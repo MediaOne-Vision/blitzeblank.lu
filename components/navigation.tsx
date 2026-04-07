@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-import { Menu, Phone, Sparkles, ChevronDown } from "lucide-react"
+import { Menu, Phone, Sparkles, ChevronDown, Building2, Droplets, Wind, Gem, Building, ArrowRight } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "Startseite" },
@@ -14,51 +14,77 @@ const navLinks = [
 ]
 
 const serviceLinks = [
-  { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
-  { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
-  { href: "/leistungen/trockeneisreinigung", label: "Trockeneisreinigung" },
-  { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
-  { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
+  { href: "/leistungen/industriereinigung", label: "Industriereinigung", description: "Professionelle Reinigung für Produktionsstätten", icon: Building2 },
+  { href: "/leistungen/fensterreinigung", label: "Fensterreinigung", description: "Streifenfreie Glasreinigung in jeder Höhe", icon: Droplets },
+  { href: "/leistungen/trockeneisreinigung", label: "Trockeneisreinigung", description: "Schonende Reinigung ohne Rückstände", icon: Wind },
+  { href: "/leistungen/steinreinigung", label: "Steinreinigung", description: "Aufwertung von Stein- und Pflasterflächen", icon: Gem },
+  { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung", description: "Strahlende Gebäudefronten", icon: Building },
 ]
 
 export function Navigation() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border/50">
+      <nav className="container mx-auto flex h-18 items-center justify-between px-4 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+        <Link href="/" className="flex items-center gap-3 cursor-pointer group">
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
             <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-foreground">Blitzeblank</span>
+          <div className="flex flex-col">
+            <span className="text-lg font-bold tracking-tight text-foreground">Blitzeblank</span>
+            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Luxembourg</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden items-center gap-8 lg:flex">
+        <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => 
             link.label === "Leistungen" ? (
               <div key={link.href} className="relative group">
                 <Link
                   href={link.href}
-                  className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-foreground cursor-pointer rounded-full hover:bg-muted/50"
                 >
                   {link.label}
-                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                  <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180" />
                 </Link>
-                {/* Dropdown Menu */}
-                <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <div className="min-w-[220px] rounded-lg border border-border bg-background p-2 shadow-lg">
-                    {serviceLinks.map((service) => (
-                      <Link
-                        key={service.href}
-                        href={service.href}
-                        className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
+                {/* Modern Mega Dropdown */}
+                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-out">
+                  <div className="w-[480px] rounded-2xl border border-border/50 bg-background/95 backdrop-blur-xl p-4 shadow-2xl shadow-black/10">
+                    <div className="grid gap-1">
+                      {serviceLinks.map((service) => {
+                        const Icon = service.icon
+                        return (
+                          <Link
+                            key={service.href}
+                            href={service.href}
+                            className="group/item flex items-start gap-4 rounded-xl p-3 transition-all hover:bg-muted/70 cursor-pointer"
+                          >
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover/item:bg-primary group-hover/item:text-primary-foreground">
+                              <Icon className="h-5 w-5" />
+                            </div>
+                            <div className="flex-1 space-y-0.5">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-semibold text-foreground">{service.label}</span>
+                                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 transition-all group-hover/item:opacity-100 group-hover/item:translate-x-0" />
+                              </div>
+                              <p className="text-xs text-muted-foreground leading-relaxed">{service.description}</p>
+                            </div>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-border/50">
+                      <Link 
+                        href="/leistungen" 
+                        className="flex items-center justify-center gap-2 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors cursor-pointer"
                       >
-                        {service.label}
+                        Alle Leistungen ansehen
+                        <ArrowRight className="h-4 w-4" />
                       </Link>
-                    ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -66,7 +92,7 @@ export function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                className="px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-foreground cursor-pointer rounded-full hover:bg-muted/50"
               >
                 {link.label}
               </Link>
@@ -75,62 +101,72 @@ export function Navigation() {
         </div>
 
         {/* Desktop CTA */}
-        <div className="hidden items-center gap-4 lg:flex">
-          <a href="tel:+352123456789" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground cursor-pointer">
-            <Phone className="h-4 w-4" />
-            +352 123 456 789
+        <div className="hidden items-center gap-5 lg:flex">
+          <a href="tel:+352123456789" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+              <Phone className="h-3.5 w-3.5" />
+            </div>
+            <span className="hidden xl:inline">+352 123 456 789</span>
           </a>
-          <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-            <Link href="/kontakt">Termin anfragen</Link>
+          <Button asChild size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-5 shadow-lg shadow-accent/25 transition-all hover:shadow-accent/40 hover:scale-105">
+            <Link href="/kontakt" className="cursor-pointer">Termin anfragen</Link>
           </Button>
         </div>
 
         {/* Mobile Menu */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="lg:hidden">
-            <Button variant="ghost" size="icon">
-              <Menu className="h-6 w-6" />
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <Menu className="h-5 w-5" />
               <span className="sr-only">Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-full max-w-xs">
+          <SheetContent side="right" className="w-full max-w-sm border-l-0 bg-background/95 backdrop-blur-xl">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <div className="flex flex-col gap-6 pt-6">
-              <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+            <div className="flex flex-col gap-8 pt-6">
+              <Link href="/" className="flex items-center gap-3 cursor-pointer" onClick={() => setOpen(false)}>
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/25">
                   <Sparkles className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <span className="text-xl font-bold">Blitzeblank</span>
+                <div className="flex flex-col">
+                  <span className="text-lg font-bold">Blitzeblank</span>
+                  <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Luxembourg</span>
+                </div>
               </Link>
-              <div className="flex flex-col gap-4">
+              
+              <div className="flex flex-col gap-2">
                 {navLinks.map((link) => 
                   link.label === "Leistungen" ? (
                     <div key={link.href} className="flex flex-col gap-2">
                       <Link
                         href={link.href}
-                        className="text-lg font-medium text-foreground cursor-pointer"
+                        className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-foreground rounded-xl hover:bg-muted/50 transition-colors cursor-pointer"
                         onClick={() => setOpen(false)}
                       >
                         {link.label}
                       </Link>
-                      <div className="flex flex-col gap-2 pl-4 border-l-2 border-border">
-                        {serviceLinks.map((service) => (
-                          <Link
-                            key={service.href}
-                            href={service.href}
-                            className="text-sm text-muted-foreground hover:text-foreground cursor-pointer"
-                            onClick={() => setOpen(false)}
-                          >
-                            {service.label}
-                          </Link>
-                        ))}
+                      <div className="flex flex-col gap-1 ml-4 pl-4 border-l-2 border-primary/20">
+                        {serviceLinks.map((service) => {
+                          const Icon = service.icon
+                          return (
+                            <Link
+                              key={service.href}
+                              href={service.href}
+                              className="flex items-center gap-3 px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                              onClick={() => setOpen(false)}
+                            >
+                              <Icon className="h-4 w-4 text-primary" />
+                              {service.label}
+                            </Link>
+                          )
+                        })}
                       </div>
                     </div>
                   ) : (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="text-lg font-medium text-foreground cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-3 text-base font-semibold text-foreground rounded-xl hover:bg-muted/50 transition-colors cursor-pointer"
                       onClick={() => setOpen(false)}
                     >
                       {link.label}
@@ -138,13 +174,16 @@ export function Navigation() {
                   )
                 )}
               </div>
-              <div className="flex flex-col gap-3 pt-4 border-t">
-                <a href="tel:+352123456789" className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-                  <Phone className="h-4 w-4" />
+              
+              <div className="flex flex-col gap-4 pt-6 mt-auto border-t border-border/50">
+                <a href="tel:+352123456789" className="flex items-center gap-3 px-4 py-3 text-sm text-muted-foreground hover:text-foreground rounded-xl hover:bg-muted/50 transition-colors cursor-pointer">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                    <Phone className="h-4 w-4" />
+                  </div>
                   +352 123 456 789
                 </a>
-                <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                  <Link href="/kontakt" onClick={() => setOpen(false)}>Termin anfragen</Link>
+                <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-xl h-12 shadow-lg shadow-accent/25">
+                  <Link href="/kontakt" onClick={() => setOpen(false)} className="cursor-pointer">Termin anfragen</Link>
                 </Button>
               </div>
             </div>
