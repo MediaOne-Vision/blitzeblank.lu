@@ -1,10 +1,11 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-import { Menu, Phone, Sparkles, ChevronDown, Building2, Droplets, Wind, Gem, Building, ArrowRight } from "lucide-react"
+import { Menu, Phone, ChevronDown, Building2, Droplets, Wind, Gem, Building, ArrowRight } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "Startseite" },
@@ -28,14 +29,15 @@ export function Navigation() {
     <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border/50">
       <nav className="container mx-auto flex h-18 items-center justify-between px-4 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 cursor-pointer group">
-          <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-bold tracking-tight text-foreground">Blitzeblank</span>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Luxembourg</span>
-          </div>
+        <Link href="/" className="flex items-center gap-2 cursor-pointer group">
+          <Image
+            src="/images/logo.png"
+            alt="Blitzeblank Logo"
+            width={160}
+            height={40}
+            className="h-9 w-auto transition-transform group-hover:scale-105"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -124,14 +126,14 @@ export function Navigation() {
           <SheetContent side="right" className="w-full max-w-sm border-l-0 bg-background/95 backdrop-blur-xl">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <div className="flex flex-col gap-8 pt-6">
-              <Link href="/" className="flex items-center gap-3 cursor-pointer" onClick={() => setOpen(false)}>
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/25">
-                  <Sparkles className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold">Blitzeblank</span>
-                  <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">Luxembourg</span>
-                </div>
+              <Link href="/" className="flex items-center cursor-pointer" onClick={() => setOpen(false)}>
+                <Image
+                  src="/images/logo.png"
+                  alt="Blitzeblank Logo"
+                  width={140}
+                  height={35}
+                  className="h-8 w-auto"
+                />
               </Link>
               
               <div className="flex flex-col gap-2">

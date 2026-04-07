@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Sparkles, Phone, Mail, MapPin } from "lucide-react"
+import Image from "next/image"
+import { Phone, Mail, MapPin } from "lucide-react"
 
 const services = [
   { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
@@ -23,16 +24,28 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Company Info */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
-                <Sparkles className="h-5 w-5 text-accent-foreground" />
-              </div>
-              <span className="text-xl font-bold">Blitzeblank</span>
+            <Link href="/" className="inline-block">
+              <Image
+                src="/images/logo.png"
+                alt="Blitzeblank Logo"
+                width={140}
+                height={35}
+                className="h-9 w-auto brightness-0 invert"
+              />
             </Link>
             <p className="text-sm text-primary-foreground/80 leading-relaxed">
               Ihr Partner für professionelle Reinigungsdienstleistungen in Luxemburg. 
               Zuverlässig, gründlich und transparent.
             </p>
+            <div className="pt-2">
+              <Image
+                src="/images/mascot.png"
+                alt="Blitzeblank Waschbär"
+                width={80}
+                height={80}
+                className="h-16 w-auto opacity-90"
+              />
+            </div>
           </div>
 
           {/* Services */}
