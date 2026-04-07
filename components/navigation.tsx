@@ -4,13 +4,21 @@ import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-import { Menu, X, Phone, Sparkles } from "lucide-react"
+import { Menu, Phone, Sparkles, ChevronDown } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/kontakt", label: "Kontakt" },
+]
+
+const serviceLinks = [
+  { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
+  { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
+  { href: "/leistungen/trockeneisreinigung", label: "Trockeneisreinigung" },
+  { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
+  { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
 ]
 
 export function Navigation() {
@@ -29,20 +37,46 @@ export function Navigation() {
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-8 lg:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => 
+            link.label === "Leistungen" ? (
+              <div key={link.href} className="relative group">
+                <Link
+                  href={link.href}
+                  className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                >
+                  {link.label}
+                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                </Link>
+                {/* Dropdown Menu */}
+                <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="min-w-[220px] rounded-lg border border-border bg-background p-2 shadow-lg">
+                    {serviceLinks.map((service) => (
+                      <Link
+                        key={service.href}
+                        href={service.href}
+                        className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
+                      >
+                        {service.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </div>
 
         {/* Desktop CTA */}
         <div className="hidden items-center gap-4 lg:flex">
-          <a href="tel:+352123456789" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <a href="tel:+352123456789" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground cursor-pointer">
             <Phone className="h-4 w-4" />
             +352 123 456 789
           </a>
@@ -69,19 +103,43 @@ export function Navigation() {
                 <span className="text-xl font-bold">Blitzeblank</span>
               </Link>
               <div className="flex flex-col gap-4">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-lg font-medium text-foreground"
-                    onClick={() => setOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {navLinks.map((link) => 
+                  link.label === "Leistungen" ? (
+                    <div key={link.href} className="flex flex-col gap-2">
+                      <Link
+                        href={link.href}
+                        className="text-lg font-medium text-foreground cursor-pointer"
+                        onClick={() => setOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                      <div className="flex flex-col gap-2 pl-4 border-l-2 border-border">
+                        {serviceLinks.map((service) => (
+                          <Link
+                            key={service.href}
+                            href={service.href}
+                            className="text-sm text-muted-foreground hover:text-foreground cursor-pointer"
+                            onClick={() => setOpen(false)}
+                          >
+                            {service.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="text-lg font-medium text-foreground cursor-pointer"
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                )}
               </div>
               <div className="flex flex-col gap-3 pt-4 border-t">
-                <a href="tel:+352123456789" className="flex items-center gap-2 text-sm text-muted-foreground">
+                <a href="tel:+352123456789" className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
                   <Phone className="h-4 w-4" />
                   +352 123 456 789
                 </a>
