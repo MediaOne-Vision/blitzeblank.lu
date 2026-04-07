@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowUpRight } from "lucide-react"
+import { Phone, Mail, MapPin } from "lucide-react"
 
 const services = [
   { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
@@ -13,20 +13,20 @@ const services = [
 const quickLinks = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
-  { href: "/ueber-uns", label: "Über uns" },
+  { href: "/ueber-uns", label: "Uber uns" },
   { href: "/kontakt", label: "Kontakt" },
 ]
 
 export function Footer() {
   return (
     <footer className="bg-foreground text-background">
-      <div className="container mx-auto px-4 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Main Footer */}
-        <div className="py-16 lg:py-24">
-          <div className="grid gap-12 lg:grid-cols-12">
+        <div className="py-12 lg:py-16">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {/* Logo & Info */}
-            <div className="lg:col-span-4 space-y-6">
-              <Link href="/" className="inline-block cursor-pointer">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <Link href="/" className="inline-block cursor-pointer mb-4">
                 <Image
                   src="/images/logo.png"
                   alt="Blitzeblank Logo"
@@ -35,28 +35,27 @@ export function Footer() {
                   className="h-8 w-auto brightness-0 invert"
                 />
               </Link>
-              <p className="text-sm text-background/60 leading-relaxed max-w-xs">
-                Ihr Partner für professionelle Reinigungsdienstleistungen in Luxemburg. 
-                Zuverlässig, gründlich und transparent.
+              <p className="text-sm text-background/60 mb-4">
+                Ihr Partner fur professionelle Reinigungsdienstleistungen in Luxemburg.
               </p>
               <Image
                 src="/images/mascot.png"
-                alt="Blitzeblank Waschbär"
-                width={80}
-                height={80}
-                className="h-20 w-auto opacity-80"
+                alt="Blitzeblank Waschbar"
+                width={60}
+                height={60}
+                className="h-14 w-auto opacity-70"
               />
             </div>
 
             {/* Navigation */}
-            <div className="lg:col-span-2">
-              <h3 className="text-xs uppercase tracking-[0.15em] text-background/40 mb-6">Navigation</h3>
-              <ul className="space-y-3">
+            <div>
+              <h3 className="font-semibold text-background mb-4">Navigation</h3>
+              <ul className="space-y-2">
                 {quickLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-background/70 hover:text-background transition-colors cursor-pointer"
+                      className="text-sm text-background/60 hover:text-background transition-colors cursor-pointer"
                     >
                       {link.label}
                     </Link>
@@ -66,17 +65,16 @@ export function Footer() {
             </div>
 
             {/* Services */}
-            <div className="lg:col-span-3">
-              <h3 className="text-xs uppercase tracking-[0.15em] text-background/40 mb-6">Leistungen</h3>
-              <ul className="space-y-3">
+            <div>
+              <h3 className="font-semibold text-background mb-4">Leistungen</h3>
+              <ul className="space-y-2">
                 {services.map((service) => (
                   <li key={service.href}>
                     <Link
                       href={service.href}
-                      className="group flex items-center gap-1 text-sm text-background/70 hover:text-background transition-colors cursor-pointer"
+                      className="text-sm text-background/60 hover:text-background transition-colors cursor-pointer"
                     >
                       {service.label}
-                      <ArrowUpRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </Link>
                   </li>
                 ))}
@@ -84,22 +82,25 @@ export function Footer() {
             </div>
 
             {/* Contact */}
-            <div className="lg:col-span-3">
-              <h3 className="text-xs uppercase tracking-[0.15em] text-background/40 mb-6">Kontakt</h3>
-              <ul className="space-y-4">
-                <li>
-                  <p className="text-sm text-background/70">
+            <div>
+              <h3 className="font-semibold text-background mb-4">Kontakt</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <MapPin className="h-4 w-4 text-background/60 mt-0.5 shrink-0" />
+                  <span className="text-sm text-background/60">
                     Rue de la Gare 123<br />
                     L-1234 Luxemburg
-                  </p>
+                  </span>
                 </li>
                 <li>
-                  <a href="tel:+352123456789" className="text-sm text-background/70 hover:text-background transition-colors cursor-pointer">
+                  <a href="tel:+352123456789" className="flex items-center gap-3 text-sm text-background/60 hover:text-background transition-colors cursor-pointer">
+                    <Phone className="h-4 w-4 shrink-0" />
                     +352 123 456 789
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:info@blitzeblank.lu" className="text-sm text-background/70 hover:text-background transition-colors cursor-pointer">
+                  <a href="mailto:info@blitzeblank.lu" className="flex items-center gap-3 text-sm text-background/60 hover:text-background transition-colors cursor-pointer">
+                    <Mail className="h-4 w-4 shrink-0" />
                     info@blitzeblank.lu
                   </a>
                 </li>
@@ -110,7 +111,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="py-6 border-t border-background/10">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-background/40">
               {new Date().getFullYear()} Blitzeblank. Alle Rechte vorbehalten.
             </p>

@@ -1,77 +1,92 @@
 import Link from "next/link"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowRight, Building2, Droplets, Wind, Gem, Building } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
 
 const services = [
   {
-    number: "01",
+    icon: Building2,
     title: "Industriereinigung",
     description: "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen.",
     href: "/leistungen/industriereinigung",
   },
   {
-    number: "02",
+    icon: Droplets,
     title: "Fensterreinigung",
-    description: "Streifenfreie Glasreinigung für Bürogebäude und Geschäfte jeder Größe.",
+    description: "Streifenfreie Glasreinigung fur Burogebaude und Geschafte jeder Grosse.",
     href: "/leistungen/fensterreinigung",
   },
   {
-    number: "03",
+    icon: Wind,
     title: "Trockeneisreinigung",
-    description: "Schonende Reinigung ohne Chemie oder Wasser für empfindliche Oberflächen.",
+    description: "Schonende Reinigung ohne Chemie oder Wasser fur empfindliche Oberflachen.",
     href: "/leistungen/trockeneisreinigung",
   },
   {
-    number: "04",
+    icon: Gem,
     title: "Steinreinigung",
-    description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Außenanlagen.",
+    description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Aussenanlagen.",
     href: "/leistungen/steinreinigung",
   },
   {
-    number: "05",
+    icon: Building,
     title: "Fassadenreinigung",
-    description: "Professionelle Außenreinigung für Gebäudefassaden aller Art.",
+    description: "Professionelle Aussenreinigung fur Gebaudefassaden aller Art.",
     href: "/leistungen/fassadenreinigung",
   },
 ]
 
 export function ServicesOverview() {
   return (
-    <section className="py-24 lg:py-32">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-16 lg:mb-24">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+        <div className="text-center mb-12 lg:mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
             Unsere Leistungen
-          </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium tracking-tight text-foreground max-w-3xl">
-            Professionelle Lösungen für jede Anforderung
           </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Professionelle Reinigungslosungen fur jeden Bedarf - von der Industrie bis zum Privatobjekt.
+          </p>
         </div>
 
-        {/* Services List */}
-        <div className="border-t border-border">
-          {services.map((service) => (
-            <Link
-              key={service.number}
-              href={service.href}
-              className="group flex items-start lg:items-center gap-6 lg:gap-12 py-8 border-b border-border cursor-pointer transition-colors hover:bg-muted/30"
-            >
-              <span className="text-sm text-muted-foreground font-mono">{service.number}</span>
-              
-              <div className="flex-1 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif font-medium text-foreground group-hover:text-primary transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-muted-foreground lg:max-w-md lg:text-right">
-                  {service.description}
-                </p>
-              </div>
-              
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border group-hover:bg-primary group-hover:border-primary transition-all">
-                <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
-              </div>
-            </Link>
-          ))}
+        {/* Services Grid */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((service) => {
+            const Icon = service.icon
+            return (
+              <Card key={service.title} className="group relative overflow-hidden border-border hover:border-primary/50 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    {service.description}
+                  </p>
+                  <Link
+                    href={service.href}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 cursor-pointer"
+                  >
+                    Mehr erfahren
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-12">
+          <Link
+            href="/leistungen"
+            className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary cursor-pointer"
+          >
+            Alle Leistungen ansehen
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

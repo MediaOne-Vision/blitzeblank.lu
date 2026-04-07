@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
@@ -18,7 +19,7 @@ const services = [
 
 const frequencies = [
   { value: "einmalig", label: "Einmalig", multiplier: 1 },
-  { value: "woechentlich", label: "Wöchentlich", multiplier: 0.85 },
+  { value: "woechentlich", label: "Wochentlich", multiplier: 0.85 },
   { value: "monatlich", label: "Monatlich", multiplier: 0.9 },
   { value: "quartalsweise", label: "Quartalsweise", multiplier: 0.95 },
 ]
@@ -49,20 +50,18 @@ export function PriceCalculator() {
   const showPrice = service && frequency
 
   return (
-    <div className="bg-card rounded-3xl border border-border p-8 lg:p-10">
-      <div className="space-y-8">
+    <Card className="border-border">
+      <CardContent className="p-6 lg:p-8 space-y-6">
         {/* Service Selection */}
-        <div className="space-y-3">
-          <Label htmlFor="service" className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
-            Leistung
-          </Label>
+        <div className="space-y-2">
+          <Label htmlFor="service">Leistung</Label>
           <Select value={service} onValueChange={setService}>
-            <SelectTrigger id="service" className="h-14 rounded-xl border-border bg-background text-base">
-              <SelectValue placeholder="Leistung auswählen" />
+            <SelectTrigger id="service">
+              <SelectValue placeholder="Leistung auswahlen" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
+            <SelectContent>
               {services.map((s) => (
-                <SelectItem key={s.value} value={s.value} className="rounded-lg">
+                <SelectItem key={s.value} value={s.value}>
                   {s.label}
                 </SelectItem>
               ))}
@@ -73,10 +72,8 @@ export function PriceCalculator() {
         {/* Area Slider */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
-              Fläche
-            </Label>
-            <span className="text-2xl font-serif font-medium text-foreground">{area[0]} m²</span>
+            <Label>Flache</Label>
+            <span className="text-lg font-semibold text-foreground">{area[0]} m2</span>
           </div>
           <Slider
             value={area}
@@ -84,26 +81,23 @@ export function PriceCalculator() {
             max={1000}
             min={20}
             step={10}
-            className="w-full"
           />
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>20 m²</span>
-            <span>1000 m²</span>
+            <span>20 m2</span>
+            <span>1000 m2</span>
           </div>
         </div>
 
         {/* Frequency Selection */}
-        <div className="space-y-3">
-          <Label htmlFor="frequency" className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
-            Häufigkeit
-          </Label>
+        <div className="space-y-2">
+          <Label htmlFor="frequency">Haufigkeit</Label>
           <Select value={frequency} onValueChange={setFrequency}>
-            <SelectTrigger id="frequency" className="h-14 rounded-xl border-border bg-background text-base">
-              <SelectValue placeholder="Häufigkeit auswählen" />
+            <SelectTrigger id="frequency">
+              <SelectValue placeholder="Haufigkeit auswahlen" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
+            <SelectContent>
               {frequencies.map((f) => (
-                <SelectItem key={f.value} value={f.value} className="rounded-lg">
+                <SelectItem key={f.value} value={f.value}>
                   {f.label}
                   {f.multiplier < 1 && (
                     <span className="ml-2 text-primary">
@@ -118,31 +112,27 @@ export function PriceCalculator() {
 
         {/* Price Display */}
         {showPrice && (
-          <div className="rounded-2xl bg-foreground text-background p-6">
-            <p className="text-xs uppercase tracking-[0.15em] text-background/60 mb-2">
-              Geschätzte Preisspanne
+          <div className="rounded-lg bg-primary p-6 text-center">
+            <p className="text-sm text-primary-foreground/80 mb-1">
+              Geschatzte Preisspanne
             </p>
-            <p className="text-4xl font-serif font-medium">
+            <p className="text-3xl font-bold text-primary-foreground">
               {price.min} - {price.max} EUR
             </p>
-            <p className="text-xs text-background/60 mt-3">
-              Unverbindliche Schätzung. Der finale Preis wird nach Besichtigung festgelegt.
+            <p className="text-xs text-primary-foreground/60 mt-2">
+              Unverbindliche Schatzung
             </p>
           </div>
         )}
 
         {/* CTA */}
-        <Button 
-          asChild 
-          size="lg"
-          className="w-full h-14 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 text-base"
-        >
-          <Link href="/kontakt" className="flex items-center justify-center gap-2 cursor-pointer">
+        <Button asChild size="lg" className="w-full gap-2">
+          <Link href="/kontakt" className="cursor-pointer">
             Termin anfragen
             <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

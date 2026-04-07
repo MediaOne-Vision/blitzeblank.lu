@@ -1,11 +1,14 @@
+import { Card, CardContent } from "@/components/ui/card"
+import { Quote } from "lucide-react"
+
 const testimonials = [
   {
-    quote: "Blitzeblank reinigt unsere Produktionshalle seit über 3 Jahren. Die Zuverlässigkeit und Qualität sind hervorragend.",
-    author: "Thomas Müller",
-    role: "Geschäftsführer, Müller Metallbau GmbH",
+    quote: "Blitzeblank reinigt unsere Produktionshalle seit uber 3 Jahren. Die Zuverlassigkeit und Qualitat sind hervorragend.",
+    author: "Thomas Muller",
+    role: "Geschaftsfuhrer, Muller Metallbau GmbH",
   },
   {
-    quote: "Die Fensterreinigung unseres Bürogebäudes wird stets termingerecht und in höchster Qualität durchgeführt. Sehr professionelles Team.",
+    quote: "Die Fensterreinigung unseres Burogebaudes wird stets termingerecht und in hochster Qualitat durchgefuhrt. Sehr professionelles Team.",
     author: "Sandra Klein",
     role: "Facility Managerin, Klein & Partner",
   },
@@ -18,30 +21,33 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-24 lg:py-32">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="py-16 sm:py-24 bg-muted/30">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-16 lg:mb-24">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            Kundenstimmen
-          </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium tracking-tight text-foreground max-w-3xl">
+        <div className="text-center mb-12 lg:mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
             Was unsere Kunden sagen
           </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Vertrauen Sie auf die Erfahrungen zufriedener Kunden.
+          </p>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="flex flex-col">
-              <blockquote className="text-xl lg:text-2xl font-serif text-foreground leading-relaxed mb-8 flex-1">
-                {`"${testimonial.quote}"`}
-              </blockquote>
-              <div className="pt-6 border-t border-border">
-                <p className="font-medium text-foreground">{testimonial.author}</p>
-                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-              </div>
-            </div>
+            <Card key={index} className="border-border">
+              <CardContent className="p-6">
+                <Quote className="h-8 w-8 text-primary/20 mb-4" />
+                <blockquote className="text-foreground mb-6">
+                  {testimonial.quote}
+                </blockquote>
+                <div className="border-t border-border pt-4">
+                  <p className="font-semibold text-foreground">{testimonial.author}</p>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

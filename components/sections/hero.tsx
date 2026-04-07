@@ -1,110 +1,80 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, CheckCircle2 } from "lucide-react"
+
+const features = [
+  "Kostenlose Erstberatung",
+  "Kurzfristige Termine",
+  "Transparente Preise",
+]
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-20 right-10 w-32 h-32 lg:w-48 lg:h-48 opacity-20">
-        <Image
-          src="/images/logo-icon.png"
-          alt=""
-          fill
-          className="object-contain"
-          aria-hidden="true"
-        />
-      </div>
-      <div className="absolute bottom-40 left-10 w-24 h-24 opacity-10 rotate-12">
-        <Image
-          src="/images/logo-icon.png"
-          alt=""
-          fill
-          className="object-contain"
-          aria-hidden="true"
-        />
-      </div>
+    <section className="bg-muted/30">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+          {/* Text Content */}
+          <div className="flex flex-col gap-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary w-fit">
+              <Image
+                src="/images/logo-icon.png"
+                alt=""
+                width={16}
+                height={16}
+                className="h-4 w-4"
+              />
+              Professionelle Reinigung in Luxemburg
+            </div>
+            
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance">
+              Sauberkeit, die{" "}
+              <span className="text-primary">uberzeugt</span>
+            </h1>
+            
+            <p className="text-lg text-muted-foreground max-w-xl">
+              Blitzeblank ist Ihr zuverlassiger Partner fur professionelle Reinigungsdienstleistungen. 
+              Von der Industriereinigung bis zur Fassadenpflege - wir liefern Qualitat, auf die Sie sich verlassen konnen.
+            </p>
 
-      <div className="container mx-auto px-4 lg:px-8">
-        {/* Main Headline - Centered Large Typography */}
-        <div className="max-w-5xl mx-auto text-center mb-16 lg:mb-24">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif font-medium tracking-tight text-foreground leading-[0.95] text-balance mb-8">
-            Professionelle Sauberkeit trifft 
-            <span className="italic"> Präzision</span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Wir reinigen Ihre Gewerbeflächen in Luxemburg zuverlässig, 
-            gründlich und termingerecht.
-          </p>
-        </div>
+            <ul className="flex flex-col gap-2 sm:flex-row sm:gap-6">
+              {features.map((feature) => (
+                <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
 
-        {/* Two Column Layout - CTAs and Image */}
-        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 items-end">
-          {/* Left CTA */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">Kostenlos & Unverbindlich</p>
-            <h3 className="text-lg font-medium mb-4">Besichtigungstermin vereinbaren</h3>
-            <Button 
-              asChild 
-              variant="outline"
-              className="rounded-full border-foreground/20 hover:bg-foreground hover:text-background transition-all group"
-            >
-              <Link href="/kontakt" className="flex items-center gap-2 cursor-pointer">
-                Termin anfragen
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 pt-2">
+              <Button asChild size="lg" className="gap-2">
+                <Link href="/kontakt" className="cursor-pointer">
+                  Kostenlose Beratung
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/leistungen" className="cursor-pointer">
+                  Unsere Leistungen
+                </Link>
+              </Button>
+            </div>
           </div>
 
-          {/* Center - Mascot Image */}
-          <div className="relative flex justify-center order-first lg:order-none">
-            <div className="relative w-full max-w-[300px] md:max-w-[350px] lg:max-w-[400px]">
+          {/* Mascot Image */}
+          <div className="relative flex items-center justify-center lg:justify-end">
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-full bg-primary/5 blur-3xl" />
               <Image
                 src="/images/mascot.png"
-                alt="Blitzeblank Waschbär Maskottchen"
-                width={500}
-                height={500}
-                className="w-full h-auto drop-shadow-2xl"
+                alt="Blitzeblank Waschbar Maskottchen"
+                width={450}
+                height={450}
+                className="relative h-auto w-full max-w-sm lg:max-w-md"
                 priority
               />
             </div>
           </div>
-
-          {/* Right CTA */}
-          <div className="flex flex-col items-center lg:items-end text-center lg:text-right">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">Preistransparenz</p>
-            <h3 className="text-lg font-medium mb-4">Sofort Preisspanne erfahren</h3>
-            <Button 
-              asChild 
-              className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all group"
-            >
-              <Link href="#preiskalkulator" className="flex items-center gap-2 cursor-pointer">
-                Preis berechnen
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Scrolling Service Marquee */}
-      <div className="mt-20 lg:mt-32 border-t border-b border-border/40 py-4 overflow-hidden">
-        <div className="flex animate-marquee whitespace-nowrap">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center gap-8 mx-4">
-              <span className="text-sm uppercase tracking-[0.15em] text-muted-foreground">Industriereinigung</span>
-              <span className="text-primary">•</span>
-              <span className="text-sm uppercase tracking-[0.15em] text-muted-foreground">Fensterreinigung</span>
-              <span className="text-primary">•</span>
-              <span className="text-sm uppercase tracking-[0.15em] text-muted-foreground">Trockeneisreinigung</span>
-              <span className="text-primary">•</span>
-              <span className="text-sm uppercase tracking-[0.15em] text-muted-foreground">Steinreinigung</span>
-              <span className="text-primary">•</span>
-              <span className="text-sm uppercase tracking-[0.15em] text-muted-foreground">Fassadenreinigung</span>
-              <span className="text-primary">•</span>
-            </div>
-          ))}
         </div>
       </div>
     </section>

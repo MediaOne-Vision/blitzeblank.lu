@@ -1,60 +1,68 @@
+import { Phone, Eye, Sparkles, ThumbsUp } from "lucide-react"
+
 const steps = [
   {
+    icon: Phone,
     number: "01",
     title: "Kontakt aufnehmen",
     description: "Rufen Sie uns an oder nutzen Sie unser Kontaktformular. Wir melden uns innerhalb von 24 Stunden.",
   },
   {
+    icon: Eye,
     number: "02",
     title: "Kostenlose Besichtigung",
-    description: "Wir besichtigen Ihre Räumlichkeiten, besprechen Anforderungen und erstellen ein individuelles Angebot.",
+    description: "Wir besichtigen Ihre Raumlichkeiten, besprechen Anforderungen und erstellen ein individuelles Angebot.",
   },
   {
+    icon: Sparkles,
     number: "03",
     title: "Professionelle Reinigung",
-    description: "Unser Team führt die Reinigung nach höchsten Standards durch - termingerecht und gründlich.",
+    description: "Unser Team fuhrt die Reinigung nach hochsten Standards durch - termingerecht und grundlich.",
   },
   {
+    icon: ThumbsUp,
     number: "04",
     title: "Zufriedenheitsgarantie",
-    description: "Nach Abschluss prüfen wir gemeinsam das Ergebnis. Ihre Zufriedenheit ist unser Maßstab.",
+    description: "Nach Abschluss prufen wir gemeinsam das Ergebnis. Ihre Zufriedenheit ist unser Massstab.",
   },
 ]
 
 export function ProcessSection() {
   return (
-    <section className="py-24 lg:py-32 bg-muted/30">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-16 lg:mb-24">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+        <div className="text-center mb-12 lg:mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
             So funktioniert es
-          </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium tracking-tight text-foreground max-w-3xl">
-            In 4 Schritten zu strahlender Sauberkeit
           </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            In vier einfachen Schritten zu strahlender Sauberkeit.
+          </p>
         </div>
 
-        {/* Steps Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4">
-          {steps.map((step, index) => (
-            <div key={index} className="relative group">
-              {/* Number */}
-              <span className="text-7xl lg:text-8xl font-serif font-medium text-border group-hover:text-primary/20 transition-colors duration-300">
-                {step.number}
-              </span>
-              
-              {/* Content */}
-              <div className="mt-4">
-                <h3 className="text-xl font-medium text-foreground mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
+        {/* Steps */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((step, index) => {
+            const Icon = step.icon
+            return (
+              <div key={step.number} className="relative">
+                {/* Connector Line */}
+                {index < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-border -translate-x-1/2 z-0" />
+                )}
+                
+                <div className="relative z-10 flex flex-col items-center text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
+                    <Icon className="h-7 w-7" />
+                  </div>
+                  <span className="text-xs font-medium text-primary mb-2">{step.number}</span>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
