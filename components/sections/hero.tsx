@@ -1,81 +1,53 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, CheckCircle2 } from "lucide-react"
-
-const features = [
-  "Kostenlose Erstberatung",
-  "Kurzfristige Termine",
-  "Transparente Preise",
-]
 
 export function HeroSection() {
   return (
-    <section className="bg-muted/30">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-          {/* Text Content */}
-          <div className="flex flex-col gap-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary w-fit">
-              <Image
-                src="/images/logo-icon.png"
-                alt=""
-                width={16}
-                height={16}
-                className="h-4 w-4"
-              />
-              Professionelle Reinigung in Luxemburg
-            </div>
-            
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance">
-              Sauberkeit, die{" "}
-              <span className="text-primary">uberzeugt</span>
-            </h1>
-            
-            <p className="text-lg text-muted-foreground max-w-xl">
-              Blitzeblank ist Ihr zuverlassiger Partner fur professionelle Reinigungsdienstleistungen. 
-              Von der Industriereinigung bis zur Fassadenpflege - wir liefern Qualitat, auf die Sie sich verlassen konnen.
-            </p>
+    <section className="relative min-h-[90vh] bg-neutral-900 pt-16 flex items-center overflow-hidden">
+      {/* Background Image Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/80 via-neutral-900/60 to-neutral-900" />
+      
+      {/* Content */}
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-20 lg:py-32 w-full">
+        <div className="max-w-2xl">
+          <p className="text-neutral-400 text-sm tracking-wide uppercase mb-6">
+            Professionelle Reinigung in Luxemburg
+          </p>
+          
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-white leading-tight mb-8">
+            Ihr Partner fur makellose Sauberkeit im gewerblichen Bereich
+          </h1>
+          
+          <p className="text-neutral-400 text-lg max-w-lg mb-10 leading-relaxed">
+            Von der Industriereinigung bis zur Fassadenpflege bieten wir massgeschneiderte Losungen fur Unternehmen in ganz Luxemburg.
+          </p>
 
-            <ul className="flex flex-col gap-2 sm:flex-row sm:gap-6">
-              {features.map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 pt-2">
-              <Button asChild size="lg" className="gap-2">
-                <Link href="/kontakt" className="cursor-pointer">
-                  Kostenlose Beratung
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/leistungen" className="cursor-pointer">
-                  Unsere Leistungen
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          {/* Mascot Image */}
-          <div className="relative flex items-center justify-center lg:justify-end">
-            <div className="relative">
-              <div className="absolute -inset-4 rounded-full bg-primary/5 blur-3xl" />
-              <Image
-                src="/images/mascot.png"
-                alt="Blitzeblank Waschbar Maskottchen"
-                width={450}
-                height={450}
-                className="relative h-auto w-full max-w-sm lg:max-w-md"
-                priority
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button asChild size="lg" className="bg-white text-neutral-900 hover:bg-neutral-100 rounded-full px-8">
+              <Link href="/kontakt" className="cursor-pointer">
+                Kostenlose Beratung
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="border-neutral-600 text-white hover:bg-neutral-800 rounded-full px-8">
+              <Link href="/leistungen" className="cursor-pointer">
+                Unsere Leistungen
+              </Link>
+            </Button>
           </div>
         </div>
+      </div>
+
+      {/* Mascot - Bottom Right */}
+      <div className="absolute bottom-0 right-0 lg:right-20 opacity-20 lg:opacity-100">
+        <Image
+          src="/images/mascot.png"
+          alt="Blitzeblank Maskottchen"
+          width={400}
+          height={400}
+          className="h-64 lg:h-96 w-auto"
+          priority
+        />
       </div>
     </section>
   )

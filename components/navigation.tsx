@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
-import { Menu, Phone, ChevronDown } from "lucide-react"
+import { Menu, ChevronDown } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "Startseite" },
@@ -26,40 +26,39 @@ export function Navigation() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-neutral-200">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center cursor-pointer">
+        <Link href="/" className="cursor-pointer">
           <Image
             src="/images/logo.png"
-            alt="Blitzeblank Logo"
-            width={150}
-            height={38}
+            alt="Blitzeblank"
+            width={140}
+            height={35}
             className="h-8 w-auto"
             priority
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-1 lg:flex">
+        {/* Desktop Navigation - Centered */}
+        <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => 
             link.label === "Leistungen" ? (
               <div key={link.href} className="relative group">
                 <Link
                   href={link.href}
-                  className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                  className="flex items-center gap-1 text-sm text-neutral-600 hover:text-neutral-900 transition-colors cursor-pointer"
                 >
                   {link.label}
-                  <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180" />
+                  <ChevronDown className="h-3.5 w-3.5" />
                 </Link>
-                {/* Dropdown */}
-                <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <div className="min-w-[200px] rounded-lg border border-border bg-background p-2 shadow-lg">
+                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                  <div className="bg-white border border-neutral-200 rounded-lg shadow-lg py-2 min-w-[180px]">
                     {serviceLinks.map((service) => (
                       <Link
                         key={service.href}
                         href={service.href}
-                        className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
+                        className="block px-4 py-2 text-sm text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50 cursor-pointer"
                       >
                         {service.label}
                       </Link>
@@ -71,7 +70,7 @@ export function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+                className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors cursor-pointer"
               >
                 {link.label}
               </Link>
@@ -79,57 +78,42 @@ export function Navigation() {
           )}
         </nav>
 
-        {/* CTA Buttons */}
-        <div className="hidden items-center gap-4 lg:flex">
-          <a href="tel:+352123456789" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer">
-            <Phone className="h-4 w-4" />
-            +352 123 456 789
-          </a>
-          <Button asChild>
+        {/* CTA */}
+        <div className="hidden lg:block">
+          <Button asChild size="sm" className="bg-neutral-900 hover:bg-neutral-800 text-white rounded-full px-5">
             <Link href="/kontakt" className="cursor-pointer">
-              Kostenlose Beratung
+              Kontakt
             </Link>
           </Button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="lg:hidden">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="h-9 w-9">
               <Menu className="h-5 w-5" />
-              <span className="sr-only">Menu offnen</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-full max-w-xs">
-            <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <div className="flex flex-col gap-6 pt-6">
-              <Link href="/" className="cursor-pointer" onClick={() => setOpen(false)}>
-                <Image
-                  src="/images/logo.png"
-                  alt="Blitzeblank Logo"
-                  width={130}
-                  height={32}
-                  className="h-7 w-auto"
-                />
-              </Link>
-              
-              <nav className="flex flex-col gap-1">
+          <SheetContent side="right" className="w-72 bg-white">
+            <SheetTitle className="sr-only">Menu</SheetTitle>
+            <div className="flex flex-col pt-8">
+              <nav className="flex flex-col">
                 {navLinks.map((link) => 
                   link.label === "Leistungen" ? (
-                    <div key={link.href} className="flex flex-col">
+                    <div key={link.href}>
                       <Link
                         href={link.href}
-                        className="py-2 text-base font-medium text-foreground cursor-pointer"
+                        className="block py-3 text-neutral-900 font-medium border-b border-neutral-100 cursor-pointer"
                         onClick={() => setOpen(false)}
                       >
                         {link.label}
                       </Link>
-                      <div className="ml-4 flex flex-col gap-1 border-l border-border pl-4">
+                      <div className="py-2 pl-4 border-b border-neutral-100">
                         {serviceLinks.map((service) => (
                           <Link
                             key={service.href}
                             href={service.href}
-                            className="py-1.5 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
+                            className="block py-2 text-sm text-neutral-500 hover:text-neutral-900 cursor-pointer"
                             onClick={() => setOpen(false)}
                           >
                             {service.label}
@@ -141,7 +125,7 @@ export function Navigation() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="py-2 text-base font-medium text-foreground cursor-pointer"
+                      className="py-3 text-neutral-900 font-medium border-b border-neutral-100 cursor-pointer"
                       onClick={() => setOpen(false)}
                     >
                       {link.label}
@@ -149,15 +133,10 @@ export function Navigation() {
                   )
                 )}
               </nav>
-
-              <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                <a href="tel:+352123456789" className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-                  <Phone className="h-4 w-4" />
-                  +352 123 456 789
-                </a>
-                <Button asChild className="w-full">
+              <div className="pt-6">
+                <Button asChild className="w-full bg-neutral-900 hover:bg-neutral-800 rounded-full">
                   <Link href="/kontakt" onClick={() => setOpen(false)}>
-                    Kostenlose Beratung
+                    Kontakt
                   </Link>
                 </Button>
               </div>

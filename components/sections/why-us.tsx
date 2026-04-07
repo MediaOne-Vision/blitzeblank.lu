@@ -1,4 +1,4 @@
-import { Clock, Shield, MessageCircle, Award } from "lucide-react"
+import Image from "next/image"
 
 const stats = [
   { value: "500+", label: "Zufriedene Kunden" },
@@ -7,73 +7,73 @@ const stats = [
   { value: "24h", label: "Reaktionszeit" },
 ]
 
-const features = [
-  {
-    icon: Clock,
-    title: "Zuverlassigkeit",
-    description: "Termingerechte Ausfuhrung und konstant hohe Qualitat sind fur uns selbstverstandlich.",
-  },
-  {
-    icon: Shield,
-    title: "Flexibilitat",
-    description: "Kurzfristige Terminvergabe und schnelle Reaktionszeiten - wir passen uns Ihrem Zeitplan an.",
-  },
-  {
-    icon: MessageCircle,
-    title: "Personlicher Kontakt",
-    description: "Ein fester Ansprechpartner fur alle Ihre Anliegen. Direkte Kommunikation ohne Umwege.",
-  },
-  {
-    icon: Award,
-    title: "Qualitatsgarantie",
-    description: "Unsere Arbeit wird erst abgeschlossen, wenn Sie zufrieden sind.",
-  },
-]
-
 export function WhyUsSection() {
   return (
-    <section className="py-16 sm:py-24 bg-muted/30">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-16">
+    <section className="py-20 bg-white">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Header */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+          <div>
+            <p className="text-sm font-medium text-[#4AADE4] mb-3">Uber uns</p>
+            <h2 className="text-3xl lg:text-4xl font-medium text-neutral-900">
+              Warum Unternehmen auf Blitzeblank vertrauen
+            </h2>
+          </div>
+          <p className="text-neutral-600 leading-relaxed">
+            Seit unserer Grundung steht Blitzeblank fur professionelle Reinigung mit Herz. 
+            Wir verstehen, dass Sauberkeit mehr ist als nur Hygiene - sie schafft ein 
+            angenehmes Arbeitsumfeld und hinterlasst bei Ihren Kunden einen bleibenden Eindruck.
+          </p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {stats.map((stat) => (
-            <div key={stat.label} className="text-center p-6 rounded-lg bg-background border border-border">
-              <p className="text-3xl font-bold text-primary sm:text-4xl">{stat.value}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
+            <div key={stat.label} className="bg-neutral-50 rounded-xl p-6 text-center">
+              <p className="text-3xl lg:text-4xl font-medium text-[#4AADE4] mb-2">{stat.value}</p>
+              <p className="text-sm text-neutral-500">{stat.label}</p>
             </div>
           ))}
         </div>
 
-        {/* Content */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* Left Column */}
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-4">
-              Warum Blitzeblank?
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Seit unserer Grundung steht Blitzeblank fur professionelle Reinigung mit Herz. 
-              Sauberkeit schafft ein angenehmes Arbeitsumfeld und hinterlasst bei Ihren Kunden 
-              einen positiven Eindruck.
-            </p>
+        {/* Features */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8">
+            <div className="border-l-2 border-neutral-200 pl-6 hover:border-[#4AADE4] transition-colors">
+              <h3 className="text-lg font-medium text-neutral-900 mb-2">Zuverlassigkeit</h3>
+              <p className="text-sm text-neutral-600">
+                Termingerechte Ausfuhrung und konstant hohe Qualitat sind fur uns selbstverstandlich.
+              </p>
+            </div>
+            <div className="border-l-2 border-neutral-200 pl-6 hover:border-[#4AADE4] transition-colors">
+              <h3 className="text-lg font-medium text-neutral-900 mb-2">Flexibilitat</h3>
+              <p className="text-sm text-neutral-600">
+                Kurzfristige Terminvergabe und schnelle Reaktionszeiten - wir passen uns Ihrem Zeitplan an.
+              </p>
+            </div>
+            <div className="border-l-2 border-neutral-200 pl-6 hover:border-[#4AADE4] transition-colors">
+              <h3 className="text-lg font-medium text-neutral-900 mb-2">Personlicher Kontakt</h3>
+              <p className="text-sm text-neutral-600">
+                Ein fester Ansprechpartner fur alle Ihre Anliegen. Direkte Kommunikation ohne Umwege.
+              </p>
+            </div>
+            <div className="border-l-2 border-neutral-200 pl-6 hover:border-[#4AADE4] transition-colors">
+              <h3 className="text-lg font-medium text-neutral-900 mb-2">Qualitatsgarantie</h3>
+              <p className="text-sm text-neutral-600">
+                Unsere Arbeit wird erst abgeschlossen, wenn Sie vollstandig zufrieden sind.
+              </p>
+            </div>
           </div>
-
-          {/* Right Column - Features */}
-          <div className="grid gap-6 sm:grid-cols-2">
-            {features.map((feature) => {
-              const Icon = feature.icon
-              return (
-                <div key={feature.title} className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                  </div>
-                </div>
-              )
-            })}
+          
+          <div className="relative flex justify-center">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#4AADE4]/10 to-transparent rounded-3xl" />
+            <Image
+              src="/images/mascot.png"
+              alt="Blitzeblank Maskottchen"
+              width={350}
+              height={350}
+              className="relative h-auto w-full max-w-sm"
+            />
           </div>
         </div>
       </div>
