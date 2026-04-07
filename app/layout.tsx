@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
@@ -8,9 +8,9 @@ const inter = Inter({
   variable: '--font-inter'
 })
 
-const spaceGrotesk = Space_Grotesk({ 
+const playfair = Playfair_Display({ 
   subsets: ["latin"],
-  variable: '--font-space-grotesk'
+  variable: '--font-playfair'
 })
 
 export const metadata: Metadata = {
@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" data-scroll-behavior="smooth" className="scroll-smooth">
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

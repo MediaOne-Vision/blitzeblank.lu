@@ -2,11 +2,10 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { Calculator, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 const services = [
@@ -50,28 +49,20 @@ export function PriceCalculator() {
   const showPrice = service && frequency
 
   return (
-    <Card className="p-6 lg:p-8">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10">
-          <Calculator className="h-5 w-5 text-accent" />
-        </div>
-        <div>
-          <h3 className="font-semibold text-foreground">Preiskalkulator</h3>
-          <p className="text-sm text-muted-foreground">Erhalten Sie eine unverbindliche Preisspanne</p>
-        </div>
-      </div>
-
-      <div className="space-y-6">
+    <div className="bg-card rounded-3xl border border-border p-8 lg:p-10">
+      <div className="space-y-8">
         {/* Service Selection */}
-        <div className="space-y-2">
-          <Label htmlFor="service">Welche Leistung benötigen Sie?</Label>
+        <div className="space-y-3">
+          <Label htmlFor="service" className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+            Leistung
+          </Label>
           <Select value={service} onValueChange={setService}>
-            <SelectTrigger id="service">
+            <SelectTrigger id="service" className="h-14 rounded-xl border-border bg-background text-base">
               <SelectValue placeholder="Leistung auswählen" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               {services.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
+                <SelectItem key={s.value} value={s.value} className="rounded-lg">
                   {s.label}
                 </SelectItem>
               ))}
@@ -82,8 +73,10 @@ export function PriceCalculator() {
         {/* Area Slider */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label>Ungefähre Fläche</Label>
-            <span className="text-sm font-medium text-foreground">{area[0]} m²</span>
+            <Label className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+              Fläche
+            </Label>
+            <span className="text-2xl font-serif font-medium text-foreground">{area[0]} m²</span>
           </div>
           <Slider
             value={area}
@@ -100,19 +93,21 @@ export function PriceCalculator() {
         </div>
 
         {/* Frequency Selection */}
-        <div className="space-y-2">
-          <Label htmlFor="frequency">Wie oft soll gereinigt werden?</Label>
+        <div className="space-y-3">
+          <Label htmlFor="frequency" className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+            Häufigkeit
+          </Label>
           <Select value={frequency} onValueChange={setFrequency}>
-            <SelectTrigger id="frequency">
+            <SelectTrigger id="frequency" className="h-14 rounded-xl border-border bg-background text-base">
               <SelectValue placeholder="Häufigkeit auswählen" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               {frequencies.map((f) => (
-                <SelectItem key={f.value} value={f.value}>
+                <SelectItem key={f.value} value={f.value} className="rounded-lg">
                   {f.label}
                   {f.multiplier < 1 && (
-                    <span className="ml-2 text-accent">
-                      ({Math.round((1 - f.multiplier) * 100)}% Rabatt)
+                    <span className="ml-2 text-primary">
+                      -{Math.round((1 - f.multiplier) * 100)}%
                     </span>
                   )}
                 </SelectItem>
@@ -123,25 +118,31 @@ export function PriceCalculator() {
 
         {/* Price Display */}
         {showPrice && (
-          <div className="rounded-lg bg-secondary p-4 mt-6">
-            <p className="text-sm text-muted-foreground mb-1">Geschätzte Preisspanne</p>
-            <p className="text-3xl font-bold text-foreground">
+          <div className="rounded-2xl bg-foreground text-background p-6">
+            <p className="text-xs uppercase tracking-[0.15em] text-background/60 mb-2">
+              Geschätzte Preisspanne
+            </p>
+            <p className="text-4xl font-serif font-medium">
               {price.min} - {price.max} EUR
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
-              * Unverbindliche Schätzung. Der finale Preis wird nach Besichtigung festgelegt.
+            <p className="text-xs text-background/60 mt-3">
+              Unverbindliche Schätzung. Der finale Preis wird nach Besichtigung festgelegt.
             </p>
           </div>
         )}
 
         {/* CTA */}
-        <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-          <Link href="/kontakt" className="flex items-center justify-center gap-2">
-            Kostenlosen Besichtigungstermin anfragen
+        <Button 
+          asChild 
+          size="lg"
+          className="w-full h-14 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 text-base"
+        >
+          <Link href="/kontakt" className="flex items-center justify-center gap-2 cursor-pointer">
+            Termin anfragen
             <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
       </div>
-    </Card>
+    </div>
   )
 }
