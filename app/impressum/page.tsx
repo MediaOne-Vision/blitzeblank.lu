@@ -65,18 +65,17 @@ export default function ImpressumPage() {
         {/* Content */}
         <section className="py-16 lg:py-24">
           <div className="mx-auto max-w-4xl px-6">
-            {/* Contact blocks grid */}
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-10">
+              {/* Contact blocks - same style as detailed sections */}
               {blocks.map((block) => (
-                <div
-                  key={block.title}
-                  className="flex gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-navy/5"
-                >
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-mint">
+                <div key={block.title}>
+                  <div className="mb-3 flex items-center gap-3">
                     <block.icon className="h-5 w-5 text-brand-blue" />
+                    <h2 className="font-display text-xl font-extrabold text-brand-navy">
+                      {block.title}
+                    </h2>
                   </div>
-                  <div>
-                    <h2 className="text-sm font-medium text-neutral-500">{block.title}</h2>
+                  <div className="rounded-2xl bg-brand-mint/50 p-6 text-neutral-600 leading-relaxed">
                     {block.href ? (
                       <a
                         href={block.href}
@@ -86,18 +85,13 @@ export default function ImpressumPage() {
                       </a>
                     ) : (
                       block.lines.map((line) => (
-                        <p key={line} className="text-brand-navy leading-relaxed">
-                          {line}
-                        </p>
+                        <p key={line}>{line}</p>
                       ))
                     )}
                   </div>
                 </div>
               ))}
-            </div>
 
-            {/* Detailed sections */}
-            <div className="mt-12 space-y-10">
               <div>
                 <div className="mb-3 flex items-center gap-3">
                   <Shield className="h-5 w-5 text-brand-blue" />
