@@ -1,22 +1,23 @@
+import Image from "next/image"
 import { Quote, Star } from "lucide-react"
 
 const testimonials = [
   {
-    quote: "Blitzeblank reinigt unsere Produktionshalle seit uber 3 Jahren. Die Zuverlassigkeit und Qualitat sind hervorragend.",
-    author: "Thomas Muller",
-    company: "Muller Metallbau GmbH",
+    quote: "Super Service! Nach einer Besichtigung wurde ein kurzfristiger Termin vereinbart. Die Arbeit wurde punktlich und sehr ordentlich durchgefuhrt. Der Hof (ca. 250qm) war danach nicht mehr wiederzuerkennen. Und das alles in nicht mal 2 Tagen und zu einem super Preis! Sehr weiterzuempfehlen!",
+    author: "Stefan Klein",
+    company: "vor einem Jahr",
     accent: "text-brand-blue",
   },
   {
-    quote: "Die Fensterreinigung unseres Burogebaudes wird stets termingerecht und in hochster Qualitat durchgefuhrt.",
-    author: "Sandra Klein",
-    company: "Klein & Partner",
+    quote: "Nach einer kostenlosen Testreinigung haben wir uns fur diesen Service entschieden und sind mehr als begeistert. Mit unserem herkommlichen Hochdruckreiniger hatten wir niemals dieses super Ergebnis erzielen konnen. Gutes Preis-Leistungs-Verhaltnis und schneller Ausfuhrungstermin.",
+    author: "Anika Schwarz",
+    company: "vor 2 Jahren",
     accent: "text-brand-teal",
   },
   {
-    quote: "Die Trockeneisreinigung unserer Maschinen war beeindruckend. Schonend, effektiv und ohne lange Stillstandzeiten.",
-    author: "Marc Weber",
-    company: "Weber Industries",
+    quote: "Wir waren mit dem Service super zufrieden. Es wurden Holzdecken gereinigt und das Ergebnis ist super geworden. Auf meine Anfrage hin haben wir einen schnellen Vor-Ort-Termin bekommen mit einem entsprechend guten Angebot. Wir werden auf jeden Fall weitere Projekte an diese Firma vergeben.",
+    author: "Bernd Goeblet",
+    company: "vor 7 Monaten",
     accent: "text-brand-blue",
   },
 ]
@@ -31,6 +32,15 @@ export function TestimonialsSection() {
           <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy tracking-tight text-balance">
             Was unsere Kunden sagen
           </h2>
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-brand-blue/15 bg-brand-mint px-4 py-2">
+            <Image src="/images/google-logo.svg" alt="Google" width={18} height={18} className="h-[18px] w-[18px]" />
+            <span className="text-sm font-medium text-brand-navy">Echte Google-Rezensionen</span>
+            <span className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="h-3.5 w-3.5 fill-brand-blue text-brand-blue" />
+              ))}
+            </span>
+          </div>
         </div>
 
         {/* Testimonials */}
@@ -40,7 +50,10 @@ export function TestimonialsSection() {
               key={index}
               className="relative rounded-2xl bg-brand-mint p-8 hover:-translate-y-1 transition-transform"
             >
-              <Quote className={`h-8 w-8 mb-4 ${testimonial.accent}`} />
+              <div className="flex items-center justify-between mb-4">
+                <Quote className={`h-8 w-8 ${testimonial.accent}`} />
+                <Image src="/images/google-logo.svg" alt="Google Rezension" width={22} height={22} className="h-[22px] w-[22px]" />
+              </div>
               <div className="flex gap-0.5 mb-4">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-brand-blue text-brand-blue" />
