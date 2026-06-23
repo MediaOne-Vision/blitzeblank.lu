@@ -5,13 +5,12 @@ import Link from "next/link"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Phone, Mail, MapPin, Clock, CheckCircle, Send } from "lucide-react"
+import { Phone, Mail, MapPin, Clock, CheckCircle, Send, Sparkles, ArrowRight } from "lucide-react"
 
 const services = [
   { value: "industrie", label: "Industriereinigung" },
@@ -52,6 +51,13 @@ const contactInfo = [
   },
 ]
 
+const benefits = [
+  "Kostenlose Besichtigung vor Ort",
+  "Unverbindliches Angebot",
+  "Probearbeit möglich",
+  "Antwort innerhalb von 24h",
+]
+
 export default function KontaktPage() {
   const [formState, setFormState] = useState({
     name: "",
@@ -68,10 +74,10 @@ export default function KontaktPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1500))
-    
+
     setIsSubmitting(false)
     setIsSubmitted(true)
   }
@@ -81,107 +87,110 @@ export default function KontaktPage() {
       <Navigation />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-primary pt-28 pb-16 lg:pt-36 lg:pb-24">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center">
-              <h1 className="mb-6 text-balance text-4xl font-bold tracking-tight text-primary-foreground md:text-5xl">
-                Kontakt aufnehmen
-              </h1>
-              <p className="text-lg text-primary-foreground/80">
-                Fordern Sie einen kostenlosen Besichtigungstermin an oder stellen Sie uns Ihre Fragen. 
-                Wir melden uns innerhalb von 24 Stunden bei Ihnen.
-              </p>
-            </div>
+        <section className="relative overflow-hidden bg-brand-navy pt-28 pb-16 lg:pt-36 lg:pb-24">
+          <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-brand-blue/20 blur-3xl" />
+          <div className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-brand-teal/15 blur-3xl" />
+          <div className="relative mx-auto max-w-3xl px-6 text-center">
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-brand-sky ring-1 ring-white/15">
+              <Sparkles className="h-4 w-4" />
+              Kontakt
+            </span>
+            <h1 className="mb-6 text-balance font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+              Lassen Sie uns sprechen
+            </h1>
+            <p className="text-lg text-white/75 text-pretty">
+              Fordern Sie einen kostenlosen Besichtigungstermin an oder stellen Sie uns Ihre Fragen. 
+              Wir melden uns innerhalb von 24 Stunden bei Ihnen.
+            </p>
           </div>
         </section>
 
         {/* Contact Section */}
         <section className="py-16 lg:py-24">
-          <div className="container mx-auto px-4 lg:px-8">
+          <div className="mx-auto max-w-6xl px-6">
             <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
               {/* Contact Info */}
               <div className="lg:col-span-2">
-                <h2 className="mb-6 text-2xl font-bold text-foreground">
+                <h2 className="mb-4 font-display text-2xl font-extrabold text-brand-navy">
                   So erreichen Sie uns
                 </h2>
-                <p className="mb-8 text-muted-foreground leading-relaxed">
+                <p className="mb-8 text-neutral-600 leading-relaxed">
                   Haben Sie Fragen oder möchten Sie einen Termin vereinbaren? 
                   Kontaktieren Sie uns auf dem für Sie angenehmsten Weg.
                 </p>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {contactInfo.map((item, index) => (
-                    <div key={index} className="flex gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent/10">
-                        <item.icon className="h-5 w-5 text-accent" />
+                    <div
+                      key={index}
+                      className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5 transition-shadow hover:shadow-md"
+                    >
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-mint">
+                        <item.icon className="h-5 w-5 text-brand-blue" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-foreground">{item.title}</h3>
+                        <h3 className="font-semibold text-brand-navy">{item.title}</h3>
                         {item.href ? (
                           <a
                             href={item.href}
-                            className="text-muted-foreground hover:text-accent transition-colors"
+                            className="text-neutral-600 hover:text-brand-blue transition-colors cursor-pointer"
                           >
                             {item.content}
                           </a>
                         ) : (
-                          <p className="text-muted-foreground">{item.content}</p>
+                          <p className="text-neutral-600">{item.content}</p>
                         )}
-                        <p className="text-sm text-muted-foreground/70">{item.description}</p>
+                        <p className="text-sm text-neutral-400">{item.description}</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
                 {/* Trust Badges */}
-                <div className="mt-12 rounded-xl bg-secondary p-6">
-                  <h3 className="mb-4 font-semibold text-foreground">Darum Blitzeblank</h3>
+                <div className="mt-8 rounded-2xl bg-brand-navy p-6">
+                  <h3 className="mb-4 font-display font-bold text-white">Darum Blitzeblank</h3>
                   <ul className="space-y-3">
-                    <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                      Kostenlose Besichtigung vor Ort
-                    </li>
-                    <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                      Unverbindliches Angebot
-                    </li>
-                    <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                      Probearbeit möglich
-                    </li>
-                    <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                      Antwort innerhalb von 24h
-                    </li>
+                    {benefits.map((benefit) => (
+                      <li key={benefit} className="flex items-center gap-2.5 text-sm text-white/80">
+                        <CheckCircle className="h-4 w-4 shrink-0 text-brand-sky" />
+                        {benefit}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
 
               {/* Contact Form */}
               <div className="lg:col-span-3">
-                <Card className="border-0 bg-card p-6 shadow-lg lg:p-8">
+                <div className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-brand-navy/5 lg:p-8">
                   {isSubmitted ? (
                     <div className="py-12 text-center">
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent/10">
-                        <CheckCircle className="h-8 w-8 text-accent" />
+                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-mint">
+                        <CheckCircle className="h-8 w-8 text-brand-blue" />
                       </div>
-                      <h3 className="mb-2 text-xl font-semibold text-foreground">
+                      <h3 className="mb-2 font-display text-xl font-bold text-brand-navy">
                         Vielen Dank für Ihre Anfrage!
                       </h3>
-                      <p className="mb-6 text-muted-foreground">
+                      <p className="mb-6 text-neutral-600">
                         Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.
                       </p>
-                      <Button asChild variant="outline">
-                        <Link href="/">Zur Startseite</Link>
+                      <Button
+                        asChild
+                        className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8"
+                      >
+                        <Link href="/" className="cursor-pointer">
+                          Zur Startseite
+                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </Link>
                       </Button>
                     </div>
                   ) : (
                     <>
                       <div className="mb-6">
-                        <h3 className="text-xl font-semibold text-foreground">
+                        <h3 className="font-display text-xl font-bold text-brand-navy">
                           Kostenlosen Besichtigungstermin anfragen
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-neutral-500">
                           Füllen Sie das Formular aus und wir melden uns bei Ihnen.
                         </p>
                       </div>
@@ -285,10 +294,10 @@ export default function KontaktPage() {
                             }
                             required
                           />
-                          <Label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed">
+                          <Label htmlFor="consent" className="text-sm text-neutral-500 leading-relaxed">
                             Ich bin damit einverstanden, dass meine Daten zur Bearbeitung meiner Anfrage 
                             verwendet werden. Weitere Informationen finden Sie in unserer{" "}
-                            <Link href="/datenschutz" className="text-accent hover:underline">
+                            <Link href="/datenschutz" className="text-brand-blue hover:underline">
                               Datenschutzerklärung
                             </Link>
                             .
@@ -298,7 +307,7 @@ export default function KontaktPage() {
                         <Button
                           type="submit"
                           size="lg"
-                          className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                          className="w-full bg-brand-blue text-white hover:bg-brand-teal rounded-full shadow-lg shadow-brand-blue/30"
                           disabled={isSubmitting || !formState.consent}
                         >
                           {isSubmitting ? (
@@ -313,7 +322,7 @@ export default function KontaktPage() {
                       </form>
                     </>
                   )}
-                </Card>
+                </div>
               </div>
             </div>
           </div>
