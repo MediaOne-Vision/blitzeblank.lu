@@ -27,35 +27,19 @@ const contactInfo = [
     title: "Telefon",
     content: "+352 123 456 789",
     href: "tel:+352123456789",
-    description: "Mo-Fr: 8:00 - 18:00 Uhr",
   },
   {
     icon: Mail,
     title: "E-Mail",
     content: "info@blitzeblank.lu",
     href: "mailto:info@blitzeblank.lu",
-    description: "Antwort innerhalb von 24h",
   },
   {
     icon: MapPin,
     title: "Adresse",
     content: "Rue de la Gare 123, L-1234 Luxemburg",
     href: "https://maps.google.com",
-    description: "Besuchen Sie uns vor Ort",
   },
-  {
-    icon: Clock,
-    title: "Öffnungszeiten",
-    content: "Mo-Fr: 8:00 - 18:00",
-    description: "Termine nach Vereinbarung",
-  },
-]
-
-const benefits = [
-  "Kostenlose Besichtigung vor Ort",
-  "Unverbindliches Angebot",
-  "Probearbeit möglich",
-  "Antwort innerhalb von 24h",
 ]
 
 export default function KontaktPage() {
@@ -111,53 +95,32 @@ export default function KontaktPage() {
             <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
               {/* Contact Info */}
               <div className="lg:col-span-2">
-                <h2 className="mb-4 font-display text-2xl font-extrabold text-brand-navy">
+                <h2 className="mb-6 font-display text-2xl font-extrabold text-brand-navy">
                   So erreichen Sie uns
                 </h2>
-                <p className="mb-8 text-neutral-600 leading-relaxed">
-                  Haben Sie Fragen oder möchten Sie einen Termin vereinbaren? 
-                  Kontaktieren Sie uns auf dem für Sie angenehmsten Weg.
-                </p>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {contactInfo.map((item, index) => (
-                    <div
+                    <a
                       key={index}
-                      className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5 transition-shadow hover:shadow-md"
+                      href={item.href}
+                      className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5 transition-shadow hover:shadow-md cursor-pointer"
                     >
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-mint">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-mint">
                         <item.icon className="h-5 w-5 text-brand-blue" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-brand-navy">{item.title}</h3>
-                        {item.href ? (
-                          <a
-                            href={item.href}
-                            className="text-neutral-600 hover:text-brand-blue transition-colors cursor-pointer"
-                          >
-                            {item.content}
-                          </a>
-                        ) : (
-                          <p className="text-neutral-600">{item.content}</p>
-                        )}
-                        <p className="text-sm text-neutral-400">{item.description}</p>
+                        <h3 className="text-sm font-medium text-neutral-500">{item.title}</h3>
+                        <p className="text-brand-navy">{item.content}</p>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
 
-                {/* Trust Badges */}
-                <div className="mt-8 rounded-2xl bg-brand-navy p-6">
-                  <h3 className="mb-4 font-display font-bold text-white">Darum Blitzeblank</h3>
-                  <ul className="space-y-3">
-                    {benefits.map((benefit) => (
-                      <li key={benefit} className="flex items-center gap-2.5 text-sm text-white/80">
-                        <CheckCircle className="h-4 w-4 shrink-0 text-brand-sky" />
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <p className="mt-6 flex items-center gap-2 text-sm text-neutral-500">
+                  <Clock className="h-4 w-4 text-brand-blue" />
+                  Mo-Fr: 8:00 - 18:00 Uhr
+                </p>
               </div>
 
               {/* Contact Form */}
@@ -198,7 +161,7 @@ export default function KontaktPage() {
                       <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div className="space-y-2">
-                            <Label htmlFor="name">Name *</Label>
+                            <Label htmlFor="name" className="font-normal text-neutral-600">Name *</Label>
                             <Input
                               id="name"
                               placeholder="Ihr Name"
@@ -210,7 +173,7 @@ export default function KontaktPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="company">Unternehmen</Label>
+                            <Label htmlFor="company" className="font-normal text-neutral-600">Unternehmen</Label>
                             <Input
                               id="company"
                               placeholder="Ihr Unternehmen"
@@ -224,7 +187,7 @@ export default function KontaktPage() {
 
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div className="space-y-2">
-                            <Label htmlFor="email">E-Mail *</Label>
+                            <Label htmlFor="email" className="font-normal text-neutral-600">E-Mail *</Label>
                             <Input
                               id="email"
                               type="email"
@@ -237,7 +200,7 @@ export default function KontaktPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="phone">Telefon</Label>
+                            <Label htmlFor="phone" className="font-normal text-neutral-600">Telefon</Label>
                             <Input
                               id="phone"
                               type="tel"
@@ -251,7 +214,7 @@ export default function KontaktPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="service">Gewünschte Leistung</Label>
+                          <Label htmlFor="service" className="font-normal text-neutral-600">Gewünschte Leistung</Label>
                           <Select
                             value={formState.service}
                             onValueChange={(value) =>
@@ -272,7 +235,7 @@ export default function KontaktPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="message">Ihre Nachricht *</Label>
+                          <Label htmlFor="message" className="font-normal text-neutral-600">Ihre Nachricht *</Label>
                           <Textarea
                             id="message"
                             placeholder="Beschreiben Sie kurz Ihre Anforderungen..."
