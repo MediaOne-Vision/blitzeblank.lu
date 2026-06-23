@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2, ArrowRight, Home } from "lucide-react"
+import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2, ArrowRight } from "lucide-react"
 
 const featured = {
   title: "Industriereinigung",
@@ -110,11 +110,6 @@ export function ServicesOverview() {
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/50 to-transparent" />
-                {/* Privat-Hinweis */}
-                <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-brand-navy shadow-sm backdrop-blur-sm">
-                  <Home className="h-3 w-3 text-brand-blue" />
-                  Auch privat
-                </span>
                 {/* Icon badge - centered, larger, with gradient ring + hover lift */}
                 <div className="absolute -bottom-7 left-5 z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue shadow-lg shadow-brand-blue/40 ring-4 ring-white transition-all duration-300 group-hover:-translate-y-1 group-hover:rotate-3 group-hover:bg-brand-teal">
                   <service.icon className="h-7 w-7 text-white" strokeWidth={2} />
