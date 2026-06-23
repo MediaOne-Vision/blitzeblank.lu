@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2, ArrowRight } from "lucide-react"
+import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2, ArrowRight, Home } from "lucide-react"
 
 const featured = {
   title: "Industriereinigung",
@@ -109,14 +109,19 @@ export function ServicesOverview() {
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/30 to-transparent" />
-              </div>
-              {/* Floating icon badge - sits on card so it is never clipped */}
-              <div className="absolute top-[140px] left-5 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl bg-brand-blue shadow-lg ring-4 ring-white">
-                <service.icon className="h-5 w-5 text-white" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/50 to-transparent" />
+                {/* Privat-Hinweis */}
+                <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-brand-navy shadow-sm backdrop-blur-sm">
+                  <Home className="h-3 w-3 text-brand-blue" />
+                  Auch privat
+                </span>
+                {/* Icon badge - centered, larger, with gradient ring + hover lift */}
+                <div className="absolute -bottom-7 left-5 z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue shadow-lg shadow-brand-blue/40 ring-4 ring-white transition-all duration-300 group-hover:-translate-y-1 group-hover:rotate-3 group-hover:bg-brand-teal">
+                  <service.icon className="h-7 w-7 text-white" strokeWidth={2} />
+                </div>
               </div>
               {/* Text on solid white - fully legible */}
-              <div className="flex flex-1 flex-col p-5 pt-7">
+              <div className="flex flex-1 flex-col p-5 pt-10">
                 <h3 className="font-display text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors">
                   {service.title}
                 </h3>
