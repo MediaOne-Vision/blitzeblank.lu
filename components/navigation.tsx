@@ -10,6 +10,7 @@ import { Menu, ChevronDown } from "lucide-react"
 const navLinks = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
+  { href: "/#preiskalkulator", label: "Preiskalkulator" },
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/kontakt", label: "Kontakt" },
 ]

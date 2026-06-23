@@ -2,7 +2,7 @@ import { PriceCalculator } from "@/components/price-calculator"
 
 export function CalculatorSection() {
   return (
-    <section id="preiskalkulator" className="py-20 bg-brand-mint">
+    <section id="preiskalkulator" className="scroll-mt-24 py-20 bg-brand-mint">
       <div className="mx-auto max-w-6xl px-6">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
