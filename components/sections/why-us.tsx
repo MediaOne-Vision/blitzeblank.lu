@@ -3,7 +3,7 @@ import { Zap, Repeat, UserCheck, Award } from "lucide-react"
 
 const stats = [
   { value: "500+", label: "Zufriedene Kunden", color: "bg-brand-blue text-white" },
-  { value: "15+", label: "Jahre Erfahrung", color: "bg-brand-amber text-brand-navy" },
+  { value: "15+", label: "Jahre Erfahrung", color: "bg-brand-sky text-brand-navy" },
   { value: "98%", label: "Weiterempfehlung", color: "bg-brand-teal text-white" },
   { value: "24h", label: "Reaktionszeit", color: "bg-brand-navy text-white" },
 ]

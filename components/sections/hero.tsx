@@ -9,7 +9,7 @@ export function HeroSection() {
       {/* Colorful gradient backdrop (analogous navy -> teal -> blue) */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-brand-teal/40 to-brand-blue/30" />
       <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-brand-blue/30 blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-brand-amber/20 blur-3xl" />
+      <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-brand-sky/20 blur-3xl" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-20 lg:py-28 w-full">
@@ -29,9 +29,9 @@ export function HeroSection() {
             Reinigungslosungen fur Unternehmen in Luxemburg und Deutschland.
           </p>
 
-          <div className="flex items-center gap-2 text-sm text-white/60 mb-10">
-            <MapPin className="h-4 w-4 text-brand-amber" />
-            <span>Aktiv in ganz Luxemburg &amp; Deutschland</span>
+          <div className="flex items-center gap-2.5 text-lg sm:text-xl font-semibold text-brand-sky mb-10">
+            <MapPin className="h-6 w-6 text-brand-sky" />
+            <span>Aktiv in Luxemburg &amp; Deutschland</span>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">

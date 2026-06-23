@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
 import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2 } from "lucide-react"
 
 const services = [
@@ -22,21 +21,21 @@ const services = [
     description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser fur empfindliche Oberflachen.",
     href: "/leistungen/trockeneisreinigung",
     icon: Snowflake,
-    color: "bg-brand-amber",
+    color: "bg-brand-blue",
   },
   {
     title: "Steinreinigung",
     description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Aussenanlagen.",
     href: "/leistungen/steinreinigung",
     icon: Gem,
-    color: "bg-brand-navy",
+    color: "bg-brand-teal",
   },
   {
     title: "Fassadenreinigung",
     description: "Professionelle Aussenreinigung fur Gebaudefassaden aller Art und Materialien.",
     href: "/leistungen/fassadenreinigung",
     icon: Building2,
-    color: "bg-brand-teal",
+    color: "bg-brand-blue",
   },
 ]
 
@@ -66,32 +65,23 @@ export function ServicesOverview() {
           {/* Featured Service */}
           <Link
             href={services[0].href}
-            className="lg:col-span-2 lg:row-span-2 bg-brand-navy rounded-3xl p-8 flex flex-col justify-between min-h-[400px] group overflow-hidden relative cursor-pointer"
+            className="lg:col-span-2 lg:row-span-2 bg-brand-navy rounded-3xl p-8 flex flex-col items-center justify-center text-center min-h-[400px] group overflow-hidden relative cursor-pointer"
           >
             <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-2xl" />
-            <div className="relative">
-              <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-2xl ${services[0].color}`}>
-                <Factory className="h-7 w-7 text-white" />
+            <div className="relative flex flex-col items-center">
+              <div className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ${services[0].color}`}>
+                <Factory className="h-8 w-8 text-white" />
               </div>
               <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">
                 {services[0].title}
               </h3>
-              <p className="text-white/70 max-w-md leading-relaxed">
+              <p className="text-white/70 max-w-md leading-relaxed mb-6">
                 {services[0].description}
               </p>
-            </div>
-            <div className="relative flex items-end justify-between mt-8">
               <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-sky group-hover:gap-3 transition-all">
                 Mehr erfahren
                 <ArrowUpRight className="h-4 w-4" />
               </span>
-              <Image
-                src="/images/mascot.png"
-                alt=""
-                width={140}
-                height={140}
-                className="h-28 w-auto opacity-80 group-hover:scale-105 transition-transform"
-              />
             </div>
           </Link>
 
@@ -100,22 +90,17 @@ export function ServicesOverview() {
             <Link
               key={service.title}
               href={service.href}
-              className="bg-white rounded-3xl p-6 flex flex-col justify-between min-h-[180px] group hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer border border-white"
+              className="bg-white rounded-3xl p-6 flex flex-col items-center justify-center text-center min-h-[180px] group hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer border border-brand-blue/10"
             >
-              <div>
-                <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-xl ${service.color}`}>
-                  <service.icon className="h-5 w-5 text-white" />
-                </div>
-                <h3 className="font-display text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors">
-                  {service.title}
-                </h3>
+              <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${service.color}`}>
+                <service.icon className="h-6 w-6 text-white" />
               </div>
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-neutral-500 line-clamp-2">
-                  {service.description}
-                </p>
-                <ArrowUpRight className="h-4 w-4 text-neutral-300 group-hover:text-brand-blue flex-shrink-0 ml-4" />
-              </div>
+              <h3 className="font-display text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors">
+                {service.title}
+              </h3>
+              <p className="text-sm text-neutral-500 line-clamp-2">
+                {service.description}
+              </p>
             </Link>
           ))}
         </div>

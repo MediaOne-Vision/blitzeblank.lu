@@ -17,7 +17,7 @@ const testimonials = [
     quote: "Die Trockeneisreinigung unserer Maschinen war beeindruckend. Schonend, effektiv und ohne lange Stillstandzeiten.",
     author: "Marc Weber",
     company: "Weber Industries",
-    accent: "text-brand-amber",
+    accent: "text-brand-blue",
   },
 ]
 
@@ -43,7 +43,7 @@ export function TestimonialsSection() {
               <Quote className={`h-8 w-8 mb-4 ${testimonial.accent}`} />
               <div className="flex gap-0.5 mb-4">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-brand-amber text-brand-amber" />
+                  <Star key={i} className="h-4 w-4 fill-brand-blue text-brand-blue" />
                 ))}
               </div>
               <blockquote className="text-neutral-700 leading-relaxed mb-6">

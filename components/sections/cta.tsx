@@ -18,7 +18,7 @@ export function CtaSection() {
               Luxemburg und Deutschland. Wir erstellen Ihnen ein massgeschneidertes Angebot.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-white text-brand-navy hover:bg-brand-sand rounded-full px-8 shadow-lg">
+              <Button asChild size="lg" className="bg-white text-brand-navy hover:bg-brand-mint rounded-full px-8 shadow-lg">
                 <Link href="/kontakt" className="cursor-pointer">
                   Kontakt aufnehmen
                 </Link>
