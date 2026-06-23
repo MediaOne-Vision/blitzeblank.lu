@@ -1,41 +1,43 @@
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2 } from "lucide-react"
 
+const featured = {
+  title: "Industriereinigung",
+  description:
+    "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen mit modernster Technik.",
+  href: "/leistungen/industriereinigung",
+  icon: Factory,
+}
+
 const services = [
-  {
-    title: "Industriereinigung",
-    description: "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen mit modernster Technik.",
-    href: "/leistungen/industriereinigung",
-    icon: Factory,
-    color: "bg-brand-blue",
-  },
   {
     title: "Fensterreinigung",
     description: "Streifenfreie Glasreinigung fur Burogebaude und Geschafte - auch in grossen Hohen.",
     href: "/leistungen/fensterreinigung",
     icon: GlassWater,
-    color: "bg-brand-teal",
+    image: "/placeholder.svg?height=400&width=400&query=clean+modern+glass+office+windows+reflection",
   },
   {
     title: "Trockeneisreinigung",
     description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser fur empfindliche Oberflachen.",
     href: "/leistungen/trockeneisreinigung",
     icon: Snowflake,
-    color: "bg-brand-blue",
+    image: "/placeholder.svg?height=400&width=400&query=dry+ice+blasting+industrial+cleaning+machine",
   },
   {
     title: "Steinreinigung",
     description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Aussenanlagen.",
     href: "/leistungen/steinreinigung",
     icon: Gem,
-    color: "bg-brand-teal",
+    image: "/placeholder.svg?height=400&width=400&query=clean+natural+stone+pavement+terrace+outdoor",
   },
   {
     title: "Fassadenreinigung",
     description: "Professionelle Aussenreinigung fur Gebaudefassaden aller Art und Materialien.",
     href: "/leistungen/fassadenreinigung",
     icon: Building2,
-    color: "bg-brand-blue",
+    image: "/placeholder.svg?height=400&width=400&query=modern+building+facade+exterior+cleaning",
   },
 ]
 
@@ -60,47 +62,69 @@ export function ServicesOverview() {
           </Link>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Featured Service */}
-          <Link
-            href={services[0].href}
-            className="lg:col-span-2 lg:row-span-2 bg-brand-navy rounded-3xl p-8 flex flex-col items-center justify-center text-center min-h-[400px] group overflow-hidden relative cursor-pointer"
-          >
-            <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-2xl" />
-            <div className="relative flex flex-col items-center">
-              <div className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ${services[0].color}`}>
-                <Factory className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">
-                {services[0].title}
-              </h3>
-              <p className="text-white/70 max-w-md leading-relaxed mb-6">
-                {services[0].description}
-              </p>
-              <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-sky group-hover:gap-3 transition-all">
-                Mehr erfahren
-                <ArrowUpRight className="h-4 w-4" />
-              </span>
+        {/* Featured Service - wide slim banner */}
+        <Link
+          href={featured.href}
+          className="group relative mb-6 flex items-center justify-between overflow-hidden rounded-3xl bg-brand-navy px-8 py-8 sm:px-10 cursor-pointer"
+        >
+          <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-2xl" />
+          <div className="relative max-w-xl">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue">
+              <featured.icon className="h-7 w-7 text-white" />
             </div>
-          </Link>
+            <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-3">
+              {featured.title}
+            </h3>
+            <p className="text-white/70 leading-relaxed mb-5">
+              {featured.description}
+            </p>
+            <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-sky group-hover:gap-3 transition-all">
+              Mehr erfahren
+              <ArrowUpRight className="h-4 w-4" />
+            </span>
+          </div>
+          <Image
+            src="/images/mascot.png"
+            alt="Blitzeblank Waschbar Maskottchen"
+            width={260}
+            height={260}
+            className="relative hidden md:block h-44 lg:h-52 w-auto flex-shrink-0 transition-transform group-hover:scale-105"
+          />
+        </Link>
 
-          {/* Other Services */}
-          {services.slice(1).map((service) => (
+        {/* Other Services - row of image cards */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {services.map((service) => (
             <Link
               key={service.title}
               href={service.href}
-              className="bg-white rounded-3xl p-6 flex flex-col items-center justify-center text-center min-h-[180px] group hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer border border-brand-blue/10"
+              className="group relative flex min-h-[260px] flex-col justify-end overflow-hidden rounded-3xl cursor-pointer"
             >
-              <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${service.color}`}>
-                <service.icon className="h-6 w-6 text-white" />
+              {/* Background image */}
+              <Image
+                src={service.image || "/placeholder.svg"}
+                alt={service.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              {/* Gradient overlay to keep text legible */}
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/70 to-brand-navy/10" />
+              {/* Content in foreground */}
+              <div className="relative p-5">
+                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue">
+                  <service.icon className="h-5 w-5 text-white" />
+                </div>
+                <h3 className="font-display text-lg font-bold text-white mb-1.5">
+                  {service.title}
+                </h3>
+                <p className="text-sm text-white/75 line-clamp-2">
+                  {service.description}
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-brand-sky group-hover:gap-2.5 transition-all">
+                  Mehr erfahren
+                  <ArrowUpRight className="h-4 w-4" />
+                </span>
               </div>
-              <h3 className="font-display text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors">
-                {service.title}
-              </h3>
-              <p className="text-sm text-neutral-500 line-clamp-2">
-                {service.description}
-              </p>
             </Link>
           ))}
         </div>
