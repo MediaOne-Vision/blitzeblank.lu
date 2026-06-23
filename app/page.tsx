@@ -8,6 +8,7 @@ import { OwnerSection } from "@/components/sections/owner"
 import { ProcessSection } from "@/components/sections/process"
 import { CalculatorSection } from "@/components/sections/calculator-section"
 import { TestimonialsSection } from "@/components/sections/testimonials"
+import { FaqSection } from "@/components/sections/faq"
 import { CtaSection } from "@/components/sections/cta"
 
 export default function HomePage() {
@@ -23,6 +24,7 @@ export default function HomePage() {
         <ProcessSection />
         <CalculatorSection />
         <TestimonialsSection />
+        <FaqSection />
         <CtaSection />
       </main>
       <Footer />

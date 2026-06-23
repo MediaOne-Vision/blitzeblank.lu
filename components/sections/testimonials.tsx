@@ -5,19 +5,16 @@ const testimonials = [
   {
     quote: "Super Service! Nach einer Besichtigung wurde ein kurzfristiger Termin vereinbart. Die Arbeit wurde pünktlich und sehr ordentlich durchgeführt. Der Hof (ca. 250qm) war danach nicht mehr wiederzuerkennen. Und das alles in nicht mal 2 Tagen und zu einem super Preis! Sehr weiterzuempfehlen!",
     author: "Stefan Klein",
-    company: "vor einem Jahr",
     accent: "text-brand-blue",
   },
   {
     quote: "Nach einer kostenlosen Testreinigung haben wir uns für diesen Service entschieden und sind mehr als begeistert. Mit unserem herkömmlichen Hochdruckreiniger hätten wir niemals dieses super Ergebnis erzielen können. Gutes Preis-Leistungs-Verhältnis und schneller Ausführungstermin.",
     author: "Anika Schwarz",
-    company: "vor 2 Jahren",
     accent: "text-brand-teal",
   },
   {
     quote: "Wir waren mit dem Service super zufrieden. Es wurden Holzdecken gereinigt und das Ergebnis ist super geworden. Auf meine Anfrage hin haben wir einen schnellen Vor-Ort-Termin bekommen mit einem entsprechend guten Angebot. Wir werden auf jeden Fall weitere Projekte an diese Firma vergeben.",
     author: "Bernd Goeblet",
-    company: "vor 7 Monaten",
     accent: "text-brand-blue",
   },
 ]
@@ -64,7 +61,6 @@ export function TestimonialsSection() {
               </blockquote>
               <div className="pt-4 border-t border-brand-blue/15">
                 <p className="font-display font-bold text-brand-navy">{testimonial.author}</p>
-                <p className="text-sm text-neutral-500">{testimonial.company}</p>
               </div>
             </div>
           ))}
