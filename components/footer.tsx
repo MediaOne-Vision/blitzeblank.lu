@@ -28,9 +28,9 @@ export function Footer() {
               <Image
                 src="/images/logo.png"
                 alt="Blitzeblank"
-                width={140}
-                height={35}
-                className="h-8 w-auto brightness-0 invert"
+                width={240}
+                height={60}
+                className="h-12 w-auto brightness-0 invert"
               />
             </Link>
             <p className="text-sm text-neutral-400 max-w-xs mb-6">

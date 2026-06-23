@@ -55,7 +55,7 @@ export default function LeistungenPage() {
       <Navigation />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-primary py-16 lg:py-24">
+        <section className="bg-primary pt-28 pb-16 lg:pt-36 lg:pb-24">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <h1 className="mb-6 text-balance text-4xl font-bold tracking-tight text-primary-foreground md:text-5xl">

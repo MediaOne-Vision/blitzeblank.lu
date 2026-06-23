@@ -27,15 +27,15 @@ export function Navigation() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-neutral-200">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="cursor-pointer">
           <Image
             src="/images/logo.png"
             alt="Blitzeblank"
-            width={140}
-            height={35}
-            className="h-8 w-auto"
+            width={220}
+            height={55}
+            className="h-12 w-auto"
             priority
           />
         </Link>

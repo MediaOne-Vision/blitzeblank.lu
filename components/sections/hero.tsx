@@ -5,7 +5,7 @@ import { MapPin, Sparkles } from "lucide-react"
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[92vh] bg-brand-navy pt-16 flex items-center overflow-hidden">
+    <section className="relative min-h-[92vh] bg-brand-navy pt-20 flex items-center overflow-hidden">
       {/* Colorful gradient backdrop (analogous navy -> teal -> blue) */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-brand-teal/40 to-brand-blue/30" />
       <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-brand-blue/30 blur-3xl" />

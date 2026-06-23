@@ -34,7 +34,7 @@ export function OwnerSection() {
 
             <div className="space-y-4 text-neutral-600 leading-relaxed">
               <p>
-                Mit über 15 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
+                Mit 3 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
                 Blitzeblank mit einer klaren Vision gegründet: Reinigungsdienstleistungen, die 
                 echten Mehrwert für unsere Kunden in Luxemburg und Deutschland schaffen.
               </p>

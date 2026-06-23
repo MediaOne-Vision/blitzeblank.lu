@@ -40,14 +40,14 @@ export default function UeberUnsPage() {
       <Navigation />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-primary py-16 lg:py-24">
+        <section className="bg-primary pt-28 pb-16 lg:pt-36 lg:pb-24">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <h1 className="mb-6 text-balance text-4xl font-bold tracking-tight text-primary-foreground md:text-5xl">
                 Über Blitzeblank
               </h1>
               <p className="text-lg text-primary-foreground/80">
-                Seit über 15 Jahren steht Blitzeblank für professionelle Reinigung mit Herz. 
+                Blitzeblank steht für professionelle Reinigung mit Herz. 
                 Lernen Sie uns und unsere Geschichte kennen.
               </p>
             </div>
@@ -95,7 +95,7 @@ export default function UeberUnsPage() {
 
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Mit über 15 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
+                    Mit 3 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
                     Blitzeblank mit einer klaren Vision gegründet: Reinigungsdienstleistungen, die 
                     nicht nur sauber machen, sondern echten Mehrwert für unsere Kunden schaffen.
                   </p>

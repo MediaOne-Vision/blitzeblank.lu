@@ -34,7 +34,7 @@ export function ServicePageTemplate({
       <Navigation />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-primary py-16 lg:py-24">
+        <section className="bg-primary pt-28 pb-16 lg:pt-36 lg:pb-24">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-foreground/10">
