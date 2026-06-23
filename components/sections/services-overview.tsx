@@ -99,10 +99,10 @@ export function ServicesOverview() {
             <Link
               key={service.title}
               href={service.href}
-              className="group flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer"
+              className="group relative flex flex-col rounded-3xl bg-white shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer"
             >
-              {/* Image area with floating icon badge */}
-              <div className="relative h-40 overflow-hidden">
+              {/* Image area */}
+              <div className="relative h-40 overflow-hidden rounded-t-3xl">
                 <Image
                   src={service.image || "/placeholder.svg"}
                   alt={service.title}
@@ -110,9 +110,10 @@ export function ServicesOverview() {
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/30 to-transparent" />
-                <div className="absolute -bottom-5 left-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue shadow-lg ring-4 ring-white">
-                  <service.icon className="h-5 w-5 text-white" />
-                </div>
+              </div>
+              {/* Floating icon badge - sits on card so it is never clipped */}
+              <div className="absolute top-[140px] left-5 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl bg-brand-blue shadow-lg ring-4 ring-white">
+                <service.icon className="h-5 w-5 text-white" />
               </div>
               {/* Text on solid white - fully legible */}
               <div className="flex flex-1 flex-col p-5 pt-7">
