@@ -54,14 +54,11 @@ export function ProcessSection() {
           <div className="hidden lg:block absolute top-9 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-blue/40 to-transparent" />
 
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-            {steps.map((step, index) => (
+            {steps.map((step) => (
               <div key={step.number} className="relative flex h-full flex-col items-center text-center group">
-                {/* Number badge / node */}
+                {/* Icon node */}
                 <div className="relative z-10 mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-brand-blue ring-8 ring-brand-navy shadow-lg shadow-brand-blue/30 transition-transform group-hover:scale-110">
                   <step.icon className="h-8 w-8 text-white" strokeWidth={2.2} />
-                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs font-display font-extrabold text-brand-navy shadow-md">
-                    {index + 1}
-                  </span>
                 </div>
 
                 {/* Card */}

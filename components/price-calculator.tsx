@@ -73,7 +73,7 @@ export function PriceCalculator() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label className="text-sm text-neutral-600">Fläche</Label>
-              <span className="text-lg font-medium text-neutral-900">{area[0]} m²</span>
+              <span className="text-lg font-medium text-neutral-900">{area[0].toLocaleString("de-DE")} m²</span>
             </div>
             <Slider
               value={area}
@@ -85,7 +85,7 @@ export function PriceCalculator() {
             />
             <div className="flex justify-between text-xs text-neutral-400">
               <span>20 m²</span>
-              <span>1000 m²</span>
+              <span>1.000 m²</span>
             </div>
           </div>
 
@@ -121,7 +121,7 @@ export function PriceCalculator() {
                 Geschätzte Preisspanne
               </p>
               <p className="font-display text-4xl font-extrabold text-white">
-                {price.min} - {price.max} EUR
+                {price.min.toLocaleString("de-DE")} - {price.max.toLocaleString("de-DE")} €
               </p>
               <p className="text-xs text-white/70 mt-2">
                 Unverbindliche Schätzung
