@@ -5,23 +5,19 @@ export function CalculatorSection() {
     <section id="preiskalkulator" className="py-20 bg-brand-mint">
       <div className="mx-auto max-w-6xl px-6">
         {/* Header */}
-        <div className="grid lg:grid-cols-2 gap-8 items-start mb-12">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">Preiskalkulator</p>
-            <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy tracking-tight text-balance">
-              Ihre unverbindliche Preisschatzung
-            </h2>
-          </div>
-          <p className="text-neutral-600 leading-relaxed">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">Preiskalkulator</p>
+          <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy tracking-tight text-balance">
+            Ihre unverbindliche Preisschatzung
+          </h2>
+          <p className="text-neutral-600 leading-relaxed mt-4 text-pretty">
             Wahlen Sie Ihre gewunschte Leistung und Flache. Der finale Preis wird nach 
             einer kostenlosen Besichtigung vor Ort individuell festgelegt.
           </p>
         </div>
 
         {/* Calculator */}
-        <div className="max-w-xl">
-          <PriceCalculator />
-        </div>
+        <PriceCalculator />
       </div>
     </section>
   )
