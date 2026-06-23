@@ -34,13 +34,14 @@ export function OwnerSection() {
 
             <div className="space-y-4 text-neutral-600 leading-relaxed">
               <p>
-                Mit 3 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
-                Blitzeblank mit einer klaren Vision gegründet: Reinigungsdienstleistungen, die 
-                echten Mehrwert für unsere Kunden in Luxemburg und Deutschland schaffen.
+                Mein Name ist Mustapha El-Ali, Gründer und Inhaber von Blitzeblank. Ich betreue 
+                Kunden aus dem Gewerbe- und Privatbereich mit einem klaren Anspruch: gründliche 
+                Arbeit, feste Abläufe und absolute Zuverlässigkeit.
               </p>
               <p>
-                Als Ihr direkter Ansprechpartner bin ich persönlich für die Qualität unserer 
-                Arbeit verantwortlich - von der ersten Besichtigung bis zur finalen Abnahme.
+                Jedes Objekt wird persönlich geplant und regelmäßig überprüft, unterstützt von 
+                einem erfahrenen Team, das nach klaren Qualitätsstandards arbeitet. So entsteht 
+                Sauberkeit, auf die Sie sich verlassen können.
               </p>
             </div>
           </div>

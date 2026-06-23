@@ -4,7 +4,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { ArrowRight, Quote, Shield, Heart, Target, Handshake } from "lucide-react"
+import { ArrowRight, Quote, Shield, Heart, Target, Handshake, Compass } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Über uns | Blitzeblank - Professionelle Reinigung in Luxemburg",
@@ -88,26 +88,26 @@ export default function UeberUnsPage() {
                 <div className="relative mb-8 pl-6 border-l-2 border-accent">
                   <Quote className="absolute -left-3 -top-1 h-6 w-6 text-accent bg-background" />
                   <blockquote className="text-lg text-muted-foreground italic leading-relaxed">
-                    {`"Sauberkeit schafft Wohlbefinden. Als Gründer von Blitzeblank setze ich mich 
-                    persönlich dafür ein, dass jeder Kunde diese Erfahrung macht."`}
+                    {`"Sauberkeit ist für mich nicht nur ein Beruf, sondern eine Leidenschaft - 
+                    auf die sich meine Kunden verlassen können."`}
                   </blockquote>
                 </div>
 
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
                   <p>
-                    Mit 3 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
-                    Blitzeblank mit einer klaren Vision gegründet: Reinigungsdienstleistungen, die 
-                    nicht nur sauber machen, sondern echten Mehrwert für unsere Kunden schaffen.
+                    Mein Name ist Mustapha El-Ali, Gründer und Inhaber von Blitzeblank. Ich betreue 
+                    Kunden aus dem Gewerbe- und Privatbereich mit einem klaren Anspruch: gründliche 
+                    Arbeit, feste Abläufe und absolute Zuverlässigkeit.
                   </p>
                   <p>
-                    Als Ihr direkter Ansprechpartner bin ich persönlich für die Qualität unserer 
-                    Arbeit verantwortlich. Von der ersten Besichtigung bis zur finalen Abnahme - 
-                    ich begleite Sie durch den gesamten Prozess und stelle sicher, dass Ihre 
-                    Erwartungen übertroffen werden.
+                    Jedes Objekt wird persönlich geplant und regelmäßig überprüft, unterstützt von 
+                    einem erfahrenen Team, das nach klaren Qualitätsstandards arbeitet. So entsteht 
+                    Sauberkeit, auf die Sie sich verlassen können.
                   </p>
                   <p>
-                    Was mich antreibt? Die Zufriedenheit meiner Kunden und das Wissen, dass 
-                    saubere Räume zu einem besseren Arbeits- und Lebensumfeld beitragen.
+                    Mit 3 Jahren Erfahrung in der professionellen Reinigungsbranche begleite ich 
+                    Sie als Ihr direkter Ansprechpartner durch den gesamten Prozess - von der 
+                    ersten Besichtigung bis zur finalen Abnahme.
                   </p>
                 </div>
               </div>
@@ -144,87 +144,46 @@ export default function UeberUnsPage() {
           </div>
         </section>
 
-        {/* History Timeline */}
+        {/* Mission & Vision */}
         <section className="py-16 lg:py-24">
           <div className="container mx-auto px-4 lg:px-8">
-            <div className="mx-auto max-w-3xl">
-              <div className="mb-12 text-center">
-                <p className="mb-3 text-sm font-medium uppercase tracking-wider text-accent">
-                  Unsere Geschichte
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <p className="mb-3 text-sm font-medium uppercase tracking-wider text-accent">
+                Mission &amp; Vision
+              </p>
+              <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                Was uns antreibt
+              </h2>
+            </div>
+
+            <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+              <Card className="border-0 bg-card p-8">
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent/10">
+                  <Target className="h-7 w-7 text-accent" />
+                </div>
+                <h3 className="mb-3 text-xl font-semibold text-foreground">Unsere Mission</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Unsere Mission ist es, für unsere Kunden dauerhaft saubere, gepflegte und 
+                  hygienische Räume zu schaffen - zuverlässig, planbar und auf konstant hohem 
+                  Qualitätsniveau. Wir setzen auf klare Abläufe, geschultes Personal und 
+                  regelmäßige Qualitätskontrollen, um jede Reinigungsleistung effizient und 
+                  gewissenhaft umzusetzen.
                 </p>
-                <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-                  Der Weg zu Blitzeblank
-                </h2>
-              </div>
+              </Card>
 
-              <div className="space-y-8">
-                <div className="flex gap-6">
-                  <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-foreground">
-                      1
-                    </div>
-                    <div className="mt-2 h-full w-0.5 bg-border" />
-                  </div>
-                  <div className="pb-8">
-                    <p className="text-sm font-medium text-accent">2009</p>
-                    <h3 className="text-lg font-semibold text-foreground">Die Gründung</h3>
-                    <p className="text-muted-foreground">
-                      Mustapha El-Ali gründet Blitzeblank als Ein-Mann-Unternehmen mit dem 
-                      Ziel, professionelle Reinigung auf einem neuen Qualitätsniveau anzubieten.
-                    </p>
-                  </div>
+              <Card className="border-0 bg-card p-8">
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent/10">
+                  <Compass className="h-7 w-7 text-accent" />
                 </div>
-
-                <div className="flex gap-6">
-                  <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-foreground">
-                      2
-                    </div>
-                    <div className="mt-2 h-full w-0.5 bg-border" />
-                  </div>
-                  <div className="pb-8">
-                    <p className="text-sm font-medium text-accent">2014</p>
-                    <h3 className="text-lg font-semibold text-foreground">Expansion ins Gewerbe</h3>
-                    <p className="text-muted-foreground">
-                      Der Fokus verlagert sich auf Gewerbekunden. Erste größere Industriekunden 
-                      vertrauen Blitzeblank ihre Reinigung an.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-6">
-                  <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-foreground">
-                      3
-                    </div>
-                    <div className="mt-2 h-full w-0.5 bg-border" />
-                  </div>
-                  <div className="pb-8">
-                    <p className="text-sm font-medium text-accent">2019</p>
-                    <h3 className="text-lg font-semibold text-foreground">Innovative Technologien</h3>
-                    <p className="text-muted-foreground">
-                      Einführung der Trockeneisreinigung als erste Firma in Luxemburg. 
-                      Investition in modernste Reinigungstechnologie.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-6">
-                  <div className="flex flex-col items-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-foreground">
-                      4
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-accent">Heute</p>
-                    <h3 className="text-lg font-semibold text-foreground">Ihr Partner für Sauberkeit</h3>
-                    <p className="text-muted-foreground">
-                      Über 500 zufriedene Kunden in Luxemburg vertrauen auf Blitzeblank. 
-                      Wir sind stolz auf unsere 98% Weiterempfehlungsrate.
-                    </p>
-                  </div>
-                </div>
-              </div>
+                <h3 className="mb-3 text-xl font-semibold text-foreground">Unsere Vision</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Unsere Vision ist es, als vertrauensvoller Ansprechpartner für 
+                  Gebäudereinigung bekannt zu sein. Mit festen Standards, persönlicher Betreuung 
+                  und ehrlicher Arbeit möchten wir langfristige Partnerschaften aufbauen, bei 
+                  denen sich unsere Kunden auf gleichbleibende Qualität, transparente 
+                  Kommunikation und zuverlässige Ergebnisse verlassen können.
+                </p>
+              </Card>
             </div>
           </div>
         </section>
