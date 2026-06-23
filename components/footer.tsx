@@ -13,6 +13,7 @@ const services = [
 const navigation = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
+  { href: "/#preiskalkulator", label: "Preiskalkulator" },
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/kontakt", label: "Kontakt" },
 ]
@@ -128,13 +129,14 @@ export function Footer() {
           <p className="text-xs text-neutral-500">
             {new Date().getFullYear()} Blitzeblank. Alle Rechte vorbehalten.
           </p>
-          <div className="flex gap-6">
+          <div className="flex items-center gap-6">
             <Link href="/impressum" className="text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer">
               Impressum
             </Link>
             <Link href="/datenschutz" className="text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer">
               Datenschutz
             </Link>
+            <span className="text-xs text-neutral-600">Made by MediaOne</span>
           </div>
         </div>
       </div>
