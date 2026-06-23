@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { Facebook, Instagram } from "lucide-react"
 
 const services = [
   { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
@@ -37,6 +38,26 @@ export function Footer() {
               Ihr Partner für professionelle Reinigungsdienstleistungen in Luxemburg 
               und Deutschland. Zuverlässig, gründlich und transparent.
             </p>
+            <div className="flex items-center gap-3 mb-6">
+              <a
+                href="https://www.facebook.com/blitzeblank.lu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Blitzeblank auf Facebook"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800 text-neutral-300 transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.instagram.com/blitzeblank.lu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Blitzeblank auf Instagram"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800 text-neutral-300 transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+            </div>
             <Image
               src="/images/mascot.png"
               alt=""
