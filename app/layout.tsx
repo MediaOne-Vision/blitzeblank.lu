@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Sora } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
@@ -8,14 +8,20 @@ const inter = Inter({
   variable: '--font-inter'
 })
 
+const sora = Sora({ 
+  subsets: ["latin"],
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-sora'
+})
+
 export const metadata: Metadata = {
-  title: 'Blitzeblank | Professionelle Reinigungsdienstleistungen in Luxemburg',
-  description: 'Blitzeblank bietet professionelle Industrie-, Fenster-, Trockeneis-, Stein- und Fassadenreinigung in Luxemburg. Schnelle Reaktionszeit, kostenloser Besichtigungstermin und transparente Kommunikation.',
-  keywords: ['Reinigungsfirma Luxemburg', 'Industriereinigung', 'Fensterreinigung', 'Trockeneisreinigung', 'Steinreinigung', 'Fassadenreinigung', 'Gewerbereinigung'],
+  title: 'Blitzeblank | Professionelle Reinigungsdienstleistungen in Luxemburg & Deutschland',
+  description: 'Blitzeblank bietet professionelle Industrie-, Fenster-, Trockeneis-, Stein- und Fassadenreinigung in Luxemburg und Deutschland. Schnelle Reaktionszeit, kostenloser Besichtigungstermin und transparente Kommunikation.',
+  keywords: ['Reinigungsfirma Luxemburg', 'Reinigungsfirma Deutschland', 'Industriereinigung', 'Fensterreinigung', 'Trockeneisreinigung', 'Steinreinigung', 'Fassadenreinigung', 'Gewerbereinigung'],
   authors: [{ name: 'Blitzeblank' }],
   openGraph: {
     title: 'Blitzeblank | Professionelle Reinigungsdienstleistungen',
-    description: 'Ihr Partner für professionelle Reinigung in Luxemburg',
+    description: 'Ihr Partner für professionelle Reinigung in Luxemburg & Deutschland',
     type: 'website',
     locale: 'de_LU',
   },
@@ -34,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className="scroll-smooth">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${sora.variable} font-sans antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

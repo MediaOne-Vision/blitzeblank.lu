@@ -43,6 +43,14 @@
   --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: oklch(0.92 0 0);
   --sidebar-ring: oklch(0.70 0.12 220);
+  /* Blitzeblank brand palette (raw values) */
+  --brand-blue: #4AADE4;
+  --brand-sky: #7FCDEE;
+  --brand-navy: #0B2A45;
+  --brand-teal: #1E8FB0;
+  --brand-amber: #FFB347;
+  --brand-mint: #EAF7FC;
+  --brand-sand: #FFF6E9;
 }
 
 .dark {
@@ -69,7 +77,16 @@
 
 @theme inline {
   --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
+  --font-display: 'Sora', 'Inter Fallback', system-ui, sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  /* Blitzeblank brand color palette */
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-sky: var(--brand-sky);
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-amber: var(--brand-amber);
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-sand: var(--brand-sand);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

@@ -48,7 +48,7 @@ export function PriceCalculator() {
   const showPrice = service && frequency
 
   return (
-    <div className="bg-neutral-50 rounded-2xl p-8 space-y-6">
+    <div className="bg-white rounded-2xl p-8 space-y-6 shadow-sm border border-brand-blue/10">
       {/* Service Selection */}
       <div className="space-y-2">
         <Label htmlFor="service" className="text-sm text-neutral-600">Leistung</Label>
@@ -110,21 +110,21 @@ export function PriceCalculator() {
 
       {/* Price Display */}
       {showPrice && (
-        <div className="bg-neutral-900 rounded-xl p-6 text-center">
-          <p className="text-sm text-neutral-400 mb-1">
+        <div className="bg-gradient-to-br from-brand-blue to-brand-teal rounded-xl p-6 text-center">
+          <p className="text-sm text-white/80 mb-1">
             Geschatzte Preisspanne
           </p>
-          <p className="text-3xl font-medium text-white">
+          <p className="font-display text-3xl font-extrabold text-white">
             {price.min} - {price.max} EUR
           </p>
-          <p className="text-xs text-neutral-500 mt-2">
+          <p className="text-xs text-white/70 mt-2">
             Unverbindliche Schatzung
           </p>
         </div>
       )}
 
       {/* CTA */}
-      <Button asChild size="lg" className="w-full bg-neutral-900 hover:bg-neutral-800 rounded-full h-12">
+      <Button asChild size="lg" className="w-full bg-brand-blue hover:bg-brand-teal text-white rounded-full h-12">
         <Link href="/kontakt" className="cursor-pointer">
           Termin anfragen
         </Link>

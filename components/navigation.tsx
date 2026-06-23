@@ -80,7 +80,7 @@ export function Navigation() {
 
         {/* CTA */}
         <div className="hidden lg:block">
-          <Button asChild size="sm" className="bg-neutral-900 hover:bg-neutral-800 text-white rounded-full px-5">
+          <Button asChild size="sm" className="bg-brand-blue hover:bg-brand-teal text-white rounded-full px-5 shadow-sm shadow-brand-blue/30">
             <Link href="/kontakt" className="cursor-pointer">
               Kontakt
             </Link>
@@ -134,7 +134,7 @@ export function Navigation() {
                 )}
               </nav>
               <div className="pt-6">
-                <Button asChild className="w-full bg-neutral-900 hover:bg-neutral-800 rounded-full">
+                <Button asChild className="w-full bg-brand-blue hover:bg-brand-teal text-white rounded-full">
                   <Link href="/kontakt" onClick={() => setOpen(false)}>
                     Kontakt
                   </Link>

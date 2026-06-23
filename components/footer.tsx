@@ -34,8 +34,8 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-neutral-400 max-w-xs mb-6">
-              Ihr Partner fur professionelle Reinigungsdienstleistungen in Luxemburg. 
-              Zuverlassig, grundlich und transparent.
+              Ihr Partner fur professionelle Reinigungsdienstleistungen in Luxemburg 
+              und Deutschland. Zuverlassig, grundlich und transparent.
             </p>
             <Image
               src="/images/mascot.png"
@@ -48,7 +48,7 @@ export function Footer() {
 
           {/* Navigation */}
           <div>
-            <h3 className="text-sm font-medium text-white mb-4">Navigation</h3>
+            <h3 className="font-display text-sm font-bold text-brand-sky mb-4">Navigation</h3>
             <ul className="space-y-3">
               {navigation.map((link) => (
                 <li key={link.href}>
@@ -65,7 +65,7 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-sm font-medium text-white mb-4">Leistungen</h3>
+            <h3 className="font-display text-sm font-bold text-brand-sky mb-4">Leistungen</h3>
             <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service.href}>
@@ -82,7 +82,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-sm font-medium text-white mb-4">Kontakt</h3>
+            <h3 className="font-display text-sm font-bold text-brand-sky mb-4">Kontakt</h3>
             <ul className="space-y-3 text-sm text-neutral-400">
               <li>
                 Rue de la Gare 123<br />
