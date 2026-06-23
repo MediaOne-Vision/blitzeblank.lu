@@ -34,9 +34,10 @@ export function OwnerSection() {
 
             <div className="space-y-4 text-neutral-600 leading-relaxed">
               <p>
-                Mein Name ist Mustapha El-Ali, Gründer und Inhaber von Blitzeblank. Ich betreue 
-                Kunden aus dem Gewerbe- und Privatbereich mit einem klaren Anspruch: gründliche 
-                Arbeit, feste Abläufe und absolute Zuverlässigkeit.
+                Mein Name ist Mustapha El-Ali, Gründer und Inhaber von Blitzeblank. Mit 
+                3 Jahren Erfahrung in der professionellen Reinigung betreue ich Kunden aus 
+                dem Gewerbe- und Privatbereich mit einem klaren Anspruch: gründliche Arbeit, 
+                feste Abläufe und absolute Zuverlässigkeit.
               </p>
               <p>
                 Jedes Objekt wird persönlich geplant und regelmäßig überprüft, unterstützt von 
