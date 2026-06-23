@@ -1,9 +1,10 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { ServiceSwitcher } from "@/components/service-switcher"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { ArrowRight, CheckCircle, type LucideIcon } from "lucide-react"
+import { ArrowRight, CheckCircle2, Phone, type LucideIcon } from "lucide-react"
 
 interface ServiceFeature {
   title: string
@@ -11,20 +12,24 @@ interface ServiceFeature {
 }
 
 interface ServicePageTemplateProps {
+  slug: string
   title: string
   subtitle: string
   description: string
   icon: LucideIcon
+  image: string
   features: ServiceFeature[]
   benefits: string[]
   process: { step: string; description: string }[]
 }
 
 export function ServicePageTemplate({
+  slug,
   title,
   subtitle,
   description,
   icon: Icon,
+  image,
   features,
   benefits,
   process,
@@ -34,76 +39,132 @@ export function ServicePageTemplate({
       <Navigation />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-primary pt-28 pb-16 lg:pt-36 lg:pb-24">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-foreground/10">
-                <Icon className="h-8 w-8 text-primary-foreground" />
+        <section className="relative overflow-hidden bg-brand-navy pt-28 pb-16 lg:pt-36 lg:pb-24">
+          <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-brand-blue/20 blur-3xl" />
+          <div className="relative mx-auto max-w-6xl px-6">
+            <div className="grid items-center gap-10 lg:grid-cols-2">
+              <div>
+                {/* Breadcrumb */}
+                <nav className="mb-6 flex items-center gap-2 text-sm text-white/60">
+                  <Link href="/leistungen" className="hover:text-brand-sky cursor-pointer">
+                    Leistungen
+                  </Link>
+                  <span>/</span>
+                  <span className="text-white/90">{title}</span>
+                </nav>
+
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-blue shadow-lg shadow-brand-blue/30">
+                  <Icon className="h-8 w-8 text-white" />
+                </div>
+                <h1 className="mb-4 text-balance font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                  {title}
+                </h1>
+                <p className="mb-8 text-lg text-white/75 text-pretty">{subtitle}</p>
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
+                  >
+                    <Link href="/kontakt" className="cursor-pointer">
+                      Kostenlose Beratung
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
+                  >
+                    <Link href="/#preiskalkulator" className="cursor-pointer">
+                      Preis berechnen
+                    </Link>
+                  </Button>
+                </div>
               </div>
-              <h1 className="mb-4 text-balance text-4xl font-bold tracking-tight text-primary-foreground md:text-5xl">
-                {title}
-              </h1>
-              <p className="text-lg text-primary-foreground/80">{subtitle}</p>
+
+              {/* Hero image */}
+              <div className="relative">
+                <div className="relative h-64 overflow-hidden rounded-3xl ring-1 ring-white/10 lg:h-80">
+                  <Image
+                    src={`/placeholder.svg?height=640&width=800&query=${image}`}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 to-transparent" />
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Description */}
         <section className="py-16 lg:py-24">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="mx-auto max-w-3xl">
-              <p className="text-lg text-muted-foreground leading-relaxed">{description}</p>
-            </div>
+          <div className="mx-auto max-w-3xl px-6 text-center">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Überblick</p>
+            <p className="text-lg leading-relaxed text-neutral-600 text-pretty">{description}</p>
           </div>
         </section>
 
         {/* Features */}
-        <section className="bg-secondary py-16 lg:py-24">
-          <div className="container mx-auto px-4 lg:px-8">
+        <section className="bg-brand-mint py-16 lg:py-24">
+          <div className="mx-auto max-w-6xl px-6">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <h2 className="mb-4 text-balance text-3xl font-bold tracking-tight text-foreground">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Im Detail</p>
+              <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-brand-navy">
                 Unsere Leistungen im Detail
               </h2>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {features.map((feature, index) => (
-                <Card key={index} className="border-0 bg-card p-6">
-                  <h3 className="mb-2 text-lg font-semibold text-foreground">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-                </Card>
+                <div
+                  key={index}
+                  className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-navy/5 transition-all hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue">
+                    <CheckCircle2 className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="mb-2 font-display text-lg font-bold text-brand-navy">{feature.title}</h3>
+                  <p className="text-sm leading-relaxed text-neutral-600">{feature.description}</p>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Benefits */}
+        {/* Benefits + Process */}
         <section className="py-16 lg:py-24">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
               <div>
-                <h2 className="mb-6 text-balance text-3xl font-bold tracking-tight text-foreground">
-                  Ihre Vorteile mit Blitzeblank
+                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Ihre Vorteile</p>
+                <h2 className="mb-6 text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-brand-navy">
+                  Darauf können Sie sich verlassen
                 </h2>
                 <ul className="space-y-4">
                   {benefits.map((benefit, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 mt-0.5 shrink-0 text-accent" />
-                      <span className="text-muted-foreground">{benefit}</span>
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand-blue" />
+                      <span className="text-neutral-600">{benefit}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="rounded-2xl bg-primary p-8">
-                <h3 className="mb-6 text-xl font-semibold text-primary-foreground">Unser Ablauf</h3>
-                <div className="space-y-4">
+
+              <div className="rounded-3xl bg-brand-navy p-8 shadow-lg">
+                <h3 className="mb-6 font-display text-xl font-bold text-white">Unser Ablauf</h3>
+                <div className="space-y-5">
                   {process.map((item, index) => (
                     <div key={index} className="flex gap-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-foreground">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-blue text-sm font-display font-extrabold text-white">
                         {index + 1}
                       </div>
                       <div>
-                        <h4 className="font-medium text-primary-foreground">{item.step}</h4>
-                        <p className="text-sm text-primary-foreground/70">{item.description}</p>
+                        <h4 className="font-display font-bold text-white">{item.step}</h4>
+                        <p className="text-sm text-white/70">{item.description}</p>
                       </div>
                     </div>
                   ))}
@@ -113,27 +174,39 @@ export function ServicePageTemplate({
           </div>
         </section>
 
+        {/* Service Switcher */}
+        <ServiceSwitcher currentSlug={slug} />
+
         {/* CTA */}
-        <section className="bg-secondary py-16 lg:py-24">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="mb-4 text-balance text-3xl font-bold tracking-tight text-foreground">
-                Interesse an {title}?
-              </h2>
-              <p className="mb-8 text-muted-foreground">
-                Kontaktieren Sie uns für eine kostenlose Besichtigung und ein individuelles Angebot.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-                <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                  <Link href="/kontakt" className="flex items-center gap-2">
-                    Kostenlosen Termin anfragen
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                  <Link href="/leistungen">Alle Leistungen ansehen</Link>
-                </Button>
-              </div>
+        <section className="bg-brand-navy py-16 lg:py-24">
+          <div className="mx-auto max-w-2xl px-6 text-center">
+            <h2 className="mb-4 text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+              Interesse an {title}?
+            </h2>
+            <p className="mb-8 text-white/75 text-pretty">
+              Kontaktieren Sie uns für eine kostenlose Besichtigung und ein individuelles Angebot.
+            </p>
+            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
+              >
+                <Link href="/kontakt" className="cursor-pointer">
+                  <Phone className="h-4 w-4" />
+                  Kostenlosen Termin anfragen
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
+              >
+                <Link href="/leistungen" className="cursor-pointer">
+                  Alle Leistungen ansehen
+                </Link>
+              </Button>
             </div>
           </div>
         </section>

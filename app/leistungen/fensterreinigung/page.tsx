@@ -54,10 +54,12 @@ const process = [
 export default function FensterreinigungPage() {
   return (
     <ServicePageTemplate
+      slug="fensterreinigung"
       title="Fensterreinigung"
       subtitle="Streifenfreier Durchblick für Ihr Unternehmen"
       description="Saubere Fenster sind die Visitenkarte Ihres Unternehmens. Unsere professionelle Fensterreinigung sorgt für streifenfreie Ergebnisse an allen Glasflächen - vom Schaufenster bis zur Glasfassade. Mit modernen Techniken und umweltfreundlichen Mitteln garantieren wir eine effiziente und gründliche Reinigung, die Ihre Räume in bestem Licht erscheinen lässt."
       icon={Grid3X3}
+      image="clean+modern+glass+office+windows+reflection+blue+sky"
       features={features}
       benefits={benefits}
       process={process}

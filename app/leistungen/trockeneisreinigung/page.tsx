@@ -54,10 +54,12 @@ const process = [
 export default function TrockeneisreinigungPage() {
   return (
     <ServicePageTemplate
+      slug="trockeneisreinigung"
       title="Trockeneisreinigung"
       subtitle="Innovative Reinigung ohne Chemie und Wasser"
       description="Die Trockeneisreinigung ist eine revolutionäre Methode zur schonenden Entfernung von Verschmutzungen aller Art. Durch den Einsatz von gefrorenen CO2-Pellets wird der Schmutz durch thermischen Schock und kinetische Energie abgetragen - ohne Chemikalien, Wasser oder Abrieb. Ideal für empfindliche Oberflächen, Elektronik und Produktionsanlagen."
       icon={Snowflake}
+      image="dry+ice+blasting+industrial+cleaning+machine+vapor"
       features={features}
       benefits={benefits}
       process={process}

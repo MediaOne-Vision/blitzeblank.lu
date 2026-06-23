@@ -54,10 +54,12 @@ const process = [
 export default function FassadenreinigungPage() {
   return (
     <ServicePageTemplate
+      slug="fassadenreinigung"
       title="Fassadenreinigung"
       subtitle="Strahlende Außenwirkung für Ihr Gebäude"
       description="Die Fassade ist das Gesicht Ihres Gebäudes. Umwelteinflüsse, Abgase und organische Ablagerungen hinterlassen im Laufe der Zeit ihre Spuren. Unsere professionelle Fassadenreinigung entfernt selbst hartnäckige Verschmutzungen schonend und effektiv. Wir arbeiten mit verschiedenen Techniken, die optimal auf Ihr Fassadenmaterial abgestimmt sind."
       icon={Building2}
+      image="modern+building+facade+exterior+cleaning+architecture"
       features={features}
       benefits={benefits}
       process={process}
