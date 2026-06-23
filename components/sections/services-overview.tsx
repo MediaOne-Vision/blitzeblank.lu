@@ -110,10 +110,10 @@ export function ServicesOverview() {
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/50 to-transparent" />
-                {/* Icon badge - centered, larger, with gradient ring + hover lift */}
-                <div className="absolute -bottom-7 left-5 z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue shadow-lg shadow-brand-blue/40 ring-4 ring-white transition-all duration-300 group-hover:-translate-y-1 group-hover:rotate-3 group-hover:bg-brand-teal">
-                  <service.icon className="h-7 w-7 text-white" strokeWidth={2} />
-                </div>
+              </div>
+              {/* Icon badge - sits on the card so it straddles the image/white boundary */}
+              <div className="absolute left-5 top-40 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-2xl bg-brand-blue shadow-lg shadow-brand-blue/40 ring-4 ring-white transition-all duration-300 group-hover:-translate-y-[calc(50%+4px)] group-hover:rotate-3 group-hover:bg-brand-teal">
+                <service.icon className="h-7 w-7 text-white" strokeWidth={2} />
               </div>
               {/* Text on solid white - fully legible */}
               <div className="flex flex-1 flex-col p-5 pt-10">
