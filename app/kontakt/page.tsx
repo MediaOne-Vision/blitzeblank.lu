@@ -115,12 +115,17 @@ export default function KontaktPage() {
                       </div>
                     </a>
                   ))}
-                </div>
 
-                <p className="mt-6 flex items-center gap-2 text-sm text-neutral-500">
-                  <Clock className="h-4 w-4 text-brand-blue" />
-                  Mo-Fr: 8:00 - 18:00 Uhr
-                </p>
+                  <div className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-mint">
+                      <Clock className="h-5 w-5 text-brand-blue" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-neutral-500">Öffnungszeiten</h3>
+                      <p className="text-brand-navy">Mo-Fr: 8:00 - 18:00 Uhr</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Contact Form */}
@@ -166,6 +171,7 @@ export default function KontaktPage() {
                               id="name"
                               placeholder="Ihr Name"
                               required
+                              className="font-light text-neutral-500 placeholder:text-neutral-400/70"
                               value={formState.name}
                               onChange={(e) =>
                                 setFormState({ ...formState, name: e.target.value })
@@ -177,6 +183,7 @@ export default function KontaktPage() {
                             <Input
                               id="company"
                               placeholder="Ihr Unternehmen"
+                              className="font-light text-neutral-500 placeholder:text-neutral-400/70"
                               value={formState.company}
                               onChange={(e) =>
                                 setFormState({ ...formState, company: e.target.value })
@@ -193,6 +200,7 @@ export default function KontaktPage() {
                               type="email"
                               placeholder="ihre@email.com"
                               required
+                              className="font-light text-neutral-500 placeholder:text-neutral-400/70"
                               value={formState.email}
                               onChange={(e) =>
                                 setFormState({ ...formState, email: e.target.value })
@@ -205,6 +213,7 @@ export default function KontaktPage() {
                               id="phone"
                               type="tel"
                               placeholder="+352 ..."
+                              className="font-light text-neutral-500 placeholder:text-neutral-400/70"
                               value={formState.phone}
                               onChange={(e) =>
                                 setFormState({ ...formState, phone: e.target.value })
@@ -221,7 +230,7 @@ export default function KontaktPage() {
                               setFormState({ ...formState, service: value })
                             }
                           >
-                            <SelectTrigger id="service">
+                            <SelectTrigger id="service" className="font-light text-neutral-500">
                               <SelectValue placeholder="Leistung auswählen" />
                             </SelectTrigger>
                             <SelectContent>
@@ -241,6 +250,7 @@ export default function KontaktPage() {
                             placeholder="Beschreiben Sie kurz Ihre Anforderungen..."
                             rows={4}
                             required
+                            className="font-light text-neutral-500 placeholder:text-neutral-400/70"
                             value={formState.message}
                             onChange={(e) =>
                               setFormState({ ...formState, message: e.target.value })
@@ -257,9 +267,9 @@ export default function KontaktPage() {
                             }
                             required
                           />
-                          <Label htmlFor="consent" className="text-sm text-neutral-500 leading-relaxed">
-                            Ich bin damit einverstanden, dass meine Daten zur Bearbeitung meiner Anfrage 
-                            verwendet werden. Weitere Informationen finden Sie in unserer{" "}
+                          <Label htmlFor="consent" className="text-xs font-normal text-neutral-400 leading-relaxed">
+                            Ich willige ein, dass meine Angaben zur Bearbeitung meiner Anfrage 
+                            gespeichert und verarbeitet werden. Weitere Informationen finden Sie in unserer{" "}
                             <Link href="/datenschutz" className="text-brand-blue hover:underline">
                               Datenschutzerklärung
                             </Link>
