@@ -12,7 +12,7 @@ const services = [
 const navigation = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
-  { href: "/ueber-uns", label: "Uber uns" },
+  { href: "/ueber-uns", label: "Über uns" },
   { href: "/kontakt", label: "Kontakt" },
 ]
 
@@ -34,8 +34,8 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-neutral-400 max-w-xs mb-6">
-              Ihr Partner fur professionelle Reinigungsdienstleistungen in Luxemburg 
-              und Deutschland. Zuverlassig, grundlich und transparent.
+              Ihr Partner für professionelle Reinigungsdienstleistungen in Luxemburg 
+              und Deutschland. Zuverlässig, gründlich und transparent.
             </p>
             <Image
               src="/images/mascot.png"

@@ -13,28 +13,28 @@ const featured = {
 const services = [
   {
     title: "Fensterreinigung",
-    description: "Streifenfreie Glasreinigung fur Burogebaude und Geschafte - auch in grossen Hohen.",
+    description: "Streifenfreie Glasreinigung für Bürogebäude und Geschäfte - auch in großen Höhen.",
     href: "/leistungen/fensterreinigung",
     icon: GlassWater,
     image: "/placeholder.svg?height=400&width=400&query=clean+modern+glass+office+windows+reflection",
   },
   {
     title: "Trockeneisreinigung",
-    description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser fur empfindliche Oberflachen.",
+    description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser für empfindliche Oberflächen.",
     href: "/leistungen/trockeneisreinigung",
     icon: Snowflake,
     image: "/placeholder.svg?height=400&width=400&query=dry+ice+blasting+industrial+cleaning+machine",
   },
   {
     title: "Steinreinigung",
-    description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Aussenanlagen.",
+    description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Außenanlagen.",
     href: "/leistungen/steinreinigung",
     icon: Gem,
     image: "/placeholder.svg?height=400&width=400&query=clean+natural+stone+pavement+terrace+outdoor",
   },
   {
     title: "Fassadenreinigung",
-    description: "Professionelle Aussenreinigung fur Gebaudefassaden aller Art und Materialien.",
+    description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
     href: "/leistungen/fassadenreinigung",
     icon: Building2,
     image: "/placeholder.svg?height=400&width=400&query=modern+building+facade+exterior+cleaning",
@@ -50,7 +50,7 @@ export function ServicesOverview() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">Leistungen</p>
             <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy max-w-xl tracking-tight text-balance">
-              Reinigung fur jeden Anspruch
+              Reinigung für jeden Anspruch
             </h2>
           </div>
           <Link
@@ -85,7 +85,7 @@ export function ServicesOverview() {
           </div>
           <Image
             src="/images/mascot.png"
-            alt="Blitzeblank Waschbar Maskottchen"
+            alt="Blitzeblank Waschbär Maskottchen"
             width={260}
             height={260}
             className="relative hidden md:block h-44 lg:h-52 w-auto flex-shrink-0 transition-transform group-hover:scale-105"

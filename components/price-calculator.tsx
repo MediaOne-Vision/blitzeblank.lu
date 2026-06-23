@@ -17,7 +17,7 @@ const services = [
 
 const frequencies = [
   { value: "einmalig", label: "Einmalig", multiplier: 1 },
-  { value: "woechentlich", label: "Wochentlich", multiplier: 0.85 },
+  { value: "woechentlich", label: "Wöchentlich", multiplier: 0.85 },
   { value: "monatlich", label: "Monatlich", multiplier: 0.9 },
   { value: "quartalsweise", label: "Quartalsweise", multiplier: 0.95 },
 ]
@@ -57,7 +57,7 @@ export function PriceCalculator() {
             <Label htmlFor="service" className="text-sm text-neutral-600">Leistung</Label>
             <Select value={service} onValueChange={setService}>
               <SelectTrigger id="service" className="bg-white border-neutral-200 h-12 rounded-xl">
-                <SelectValue placeholder="Leistung auswahlen" />
+                <SelectValue placeholder="Leistung auswählen" />
               </SelectTrigger>
               <SelectContent>
                 {services.map((s) => (
@@ -72,8 +72,8 @@ export function PriceCalculator() {
           {/* Area Slider */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label className="text-sm text-neutral-600">Flache</Label>
-              <span className="text-lg font-medium text-neutral-900">{area[0]} m2</span>
+              <Label className="text-sm text-neutral-600">Fläche</Label>
+              <span className="text-lg font-medium text-neutral-900">{area[0]} m²</span>
             </div>
             <Slider
               value={area}
@@ -84,17 +84,17 @@ export function PriceCalculator() {
               className="[&_[role=slider]]:bg-[#4AADE4] [&_[role=slider]]:border-[#4AADE4]"
             />
             <div className="flex justify-between text-xs text-neutral-400">
-              <span>20 m2</span>
-              <span>1000 m2</span>
+              <span>20 m²</span>
+              <span>1000 m²</span>
             </div>
           </div>
 
           {/* Frequency Selection */}
           <div className="space-y-2">
-            <Label htmlFor="frequency" className="text-sm text-neutral-600">Haufigkeit</Label>
+            <Label htmlFor="frequency" className="text-sm text-neutral-600">Häufigkeit</Label>
             <Select value={frequency} onValueChange={setFrequency}>
               <SelectTrigger id="frequency" className="bg-white border-neutral-200 h-12 rounded-xl">
-                <SelectValue placeholder="Haufigkeit auswahlen" />
+                <SelectValue placeholder="Häufigkeit auswählen" />
               </SelectTrigger>
               <SelectContent>
                 {frequencies.map((f) => (
@@ -118,20 +118,20 @@ export function PriceCalculator() {
           {showPrice ? (
             <div className="bg-gradient-to-br from-brand-blue to-brand-teal rounded-xl p-8 text-center">
               <p className="text-sm text-white/80 mb-1">
-                Geschatzte Preisspanne
+                Geschätzte Preisspanne
               </p>
               <p className="font-display text-4xl font-extrabold text-white">
                 {price.min} - {price.max} EUR
               </p>
               <p className="text-xs text-white/70 mt-2">
-                Unverbindliche Schatzung
+                Unverbindliche Schätzung
               </p>
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-brand-blue/30 bg-brand-mint p-8 text-center">
               <p className="text-sm text-neutral-500">
-                Wahlen Sie eine Leistung und Haufigkeit, um Ihre 
-                Preisschatzung zu sehen.
+                Wählen Sie eine Leistung und Häufigkeit, um Ihre 
+                Preisschätzung zu sehen.
               </p>
             </div>
           )}

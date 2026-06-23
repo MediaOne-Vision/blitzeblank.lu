@@ -11,11 +11,11 @@ export function CtaSection() {
           <div className="absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-brand-navy/20 blur-3xl" />
           <div className="relative">
             <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-white mb-4 tracking-tight text-balance">
-              Sprechen Sie mit uns uber Ihr Projekt
+              Sprechen Sie mit uns über Ihr Projekt
             </h2>
             <p className="text-white/85 max-w-xl mx-auto mb-8 leading-relaxed">
-              Kontaktieren Sie uns fur eine kostenlose und unverbindliche Beratung in 
-              Luxemburg und Deutschland. Wir erstellen Ihnen ein massgeschneidertes Angebot.
+              Kontaktieren Sie uns für eine kostenlose und unverbindliche Beratung in 
+              Luxemburg und Deutschland. Wir erstellen Ihnen ein maßgeschneidertes Angebot.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-white text-brand-navy hover:bg-brand-mint rounded-full px-8 shadow-lg">

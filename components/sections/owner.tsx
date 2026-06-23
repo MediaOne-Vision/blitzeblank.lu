@@ -13,7 +13,7 @@ export function OwnerSection() {
                 <span className="font-display text-3xl font-bold text-white">ME</span>
               </div>
               <p className="text-white font-medium">Mustapha El-Ali</p>
-              <p className="text-sm text-white/70">Grunder &amp; Geschaftsfuhrer</p>
+              <p className="text-sm text-white/70">Gründer &amp; Geschäftsführer</p>
             </div>
           </div>
 
@@ -23,23 +23,23 @@ export function OwnerSection() {
             <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy mb-2 tracking-tight">
               Mustapha El-Ali
             </h2>
-            <p className="text-neutral-500 mb-8">Grunder &amp; Geschaftsfuhrer</p>
+            <p className="text-neutral-500 mb-8">Gründer &amp; Geschäftsführer</p>
 
             <div className="relative rounded-2xl bg-white p-6 mb-8 shadow-sm">
               <Quote className="absolute -top-3 left-6 h-7 w-7 text-brand-blue" />
               <blockquote className="text-lg text-brand-navy font-medium italic pt-2">
-                &ldquo;Sauberkeit ist fur mich nicht nur ein Beruf, sondern eine Leidenschaft.&rdquo;
+                &ldquo;Sauberkeit ist für mich nicht nur ein Beruf, sondern eine Leidenschaft.&rdquo;
               </blockquote>
             </div>
 
             <div className="space-y-4 text-neutral-600 leading-relaxed">
               <p>
-                Mit uber 15 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
-                Blitzeblank mit einer klaren Vision gegrundet: Reinigungsdienstleistungen, die 
-                echten Mehrwert fur unsere Kunden in Luxemburg und Deutschland schaffen.
+                Mit über 15 Jahren Erfahrung in der professionellen Reinigungsbranche habe ich 
+                Blitzeblank mit einer klaren Vision gegründet: Reinigungsdienstleistungen, die 
+                echten Mehrwert für unsere Kunden in Luxemburg und Deutschland schaffen.
               </p>
               <p>
-                Als Ihr direkter Ansprechpartner bin ich personlich fur die Qualitat unserer 
+                Als Ihr direkter Ansprechpartner bin ich persönlich für die Qualität unserer 
                 Arbeit verantwortlich - von der ersten Besichtigung bis zur finalen Abnahme.
               </p>
             </div>

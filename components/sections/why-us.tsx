@@ -9,10 +9,10 @@ const stats = [
 ]
 
 const features = [
-  { icon: Zap, title: "Zuverlassigkeit", text: "Termingerechte Ausfuhrung und konstant hohe Qualitat sind fur uns selbstverstandlich." },
-  { icon: Repeat, title: "Flexibilitat", text: "Kurzfristige Terminvergabe und schnelle Reaktionszeiten - wir passen uns Ihrem Zeitplan an." },
-  { icon: UserCheck, title: "Personlicher Kontakt", text: "Ein fester Ansprechpartner fur alle Ihre Anliegen. Direkte Kommunikation ohne Umwege." },
-  { icon: Award, title: "Qualitatsgarantie", text: "Unsere Arbeit wird erst abgeschlossen, wenn Sie vollstandig zufrieden sind." },
+  { icon: Zap, title: "Zuverlässigkeit", text: "Termingerechte Ausführung und konstant hohe Qualität sind für uns selbstverständlich." },
+  { icon: Repeat, title: "Flexibilität", text: "Kurzfristige Terminvergabe und schnelle Reaktionszeiten - wir passen uns Ihrem Zeitplan an." },
+  { icon: UserCheck, title: "Persönlicher Kontakt", text: "Ein fester Ansprechpartner für alle Ihre Anliegen. Direkte Kommunikation ohne Umwege." },
+  { icon: Award, title: "Qualitätsgarantie", text: "Unsere Arbeit wird erst abgeschlossen, wenn Sie vollständig zufrieden sind." },
 ]
 
 export function WhyUsSection() {
@@ -22,15 +22,15 @@ export function WhyUsSection() {
         {/* Header */}
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">Uber uns</p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">Über uns</p>
             <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy tracking-tight text-balance">
               Darauf vertrauen Unternehmen
             </h2>
           </div>
           <p className="text-neutral-600 leading-relaxed">
-            Seit unserer Grundung steht Blitzeblank fur professionelle Reinigung mit Herz. 
+            Seit unserer Gründung steht Blitzeblank für professionelle Reinigung mit Herz. 
             Wir verstehen, dass Sauberkeit mehr ist als nur Hygiene - sie schafft ein 
-            angenehmes Arbeitsumfeld und hinterlasst bei Ihren Kunden einen bleibenden Eindruck.
+            angenehmes Arbeitsumfeld und hinterlässt bei Ihren Kunden einen bleibenden Eindruck.
           </p>
         </div>
 

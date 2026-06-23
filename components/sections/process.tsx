@@ -5,25 +5,25 @@ const steps = [
     number: "01",
     icon: Phone,
     title: "Kontakt aufnehmen",
-    description: "Rufen Sie uns an oder nutzen Sie unser Kontaktformular. Wir melden uns innerhalb von 24 Stunden zuruck.",
+    description: "Rufen Sie uns an oder nutzen Sie unser Kontaktformular. Wir melden uns innerhalb von 24 Stunden zurück.",
   },
   {
     number: "02",
     icon: ClipboardCheck,
     title: "Kostenlose Besichtigung",
-    description: "Wir besichtigen Ihre Raumlichkeiten vor Ort und erstellen ein massgeschneidertes Angebot.",
+    description: "Wir besichtigen Ihre Räumlichkeiten vor Ort und erstellen ein maßgeschneidertes Angebot.",
   },
   {
     number: "03",
     icon: Sparkles,
     title: "Professionelle Reinigung",
-    description: "Unser geschultes Team fuhrt die Reinigung nach hochsten Standards durch - termingerecht und grundlich.",
+    description: "Unser geschultes Team führt die Reinigung nach höchsten Standards durch - termingerecht und gründlich.",
   },
   {
     number: "04",
     icon: ThumbsUp,
     title: "Ihre Zufriedenheit",
-    description: "Nach Abschluss prufen wir gemeinsam das Ergebnis. Ihre Zufriedenheit ist unser Massstab.",
+    description: "Nach Abschluss prüfen wir gemeinsam das Ergebnis. Ihre Zufriedenheit ist unser Maßstab.",
   },
 ]
 

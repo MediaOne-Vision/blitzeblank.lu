@@ -3,13 +3,13 @@ import { Quote, Star } from "lucide-react"
 
 const testimonials = [
   {
-    quote: "Super Service! Nach einer Besichtigung wurde ein kurzfristiger Termin vereinbart. Die Arbeit wurde punktlich und sehr ordentlich durchgefuhrt. Der Hof (ca. 250qm) war danach nicht mehr wiederzuerkennen. Und das alles in nicht mal 2 Tagen und zu einem super Preis! Sehr weiterzuempfehlen!",
+    quote: "Super Service! Nach einer Besichtigung wurde ein kurzfristiger Termin vereinbart. Die Arbeit wurde pünktlich und sehr ordentlich durchgeführt. Der Hof (ca. 250qm) war danach nicht mehr wiederzuerkennen. Und das alles in nicht mal 2 Tagen und zu einem super Preis! Sehr weiterzuempfehlen!",
     author: "Stefan Klein",
     company: "vor einem Jahr",
     accent: "text-brand-blue",
   },
   {
-    quote: "Nach einer kostenlosen Testreinigung haben wir uns fur diesen Service entschieden und sind mehr als begeistert. Mit unserem herkommlichen Hochdruckreiniger hatten wir niemals dieses super Ergebnis erzielen konnen. Gutes Preis-Leistungs-Verhaltnis und schneller Ausfuhrungstermin.",
+    quote: "Nach einer kostenlosen Testreinigung haben wir uns für diesen Service entschieden und sind mehr als begeistert. Mit unserem herkömmlichen Hochdruckreiniger hätten wir niemals dieses super Ergebnis erzielen können. Gutes Preis-Leistungs-Verhältnis und schneller Ausführungstermin.",
     author: "Anika Schwarz",
     company: "vor 2 Jahren",
     accent: "text-brand-teal",

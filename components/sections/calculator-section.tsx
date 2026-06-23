@@ -8,10 +8,10 @@ export function CalculatorSection() {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">Preiskalkulator</p>
           <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy tracking-tight text-balance">
-            Ihre unverbindliche Preisschatzung
+            Ihre unverbindliche Preisschätzung
           </h2>
           <p className="text-neutral-600 leading-relaxed mt-4 text-pretty">
-            Wahlen Sie Ihre gewunschte Leistung und Flache. Der finale Preis wird nach 
+            Wählen Sie Ihre gewünschte Leistung und Fläche. Der finale Preis wird nach 
             einer kostenlosen Besichtigung vor Ort individuell festgelegt.
           </p>
         </div>

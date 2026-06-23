@@ -10,7 +10,7 @@ const values = [
   {
     icon: MapPinned,
     title: "Kostenlose Besichtigung",
-    text: "Vor-Ort-Termin fur ein prazises Angebot - gratis.",
+    text: "Vor-Ort-Termin für ein präzises Angebot - gratis.",
     color: "bg-brand-teal",
   },
   {
@@ -21,7 +21,7 @@ const values = [
   },
   {
     icon: ShieldCheck,
-    title: "Qualitatsgarantie",
+    title: "Qualitätsgarantie",
     text: "Inklusive Probearbeit auf Wunsch.",
     color: "bg-brand-teal",
   },

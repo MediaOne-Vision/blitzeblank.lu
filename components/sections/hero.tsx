@@ -25,8 +25,8 @@ export function HeroSection() {
           </h1>
 
           <p className="text-white/70 text-lg max-w-lg mb-8 leading-relaxed">
-            Von der Industriereinigung bis zur Fassadenpflege: massgeschneiderte
-            Reinigungslosungen fur Unternehmen in Luxemburg und Deutschland.
+            Von der Industriereinigung bis zur Fassadenpflege: maßgeschneiderte
+            Reinigungslösungen für Unternehmen in Luxemburg und Deutschland.
           </p>
 
           <div className="flex items-center gap-2.5 text-lg sm:text-xl font-semibold text-brand-sky mb-10">
