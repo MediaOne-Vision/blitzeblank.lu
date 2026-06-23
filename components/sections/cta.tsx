@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Phone } from "lucide-react"
+import { Phone, ArrowRight } from "lucide-react"
 
 export function CtaSection() {
   return (
@@ -18,9 +18,10 @@ export function CtaSection() {
               Luxemburg und Deutschland. Wir erstellen Ihnen ein maßgeschneidertes Angebot.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-white text-brand-navy hover:bg-brand-mint rounded-full px-8 shadow-lg">
+              <Button asChild size="lg" className="group bg-white text-brand-navy hover:bg-brand-mint rounded-full px-8 shadow-lg transition-transform hover:scale-105">
                 <Link href="/kontakt" className="cursor-pointer">
                   Kontakt aufnehmen
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20 rounded-full px-8">

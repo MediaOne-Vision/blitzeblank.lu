@@ -4,7 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { HelpCircle } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { HelpCircle, ArrowRight } from "lucide-react"
 
 const faqs = [
   {
@@ -85,6 +87,26 @@ export function FaqSection() {
             </AccordionItem>
           ))}
         </Accordion>
+
+        {/* CTA below FAQ */}
+        <div className="mt-12 rounded-2xl bg-white border border-brand-blue/10 px-6 py-8 text-center">
+          <p className="font-display text-xl font-bold text-brand-navy mb-2 text-balance">
+            Ihre Frage war nicht dabei?
+          </p>
+          <p className="text-neutral-600 mb-6 text-pretty">
+            Wir beantworten gerne alle Ihre Anliegen - persönlich und unverbindlich.
+          </p>
+          <Button
+            asChild
+            size="lg"
+            className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/30"
+          >
+            <Link href="/kontakt" className="cursor-pointer">
+              Jetzt Kontakt aufnehmen
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   )

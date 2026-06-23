@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2, ArrowRight } from "lucide-react"
 
 const featured = {
   title: "Industriereinigung",
@@ -128,6 +129,23 @@ export function ServicesOverview() {
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* CTA below services */}
+        <div className="mt-12 flex flex-col items-center gap-4 text-center">
+          <p className="text-lg font-medium text-brand-navy text-balance">
+            Entdecken Sie unser komplettes Leistungsspektrum
+          </p>
+          <Button
+            asChild
+            size="lg"
+            className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/30"
+          >
+            <Link href="/leistungen" className="cursor-pointer">
+              Alle Leistungen ansehen
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
