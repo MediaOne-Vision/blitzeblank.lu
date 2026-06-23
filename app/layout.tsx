@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Sora } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
@@ -8,10 +8,10 @@ const inter = Inter({
   variable: '--font-inter'
 })
 
-const sora = Sora({ 
+const jakarta = Plus_Jakarta_Sans({ 
   subsets: ["latin"],
-  weight: ['500', '600', '700', '800'],
-  variable: '--font-sora'
+  weight: ['600', '700', '800'],
+  variable: '--font-jakarta'
 })
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className="scroll-smooth">
-      <body className={`${inter.variable} ${sora.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${jakarta.variable} font-sans antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
