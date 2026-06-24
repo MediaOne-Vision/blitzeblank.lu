@@ -12,6 +12,7 @@ import { QuoteBanner } from "@/components/quote-banner"
 import { TestimonialsSection } from "@/components/sections/testimonials"
 import { FaqSection } from "@/components/sections/faq"
 import { CtaSection } from "@/components/sections/cta"
+import { SocialBanner } from "@/components/sections/social-banner"
 
 export default function HomePage() {
   return (
@@ -48,6 +49,9 @@ export default function HomePage() {
         </Reveal>
         <Reveal>
           <CtaSection />
+        </Reveal>
+        <Reveal direction="fade">
+          <SocialBanner />
         </Reveal>
       </main>
       <Footer />
