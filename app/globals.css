@@ -153,6 +153,19 @@
   50% { transform: translateY(20px) scale(1.05); }
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.group\/marquee:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
@@ -186,7 +199,8 @@
   .animate-float,
   .animate-float-slow,
   .animate-fade-up,
-  .animate-fade-in {
+  .animate-fade-in,
+  .animate-marquee {
     animation: none;
     opacity: 1;
   }

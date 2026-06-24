@@ -1,36 +1,27 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react"
+import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import type { GalleryImage } from "@/lib/service-media"
 
 interface GalleryCarouselProps {
   images: GalleryImage[]
-  /** auto-rotate interval in ms */
-  interval?: number
 }
 
-export function GalleryCarousel({ images, interval = 4000 }: GalleryCarouselProps) {
-  const [current, setCurrent] = useState(0)
+export function GalleryCarousel({ images }: GalleryCarouselProps) {
   const [lightbox, setLightbox] = useState(false)
-  const [paused, setPaused] = useState(false)
+  const [current, setCurrent] = useState(0)
   const count = images.length
 
   const goTo = useCallback((i: number) => setCurrent(((i % count) + count) % count), [count])
   const next = useCallback(() => goTo(current + 1), [current, goTo])
   const prev = useCallback(() => goTo(current - 1), [current, goTo])
 
-  // Auto-rotate, paused on hover or when lightbox is open
-  useEffect(() => {
-    if (count <= 1 || paused || lightbox) return
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (prefersReduced) return
-    const id = setInterval(() => setCurrent((c) => (c + 1) % count), interval)
-    return () => clearInterval(id)
-  }, [count, paused, lightbox, interval])
+  const open = (i: number) => {
+    setCurrent(i)
+    setLightbox(true)
+  }
 
   // Keyboard controls while lightbox is open
   useEffect(() => {
@@ -50,87 +41,35 @@ export function GalleryCarousel({ images, interval = 4000 }: GalleryCarouselProp
 
   if (count === 0) return null
 
+  // Bilder verdoppeln für eine nahtlose, endlose Laufschleife
+  const looped = [...images, ...images]
+
   return (
     <div>
-      {/* Carousel */}
-      <div
-        className="relative overflow-hidden rounded-3xl shadow-sm ring-1 ring-brand-navy/5"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        <div className="relative aspect-[16/10] w-full">
-          {images.map((img, i) => (
-            <button
-              key={img.src}
-              type="button"
-              aria-label={`${img.alt} – vergrößern`}
-              aria-hidden={i !== current}
-              tabIndex={i === current ? 0 : -1}
-              onClick={() => setLightbox(true)}
-              className={`group absolute inset-0 cursor-zoom-in transition-opacity duration-700 ${
-                i === current ? "opacity-100" : "pointer-events-none opacity-0"
-              }`}
-            >
-              <Image
-                src={img.src || "/placeholder.svg"}
-                alt={img.alt}
-                fill
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover"
-              />
-              <span className="absolute inset-0 bg-brand-navy/0 transition-colors group-hover:bg-brand-navy/15" />
-              <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brand-navy opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                <ZoomIn className="h-5 w-5" />
-              </span>
-            </button>
+      {/* Endlos durchlaufende Bilderleiste */}
+      <div className="group/marquee relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+        <ul className="animate-marquee flex w-max items-center gap-4 py-2">
+          {looped.map((img, i) => (
+            <li key={`${img.src}-${i}`} className="shrink-0">
+              <button
+                type="button"
+                onClick={() => open(i % count)}
+                aria-label={`${img.alt} – vergrößern`}
+                className="group/item relative block h-28 w-44 overflow-hidden rounded-xl shadow-sm ring-1 ring-brand-navy/5 transition-all duration-300 hover:z-10 hover:scale-110 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue sm:h-32 sm:w-52"
+              >
+                <Image
+                  src={img.src || "/placeholder.svg"}
+                  alt={img.alt}
+                  fill
+                  sizes="208px"
+                  className="object-cover transition-transform duration-300 group-hover/item:scale-105"
+                />
+                <span className="absolute inset-0 bg-brand-navy/20 opacity-100 transition-opacity duration-300 group-hover/item:opacity-0" />
+              </button>
+            </li>
           ))}
-
-          {/* Caption */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-navy/70 to-transparent p-5 pt-12">
-            <p className="text-pretty text-sm font-medium text-white">{images[current].alt}</p>
-          </div>
-        </div>
-
-        {/* Arrows */}
-        {count > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={prev}
-              aria-label="Vorheriges Bild"
-              className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-brand-navy shadow-lg ring-1 ring-brand-navy/10 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              aria-label="Nächstes Bild"
-              className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-brand-navy shadow-lg ring-1 ring-brand-navy/10 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </>
-        )}
+        </ul>
       </div>
-
-      {/* Dots */}
-      {count > 1 && (
-        <div className="mt-5 flex items-center justify-center gap-2">
-          {images.map((img, i) => (
-            <button
-              key={img.src}
-              type="button"
-              onClick={() => goTo(i)}
-              aria-label={`Bild ${i + 1} anzeigen`}
-              aria-current={i === current}
-              className={`h-2.5 rounded-full transition-all ${
-                i === current ? "w-8 bg-brand-blue" : "w-2.5 bg-brand-navy/20 hover:bg-brand-navy/40"
-              }`}
-            />
-          ))}
-        </div>
-      )}
 
       {/* Lightbox */}
       {lightbox && (
