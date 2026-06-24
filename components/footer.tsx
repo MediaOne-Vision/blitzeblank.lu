@@ -13,7 +13,7 @@ const services = [
 const navigation = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
-  { href: "/#preiskalkulator", label: "Preiskalkulator" },
+  { href: "/angebot", label: "Kostenloses Angebot" },
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/kontakt", label: "Kontakt" },
 ]

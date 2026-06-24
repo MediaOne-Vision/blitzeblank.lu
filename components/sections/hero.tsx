@@ -42,9 +42,9 @@ export function HeroSection() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8">
-              <Link href="/#preiskalkulator" className="cursor-pointer">
+              <Link href="/angebot" className="cursor-pointer">
                 <Calculator className="h-4 w-4" />
-                Preis berechnen
+                Kostenloses Angebot
               </Link>
             </Button>
           </div>

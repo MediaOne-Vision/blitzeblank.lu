@@ -7,7 +7,7 @@ import { ServicesOverview } from "@/components/sections/services-overview"
 import { WhyUsSection } from "@/components/sections/why-us"
 import { OwnerSection } from "@/components/sections/owner"
 import { ProcessSection } from "@/components/sections/process"
-import { CalculatorSection } from "@/components/sections/calculator-section"
+import { QuoteBanner } from "@/components/quote-banner"
 import { TestimonialsSection } from "@/components/sections/testimonials"
 import { FaqSection } from "@/components/sections/faq"
 import { CtaSection } from "@/components/sections/cta"
@@ -30,7 +30,11 @@ export default function HomePage() {
           <ProcessSection />
         </Reveal>
         <Reveal>
-          <CalculatorSection />
+          <section className="py-16 lg:py-24">
+            <div className="mx-auto max-w-7xl px-6">
+              <QuoteBanner />
+            </div>
+          </section>
         </Reveal>
         <Reveal>
           <TestimonialsSection />

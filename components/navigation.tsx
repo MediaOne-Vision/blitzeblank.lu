@@ -12,7 +12,7 @@ import { Menu, ChevronDown, Phone, Calculator } from "lucide-react"
 const navLinks = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
-  { href: "/#preiskalkulator", label: "Preiskalkulator" },
+  { href: "/angebot", label: "Angebot" },
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/kontakt", label: "Kontakt" },
 ]
@@ -178,7 +178,7 @@ export function Navigation() {
                       )}
                       onClick={() => setOpen(false)}
                     >
-                      {link.label === "Preiskalkulator" && <Calculator className="h-4 w-4 shrink-0" />}
+                      {link.label === "Angebot" && <Calculator className="h-4 w-4 shrink-0" />}
                       {link.label}
                     </Link>
                   ),
