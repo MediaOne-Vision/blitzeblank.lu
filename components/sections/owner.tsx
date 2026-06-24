@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Quote } from "lucide-react"
 
 export function OwnerSection() {
@@ -6,14 +7,23 @@ export function OwnerSection() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Portrait */}
-          <div className="relative rounded-3xl bg-gradient-to-br from-brand-navy to-brand-teal aspect-[4/5] flex items-center justify-center overflow-hidden">
-            <div className="absolute -bottom-12 -left-12 h-56 w-56 rounded-full bg-brand-sky/30 blur-2xl" />
-            <div className="relative text-center">
-              <div className="w-24 h-24 mx-auto rounded-full bg-white/15 backdrop-blur flex items-center justify-center mb-4 ring-2 ring-white/20">
-                <span className="font-display text-3xl font-bold text-white">ME</span>
+          <div className="relative">
+            <div className="absolute -bottom-6 -left-6 h-56 w-56 rounded-full bg-brand-sky/30 blur-2xl" />
+            <div className="absolute -top-6 -right-6 h-40 w-40 rounded-full bg-brand-blue/20 blur-2xl" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-xl ring-1 ring-brand-navy/10">
+              <Image
+                src="/images/team/mustapha-el-ali-gruender-blitzeblank-handschlag.avif"
+                alt="Mustapha El-Ali, Gründer und Geschäftsführer von Blitzeblank, im schwarzen Firmen-Shirt mit ausgestreckter Hand zur Begrüßung"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-top"
+              />
+              {/* Verlauf für den Namenszug unten */}
+              <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-brand-navy/85 via-brand-navy/30 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-6">
+                <p className="font-display text-xl font-bold text-white">Mustapha El-Ali</p>
+                <p className="text-sm text-white/80">Gründer &amp; Geschäftsführer</p>
               </div>
-              <p className="text-white font-medium">Mustapha El-Ali</p>
-              <p className="text-sm text-white/70">Gründer &amp; Geschäftsführer</p>
             </div>
           </div>
 
