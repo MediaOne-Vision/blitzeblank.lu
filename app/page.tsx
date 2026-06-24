@@ -4,6 +4,7 @@ import { Reveal } from "@/components/reveal"
 import { HeroSection } from "@/components/sections/hero"
 import { TrustBar } from "@/components/sections/trust-bar"
 import { ServicesOverview } from "@/components/sections/services-overview"
+import { ResultsShowcase } from "@/components/sections/results-showcase"
 import { WhyUsSection } from "@/components/sections/why-us"
 import { OwnerSection } from "@/components/sections/owner"
 import { ProcessSection } from "@/components/sections/process"
@@ -22,6 +23,9 @@ export default function HomePage() {
           <TrustBar />
         </Reveal>
         <ServicesOverview />
+        <Reveal>
+          <ResultsShowcase />
+        </Reveal>
         <WhyUsSection />
         <Reveal>
           <OwnerSection />
