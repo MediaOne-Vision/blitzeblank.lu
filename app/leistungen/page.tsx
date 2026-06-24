@@ -15,6 +15,15 @@ export const metadata: Metadata = {
 
 const services = [
   {
+    icon: Factory,
+    title: "Industriereinigung",
+    description: "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen nach höchsten Standards.",
+    features: ["Produktionshallen", "Lagerräume", "Werkstätten", "Maschinen & Anlagen"],
+    href: "/leistungen/industriereinigung",
+    slug: "industriereinigung",
+    imageQuery: "industrial+factory+production+hall+clean+polished+floor",
+  },
+  {
     icon: Grid3X3,
     title: "Fensterreinigung",
     description: "Streifenfreie Glasreinigung für Bürogebäude, Geschäfte und Industrieanlagen jeder Größe.",
@@ -49,15 +58,6 @@ const services = [
     href: "/leistungen/trockeneisreinigung",
     slug: "trockeneisreinigung",
     imageQuery: "dry+ice+blasting+industrial+cleaning+machine+vapor",
-  },
-  {
-    icon: Factory,
-    title: "Industriereinigung",
-    description: "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen nach höchsten Standards.",
-    features: ["Produktionshallen", "Lagerräume", "Werkstätten", "Maschinen & Anlagen"],
-    href: "/leistungen/industriereinigung",
-    slug: "industriereinigung",
-    imageQuery: "industrial+factory+production+hall+clean+polished+floor",
   },
 ]
 
