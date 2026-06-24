@@ -3,6 +3,7 @@ import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ServiceSwitcher } from "@/components/service-switcher"
+import { QuoteBanner } from "@/components/quote-banner"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle2, Phone, type LucideIcon } from "lucide-react"
 
@@ -77,7 +78,7 @@ export function ServicePageTemplate({
                     variant="outline"
                     className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
                   >
-                    <Link href="/#preiskalkulator" className="cursor-pointer">
+                    <Link href={`/angebot?leistung=${slug}`} className="cursor-pointer">
                       Preis berechnen
                     </Link>
                   </Button>
@@ -173,6 +174,9 @@ export function ServicePageTemplate({
             </div>
           </div>
         </section>
+
+        {/* Kostenloses Angebot Banner */}
+        <QuoteBanner slug={slug} serviceTitle={title} />
 
         {/* Service Switcher */}
         <ServiceSwitcher currentSlug={slug} />
