@@ -90,9 +90,9 @@ export function ServicePageTemplate({
                 </div>
               </div>
 
-              {/* Hero image with navy-to-image gradient on the left */}
+              {/* Hero image ohne Rahmen, mit fließendem Übergang */}
               <div className="relative">
-                <div className="relative h-64 overflow-hidden rounded-3xl ring-1 ring-white/10 lg:h-96">
+                <div className="relative h-64 overflow-hidden lg:h-96">
                   <Image
                     src={media?.hero?.src ?? `/placeholder.svg?height=640&width=800&query=${image}`}
                     alt={media?.hero?.alt ?? title}
