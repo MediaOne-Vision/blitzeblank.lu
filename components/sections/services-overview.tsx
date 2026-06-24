@@ -22,11 +22,12 @@ const services = [
     imageAlt: "Streifenfrei gereinigtes Fenster nach professioneller Glasreinigung",
   },
   {
-    title: "Trockeneisreinigung",
-    description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser für empfindliche Oberflächen.",
-    href: "/leistungen/trockeneisreinigung",
-    icon: Snowflake,
-    image: "/placeholder.svg?height=400&width=400&query=dry+ice+blasting+industrial+cleaning+machine",
+    title: "Fassadenreinigung",
+    description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
+    href: "/leistungen/fassadenreinigung",
+    icon: Building2,
+    image: "/images/leistungen/fassadenreinigung-wohnhaus-ergebnis.avif",
+    imageAlt: "Gereinigte Fassade eines Wohnhauses als Endergebnis der Fassadenreinigung",
   },
   {
     title: "Steinreinigung",
@@ -37,12 +38,11 @@ const services = [
     imageAlt: "Gereinigte Naturstein-Terrasse als Ergebnis der Steinreinigung",
   },
   {
-    title: "Fassadenreinigung",
-    description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
-    href: "/leistungen/fassadenreinigung",
-    icon: Building2,
-    image: "/images/leistungen/fassadenreinigung-wohnhaus-ergebnis.avif",
-    imageAlt: "Gereinigte Fassade eines Wohnhauses als Endergebnis der Fassadenreinigung",
+    title: "Trockeneisreinigung",
+    description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser für empfindliche Oberflächen.",
+    href: "/leistungen/trockeneisreinigung",
+    icon: Snowflake,
+    image: "/placeholder.svg?height=400&width=400&query=dry+ice+blasting+industrial+cleaning+machine",
   },
 ]
 

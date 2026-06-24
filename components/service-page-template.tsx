@@ -4,10 +4,11 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ServiceSwitcher } from "@/components/service-switcher"
 import { QuoteBanner } from "@/components/quote-banner"
+import { QuoteWizard } from "@/components/quote-wizard"
 import { BeforeAfterSlider } from "@/components/before-after-slider"
 import { getServiceMedia } from "@/lib/service-media"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, CheckCircle2, Phone, type LucideIcon } from "lucide-react"
+import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react"
 
 interface ServiceFeature {
   title: string
@@ -30,7 +31,6 @@ export function ServicePageTemplate({
   slug,
   title,
   subtitle,
-  description,
   icon: Icon,
   image,
   features,
@@ -82,8 +82,8 @@ export function ServicePageTemplate({
                     variant="outline"
                     className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
                   >
-                    <Link href={`/angebot?leistung=${slug}`} className="cursor-pointer">
-                      Preis berechnen
+                    <Link href="#angebot" className="cursor-pointer">
+                      Kostenloses Angebot
                     </Link>
                   </Button>
                 </div>
@@ -104,14 +104,6 @@ export function ServicePageTemplate({
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Description */}
-        <section className="py-16 lg:py-24">
-          <div className="mx-auto max-w-3xl px-6 text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Überblick</p>
-            <p className="text-lg leading-relaxed text-neutral-600 text-pretty">{description}</p>
           </div>
         </section>
 
@@ -234,42 +226,27 @@ export function ServicePageTemplate({
         )}
 
         {/* Kostenloses Angebot Banner */}
-        <QuoteBanner slug={slug} serviceTitle={title} />
+        <QuoteBanner slug={slug} serviceTitle={title} ctaHref="#angebot" />
 
         {/* Service Switcher */}
         <ServiceSwitcher currentSlug={slug} />
 
-        {/* CTA */}
-        <section className="bg-brand-navy py-16 lg:py-24">
-          <div className="mx-auto max-w-2xl px-6 text-center">
-            <h2 className="mb-4 text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
-              Interesse an {title}?
-            </h2>
-            <p className="mb-8 text-white/75 text-pretty">
-              Kontaktieren Sie uns für eine kostenlose Besichtigung und ein individuelles Angebot.
-            </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
-              >
-                <Link href="/kontakt" className="cursor-pointer">
-                  <Phone className="h-4 w-4" />
-                  Kostenlosen Termin anfragen
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
-              >
-                <Link href="/leistungen" className="cursor-pointer">
-                  Alle Leistungen ansehen
-                </Link>
-              </Button>
+        {/* Eingebettetes Angebots-Tool - direkt auf der Seite, ohne Weiterleitung */}
+        <section id="angebot" className="scroll-mt-24 bg-brand-navy py-16 lg:py-24">
+          <div className="mx-auto max-w-4xl px-6">
+            <div className="mb-10 text-center">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-sky">
+                Kostenloses Angebot
+              </p>
+              <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+                Ihr Richtpreis für <span className="text-brand-sky">{title}</span> - in 2 Minuten
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-white/75 text-pretty">
+                Füllen Sie das Formular direkt hier aus - unverbindlich, kostenlos und ohne
+                Weiterleitung. Sie erhalten sofort eine Preisschätzung.
+              </p>
             </div>
+            <QuoteWizard initialSlug={slug} />
           </div>
         </section>
       </main>
