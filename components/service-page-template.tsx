@@ -6,6 +6,7 @@ import { ServiceSwitcher } from "@/components/service-switcher"
 import { QuoteBanner } from "@/components/quote-banner"
 import { QuoteWizard } from "@/components/quote-wizard"
 import { BeforeAfterSlider } from "@/components/before-after-slider"
+import { GalleryCarousel } from "@/components/gallery-carousel"
 import { getServiceMedia } from "@/lib/service-media"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react"
@@ -89,9 +90,9 @@ export function ServicePageTemplate({
                 </div>
               </div>
 
-              {/* Hero image */}
+              {/* Hero image with navy-to-image gradient on the left */}
               <div className="relative">
-                <div className="relative h-64 overflow-hidden rounded-3xl ring-1 ring-white/10 lg:h-80">
+                <div className="relative h-64 overflow-hidden rounded-3xl ring-1 ring-white/10 lg:h-96">
                   <Image
                     src={media?.hero?.src ?? `/placeholder.svg?height=640&width=800&query=${image}`}
                     alt={media?.hero?.alt ?? title}
@@ -100,7 +101,9 @@ export function ServicePageTemplate({
                     className="object-cover"
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 to-transparent" />
+                  {/* Dunkelblau links, fließend ins Bild übergehend */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/30 to-transparent" />
                 </div>
               </div>
             </div>
@@ -172,7 +175,7 @@ export function ServicePageTemplate({
           </div>
         </section>
 
-        {/* Ergebnisse: Vorher-Nachher + Galerie */}
+        {/* Ergebnisse: Zwei große Vorher-Nachher-Vergleiche + Karussell */}
         {media && (media.beforeAfter.length > 0 || media.gallery.length > 0) && (
           <section className="bg-brand-mint py-16 lg:py-24">
             <div className="mx-auto max-w-6xl px-6">
@@ -189,7 +192,7 @@ export function ServicePageTemplate({
               </div>
 
               {media.beforeAfter.length > 0 && (
-                <div className="mb-10 grid gap-6 md:grid-cols-2">
+                <div className="mb-16 grid gap-8 lg:grid-cols-2">
                   {media.beforeAfter.map((pair) => (
                     <BeforeAfterSlider
                       key={pair.afterSrc}
@@ -204,21 +207,11 @@ export function ServicePageTemplate({
               )}
 
               {media.gallery.length > 0 && (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {media.gallery.map((img) => (
-                    <div
-                      key={img.src}
-                      className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm ring-1 ring-brand-navy/5"
-                    >
-                      <Image
-                        src={img.src || "/placeholder.svg"}
-                        alt={img.alt}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                    </div>
-                  ))}
+                <div className="mx-auto max-w-4xl">
+                  <h3 className="mb-6 text-center font-display text-xl font-bold text-brand-navy">
+                    Weitere Eindrücke
+                  </h3>
+                  <GalleryCarousel images={media.gallery} />
                 </div>
               )}
             </div>

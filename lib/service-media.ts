@@ -16,9 +16,9 @@ export interface GalleryImage {
 export interface ServiceMedia {
   /** large hero image for the service detail page */
   hero?: GalleryImage
-  /** interactive before/after comparison sliders */
+  /** interactive before/after comparison sliders (two large comparisons) */
   beforeAfter: BeforeAfterPair[]
-  /** additional result images */
+  /** additional result images shown in the auto-rotating carousel */
   gallery: GalleryImage[]
 }
 
@@ -46,12 +46,57 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     ],
     gallery: [
       {
+        src: `${BASE}/fenster-halb-gereinigt-vorher-nachher.avif`,
+        alt: "Halb gereinigtes Fenster zeigt den direkten Vorher-Nachher-Unterschied",
+      },
+      {
+        src: `${BASE}/fensterrahmen-reinigung-detailarbeit.avif`,
+        alt: "Detailarbeit bei der Reinigung eines Fensterrahmens",
+      },
+      {
         src: `${BASE}/fenster-kalk-verschmutzung-reinigung.avif`,
         alt: "Entfernung von Kalk- und Wasserflecken bei der Fensterreinigung",
       },
       {
         src: `${BASE}/fensterrahmen-sauber-nahaufnahme.avif`,
         alt: "Saubere Fensterrahmen in Nahaufnahme nach der Reinigung",
+      },
+    ],
+  },
+
+  fassadenreinigung: {
+    hero: {
+      src: `${BASE}/fassade-gebaeudereinigung-sauber.avif`,
+      alt: "Saubere Gebäudefassade nach professioneller Fassadenreinigung",
+    },
+    beforeAfter: [
+      {
+        beforeSrc: `${BASE}/fassade-veralgt-vor-reinigung.avif`,
+        afterSrc: `${BASE}/fassade-gereinigt-nach-reinigung.avif`,
+        beforeAlt: "Veralgte und verschmutzte Hausfassade vor der Reinigung",
+        afterAlt: "Saubere, helle Hausfassade nach der Fassadenreinigung",
+        caption: "Wohnhaus-Fassade – Algen und Grünbelag restlos entfernt",
+      },
+      {
+        beforeSrc: `${BASE}/buerogebaeude-fassade-verschmutzt-vorher.avif`,
+        afterSrc: `${BASE}/buerogebaeude-fassade-gereinigt-nachher.avif`,
+        beforeAlt: "Verschmutzte Bürogebäude-Fassade mit Umweltablagerungen vor der Reinigung",
+        afterAlt: "Strahlend saubere Bürogebäude-Fassade nach der Reinigung",
+        caption: "Gewerbliche Fassade – Umweltablagerungen entfernt",
+      },
+    ],
+    gallery: [
+      {
+        src: `${BASE}/fassadenreinigung-wohngebaeude-resultat.avif`,
+        alt: "Ergebnis der Fassadenreinigung an einem Wohngebäude",
+      },
+      {
+        src: `${BASE}/fassadenreinigung-wohnhaus-ergebnis.avif`,
+        alt: "Gereinigte Fassade eines Wohnhauses als Endergebnis",
+      },
+      {
+        src: `${BASE}/fassade-gebaeudereinigung-sauber.avif`,
+        alt: "Saubere Gebäudefassade nach der Reinigung",
       },
     ],
   },
@@ -79,8 +124,12 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     ],
     gallery: [
       {
-        src: `${BASE}/einfahrt-pflaster-halbreinigung-ergebnis.avif`,
-        alt: "Halb gereinigte Pflaster-Einfahrt zeigt den direkten Vorher-Nachher-Unterschied",
+        src: `${BASE}/bodenreinigung-aussenflaeche-pflaster.avif`,
+        alt: "Bodenreinigung einer gepflasterten Außenfläche",
+      },
+      {
+        src: `${BASE}/flaechenreinigung-hochdruck-mitarbeiter.avif`,
+        alt: "Mitarbeiter bei der Flächenreinigung mit dem Hochdruckreiniger",
       },
       {
         src: `${BASE}/einfahrt-komplett-gereinigt-sauber.avif`,
@@ -105,24 +154,76 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     ],
   },
 
-  fassadenreinigung: {
+  trockeneisreinigung: {
     hero: {
-      src: `${BASE}/fassade-gebaeudereinigung-sauber.avif`,
-      alt: "Saubere Gebäudefassade nach professioneller Fassadenreinigung",
+      src: `${BASE}/trockeneisreinigung-maschine-anwendung.avif`,
+      alt: "Trockeneisreinigung in Anwendung mit sichtbarem CO2-Strahl an einer Maschine",
     },
-    beforeAfter: [],
+    beforeAfter: [
+      {
+        beforeSrc: `${BASE}/elektromotor-verschmutzt-vor-trockeneisreinigung.avif`,
+        afterSrc: `${BASE}/elektromotor-sauber-nach-trockeneisreinigung.avif`,
+        beforeAlt: "Verölter und verschmutzter Elektromotor vor der Trockeneisreinigung",
+        afterAlt: "Sauberer Elektromotor nach der schonenden Trockeneisreinigung",
+        caption: "Elektromotor – Fett und Öl ohne Wasser entfernt",
+      },
+      {
+        beforeSrc: `${BASE}/holzbalken-russ-vor-trockeneisreinigung.avif`,
+        afterSrc: `${BASE}/holzbalken-gereinigt-nach-trockeneisreinigung.avif`,
+        beforeAlt: "Verrußte Holzbalken nach Brandschaden vor der Trockeneisreinigung",
+        afterAlt: "Gereinigte Holzbalken mit sichtbarer Maserung nach der Trockeneisreinigung",
+        caption: "Holzbalken – Ruß schonend entfernt, Material erhalten",
+      },
+    ],
     gallery: [
       {
-        src: `${BASE}/fassadenreinigung-wohngebaeude-resultat.avif`,
-        alt: "Ergebnis der Fassadenreinigung an einem Wohngebäude",
+        src: `${BASE}/produktionsanlage-trockeneisreinigung-ergebnis.avif`,
+        alt: "Saubere Produktionsanlage als Ergebnis der Trockeneisreinigung",
       },
       {
-        src: `${BASE}/fassadenreinigung-wohnhaus-ergebnis.avif`,
-        alt: "Gereinigte Fassade eines Wohnhauses als Endergebnis",
+        src: `${BASE}/lebensmittelanlage-trockeneisreinigung.avif`,
+        alt: "Hygienische Trockeneisreinigung einer Lebensmittelanlage aus Edelstahl",
       },
       {
-        src: `${BASE}/fassade-gebaeudereinigung-sauber.avif`,
-        alt: "Saubere Gebäudefassade nach der Reinigung",
+        src: `${BASE}/trockeneisreinigung-maschine-anwendung.avif`,
+        alt: "Trockeneisreinigung einer Maschine mit CO2-Strahl in Anwendung",
+      },
+    ],
+  },
+
+  industriereinigung: {
+    hero: {
+      src: `${BASE}/industriereinigung-produktionshalle-sauber.avif`,
+      alt: "Saubere Produktionshalle nach professioneller Industriereinigung",
+    },
+    beforeAfter: [
+      {
+        beforeSrc: `${BASE}/hallenboden-verschmutzt-vor-industriereinigung.avif`,
+        afterSrc: `${BASE}/hallenboden-sauber-nach-industriereinigung.avif`,
+        beforeAlt: "Verschmutzter Industrie-Hallenboden mit Ölflecken vor der Reinigung",
+        afterAlt: "Sauberer, gereinigter Industrie-Hallenboden nach der Reinigung",
+        caption: "Hallenboden – Öl, Staub und Reifenspuren entfernt",
+      },
+      {
+        beforeSrc: `${BASE}/lagerhalle-verschmutzt-vor-reinigung.avif`,
+        afterSrc: `${BASE}/lagerhalle-gereinigt-nach-reinigung.avif`,
+        beforeAlt: "Verschmutzte und verstaubte Lagerhalle vor der Industriereinigung",
+        afterAlt: "Aufgeräumte und saubere Lagerhalle nach der Industriereinigung",
+        caption: "Lagerhalle – staubfrei und einsatzbereit",
+      },
+    ],
+    gallery: [
+      {
+        src: `${BASE}/industriereinigung-hallenreinigung-boden.avif`,
+        alt: "Bodenreinigung bei der Hallenreinigung im Industriebereich",
+      },
+      {
+        src: `${BASE}/industrieanlage-tankreinigung-ergebnis.avif`,
+        alt: "Saubere Edelstahltanks und Rohrleitungen nach der Industrieanlagenreinigung",
+      },
+      {
+        src: `${BASE}/flaechenreinigung-hochdruck-mitarbeiter.avif`,
+        alt: "Mitarbeiter bei der industriellen Flächenreinigung mit dem Hochdruckreiniger",
       },
     ],
   },
