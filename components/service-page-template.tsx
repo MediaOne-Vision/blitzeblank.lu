@@ -47,6 +47,21 @@ export function ServicePageTemplate({
         {/* Hero */}
         <section className="relative overflow-hidden bg-brand-navy pt-28 pb-16 lg:pt-36 lg:pb-24">
           <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-brand-blue/20 blur-3xl" />
+
+          {/* Hero-Bild füllt die rechte Hälfte der Sektion (bündig oben, unten, rechts) */}
+          <div className="absolute inset-y-0 right-0 hidden w-1/2 lg:block">
+            <Image
+              src={media?.hero?.src ?? `/placeholder.svg?height=900&width=800&query=${image}`}
+              alt={media?.hero?.alt ?? title}
+              fill
+              sizes="50vw"
+              className="object-cover"
+              priority
+            />
+            {/* Dunkelblau links, fließend ins Bild übergehend */}
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/50 to-transparent" />
+          </div>
+
           <div className="relative mx-auto max-w-6xl px-6">
             <div className="grid items-center gap-10 lg:grid-cols-2">
               <div>
@@ -90,21 +105,17 @@ export function ServicePageTemplate({
                 </div>
               </div>
 
-              {/* Hero image ohne Rahmen, mit fließendem Übergang */}
-              <div className="relative">
-                <div className="relative h-64 overflow-hidden lg:h-96">
-                  <Image
-                    src={media?.hero?.src ?? `/placeholder.svg?height=640&width=800&query=${image}`}
-                    alt={media?.hero?.alt ?? title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
-                    priority
-                  />
-                  {/* Dunkelblau links, fließend ins Bild übergehend */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/40 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/30 to-transparent" />
-                </div>
+              {/* Hero-Bild für Mobilgeräte: randvoll, Verlauf von oben */}
+              <div className="relative -mx-6 -mb-16 mt-4 h-72 overflow-hidden lg:hidden">
+                <Image
+                  src={media?.hero?.src ?? `/placeholder.svg?height=640&width=800&query=${image}`}
+                  alt={media?.hero?.alt ?? title}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/30 to-transparent" />
               </div>
             </div>
           </div>
