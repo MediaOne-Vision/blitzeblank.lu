@@ -30,8 +30,7 @@ import {
 
 const STEPS = [
   "Leistung",
-  "Häufigkeit",
-  "Fläche",
+  "Umfang",
   "Fotos",
   "Kontakt",
   "Angebot",
@@ -50,6 +49,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
     initialSlug ? quoteServices.find((s) => s.slug === initialSlug)?.value ?? "" : "",
   )
   const [details, setDetails] = useState<string[]>([])
+  const [customDetail, setCustomDetail] = useState("")
   const [preferredDate, setPreferredDate] = useState("")
   const [address, setAddress] = useState("")
 
@@ -77,6 +77,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const selectedService = quoteServices.find((s) => s.value === serviceValue)
   const selectedFrequency = quoteFrequencies.find((f) => f.value === frequencyValue)
   const price = calculateQuotePrice(selectedService, selectedFrequency, area[0])
+  const allDetails = customDetail.trim() ? [...details, customDetail.trim()] : details
 
   const toggleDetail = (option: string) => {
     setDetails((prev) =>
@@ -103,7 +104,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
         return Boolean(serviceValue && address.trim())
       case 1:
         return Boolean(frequencyValue)
-      case 4:
+      case 3:
         return Boolean(name.trim() && email.trim())
       default:
         return true
@@ -120,7 +121,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
     const submission: QuoteSubmission = {
       service: serviceValue,
       serviceLabel: selectedService?.label ?? "",
-      details,
+      details: allDetails,
       preferredDate,
       address,
       frequency: frequencyValue,
@@ -209,6 +210,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                     onClick={() => {
                       setServiceValue(s.value)
                       setDetails([])
+                      setCustomDetail("")
                     }}
                     className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
                       active
@@ -255,6 +257,18 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                     )
                   })}
                 </div>
+                <div className="mt-4 space-y-2">
+                  <Label htmlFor="customDetail" className="text-sm font-normal text-neutral-600">
+                    Sonstiges <span className="text-neutral-400">(optional)</span>
+                  </Label>
+                  <Input
+                    id="customDetail"
+                    placeholder="z. B. ein anderes Material oder besondere Anforderung"
+                    value={customDetail}
+                    onChange={(e) => setCustomDetail(e.target.value)}
+                    className="bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
+                  />
+                </div>
               </div>
             )}
 
@@ -289,82 +303,81 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
           </div>
         )}
 
-        {/* STEP 2 - Häufigkeit */}
+        {/* STEP 2 - Häufigkeit & Fläche */}
         {step === 1 && (
-          <div className="space-y-8">
-            <div>
-              <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                Wie häufig benötigen Sie die Reinigung?
-              </h3>
-              <p className="text-sm text-neutral-500">
-                Bei regelmäßiger Reinigung sparen Sie dauerhaft.
-              </p>
+          <div className="space-y-10">
+            <div className="space-y-5">
+              <div>
+                <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                  Wie häufig benötigen Sie die Reinigung?
+                </h3>
+                <p className="text-sm text-neutral-500">
+                  Bei regelmäßiger Reinigung sparen Sie dauerhaft.
+                </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {quoteFrequencies.map((f) => {
+                  const active = frequencyValue === f.value
+                  return (
+                    <button
+                      key={f.value}
+                      type="button"
+                      onClick={() => setFrequencyValue(f.value)}
+                      className={`flex items-center justify-between rounded-2xl border p-5 text-left transition-all cursor-pointer ${
+                        active
+                          ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                          : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
+                      }`}
+                    >
+                      <span className="font-semibold text-brand-navy">{f.label}</span>
+                      {f.discount > 0 && (
+                        <span className="rounded-full bg-brand-blue px-2.5 py-1 text-xs font-bold text-white">
+                          -{f.discount}%
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              {quoteFrequencies.map((f) => {
-                const active = frequencyValue === f.value
-                return (
-                  <button
-                    key={f.value}
-                    type="button"
-                    onClick={() => setFrequencyValue(f.value)}
-                    className={`flex items-center justify-between rounded-2xl border p-5 text-left transition-all cursor-pointer ${
-                      active
-                        ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
-                        : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
-                    }`}
-                  >
-                    <span className="font-semibold text-brand-navy">{f.label}</span>
-                    {f.discount > 0 && (
-                      <span className="rounded-full bg-brand-blue px-2.5 py-1 text-xs font-bold text-white">
-                        -{f.discount}%
-                      </span>
-                    )}
-                  </button>
-                )
-              })}
+            <div className="space-y-5">
+              <div>
+                <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                  Wie groß ist die zu reinigende Fläche?
+                </h3>
+                <p className="text-sm text-neutral-500">
+                  Verschieben Sie den Regler für eine Schätzung.
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-brand-mint/50 p-8">
+                <div className="mb-6 text-center">
+                  <span className="font-display text-5xl font-extrabold text-brand-navy">
+                    {area[0].toLocaleString("de-DE")}
+                  </span>
+                  <span className="ml-2 text-lg text-neutral-500">m²</span>
+                </div>
+                <Slider
+                  value={area}
+                  onValueChange={setArea}
+                  max={1000}
+                  min={20}
+                  step={10}
+                  className="[&_[role=slider]]:bg-brand-blue [&_[role=slider]]:border-brand-blue"
+                />
+                <div className="mt-3 flex justify-between text-xs text-neutral-400">
+                  <span>20 m²</span>
+                  <span>1.000 m²</span>
+                </div>
+              </div>
             </div>
           </div>
         )}
 
-        {/* STEP 3 - Fläche */}
+        {/* STEP 3 - Fotos */}
         {step === 2 && (
-          <div className="space-y-8">
-            <div>
-              <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                Wie groß ist die zu reinigende Fläche?
-              </h3>
-              <p className="text-sm text-neutral-500">
-                Verschieben Sie den Regler für eine Schätzung.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-brand-mint/50 p-8">
-              <div className="mb-6 text-center">
-                <span className="font-display text-5xl font-extrabold text-brand-navy">
-                  {area[0].toLocaleString("de-DE")}
-                </span>
-                <span className="ml-2 text-lg text-neutral-500">m²</span>
-              </div>
-              <Slider
-                value={area}
-                onValueChange={setArea}
-                max={1000}
-                min={20}
-                step={10}
-                className="[&_[role=slider]]:bg-brand-blue [&_[role=slider]]:border-brand-blue"
-              />
-              <div className="mt-3 flex justify-between text-xs text-neutral-400">
-                <span>20 m²</span>
-                <span>1.000 m²</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* STEP 4 - Fotos */}
-        {step === 3 && (
           <div className="space-y-8">
             <div>
               <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
@@ -418,8 +431,8 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
           </div>
         )}
 
-        {/* STEP 5 - Kontakt */}
-        {step === 4 && (
+        {/* STEP 4 - Kontakt */}
+        {step === 3 && (
           <div className="space-y-8">
             <div>
               <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
@@ -480,8 +493,8 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
           </div>
         )}
 
-        {/* STEP 6 - Angebot */}
-        {step === 5 && (
+        {/* STEP 5 - Angebot */}
+        {step === 4 && (
           <div className="space-y-8">
             {!submitted ? (
               <>
@@ -509,7 +522,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                 {/* Zusammenfassung */}
                 <div className="space-y-2.5 rounded-2xl bg-brand-mint/50 p-6 text-sm">
                   <SummaryRow label="Leistung" value={selectedService?.label ?? "-"} />
-                  {details.length > 0 && <SummaryRow label="Details" value={details.join(", ")} />}
+                  {allDetails.length > 0 && <SummaryRow label="Details" value={allDetails.join(", ")} />}
                   <SummaryRow label="Häufigkeit" value={selectedFrequency?.label ?? "-"} />
                   <SummaryRow label="Fläche" value={`${area[0].toLocaleString("de-DE")} m²`} />
                   <SummaryRow label="Adresse" value={address || "-"} />
@@ -522,26 +535,24 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   vor Ort festgelegt. Ihre Angaben werden in beiden Fällen an Blitzeblank übermittelt.
                 </p>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
+                <div className="flex flex-col gap-3">
                   <Button
-                    size="lg"
                     disabled={submitting}
                     onClick={() => handleDecision("accepted")}
-                    className="group flex-1 rounded-full bg-brand-blue text-white hover:bg-brand-teal"
+                    className="group h-16 w-full rounded-full bg-brand-blue text-lg font-bold text-white shadow-lg shadow-brand-blue/30 transition-transform hover:bg-brand-teal hover:scale-[1.02] sm:text-xl"
                   >
                     {submitting && decision === "accepted" ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                      <ThumbsUp className="h-4 w-4" />
+                      <ThumbsUp className="h-5 w-5" />
                     )}
                     Angebot annehmen
                   </Button>
                   <Button
-                    size="lg"
-                    variant="outline"
+                    variant="ghost"
                     disabled={submitting}
                     onClick={() => handleDecision("declined")}
-                    className="flex-1 rounded-full border-brand-navy/20 text-brand-navy hover:bg-brand-mint"
+                    className="rounded-full text-neutral-500 hover:bg-brand-mint hover:text-brand-navy"
                   >
                     {submitting && decision === "declined" ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -574,7 +585,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
         )}
 
         {/* Navigation */}
-        {!(step === 5 && submitted) && (
+        {!(step === 4 && submitted) && (
           <div className="mt-10 flex items-center justify-between">
             <Button
               type="button"
