@@ -66,8 +66,8 @@ export const serviceMedia: Record<string, ServiceMedia> = {
 
   fassadenreinigung: {
     hero: {
-      src: `${BASE}/fassade-gebaeudereinigung-sauber.avif`,
-      alt: "Saubere Gebäudefassade nach professioneller Fassadenreinigung",
+      src: `${BASE}/fassadenreinigung-wohngebaeude-resultat.avif`,
+      alt: "Saubere gelbe Wohnhaus-Fassade mit braunen Türen nach der Fassadenreinigung",
     },
     beforeAfter: [
       {
@@ -87,16 +87,8 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     ],
     gallery: [
       {
-        src: `${BASE}/fassadenreinigung-wohngebaeude-resultat.avif`,
-        alt: "Ergebnis der Fassadenreinigung an einem Wohngebäude",
-      },
-      {
         src: `${BASE}/fassadenreinigung-wohnhaus-ergebnis.avif`,
         alt: "Gereinigte Fassade eines Wohnhauses als Endergebnis",
-      },
-      {
-        src: `${BASE}/fassade-gebaeudereinigung-sauber.avif`,
-        alt: "Saubere Gebäudefassade nach der Reinigung",
       },
     ],
   },
