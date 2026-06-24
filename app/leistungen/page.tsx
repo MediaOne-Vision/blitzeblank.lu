@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import { getServiceMedia } from "@/lib/service-media"
 import { ArrowRight, ArrowUpRight, Factory, Grid3X3, Snowflake, Mountain, Building2, CheckCircle2 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -14,36 +15,13 @@ export const metadata: Metadata = {
 
 const services = [
   {
-    icon: Factory,
-    title: "Industriereinigung",
-    description: "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen nach höchsten Standards.",
-    features: ["Produktionshallen", "Lagerräume", "Werkstätten", "Maschinen & Anlagen"],
-    href: "/leistungen/industriereinigung",
-    image: "industrial+factory+production+hall+clean+polished+floor",
-  },
-  {
     icon: Grid3X3,
     title: "Fensterreinigung",
     description: "Streifenfreie Glasreinigung für Bürogebäude, Geschäfte und Industrieanlagen jeder Größe.",
     features: ["Bürogebäude", "Schaufenster", "Glasfassaden", "Industrieverglasung"],
     href: "/leistungen/fensterreinigung",
-    image: "clean+modern+glass+office+windows+reflection+blue+sky",
-  },
-  {
-    icon: Snowflake,
-    title: "Trockeneisreinigung",
-    description: "Schonende und effektive Reinigung ohne Chemie oder Wasser - ideal für empfindliche Oberflächen.",
-    features: ["Maschinen", "Elektronik", "Oberflächen", "Produktionsanlagen"],
-    href: "/leistungen/trockeneisreinigung",
-    image: "dry+ice+blasting+industrial+cleaning+machine+vapor",
-  },
-  {
-    icon: Mountain,
-    title: "Steinreinigung",
-    description: "Fachgerechte Pflege und Reinigung von Naturstein, Pflaster, Terrassen und Außenanlagen.",
-    features: ["Naturstein", "Pflasterflächen", "Terrassen", "Außentreppen"],
-    href: "/leistungen/steinreinigung",
-    image: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
+    slug: "fensterreinigung",
+    imageQuery: "clean+modern+glass+office+windows+reflection+blue+sky",
   },
   {
     icon: Building2,
@@ -51,7 +29,35 @@ const services = [
     description: "Professionelle Außenreinigung für Gebäudefassaden aller Art - vom Bürogebäude bis zur Industrieanlage.",
     features: ["Putzfassaden", "Klinkerfassaden", "Metallfassaden", "Glasfassaden"],
     href: "/leistungen/fassadenreinigung",
-    image: "modern+building+facade+exterior+cleaning+architecture",
+    slug: "fassadenreinigung",
+    imageQuery: "modern+building+facade+exterior+cleaning+architecture",
+  },
+  {
+    icon: Mountain,
+    title: "Steinreinigung",
+    description: "Fachgerechte Pflege und Reinigung von Naturstein, Pflaster, Terrassen und Außenanlagen.",
+    features: ["Naturstein", "Pflasterflächen", "Terrassen", "Außentreppen"],
+    href: "/leistungen/steinreinigung",
+    slug: "steinreinigung",
+    imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
+  },
+  {
+    icon: Snowflake,
+    title: "Trockeneisreinigung",
+    description: "Schonende und effektive Reinigung ohne Chemie oder Wasser - ideal für empfindliche Oberflächen.",
+    features: ["Maschinen", "Elektronik", "Oberflächen", "Produktionsanlagen"],
+    href: "/leistungen/trockeneisreinigung",
+    slug: "trockeneisreinigung",
+    imageQuery: "dry+ice+blasting+industrial+cleaning+machine+vapor",
+  },
+  {
+    icon: Factory,
+    title: "Industriereinigung",
+    description: "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen nach höchsten Standards.",
+    features: ["Produktionshallen", "Lagerräume", "Werkstätten", "Maschinen & Anlagen"],
+    href: "/leistungen/industriereinigung",
+    slug: "industriereinigung",
+    imageQuery: "industrial+factory+production+hall+clean+polished+floor",
   },
 ]
 
@@ -79,7 +85,9 @@ export default function LeistungenPage() {
         <section className="py-16 lg:py-24">
           <div className="mx-auto max-w-6xl px-6">
             <div className="space-y-8">
-              {services.map((service, index) => (
+              {services.map((service, index) => {
+                const media = getServiceMedia(service.slug)
+                return (
                 <div
                   key={index}
                   className="group grid overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl lg:grid-cols-2"
@@ -89,9 +97,10 @@ export default function LeistungenPage() {
                     className={`relative h-56 overflow-hidden lg:h-auto ${index % 2 === 1 ? "lg:order-last" : ""}`}
                   >
                     <Image
-                      src={`/placeholder.svg?height=600&width=800&query=${service.image}`}
-                      alt={service.title}
+                      src={media?.hero?.src ?? `/placeholder.svg?height=600&width=800&query=${service.imageQuery}`}
+                      alt={media?.hero?.alt ?? service.title}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/30 to-transparent" />
@@ -125,7 +134,8 @@ export default function LeistungenPage() {
                     </Button>
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
