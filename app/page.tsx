@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { Reveal } from "@/components/reveal"
 import { HeroSection } from "@/components/sections/hero"
 import { TrustBar } from "@/components/sections/trust-bar"
 import { ServicesOverview } from "@/components/sections/services-overview"
@@ -17,15 +18,29 @@ export default function HomePage() {
       <Navigation />
       <main className="flex-1">
         <HeroSection />
-        <TrustBar />
+        <Reveal direction="fade">
+          <TrustBar />
+        </Reveal>
         <ServicesOverview />
         <WhyUsSection />
-        <OwnerSection />
-        <ProcessSection />
-        <CalculatorSection />
-        <TestimonialsSection />
-        <FaqSection />
-        <CtaSection />
+        <Reveal>
+          <OwnerSection />
+        </Reveal>
+        <Reveal>
+          <ProcessSection />
+        </Reveal>
+        <Reveal>
+          <CalculatorSection />
+        </Reveal>
+        <Reveal>
+          <TestimonialsSection />
+        </Reveal>
+        <Reveal>
+          <FaqSection />
+        </Reveal>
+        <Reveal>
+          <CtaSection />
+        </Reveal>
       </main>
       <Footer />
     </div>

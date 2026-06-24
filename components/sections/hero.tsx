@@ -8,33 +8,33 @@ export function HeroSection() {
     <section className="relative min-h-[92vh] bg-brand-navy pt-20 flex items-center overflow-hidden">
       {/* Colorful gradient backdrop (analogous navy -> teal -> blue) */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-brand-teal/40 to-brand-blue/30" />
-      <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-brand-blue/30 blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-brand-sky/20 blur-3xl" />
+      <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-brand-blue/30 blur-3xl animate-float-slow" />
+      <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-brand-sky/20 blur-3xl animate-float" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-20 lg:py-28 w-full">
         <div className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-sm font-medium text-brand-sky mb-8 ring-1 ring-white/15">
+          <span className="animate-fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-sm font-medium text-brand-sky mb-8 ring-1 ring-white/15" style={{ animationDelay: "0.05s" }}>
             <Sparkles className="h-4 w-4" />
             Gewerbliche Reinigung vom Profi
           </span>
 
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-8 text-balance">
+          <h1 className="animate-fade-up font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-8 text-balance" style={{ animationDelay: "0.15s" }}>
             Strahlend sauber.{" "}
             <span className="text-brand-sky">Garantiert.</span>
           </h1>
 
-          <p className="text-white/70 text-lg max-w-lg mb-8 leading-relaxed">
+          <p className="animate-fade-up text-white/70 text-lg max-w-lg mb-8 leading-relaxed" style={{ animationDelay: "0.3s" }}>
             Von der Industriereinigung bis zur Fassadenpflege: maßgeschneiderte
             Reinigungslösungen für Unternehmen in Luxemburg und Deutschland.
           </p>
 
-          <div className="flex items-center gap-2.5 text-lg sm:text-xl font-semibold text-brand-sky mb-10">
+          <div className="animate-fade-up flex items-center gap-2.5 text-lg sm:text-xl font-semibold text-brand-sky mb-10" style={{ animationDelay: "0.42s" }}>
             <MapPin className="h-6 w-6 text-brand-sky" />
             <span>Aktiv in Luxemburg &amp; Deutschland</span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="animate-fade-up flex flex-col sm:flex-row gap-4" style={{ animationDelay: "0.54s" }}>
             <Button asChild size="lg" className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105">
               <Link href="/kontakt" className="cursor-pointer">
                 Kostenlose Beratung
@@ -58,7 +58,7 @@ export function HeroSection() {
           alt="Blitzeblank Maskottchen"
           width={420}
           height={420}
-          className="h-64 lg:h-[26rem] w-auto drop-shadow-2xl"
+          className="h-64 lg:h-[26rem] w-auto drop-shadow-2xl animate-float"
           priority
         />
       </div>
