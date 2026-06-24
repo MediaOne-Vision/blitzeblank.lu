@@ -4,6 +4,8 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ServiceSwitcher } from "@/components/service-switcher"
 import { QuoteBanner } from "@/components/quote-banner"
+import { BeforeAfterSlider } from "@/components/before-after-slider"
+import { getServiceMedia } from "@/lib/service-media"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle2, Phone, type LucideIcon } from "lucide-react"
 
@@ -35,6 +37,8 @@ export function ServicePageTemplate({
   benefits,
   process,
 }: ServicePageTemplateProps) {
+  const media = getServiceMedia(slug)
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navigation />
@@ -89,9 +93,10 @@ export function ServicePageTemplate({
               <div className="relative">
                 <div className="relative h-64 overflow-hidden rounded-3xl ring-1 ring-white/10 lg:h-80">
                   <Image
-                    src={`/placeholder.svg?height=640&width=800&query=${image}`}
-                    alt={title}
+                    src={media?.hero?.src ?? `/placeholder.svg?height=640&width=800&query=${image}`}
+                    alt={media?.hero?.alt ?? title}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover"
                     priority
                   />
@@ -174,6 +179,59 @@ export function ServicePageTemplate({
             </div>
           </div>
         </section>
+
+        {/* Ergebnisse: Vorher-Nachher + Galerie */}
+        {media && (media.beforeAfter.length > 0 || media.gallery.length > 0) && (
+          <section className="bg-brand-mint py-16 lg:py-24">
+            <div className="mx-auto max-w-6xl px-6">
+              <div className="mx-auto mb-12 max-w-2xl text-center">
+                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Ergebnisse</p>
+                <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-brand-navy">
+                  Sehen Sie den Unterschied
+                </h2>
+                {media.beforeAfter.length > 0 && (
+                  <p className="mt-3 text-neutral-600 text-pretty">
+                    Ziehen Sie den Regler, um das Vorher-Nachher-Ergebnis zu vergleichen.
+                  </p>
+                )}
+              </div>
+
+              {media.beforeAfter.length > 0 && (
+                <div className="mb-10 grid gap-6 md:grid-cols-2">
+                  {media.beforeAfter.map((pair) => (
+                    <BeforeAfterSlider
+                      key={pair.afterSrc}
+                      beforeSrc={pair.beforeSrc}
+                      afterSrc={pair.afterSrc}
+                      beforeAlt={pair.beforeAlt}
+                      afterAlt={pair.afterAlt}
+                      caption={pair.caption}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {media.gallery.length > 0 && (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {media.gallery.map((img) => (
+                    <div
+                      key={img.src}
+                      className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-sm ring-1 ring-brand-navy/5"
+                    >
+                      <Image
+                        src={img.src || "/placeholder.svg"}
+                        alt={img.alt}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* Kostenloses Angebot Banner */}
         <QuoteBanner slug={slug} serviceTitle={title} />

@@ -18,7 +18,8 @@ const services = [
     description: "Streifenfreie Glasreinigung für Bürogebäude und Geschäfte - auch in großen Höhen.",
     href: "/leistungen/fensterreinigung",
     icon: GlassWater,
-    image: "/placeholder.svg?height=400&width=400&query=clean+modern+glass+office+windows+reflection",
+    image: "/images/leistungen/fenster-sauber-nach-glasreinigung.avif",
+    imageAlt: "Streifenfrei gereinigtes Fenster nach professioneller Glasreinigung",
   },
   {
     title: "Trockeneisreinigung",
@@ -32,14 +33,16 @@ const services = [
     description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Außenanlagen.",
     href: "/leistungen/steinreinigung",
     icon: Gem,
-    image: "/placeholder.svg?height=400&width=400&query=clean+natural+stone+pavement+terrace+outdoor",
+    image: "/images/leistungen/naturstein-terrasse-gereinigt-ergebnis.avif",
+    imageAlt: "Gereinigte Naturstein-Terrasse als Ergebnis der Steinreinigung",
   },
   {
     title: "Fassadenreinigung",
     description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
     href: "/leistungen/fassadenreinigung",
     icon: Building2,
-    image: "/placeholder.svg?height=400&width=400&query=modern+building+facade+exterior+cleaning",
+    image: "/images/leistungen/fassadenreinigung-wohnhaus-ergebnis.avif",
+    imageAlt: "Gereinigte Fassade eines Wohnhauses als Endergebnis der Fassadenreinigung",
   },
 ]
 
@@ -108,8 +111,9 @@ export function ServicesOverview() {
               <div className="relative h-40 overflow-hidden rounded-t-3xl">
                 <Image
                   src={service.image || "/placeholder.svg"}
-                  alt={service.title}
+                  alt={service.imageAlt ?? service.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/50 to-transparent" />
