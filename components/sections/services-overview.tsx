@@ -26,8 +26,8 @@ const services = [
     description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
     href: "/leistungen/fassadenreinigung",
     icon: Building2,
-    image: "/images/leistungen/fassadenreinigung-wohnhaus-ergebnis.avif",
-    imageAlt: "Gereinigte Fassade eines Wohnhauses als Endergebnis der Fassadenreinigung",
+    image: "/images/leistungen/fassadenreinigung-wohngebaeude-resultat.avif",
+    imageAlt: "Saubere gelbe Wohnhaus-Fassade mit braunen Türen nach der Fassadenreinigung",
   },
   {
     title: "Steinreinigung",
@@ -110,7 +110,7 @@ export function ServicesOverview() {
               className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-brand-navy shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer"
             >
               {/* Image fills the tile */}
-              <div className="relative aspect-[4/5] overflow-hidden">
+              <div className="relative aspect-[5/4] overflow-hidden">
                 <Image
                   src={service.image || "/placeholder.svg"}
                   alt={service.imageAlt ?? service.title}
