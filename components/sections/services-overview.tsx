@@ -42,7 +42,8 @@ const services = [
     description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser für empfindliche Oberflächen.",
     href: "/leistungen/trockeneisreinigung",
     icon: Snowflake,
-    image: "/placeholder.svg?height=400&width=400&query=dry+ice+blasting+industrial+cleaning+machine",
+    image: "/images/leistungen/trockeneisreinigung-maschine-anwendung.avif",
+    imageAlt: "Trockeneisreinigung einer Maschine mit sichtbarem CO2-Strahl",
   },
 ]
 
@@ -99,41 +100,47 @@ export function ServicesOverview() {
           </Link>
         </Reveal>
 
-        {/* Other Services - image top, readable white content below */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Other Services - compact clickable tiles: image, icon & name only */}
+        <div className="grid gap-5 grid-cols-2 lg:grid-cols-4">
           {services.map((service, i) => (
             <Reveal key={service.title} as="div" direction="up" delay={i * 100} className="h-full">
             <Link
               href={service.href}
-              className="group relative flex h-full flex-col rounded-3xl bg-white shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer"
+              aria-label={`${service.title} - Details ansehen`}
+              className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-brand-navy shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer"
             >
-              {/* Image area */}
-              <div className="relative h-40 overflow-hidden rounded-t-3xl">
+              {/* Image fills the tile */}
+              <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
                   src={service.image || "/placeholder.svg"}
                   alt={service.imageAlt ?? service.title}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/50 to-transparent" />
-              </div>
-              {/* Icon badge - sits on the card so it straddles the image/white boundary */}
-              <div className="absolute left-5 top-40 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-2xl bg-brand-blue shadow-lg shadow-brand-blue/40 ring-4 ring-white transition-all duration-300 group-hover:-translate-y-[calc(50%+4px)] group-hover:rotate-3 group-hover:bg-brand-teal">
-                <service.icon className="h-7 w-7 text-white" strokeWidth={2} />
-              </div>
-              {/* Text on solid white - fully legible */}
-              <div className="flex flex-1 flex-col p-5 pt-10">
-                <h3 className="font-display text-lg font-bold text-brand-navy mb-2 group-hover:text-brand-blue transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-neutral-600 mb-4">
-                  {service.description}
-                </p>
-                <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-brand-blue group-hover:gap-2.5 transition-all">
-                  Mehr erfahren
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
+                {/* Dark gradient for legible title */}
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/30 to-transparent" />
+
+                {/* Icon badge top-left */}
+                <div className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue/90 shadow-lg shadow-brand-blue/30 ring-1 ring-white/20 backdrop-blur-sm transition-colors group-hover:bg-brand-teal">
+                  <service.icon className="h-6 w-6 text-white" strokeWidth={2} />
+                </div>
+
+                {/* Click affordance top-right */}
+                <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-sm transition-all group-hover:bg-white group-hover:text-brand-navy">
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                </div>
+
+                {/* Name + hint at the bottom */}
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <h3 className="font-display text-base lg:text-lg font-bold text-white text-balance">
+                    {service.title}
+                  </h3>
+                  <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand-sky opacity-90">
+                    Details ansehen
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </div>
               </div>
             </Link>
             </Reveal>
