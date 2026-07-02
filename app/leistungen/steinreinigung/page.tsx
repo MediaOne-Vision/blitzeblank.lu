@@ -56,7 +56,7 @@ export default function SteinreinigungPage() {
     <ServicePageTemplate
       slug="steinreinigung"
       title="Steinreinigung"
-      subtitle="Naturstein, Pflaster und Terrassen verlieren mit der Zeit durch Moos, Algen und Witterung ihren ursprünglichen Glanz. Wir reinigen Ihre Steinflächen materialschonend und fachgerecht und geben ihnen ihre natürliche Ausstrahlung zurück."
+      subtitle="Wir befreien Naturstein, Pflaster und Terrassen materialschonend von Moos, Algen und Witterungsspuren - für neuen, natürlichen Glanz."
       description="Steinoberflächen werden im Laufe der Zeit durch Witterung, Moos, Algen und Verschmutzungen unansehnlich. Unsere professionelle Steinreinigung bringt Ihre Außenflächen wieder zum Strahlen. Mit angepassten Techniken für jede Steinart sorgen wir für eine schonende und gründliche Reinigung, die den natürlichen Charakter Ihrer Steinoberflächen bewahrt."
       icon={Mountain}
       image="clean+natural+stone+pavement+terrace+outdoor+pressure+washing"

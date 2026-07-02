@@ -56,7 +56,7 @@ export default function FassadenreinigungPage() {
     <ServicePageTemplate
       slug="fassadenreinigung"
       title="Fassadenreinigung"
-      subtitle="Eine gepflegte Fassade ist die Visitenkarte Ihres Gebäudes und schützt zugleich die Bausubstanz. Wir entfernen Algen, Schmutz und Verfärbungen schonend und materialgerecht - für eine strahlende Außenwirkung, die lange erhalten bleibt."
+      subtitle="Wir entfernen Algen, Schmutz und Verfärbungen schonend und materialgerecht - für eine strahlende Fassade, die lange schön bleibt."
       description="Die Fassade ist das Gesicht Ihres Gebäudes. Umwelteinflüsse, Abgase und organische Ablagerungen hinterlassen im Laufe der Zeit ihre Spuren. Unsere professionelle Fassadenreinigung entfernt selbst hartnäckige Verschmutzungen schonend und effektiv. Wir arbeiten mit verschiedenen Techniken, die optimal auf Ihr Fassadenmaterial abgestimmt sind."
       icon={Building2}
       image="modern+building+facade+exterior+cleaning+architecture"
