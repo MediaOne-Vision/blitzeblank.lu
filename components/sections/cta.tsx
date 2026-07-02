@@ -15,7 +15,7 @@ export function CtaSection() {
             </h2>
             <p className="text-white/85 max-w-xl mx-auto mb-8 leading-relaxed">
               Kontaktieren Sie uns für eine kostenlose und unverbindliche Beratung in 
-              Luxemburg und Deutschland. Wir erstellen Ihnen ein maßgeschneidertes Angebot.
+              Luxemburg, Trier, Bitburg und der Region. Wir erstellen Ihnen ein maßgeschneidertes Angebot.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="group bg-white text-brand-navy hover:bg-brand-mint rounded-full px-8 shadow-lg transition-transform hover:scale-105">

@@ -42,7 +42,7 @@ const faqs = [
   {
     question: "Sind Anfahrtskosten im Preis inbegriffen?",
     answer:
-      "In unserem Einzugsgebiet in Luxemburg und Deutschland sind die Anfahrtskosten in der Regel im Angebot enthalten. Alle Kosten weisen wir vorab transparent aus.",
+      "In unserem Einzugsgebiet in Luxemburg, Trier, Bitburg und der Region sind die Anfahrtskosten in der Regel im Angebot enthalten. Alle Kosten weisen wir vorab transparent aus.",
   },
   {
     question: "Gibt es Rabatte auf z. B. regelmäßige Buchungen?",

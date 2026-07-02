@@ -26,12 +26,12 @@ export function HeroSection() {
 
           <p className="animate-fade-up text-white/70 text-lg max-w-lg mb-8 leading-relaxed" style={{ animationDelay: "0.3s" }}>
             Von der Industriereinigung bis zur Fassadenpflege: maßgeschneiderte
-            Reinigungslösungen für Unternehmen in Luxemburg und Deutschland.
+            Reinigungslösungen für Unternehmen in Luxemburg, Trier, Bitburg und der Region.
           </p>
 
           <div className="animate-fade-up flex items-center gap-2.5 text-lg sm:text-xl font-semibold text-brand-sky mb-10" style={{ animationDelay: "0.42s" }}>
             <MapPin className="h-6 w-6 text-brand-sky" />
-            <span>Aktiv in Luxemburg &amp; Deutschland</span>
+            <span>Aktiv in Luxemburg, Trier, Bitburg &amp; Region</span>
           </div>
 
           <div className="animate-fade-up flex flex-col sm:flex-row gap-4" style={{ animationDelay: "0.54s" }}>

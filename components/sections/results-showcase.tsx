@@ -47,6 +47,7 @@ export function ResultsShowcase() {
               beforeAlt={item.beforeAlt}
               afterAlt={item.afterAlt}
               caption={item.caption}
+              captionClassName="text-white/85"
             />
           ))}
         </div>

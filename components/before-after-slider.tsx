@@ -11,6 +11,8 @@ interface BeforeAfterSliderProps {
   afterAlt: string
   /** optional caption shown under the slider */
   caption?: string
+  /** color/utility classes for the caption text */
+  captionClassName?: string
   className?: string
 }
 
@@ -20,6 +22,7 @@ export function BeforeAfterSlider({
   beforeAlt,
   afterAlt,
   caption,
+  captionClassName = "text-neutral-500",
   className,
 }: BeforeAfterSliderProps) {
   const [position, setPosition] = useState(50)
@@ -114,7 +117,7 @@ export function BeforeAfterSlider({
         </div>
       </div>
       {caption && (
-        <figcaption className="mt-3 text-center text-sm text-neutral-500">{caption}</figcaption>
+        <figcaption className={`mt-3 text-center text-sm font-medium ${captionClassName}`}>{caption}</figcaption>
       )}
     </figure>
   )

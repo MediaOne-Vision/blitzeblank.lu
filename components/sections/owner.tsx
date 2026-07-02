@@ -1,5 +1,7 @@
 import Image from "next/image"
-import { Quote } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Quote, ArrowRight } from "lucide-react"
 
 export function OwnerSection() {
   return (
@@ -45,7 +47,7 @@ export function OwnerSection() {
             <div className="space-y-4 text-neutral-600 leading-relaxed">
               <p>
                 Mein Name ist Mustapha El-Ali, Gründer und Inhaber von Blitzeblank. Mit 
-                3 Jahren Erfahrung in der professionellen Reinigung betreue ich Kunden aus 
+                langjähriger Erfahrung in der professionellen Reinigung betreue ich Kunden aus 
                 dem Gewerbe- und Privatbereich mit einem klaren Anspruch: gründliche Arbeit, 
                 feste Abläufe und absolute Zuverlässigkeit.
               </p>
@@ -55,6 +57,17 @@ export function OwnerSection() {
                 Sauberkeit, auf die Sie sich verlassen können.
               </p>
             </div>
+
+            <Button
+              asChild
+              size="lg"
+              className="group mt-8 rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-brand-blue/30 hover:bg-brand-teal"
+            >
+              <Link href="/kontakt" className="cursor-pointer">
+                Lernen Sie mich persönlich kennen
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

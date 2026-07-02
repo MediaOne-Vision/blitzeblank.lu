@@ -1,4 +1,6 @@
-import { Clock, MapPinned, BadgeEuro, ShieldCheck } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Clock, MapPinned, BadgeEuro, ShieldCheck, CalendarCheck, ArrowRight } from "lucide-react"
 
 const values = [
   {
@@ -44,6 +46,24 @@ export function TrustBar() {
               <p className="text-sm text-neutral-600 leading-relaxed">{value.text}</p>
             </div>
           ))}
+        </div>
+
+        {/* CTA - kostenlose Besichtigung */}
+        <div className="mt-10 flex flex-col items-center justify-center gap-4 rounded-2xl bg-brand-mint px-6 py-6 text-center sm:flex-row sm:text-left">
+          <CalendarCheck className="h-8 w-8 flex-shrink-0 text-brand-blue" />
+          <p className="flex-1 text-brand-navy font-medium text-pretty">
+            Unverbindlich starten: Wir kommen zu Ihnen und erstellen Ihr Angebot vor Ort.
+          </p>
+          <Button
+            asChild
+            size="lg"
+            className="group flex-shrink-0 rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-brand-blue/30 hover:bg-brand-teal"
+          >
+            <Link href="/kontakt" className="cursor-pointer">
+              Kostenlose Besichtigung anfragen
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

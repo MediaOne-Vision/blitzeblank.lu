@@ -76,7 +76,7 @@ export default function UeberUnsPage() {
                   </div>
                   {/* Floating badge */}
                   <div className="absolute -bottom-5 left-6 rounded-2xl bg-white px-5 py-3 shadow-xl ring-1 ring-brand-navy/5">
-                    <p className="font-display text-2xl font-extrabold text-brand-blue leading-none">3 Jahre</p>
+                    <p className="font-display text-2xl font-extrabold text-brand-blue leading-none">Langjährige</p>
                     <p className="text-xs text-neutral-500">Erfahrung in Reinigung</p>
                   </div>
                 </div>
@@ -104,8 +104,8 @@ export default function UeberUnsPage() {
 
                 <div className="space-y-4 text-neutral-600 leading-relaxed">
                   <p>
-                    Mein Name ist Mustapha El-Ali, Gründer und Inhaber von Blitzeblank. Mit 
-                    3 Jahren Erfahrung in der professionellen Reinigung betreue ich Kunden aus 
+                Mein Name ist Mustapha El-Ali, Gründer und Inhaber von Blitzeblank. Mit
+                langjähriger Erfahrung in der professionellen Reinigung betreue ich Kunden aus
                     dem Gewerbe- und Privatbereich mit einem klaren Anspruch: gründliche Arbeit, 
                     feste Abläufe und absolute Zuverlässigkeit.
                   </p>

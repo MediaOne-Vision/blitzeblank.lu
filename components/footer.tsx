@@ -36,8 +36,8 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-neutral-400 max-w-xs mb-6">
-              Ihr Partner für professionelle Reinigungsdienstleistungen in Luxemburg 
-              und Deutschland. Zuverlässig, gründlich und transparent.
+              Ihr Partner für professionelle Reinigungsdienstleistungen in Luxemburg, 
+              Trier, Bitburg und der Region. Zuverlässig, gründlich und transparent.
             </p>
             <div className="flex items-center gap-3 mb-6">
               <a
