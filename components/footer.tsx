@@ -136,7 +136,17 @@ export function Footer() {
             <Link href="/datenschutz" className="text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer">
               Datenschutz
             </Link>
-            <span className="text-xs text-neutral-600">Made by MediaOne</span>
+            <span className="text-xs text-neutral-600">
+              Glänzend umgesetzt von{" "}
+              <a
+                href="https://mediaone.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-neutral-500 hover:text-white transition-colors cursor-pointer"
+              >
+                MediaOne
+              </a>
+            </span>
           </div>
         </div>
       </div>
