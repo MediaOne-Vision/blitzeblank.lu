@@ -75,11 +75,6 @@ export default function UeberUnsPage() {
                       className="object-cover object-top"
                     />
                   </div>
-                  {/* Floating badge */}
-                  <div className="absolute -bottom-5 left-6 rounded-2xl bg-white px-5 py-3 shadow-xl ring-1 ring-brand-navy/5">
-                    <p className="font-display text-2xl font-extrabold text-brand-blue leading-none">Langjährige</p>
-                    <p className="text-xs text-neutral-500">Erfahrung in Reinigung</p>
-                  </div>
                 </div>
               </div>
 
