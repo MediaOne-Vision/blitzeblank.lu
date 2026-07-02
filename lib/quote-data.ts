@@ -145,6 +145,56 @@ export function getQuoteServiceBySlug(slug: string): QuoteService | undefined {
   return quoteServices.find((s) => s.slug === slug)
 }
 
+/* ---- Fensterreinigung: Größen statt Quadratmeter ---- */
+
+export interface WindowSize {
+  value: string
+  label: string
+  hint: string
+  /** Pauschalpreis pro Fenster dieser Größe in EUR */
+  pricePerWindow: number
+}
+
+export const windowSizes: WindowSize[] = [
+  { value: "klein", label: "Klein", hint: "z. B. Kippfenster, bis ca. 0,5 m²", pricePerWindow: 6 },
+  { value: "mittel", label: "Mittelgroß", hint: "z. B. Standardfenster, ca. 0,5 – 1,5 m²", pricePerWindow: 10 },
+  { value: "gross", label: "Groß", hint: "z. B. Schaufenster, ab ca. 1,5 m²", pricePerWindow: 16 },
+]
+
+export interface WindowSizeEntry {
+  /** Anzahl der Fenster dieser Größe */
+  count: number
+  /** Optionale exakte Breite in Metern (0 = nicht angegeben) */
+  width: number
+  /** Optionale exakte Höhe in Metern (0 = nicht angegeben) */
+  height: number
+}
+
+export function calculateWindowQuotePrice(
+  service: QuoteService | undefined,
+  frequency: QuoteFrequency | undefined,
+  sizes: Record<string, WindowSizeEntry>,
+): CalculatedPrice {
+  if (!service || !frequency) return { min: 0, max: 0 }
+  let total = service.basePrice
+  for (const size of windowSizes) {
+    const entry = sizes[size.value]
+    if (!entry || entry.count <= 0) continue
+    if (entry.width > 0 && entry.height > 0) {
+      // Exakte Maße angegeben: Fläche × Quadratmeterpreis
+      total += entry.count * entry.width * entry.height * service.pricePerSqm
+    } else {
+      // Sonst Pauschalpreis pro Fenster
+      total += entry.count * size.pricePerWindow
+    }
+  }
+  const withFrequency = total * frequency.multiplier
+  return {
+    min: Math.round(withFrequency * 0.85),
+    max: Math.round(withFrequency * 1.15),
+  }
+}
+
 export interface CalculatedPrice {
   min: number
   max: number

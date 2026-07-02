@@ -9,6 +9,10 @@ export interface QuoteSubmission {
   frequency: string
   frequencyLabel: string
   area: number
+  /** Nur bei Fensterreinigung: Gesamtanzahl der Fenster */
+  windowCount?: number
+  /** Nur bei Fensterreinigung: Aufschlüsselung nach Größe */
+  windowBreakdown?: string
   photoCount: number
   name: string
   email: string

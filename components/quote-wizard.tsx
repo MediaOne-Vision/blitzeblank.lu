@@ -12,6 +12,9 @@ import {
   quoteServices,
   quoteFrequencies,
   calculateQuotePrice,
+  windowSizes,
+  calculateWindowQuotePrice,
+  type WindowSizeEntry,
 } from "@/lib/quote-data"
 import { submitQuote, type QuoteSubmission } from "@/app/actions/submit-quote"
 import {
@@ -59,6 +62,16 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   // Step 3 - Fläche
   const [area, setArea] = useState([100])
 
+  // Fensterreinigung: Anzahl + Größenverteilung (statt m²)
+  const [windowCount, setWindowCount] = useState("")
+  const [windowSizeInputs, setWindowSizeInputs] = useState<
+    Record<string, { count: string; width: string; height: string }>
+  >({
+    klein: { count: "", width: "", height: "" },
+    mittel: { count: "", width: "", height: "" },
+    gross: { count: "", width: "", height: "" },
+  })
+
   // Step 4 - Fotos
   const [photos, setPhotos] = useState<UploadedPhoto[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -76,8 +89,41 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
 
   const selectedService = quoteServices.find((s) => s.value === serviceValue)
   const selectedFrequency = quoteFrequencies.find((f) => f.value === frequencyValue)
-  const price = calculateQuotePrice(selectedService, selectedFrequency, area[0])
+  const isWindow = serviceValue === "fenster"
+
+  // Fenster-Eingaben in numerische Werte für die Preisberechnung umwandeln
+  const numericWindowSizes: Record<string, WindowSizeEntry> = windowSizes.reduce(
+    (acc, size) => {
+      const input = windowSizeInputs[size.value]
+      acc[size.value] = {
+        count: Number.parseInt(input.count) || 0,
+        width: Number.parseFloat(input.width.replace(",", ".")) || 0,
+        height: Number.parseFloat(input.height.replace(",", ".")) || 0,
+      }
+      return acc
+    },
+    {} as Record<string, WindowSizeEntry>,
+  )
+  const assignedWindows = windowSizes.reduce(
+    (sum, size) => sum + numericWindowSizes[size.value].count,
+    0,
+  )
+
+  const price = isWindow
+    ? calculateWindowQuotePrice(selectedService, selectedFrequency, numericWindowSizes)
+    : calculateQuotePrice(selectedService, selectedFrequency, area[0])
   const allDetails = customDetail.trim() ? [...details, customDetail.trim()] : details
+
+  const updateWindowSize = (
+    sizeValue: string,
+    field: "count" | "width" | "height",
+    value: string,
+  ) => {
+    setWindowSizeInputs((prev) => ({
+      ...prev,
+      [sizeValue]: { ...prev[sizeValue], [field]: value },
+    }))
+  }
 
   const toggleDetail = (option: string) => {
     setDetails((prev) =>
@@ -101,8 +147,14 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const canProceed = () => {
     switch (step) {
       case 0:
+        if (isWindow) {
+          return Boolean(serviceValue && address.trim() && (Number.parseInt(windowCount) || 0) > 0)
+        }
         return Boolean(serviceValue && address.trim())
       case 1:
+        if (isWindow) {
+          return Boolean(frequencyValue && assignedWindows > 0)
+        }
         return Boolean(frequencyValue)
       case 3:
         return Boolean(name.trim() && email.trim())
@@ -126,7 +178,19 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
       address,
       frequency: frequencyValue,
       frequencyLabel: selectedFrequency?.label ?? "",
-      area: area[0],
+      area: isWindow ? 0 : area[0],
+      windowCount: isWindow ? assignedWindows : undefined,
+      windowBreakdown: isWindow
+        ? windowSizes
+            .filter((size) => numericWindowSizes[size.value].count > 0)
+            .map((size) => {
+              const entry = numericWindowSizes[size.value]
+              const maße =
+                entry.width > 0 && entry.height > 0 ? ` (${entry.width}×${entry.height} m)` : ""
+              return `${entry.count}× ${size.label}${maße}`
+            })
+            .join(", ")
+        : undefined,
       photoCount: photos.length,
       name,
       email,
@@ -272,6 +336,28 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
               </div>
             )}
 
+            {/* Fensteranzahl direkt im ersten Schritt */}
+            {isWindow && (
+              <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 p-5">
+                <Label htmlFor="windowCount" className="text-sm font-semibold text-brand-navy">
+                  Wie viele Fenster sollen gereinigt werden? *
+                </Label>
+                <p className="mb-3 mt-0.5 text-sm text-neutral-500">
+                  Die genauen Größen geben Sie im nächsten Schritt an.
+                </p>
+                <Input
+                  id="windowCount"
+                  type="number"
+                  min={1}
+                  inputMode="numeric"
+                  placeholder="z. B. 12"
+                  value={windowCount}
+                  onChange={(e) => setWindowCount(e.target.value)}
+                  className="max-w-40 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
+                />
+              </div>
+            )}
+
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="date" className="flex items-center gap-2 text-sm font-normal text-neutral-600">
@@ -342,37 +428,128 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
               </div>
             </div>
 
-            <div className="space-y-5">
-              <div>
-                <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                  Wie groß ist die zu reinigende Fläche?
-                </h3>
-                <p className="text-sm text-neutral-500">
-                  Verschieben Sie den Regler für eine Schätzung.
-                </p>
-              </div>
+            {isWindow ? (
+              <div className="space-y-5">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    Welche Größe haben Ihre Fenster?
+                  </h3>
+                  <p className="text-sm text-neutral-500">
+                    Verteilen Sie Ihre {Number.parseInt(windowCount) || 0} Fenster auf die Größen. Optional
+                    können Sie die genauen Maße angeben.
+                  </p>
+                </div>
 
-              <div className="rounded-2xl bg-brand-mint/50 p-8">
-                <div className="mb-6 text-center">
-                  <span className="font-display text-5xl font-extrabold text-brand-navy">
-                    {area[0].toLocaleString("de-DE")}
-                  </span>
-                  <span className="ml-2 text-lg text-neutral-500">m²</span>
+                <div className="space-y-3">
+                  {windowSizes.map((size) => {
+                    const input = windowSizeInputs[size.value]
+                    return (
+                      <div
+                        key={size.value}
+                        className="rounded-2xl border border-brand-navy/10 bg-brand-mint/40 p-5"
+                      >
+                        <div className="flex flex-wrap items-end justify-between gap-4">
+                          <div>
+                            <p className="font-semibold text-brand-navy">{size.label}</p>
+                            <p className="text-xs text-neutral-500">{size.hint}</p>
+                          </div>
+                          <div className="space-y-1.5">
+                            <Label
+                              htmlFor={`count-${size.value}`}
+                              className="text-xs font-normal text-neutral-600"
+                            >
+                              Anzahl
+                            </Label>
+                            <Input
+                              id={`count-${size.value}`}
+                              type="number"
+                              min={0}
+                              inputMode="numeric"
+                              placeholder="0"
+                              value={input.count}
+                              onChange={(e) => updateWindowSize(size.value, "count", e.target.value)}
+                              className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Optionale genaue Maße */}
+                        <div className="mt-4 border-t border-brand-navy/5 pt-4">
+                          <Label className="text-xs font-normal text-neutral-500">
+                            Genaue Maße pro Fenster <span className="text-neutral-400">(optional)</span>
+                          </Label>
+                          <div className="mt-2 flex items-center gap-2">
+                            <Input
+                              type="text"
+                              inputMode="decimal"
+                              placeholder="Breite"
+                              value={input.width}
+                              onChange={(e) => updateWindowSize(size.value, "width", e.target.value)}
+                              className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
+                            />
+                            <span className="text-sm text-neutral-400">m ×</span>
+                            <Input
+                              type="text"
+                              inputMode="decimal"
+                              placeholder="Höhe"
+                              value={input.height}
+                              onChange={(e) => updateWindowSize(size.value, "height", e.target.value)}
+                              className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
+                            />
+                            <span className="text-sm text-neutral-400">m</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
-                <Slider
-                  value={area}
-                  onValueChange={setArea}
-                  max={1000}
-                  min={20}
-                  step={10}
-                  className="[&_[role=slider]]:bg-brand-blue [&_[role=slider]]:border-brand-blue"
-                />
-                <div className="mt-3 flex justify-between text-xs text-neutral-400">
-                  <span>20 m²</span>
-                  <span>1.000 m²</span>
+
+                <div className="flex items-center justify-between rounded-2xl bg-brand-mint/50 px-5 py-3 text-sm">
+                  <span className="text-neutral-500">Zugeordnete Fenster</span>
+                  <span
+                    className={`font-semibold ${
+                      (Number.parseInt(windowCount) || 0) > 0 && assignedWindows !== (Number.parseInt(windowCount) || 0)
+                        ? "text-brand-blue"
+                        : "text-brand-navy"
+                    }`}
+                  >
+                    {assignedWindows} / {Number.parseInt(windowCount) || 0}
+                  </span>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-5">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    Wie groß ist die zu reinigende Fläche?
+                  </h3>
+                  <p className="text-sm text-neutral-500">
+                    Verschieben Sie den Regler für eine Schätzung.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-brand-mint/50 p-8">
+                  <div className="mb-6 text-center">
+                    <span className="font-display text-5xl font-extrabold text-brand-navy">
+                      {area[0].toLocaleString("de-DE")}
+                    </span>
+                    <span className="ml-2 text-lg text-neutral-500">m²</span>
+                  </div>
+                  <Slider
+                    value={area}
+                    onValueChange={setArea}
+                    max={1000}
+                    min={20}
+                    step={10}
+                    className="[&_[role=slider]]:bg-brand-blue [&_[role=slider]]:border-brand-blue"
+                  />
+                  <div className="mt-3 flex justify-between text-xs text-neutral-400">
+                    <span>20 m²</span>
+                    <span>1.000 m²</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -524,7 +701,28 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   <SummaryRow label="Leistung" value={selectedService?.label ?? "-"} />
                   {allDetails.length > 0 && <SummaryRow label="Details" value={allDetails.join(", ")} />}
                   <SummaryRow label="Häufigkeit" value={selectedFrequency?.label ?? "-"} />
-                  <SummaryRow label="Fläche" value={`${area[0].toLocaleString("de-DE")} m²`} />
+                  {isWindow ? (
+                    <>
+                      <SummaryRow label="Fenster gesamt" value={`${assignedWindows}`} />
+                      {windowSizes.map((size) => {
+                        const entry = numericWindowSizes[size.value]
+                        if (entry.count <= 0) return null
+                        const maße =
+                          entry.width > 0 && entry.height > 0
+                            ? ` (${entry.width.toLocaleString("de-DE")} × ${entry.height.toLocaleString("de-DE")} m)`
+                            : ""
+                        return (
+                          <SummaryRow
+                            key={size.value}
+                            label={size.label}
+                            value={`${entry.count} Fenster${maße}`}
+                          />
+                        )
+                      })}
+                    </>
+                  ) : (
+                    <SummaryRow label="Fläche" value={`${area[0].toLocaleString("de-DE")} m²`} />
+                  )}
                   <SummaryRow label="Adresse" value={address || "-"} />
                   {preferredDate && <SummaryRow label="Wunschtermin" value={preferredDate} />}
                   {photos.length > 0 && <SummaryRow label="Fotos" value={`${photos.length} hochgeladen`} />}
