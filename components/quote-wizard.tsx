@@ -62,6 +62,9 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   // Step 3 - Fläche
   const [area, setArea] = useState([100])
 
+  // Fensterreinigung: Anzahl je Fensterart (Bürofenster usw.)
+  const [windowTypeCounts, setWindowTypeCounts] = useState<Record<string, string>>({})
+
   // Fensterreinigung: Größen mit jeweiliger Anzahl (statt m²)
   const [windowSizeInputs, setWindowSizeInputs] = useState<
     Record<string, { count: string; width: string; height: string }>
@@ -111,7 +114,14 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const price = isWindow
     ? calculateWindowQuotePrice(selectedService, selectedFrequency, numericWindowSizes)
     : calculateQuotePrice(selectedService, selectedFrequency, area[0])
-  const allDetails = customDetail.trim() ? [...details, customDetail.trim()] : details
+  // Fensterarten mit Anzahl als lesbare Liste, z. B. ["3× Bürofenster", "5× Dachfenster"]
+  const windowTypeBreakdown = isWindow
+    ? (selectedService?.detail.options ?? [])
+        .filter((type) => (Number.parseInt(windowTypeCounts[type]) || 0) > 0)
+        .map((type) => `${Number.parseInt(windowTypeCounts[type])}× ${type}`)
+    : []
+  const baseDetails = isWindow ? windowTypeBreakdown : details
+  const allDetails = customDetail.trim() ? [...baseDetails, customDetail.trim()] : baseDetails
 
   const updateWindowSize = (
     sizeValue: string,
@@ -122,6 +132,10 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
       ...prev,
       [sizeValue]: { ...prev[sizeValue], [field]: value },
     }))
+  }
+
+  const updateWindowTypeCount = (type: string, value: string) => {
+    setWindowTypeCounts((prev) => ({ ...prev, [type]: value }))
   }
 
   const toggleDetail = (option: string) => {
@@ -296,27 +310,53 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
               <div className="rounded-2xl bg-brand-mint/50 p-5">
                 <Label className="text-sm font-semibold text-brand-navy">
                   {selectedService.detail.optionLabel}{" "}
-                  <span className="font-normal text-neutral-400">(optional, Mehrfachauswahl)</span>
+                  <span className="font-normal text-neutral-400">
+                    {isWindow ? "(Anzahl je Art angeben)" : "(optional, Mehrfachauswahl)"}
+                  </span>
                 </Label>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {selectedService.detail.options.map((option) => {
-                    const active = details.includes(option)
-                    return (
-                      <button
+
+                {isWindow ? (
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {selectedService.detail.options.map((option) => (
+                      <div
                         key={option}
-                        type="button"
-                        onClick={() => toggleDetail(option)}
-                        className={`rounded-full border px-4 py-1.5 text-sm transition-all cursor-pointer ${
-                          active
-                            ? "border-brand-blue bg-brand-blue text-white"
-                            : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                        }`}
+                        className="flex items-center justify-between gap-3 rounded-xl border border-brand-navy/15 bg-white px-4 py-2.5"
                       >
-                        {option}
-                      </button>
-                    )
-                  })}
-                </div>
+                        <span className="text-sm font-medium text-brand-navy">{option}</span>
+                        <Input
+                          type="number"
+                          min={0}
+                          inputMode="numeric"
+                          placeholder="0"
+                          value={windowTypeCounts[option] ?? ""}
+                          onChange={(e) => updateWindowTypeCount(option, e.target.value)}
+                          className="w-20 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+                          aria-label={`Anzahl ${option}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {selectedService.detail.options.map((option) => {
+                      const active = details.includes(option)
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => toggleDetail(option)}
+                          className={`rounded-full border px-4 py-1.5 text-sm transition-all cursor-pointer ${
+                            active
+                              ? "border-brand-blue bg-brand-blue text-white"
+                              : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                          }`}
+                        >
+                          {option}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
                 <div className="mt-4 space-y-2">
                   <Label htmlFor="customDetail" className="text-sm font-normal text-neutral-600">
                     Sonstiges <span className="text-neutral-400">(optional)</span>
