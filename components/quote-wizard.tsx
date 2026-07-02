@@ -62,8 +62,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   // Step 3 - Fläche
   const [area, setArea] = useState([100])
 
-  // Fensterreinigung: Anzahl + Größenverteilung (statt m²)
-  const [windowCount, setWindowCount] = useState("")
+  // Fensterreinigung: Größen mit jeweiliger Anzahl (statt m²)
   const [windowSizeInputs, setWindowSizeInputs] = useState<
     Record<string, { count: string; width: string; height: string }>
   >({
@@ -147,9 +146,6 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const canProceed = () => {
     switch (step) {
       case 0:
-        if (isWindow) {
-          return Boolean(serviceValue && address.trim() && (Number.parseInt(windowCount) || 0) > 0)
-        }
         return Boolean(serviceValue && address.trim())
       case 1:
         if (isWindow) {
@@ -336,28 +332,6 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
               </div>
             )}
 
-            {/* Fensteranzahl direkt im ersten Schritt */}
-            {isWindow && (
-              <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 p-5">
-                <Label htmlFor="windowCount" className="text-sm font-semibold text-brand-navy">
-                  Wie viele Fenster sollen gereinigt werden? *
-                </Label>
-                <p className="mb-3 mt-0.5 text-sm text-neutral-500">
-                  Die genauen Größen geben Sie im nächsten Schritt an.
-                </p>
-                <Input
-                  id="windowCount"
-                  type="number"
-                  min={1}
-                  inputMode="numeric"
-                  placeholder="z. B. 12"
-                  value={windowCount}
-                  onChange={(e) => setWindowCount(e.target.value)}
-                  className="max-w-40 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
-                />
-              </div>
-            )}
-
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="date" className="flex items-center gap-2 text-sm font-normal text-neutral-600">
@@ -435,7 +409,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                     Welche Größe haben Ihre Fenster?
                   </h3>
                   <p className="text-sm text-neutral-500">
-                    Verteilen Sie Ihre {Number.parseInt(windowCount) || 0} Fenster auf die Größen. Optional
+                    Geben Sie je Fenstergröße an, wie viele Fenster gereinigt werden sollen. Optional
                     können Sie die genauen Maße angeben.
                   </p>
                 </div>
@@ -502,19 +476,6 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                       </div>
                     )
                   })}
-                </div>
-
-                <div className="flex items-center justify-between rounded-2xl bg-brand-mint/50 px-5 py-3 text-sm">
-                  <span className="text-neutral-500">Zugeordnete Fenster</span>
-                  <span
-                    className={`font-semibold ${
-                      (Number.parseInt(windowCount) || 0) > 0 && assignedWindows !== (Number.parseInt(windowCount) || 0)
-                        ? "text-brand-blue"
-                        : "text-brand-navy"
-                    }`}
-                  >
-                    {assignedWindows} / {Number.parseInt(windowCount) || 0}
-                  </span>
                 </div>
               </div>
             ) : (
