@@ -30,7 +30,7 @@ export default async function AngebotPage({
               Kostenlos &amp; unverbindlich
             </span>
             <h1 className="mb-4 text-balance font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-              Ihr kostenloses Angebot
+              Ihr kostenloses und unverbindliches Angebot
             </h1>
             <p className="text-pretty text-lg text-white/75">
               In wenigen Schritten zu Ihrem individuellen Richtpreis - geben Sie Ihre Anforderungen
