@@ -25,8 +25,8 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Telefon",
-    content: "+352 123 456 789",
-    href: "tel:+352123456789",
+    content: "+352 661 830 493",
+    href: "tel:+352661830493",
   },
   {
     icon: Mail,
@@ -156,7 +156,7 @@ export default function KontaktPage() {
                     <>
                       <div className="mb-6">
                         <h3 className="font-display text-xl font-bold text-brand-navy">
-                          Kostenlosen Besichtigungstermin anfragen
+                          Ihr kostenloses und unverbindliches Angebot anfordern
                         </h3>
                         <p className="text-sm text-neutral-500">
                           Füllen Sie das Formular aus und wir melden uns bei Ihnen.

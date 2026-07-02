@@ -68,10 +68,11 @@ export default function UeberUnsPage() {
                   <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-brand-blue/15 to-brand-teal/10" />
                   <div className="relative aspect-[4/5] overflow-hidden rounded-3xl ring-1 ring-brand-navy/10">
                     <Image
-                      src="/placeholder.svg?height=750&width=600&query=professional+friendly+business+owner+portrait+cleaning+company"
-                      alt="Mustapha El-Ali, Gründer von Blitzeblank"
+                      src="/images/team/mustapha-el-ali-gruender-blitzeblank-handschlag.avif"
+                      alt="Mustapha El-Ali, Gründer und Geschäftsführer von Blitzeblank, im schwarzen Firmen-Shirt mit ausgestreckter Hand zur Begrüßung"
                       fill
-                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover object-top"
                     />
                   </div>
                   {/* Floating badge */}

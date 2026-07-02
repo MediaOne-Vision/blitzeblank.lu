@@ -111,8 +111,8 @@ export function Footer() {
                 L-1234 Luxemburg
               </li>
               <li>
-                <a href="tel:+352123456789" className="hover:text-white transition-colors cursor-pointer">
-                  +352 123 456 789
+                <a href="tel:+352661830493" className="hover:text-white transition-colors cursor-pointer">
+                  +352 661 830 493
                 </a>
               </li>
               <li>

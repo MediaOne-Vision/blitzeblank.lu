@@ -1,5 +1,7 @@
-import { Zap, Repeat, UserCheck, Award } from "lucide-react"
+import Link from "next/link"
+import { Zap, Repeat, UserCheck, Award, ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/reveal"
+import { Button } from "@/components/ui/button"
 
 const features = [
   { icon: Zap, title: "Zuverlässigkeit", text: "Termingerechte Ausführung und konstant hohe Qualität sind für uns selbstverständlich." },
@@ -42,6 +44,23 @@ export function WhyUsSection() {
             </Reveal>
           ))}
         </div>
+
+        {/* CTA */}
+        <Reveal className="mt-12 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center">
+          <p className="text-brand-navy font-medium text-pretty">
+            Überzeugen Sie sich selbst - wir beraten Sie gern unverbindlich.
+          </p>
+          <Button
+            asChild
+            size="lg"
+            className="group shrink-0 rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-brand-blue/30 hover:bg-brand-teal"
+          >
+            <Link href="/kontakt" className="cursor-pointer">
+              Jetzt unverbindlich anfragen
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </Reveal>
       </div>
     </section>
   )
