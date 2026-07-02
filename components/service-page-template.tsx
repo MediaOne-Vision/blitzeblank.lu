@@ -9,7 +9,7 @@ import { BeforeAfterSlider } from "@/components/before-after-slider"
 import { GalleryCarousel } from "@/components/gallery-carousel"
 import { getServiceMedia } from "@/lib/service-media"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, CheckCircle2, type LucideIcon } from "lucide-react"
+import { ArrowRight, CheckCircle2, MapPin, type LucideIcon } from "lucide-react"
 
 interface ServiceFeature {
   title: string
@@ -32,7 +32,6 @@ export function ServicePageTemplate({
   slug,
   title,
   subtitle,
-  icon: Icon,
   image,
   features,
   benefits,
@@ -74,13 +73,14 @@ export function ServicePageTemplate({
                   <span className="text-white/90">{title}</span>
                 </nav>
 
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-blue shadow-lg shadow-brand-blue/30">
-                  <Icon className="h-8 w-8 text-white" />
-                </div>
                 <h1 className="mb-4 text-balance font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
                   {title}
                 </h1>
-                <p className="mb-8 text-lg text-white/75 text-pretty">{subtitle}</p>
+                <p className="mb-4 text-lg text-white/75 text-pretty">{subtitle}</p>
+                <div className="mb-8 flex items-center gap-2 text-base font-semibold text-brand-sky">
+                  <MapPin className="h-5 w-5 shrink-0" />
+                  <span>Aktiv in Luxemburg, Trier, Bitburg &amp; Region</span>
+                </div>
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <Button
                     asChild

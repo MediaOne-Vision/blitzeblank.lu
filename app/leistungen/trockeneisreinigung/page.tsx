@@ -56,7 +56,7 @@ export default function TrockeneisreinigungPage() {
     <ServicePageTemplate
       slug="trockeneisreinigung"
       title="Trockeneisreinigung"
-      subtitle="Innovative Reinigung ohne Chemie und Wasser"
+      subtitle="Mit gefrorenen CO2-Pellets entfernen wir selbst hartnäckige Verschmutzungen völlig ohne Chemie, Wasser oder Abrieb. Diese innovative Methode eignet sich ideal für empfindliche Oberflächen, Elektronik und Maschinen, die schonend und rückstandsfrei gereinigt werden müssen."
       description="Die Trockeneisreinigung ist eine revolutionäre Methode zur schonenden Entfernung von Verschmutzungen aller Art. Durch den Einsatz von gefrorenen CO2-Pellets wird der Schmutz durch thermischen Schock und kinetische Energie abgetragen - ohne Chemikalien, Wasser oder Abrieb. Ideal für empfindliche Oberflächen, Elektronik und Produktionsanlagen."
       icon={Snowflake}
       image="dry+ice+blasting+industrial+cleaning+machine+vapor"

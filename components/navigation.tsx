@@ -99,7 +99,18 @@ export function Navigation() {
         </nav>
 
         {/* CTA */}
-        <div className="hidden lg:block shrink-0">
+        <div className="hidden lg:flex items-center gap-2 shrink-0">
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="group border-brand-blue/30 text-brand-blue hover:bg-brand-mint hover:text-brand-blue rounded-full px-4"
+          >
+            <Link href="/angebot" className="cursor-pointer">
+              <Calculator className="h-4 w-4" />
+              Preis sofort berechnen
+            </Link>
+          </Button>
           <Button
             asChild
             size="sm"

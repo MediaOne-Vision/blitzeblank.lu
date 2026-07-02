@@ -56,7 +56,7 @@ export default function IndustriereinigungPage() {
     <ServicePageTemplate
       slug="industriereinigung"
       title="Industriereinigung"
-      subtitle="Sauberkeit für Ihre Produktionsstätte"
+      subtitle="Saubere Produktionshallen, Lager und Werkstätten sind die Grundlage für sicheres und effizientes Arbeiten. Unser geschultes Team reinigt Ihre Industrieflächen gründlich und nach höchsten Standards - effizient und mit minimalem Einfluss auf Ihren laufenden Betrieb."
       description="Die Industriereinigung erfordert spezielles Know-how und Erfahrung. Unsere geschulten Mitarbeiter kennen die Anforderungen verschiedener Branchen und sorgen für hygienische Arbeitsbedingungen in Ihren Produktionshallen, Lagern und Werkstätten. Wir arbeiten effizient und mit minimalem Einfluss auf Ihren Betriebsablauf."
       icon={Factory}
       image="industrial+factory+production+hall+clean+polished+floor"

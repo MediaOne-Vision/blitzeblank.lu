@@ -56,7 +56,7 @@ export default function FensterreinigungPage() {
     <ServicePageTemplate
       slug="fensterreinigung"
       title="Fensterreinigung"
-      subtitle="Streifenfreier Durchblick für Ihr Unternehmen"
+      subtitle="Streifenfreier Durchblick für Ihr Unternehmen - vom einzelnen Schaufenster bis zur kompletten Glasfassade. Mit moderner Technik und viel Erfahrung sorgen wir für klare Sicht, die Ihren professionellen Auftritt unterstreicht."
       description="Saubere Fenster sind die Visitenkarte Ihres Unternehmens. Unsere professionelle Fensterreinigung sorgt für streifenfreie Ergebnisse an allen Glasflächen - vom Schaufenster bis zur Glasfassade. Mit modernen Techniken und umweltfreundlichen Mitteln garantieren wir eine effiziente und gründliche Reinigung, die Ihre Räume in bestem Licht erscheinen lässt."
       icon={Grid3X3}
       image="clean+modern+glass+office+windows+reflection+blue+sky"
