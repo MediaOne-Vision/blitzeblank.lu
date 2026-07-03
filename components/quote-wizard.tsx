@@ -29,6 +29,9 @@ import {
   ThumbsUp,
   ThumbsDown,
   Loader2,
+  Plus,
+  Trash2,
+  Phone,
 } from "lucide-react"
 
 const STEPS = [
@@ -62,10 +65,11 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   // Step 3 - Fläche
   const [area, setArea] = useState([100])
 
-  // Fensterreinigung: eine Zeile pro Fensterart (Anzahl + Größe + optionale Maße)
+  // Fensterreinigung: frei hinzufügbare Zeilen (Art + Anzahl + Größe + optionale Maße)
   const [windowRows, setWindowRows] = useState<
-    Record<string, { count: string; size: string; width: string; height: string }>
-  >({})
+    { id: number; type: string; count: string; size: string; width: string; height: string }[]
+  >([{ id: 1, type: "", count: "", size: "mittel", width: "", height: "" }])
+  const windowRowIdRef = useRef(2)
 
   // Step 4 - Fotos
   const [photos, setPhotos] = useState<UploadedPhoto[]>([])
@@ -86,18 +90,15 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const selectedFrequency = quoteFrequencies.find((f) => f.value === frequencyValue)
   const isWindow = serviceValue === "fenster"
 
-  // Fenster-Zeilen (je Fensterart) in numerische Werte für die Preisberechnung umwandeln
+  // Fenster-Zeilen in numerische Werte für die Preisberechnung umwandeln
   const windowTypeOptions = isWindow ? selectedService?.detail.options ?? [] : []
-  const numericWindowRows: WindowRowEntry[] = windowTypeOptions.map((type) => {
-    const row = windowRows[type]
-    return {
-      type,
-      count: Number.parseInt(row?.count ?? "") || 0,
-      size: row?.size ?? "mittel",
-      width: Number.parseFloat((row?.width ?? "").replace(",", ".")) || 0,
-      height: Number.parseFloat((row?.height ?? "").replace(",", ".")) || 0,
-    }
-  })
+  const numericWindowRows: WindowRowEntry[] = windowRows.map((row) => ({
+    type: row.type,
+    count: Number.parseInt(row.count) || 0,
+    size: row.size,
+    width: Number.parseFloat(row.width.replace(",", ".")) || 0,
+    height: Number.parseFloat(row.height.replace(",", ".")) || 0,
+  }))
   const assignedWindows = numericWindowRows.reduce((sum, row) => sum + row.count, 0)
 
   const price = isWindow
@@ -109,27 +110,32 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
     .filter((row) => row.count > 0)
     .map((row) => {
       const sizeLabel = windowSizes.find((s) => s.value === row.size)?.label ?? ""
+      const typeLabel = row.type ? `${row.type} ` : ""
       const maße = row.width > 0 && row.height > 0 ? `, ${row.width} × ${row.height} m` : ""
-      return `${row.count}× ${row.type} (${sizeLabel}${maße})`
+      return `${row.count}× ${typeLabel}(${sizeLabel}${maße})`
     })
   const baseDetails = isWindow ? windowBreakdown : details
   const allDetails = customDetail.trim() ? [...baseDetails, customDetail.trim()] : baseDetails
 
   const updateWindowRow = (
-    type: string,
-    field: "count" | "size" | "width" | "height",
+    id: number,
+    field: "type" | "count" | "size" | "width" | "height",
     value: string,
   ) => {
-    setWindowRows((prev) => ({
+    setWindowRows((prev) =>
+      prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)),
+    )
+  }
+
+  const addWindowRow = () => {
+    setWindowRows((prev) => [
       ...prev,
-      [type]: {
-        count: prev[type]?.count ?? "",
-        size: prev[type]?.size ?? "mittel",
-        width: prev[type]?.width ?? "",
-        height: prev[type]?.height ?? "",
-        [field]: value,
-      },
-    }))
+      { id: windowRowIdRef.current++, type: "", count: "", size: "mittel", width: "", height: "" },
+    ])
+  }
+
+  const removeWindowRow = (id: number) => {
+    setWindowRows((prev) => (prev.length > 1 ? prev.filter((row) => row.id !== id) : prev))
   }
 
   const toggleDetail = (option: string) => {
@@ -156,7 +162,9 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
       case 0:
         return Boolean(serviceValue && address.trim())
       case 1:
-        return isWindow ? assignedWindows > 0 : true
+        return isWindow
+          ? numericWindowRows.some((row) => row.count > 0 && row.type)
+          : true
       case 3:
         return Boolean(name.trim() && email.trim() && frequencyValue)
       default:
@@ -369,105 +377,142 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                     Wie viele Fenster sollen gereinigt werden?
                   </h3>
                   <p className="text-sm text-neutral-500">
-                    Geben Sie je Fensterart die Anzahl an. Sobald Sie eine Anzahl eintragen, können
-                    Sie die Größe wählen und optional die genauen Maße angeben.
+                    Wählen Sie Fensterart, Größe und Anzahl. Über „Weitere Größe hinzufügen" können
+                    Sie beliebig viele verschiedene Größen und Anzahlen erfassen.
                   </p>
                 </div>
 
                 <div className="space-y-3">
-                  {windowTypeOptions.map((type) => {
-                    const row = windowRows[type]
-                    const count = Number.parseInt(row?.count ?? "") || 0
-                    return (
-                      <div
-                        key={type}
-                        className={`rounded-2xl border p-4 transition-colors ${
-                          count > 0
-                            ? "border-brand-blue/30 bg-brand-blue/5"
-                            : "border-brand-navy/10 bg-brand-mint/30"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="font-semibold text-brand-navy">{type}</span>
-                          <div className="flex items-center gap-2">
+                  {windowRows.map((row, index) => (
+                    <div
+                      key={row.id}
+                      className="rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-4"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-sm font-semibold text-brand-navy">
+                          Fenster {index + 1}
+                        </span>
+                        {windowRows.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeWindowRow(row.id)}
+                            className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
+                            aria-label={`Fenster ${index + 1} entfernen`}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            Entfernen
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="mt-3 space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-normal text-neutral-500">Art</Label>
+                          <div className="flex flex-wrap gap-2">
+                            {windowTypeOptions.map((type) => {
+                              const active = row.type === type
+                              return (
+                                <button
+                                  key={type}
+                                  type="button"
+                                  onClick={() => updateWindowRow(row.id, "type", type)}
+                                  className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
+                                    active
+                                      ? "border-brand-blue bg-brand-blue text-white"
+                                      : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                                  }`}
+                                >
+                                  {type}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-end gap-6">
+                          <div className="space-y-2">
                             <Label
-                              htmlFor={`count-${type}`}
+                              htmlFor={`count-${row.id}`}
                               className="text-xs font-normal text-neutral-500"
                             >
                               Anzahl
                             </Label>
                             <Input
-                              id={`count-${type}`}
+                              id={`count-${row.id}`}
                               type="number"
                               min={0}
                               inputMode="numeric"
                               placeholder="0"
-                              value={row?.count ?? ""}
-                              onChange={(e) => updateWindowRow(type, "count", e.target.value)}
-                              className="w-20 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                              aria-label={`Anzahl ${type}`}
+                              value={row.count}
+                              onChange={(e) => updateWindowRow(row.id, "count", e.target.value)}
+                              className="w-24 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
                             />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-xs font-normal text-neutral-500">Größe</Label>
+                            <div className="flex flex-wrap gap-2">
+                              {windowSizes.map((size) => {
+                                const active = row.size === size.value
+                                return (
+                                  <button
+                                    key={size.value}
+                                    type="button"
+                                    onClick={() => updateWindowRow(row.id, "size", size.value)}
+                                    className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
+                                      active
+                                        ? "border-brand-blue bg-brand-blue text-white"
+                                        : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                                    }`}
+                                    title={size.hint}
+                                  >
+                                    {size.label}
+                                  </button>
+                                )
+                              })}
+                            </div>
                           </div>
                         </div>
 
-                        {count > 0 && (
-                          <div className="mt-4 space-y-4 border-t border-brand-navy/5 pt-4">
-                            <div className="space-y-2">
-                              <Label className="text-xs font-normal text-neutral-500">Größe</Label>
-                              <div className="flex flex-wrap gap-2">
-                                {windowSizes.map((size) => {
-                                  const active = (row?.size ?? "mittel") === size.value
-                                  return (
-                                    <button
-                                      key={size.value}
-                                      type="button"
-                                      onClick={() => updateWindowRow(type, "size", size.value)}
-                                      className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
-                                        active
-                                          ? "border-brand-blue bg-brand-blue text-white"
-                                          : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                                      }`}
-                                      title={size.hint}
-                                    >
-                                      {size.label}
-                                    </button>
-                                  )
-                                })}
-                              </div>
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label className="text-xs font-normal text-neutral-500">
-                                Genaue Maße pro Fenster{" "}
-                                <span className="text-neutral-400">(optional)</span>
-                              </Label>
-                              <div className="flex items-center gap-2">
-                                <Input
-                                  type="text"
-                                  inputMode="decimal"
-                                  placeholder="Breite"
-                                  value={row?.width ?? ""}
-                                  onChange={(e) => updateWindowRow(type, "width", e.target.value)}
-                                  className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
-                                />
-                                <span className="text-sm text-neutral-400">m ×</span>
-                                <Input
-                                  type="text"
-                                  inputMode="decimal"
-                                  placeholder="Höhe"
-                                  value={row?.height ?? ""}
-                                  onChange={(e) => updateWindowRow(type, "height", e.target.value)}
-                                  className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
-                                />
-                                <span className="text-sm text-neutral-400">m</span>
-                              </div>
-                            </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs font-normal text-neutral-500">
+                            Genaue Maße pro Fenster{" "}
+                            <span className="text-neutral-400">(optional)</span>
+                          </Label>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="text"
+                              inputMode="decimal"
+                              placeholder="Breite"
+                              value={row.width}
+                              onChange={(e) => updateWindowRow(row.id, "width", e.target.value)}
+                              className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
+                            />
+                            <span className="text-sm text-neutral-400">m ×</span>
+                            <Input
+                              type="text"
+                              inputMode="decimal"
+                              placeholder="Höhe"
+                              value={row.height}
+                              onChange={(e) => updateWindowRow(row.id, "height", e.target.value)}
+                              className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
+                            />
+                            <span className="text-sm text-neutral-400">m</span>
                           </div>
-                        )}
+                        </div>
                       </div>
-                    )
-                  })}
+                    </div>
+                  ))}
                 </div>
+
+                <button
+                  type="button"
+                  onClick={addWindowRow}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-brand-blue/40 bg-brand-blue/5 px-4 py-3 text-sm font-semibold text-brand-blue transition-colors hover:bg-brand-blue/10 cursor-pointer"
+                >
+                  <Plus className="h-4 w-4" />
+                  Weitere Größe hinzufügen
+                </button>
 
                 {assignedWindows > 0 && (
                   <p className="text-sm font-medium text-brand-navy">
@@ -755,20 +800,53 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
               </>
             ) : (
               <div className="py-8 text-center">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand-blue/10">
-                  <CheckCircle2 className="h-8 w-8 text-brand-blue" />
+                <div
+                  className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full ${
+                    decision === "accepted" ? "bg-brand-blue/10" : "bg-brand-teal/10"
+                  }`}
+                >
+                  {decision === "accepted" ? (
+                    <CheckCircle2 className="h-8 w-8 text-brand-blue" />
+                  ) : (
+                    <Phone className="h-8 w-8 text-brand-teal" />
+                  )}
                 </div>
                 <h3 className="mb-3 font-display text-2xl font-extrabold text-brand-navy">
-                  {decision === "accepted" ? "Vielen Dank für Ihr Vertrauen!" : "Vielen Dank für Ihre Anfrage!"}
+                  {decision === "accepted" ? "Vielen Dank für Ihr Vertrauen!" : "Schade!"}
                 </h3>
                 <p className="mx-auto max-w-md text-neutral-600">
                   {decision === "accepted"
                     ? "Ihre Anfrage wurde an Blitzeblank übermittelt. Wir melden uns in Kürze bei Ihnen, um einen Termin für die kostenlose Besichtigung zu vereinbaren."
-                    : "Ihre Angaben wurden an Blitzeblank übermittelt. Gerne erstellen wir Ihnen ein angepasstes Angebot - wir melden uns bei Ihnen."}
+                    : "Wir verstehen, dass die Preisspanne nicht Ihren Vorstellungen entspricht. Rufen Sie uns an - vielleicht finden wir gemeinsam eine Lösung. Ihre Angaben haben wir bereits an Blitzeblank übermittelt."}
                 </p>
-                <Button asChild size="lg" className="mt-8 rounded-full bg-brand-blue text-white hover:bg-brand-teal">
-                  <Link href="/" className="cursor-pointer">Zurück zur Startseite</Link>
-                </Button>
+                {decision === "declined" && (
+                  <Button
+                    asChild
+                    size="lg"
+                    className="mt-8 h-14 rounded-full bg-brand-blue px-8 text-lg font-bold text-white shadow-lg shadow-brand-blue/30 hover:bg-brand-teal"
+                  >
+                    <a href="tel:+352661830493" className="cursor-pointer">
+                      <Phone className="h-5 w-5" />
+                      +352 661 830 493
+                    </a>
+                  </Button>
+                )}
+                <div>
+                  <Button
+                    asChild
+                    variant={decision === "declined" ? "ghost" : "default"}
+                    size="lg"
+                    className={
+                      decision === "declined"
+                        ? "mt-4 rounded-full text-neutral-500 hover:bg-brand-mint hover:text-brand-navy"
+                        : "mt-8 rounded-full bg-brand-blue text-white hover:bg-brand-teal"
+                    }
+                  >
+                    <Link href="/" className="cursor-pointer">
+                      Zurück zur Startseite
+                    </Link>
+                  </Button>
+                </div>
               </div>
             )}
           </div>
