@@ -65,11 +65,15 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   // Step 3 - Fläche
   const [area, setArea] = useState([100])
 
-  // Fensterreinigung: frei hinzufügbare Zeilen (Art + Anzahl + Größe + optionale Maße)
-  const [windowRows, setWindowRows] = useState<
-    { id: number; type: string; count: string; size: string; width: string; height: string }[]
-  >([{ id: 1, type: "", count: "", size: "mittel", width: "", height: "" }])
-  const windowRowIdRef = useRef(2)
+  // Fensterreinigung: verschachtelt nach Art -> mehrere Größen-Zeilen (Anzahl + Größe + optionale Maße)
+  const [windowGroups, setWindowGroups] = useState<
+    {
+      id: number
+      type: string
+      sizes: { id: number; count: string; size: string; width: string; height: string }[]
+    }[]
+  >([{ id: 1, type: "", sizes: [{ id: 1, count: "", size: "mittel", width: "", height: "" }] }])
+  const windowIdRef = useRef(2)
 
   // Step 4 - Fotos
   const [photos, setPhotos] = useState<UploadedPhoto[]>([])
@@ -90,14 +94,18 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const selectedFrequency = quoteFrequencies.find((f) => f.value === frequencyValue)
   const isWindow = serviceValue === "fenster"
 
-  // Fenster-Zeilen in numerische Werte für die Preisberechnung umwandeln
-  const numericWindowRows: WindowRowEntry[] = windowRows.map((row) => ({
-    type: row.type,
-    count: Number.parseInt(row.count) || 0,
-    size: row.size,
-    width: Number.parseFloat(row.width.replace(",", ".")) || 0,
-    height: Number.parseFloat(row.height.replace(",", ".")) || 0,
-  }))
+  const windowTypeOptions = isWindow ? selectedService?.detail.options ?? [] : []
+
+  // Verschachtelte Fenster-Gruppen in flache numerische Zeilen für die Preisberechnung umwandeln
+  const numericWindowRows: WindowRowEntry[] = windowGroups.flatMap((group) =>
+    group.sizes.map((row) => ({
+      type: group.type,
+      count: Number.parseInt(row.count) || 0,
+      size: row.size,
+      width: Number.parseFloat(row.width.replace(",", ".")) || 0,
+      height: Number.parseFloat(row.height.replace(",", ".")) || 0,
+    })),
+  )
   const assignedWindows = numericWindowRows.reduce((sum, row) => sum + row.count, 0)
 
   const price = isWindow
@@ -116,25 +124,71 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const baseDetails = isWindow ? windowBreakdown : details
   const allDetails = customDetail.trim() ? [...baseDetails, customDetail.trim()] : baseDetails
 
-  const updateWindowRow = (
-    id: number,
-    field: "type" | "count" | "size" | "width" | "height",
-    value: string,
-  ) => {
-    setWindowRows((prev) =>
-      prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)),
+  const updateWindowType = (groupId: number, value: string) => {
+    setWindowGroups((prev) =>
+      prev.map((group) => (group.id === groupId ? { ...group, type: value } : group)),
     )
   }
 
-  const addWindowRow = () => {
-    setWindowRows((prev) => [
+  const updateWindowSize = (
+    groupId: number,
+    rowId: number,
+    field: "count" | "size" | "width" | "height",
+    value: string,
+  ) => {
+    setWindowGroups((prev) =>
+      prev.map((group) =>
+        group.id === groupId
+          ? {
+              ...group,
+              sizes: group.sizes.map((row) =>
+                row.id === rowId ? { ...row, [field]: value } : row,
+              ),
+            }
+          : group,
+      ),
+    )
+  }
+
+  const addWindowSize = (groupId: number) => {
+    setWindowGroups((prev) =>
+      prev.map((group) =>
+        group.id === groupId
+          ? {
+              ...group,
+              sizes: [
+                ...group.sizes,
+                { id: windowIdRef.current++, count: "", size: "mittel", width: "", height: "" },
+              ],
+            }
+          : group,
+      ),
+    )
+  }
+
+  const removeWindowSize = (groupId: number, rowId: number) => {
+    setWindowGroups((prev) =>
+      prev.map((group) =>
+        group.id === groupId && group.sizes.length > 1
+          ? { ...group, sizes: group.sizes.filter((row) => row.id !== rowId) }
+          : group,
+      ),
+    )
+  }
+
+  const addWindowGroup = () => {
+    setWindowGroups((prev) => [
       ...prev,
-      { id: windowRowIdRef.current++, type: "", count: "", size: "mittel", width: "", height: "" },
+      {
+        id: windowIdRef.current++,
+        type: "",
+        sizes: [{ id: windowIdRef.current++, count: "", size: "mittel", width: "", height: "" }],
+      },
     ])
   }
 
-  const removeWindowRow = (id: number) => {
-    setWindowRows((prev) => (prev.length > 1 ? prev.filter((row) => row.id !== id) : prev))
+  const removeWindowGroup = (groupId: number) => {
+    setWindowGroups((prev) => (prev.length > 1 ? prev.filter((group) => group.id !== groupId) : prev))
   }
 
   const toggleDetail = (option: string) => {
@@ -161,7 +215,9 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
       case 0:
         return Boolean(serviceValue && address.trim())
       case 1:
-        return isWindow ? numericWindowRows.some((row) => row.count > 0) : true
+        return isWindow
+          ? numericWindowRows.some((row) => row.count > 0 && row.type)
+          : true
       case 3:
         return Boolean(name.trim() && email.trim() && frequencyValue)
       default:
@@ -374,81 +430,171 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                     Wie viele Fenster sollen gereinigt werden?
                   </h3>
                   <p className="text-sm text-neutral-500">
-                    Geben Sie die Anzahl an und wählen Sie die Größe. Über „Weitere Größe hinzufügen"
-                    können Sie mehrere verschiedene Größen und Anzahlen erfassen.
+                    Wählen Sie zuerst die Fensterart und geben Sie dann Anzahl und Größe an. Optional
+                    können Sie die genaue Größe pro Fenster ergänzen sowie weitere Größen oder
+                    Fensterarten hinzufügen.
                   </p>
                 </div>
 
-                {/* Spaltenüberschriften */}
-                <div className="hidden gap-3 px-1 sm:flex">
-                  <span className="w-24 text-xs font-normal text-neutral-500">Anzahl</span>
-                  <span className="text-xs font-normal text-neutral-500">Größe</span>
-                </div>
-
-                <div className="space-y-3">
-                  {windowRows.map((row) => (
+                <div className="space-y-4">
+                  {windowGroups.map((group, groupIndex) => (
                     <div
-                      key={row.id}
-                      className="rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-3"
+                      key={group.id}
+                      className="space-y-4 rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-4"
                     >
-                      <div className="flex flex-wrap items-center gap-3">
-                        {/* Anzahl links */}
-                        <Input
-                          type="number"
-                          min={0}
-                          inputMode="numeric"
-                          placeholder="0"
-                          value={row.count}
-                          onChange={(e) => updateWindowRow(row.id, "count", e.target.value)}
-                          className="w-24 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                          aria-label="Anzahl"
-                        />
-
-                        {/* Größen */}
-                        <div className="flex flex-wrap gap-2">
-                          {windowSizes.map((size) => {
-                            const active = row.size === size.value
-                            return (
-                              <button
-                                key={size.value}
-                                type="button"
-                                onClick={() => updateWindowRow(row.id, "size", size.value)}
-                                className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
-                                  active
-                                    ? "border-brand-blue bg-brand-blue text-white"
-                                    : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                                }`}
-                                title={size.hint}
-                              >
-                                {size.label}
-                              </button>
-                            )
-                          })}
+                      {/* Fensterart */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-normal text-neutral-500">
+                            Fensterart {groupIndex + 1}
+                          </Label>
+                          <div className="flex flex-wrap gap-2">
+                            {windowTypeOptions.map((type) => {
+                              const active = group.type === type
+                              return (
+                                <button
+                                  key={type}
+                                  type="button"
+                                  onClick={() => updateWindowType(group.id, type)}
+                                  className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
+                                    active
+                                      ? "border-brand-blue bg-brand-blue text-white"
+                                      : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                                  }`}
+                                >
+                                  {type}
+                                </button>
+                              )
+                            })}
+                          </div>
                         </div>
-
-                        {/* Entfernen */}
-                        {windowRows.length > 1 && (
+                        {windowGroups.length > 1 && (
                           <button
                             type="button"
-                            onClick={() => removeWindowRow(row.id)}
-                            className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
-                            aria-label="Größe entfernen"
+                            onClick={() => removeWindowGroup(group.id)}
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
+                            aria-label="Fensterart entfernen"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
                         )}
                       </div>
+
+                      {/* Spaltenüberschriften */}
+                      <div className="hidden gap-3 px-1 sm:flex">
+                        <span className="w-24 text-xs font-normal text-neutral-500">Anzahl</span>
+                        <span className="text-xs font-normal text-neutral-500">Größe</span>
+                      </div>
+
+                      {/* Größen-Zeilen */}
+                      <div className="space-y-3">
+                        {group.sizes.map((row) => (
+                          <div
+                            key={row.id}
+                            className="rounded-xl border border-brand-navy/10 bg-white/60 p-3"
+                          >
+                            <div className="flex flex-wrap items-center gap-3">
+                              <Input
+                                type="number"
+                                min={0}
+                                inputMode="numeric"
+                                placeholder="0"
+                                value={row.count}
+                                onChange={(e) =>
+                                  updateWindowSize(group.id, row.id, "count", e.target.value)
+                                }
+                                className="w-24 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+                                aria-label="Anzahl"
+                              />
+
+                              <div className="flex flex-wrap gap-2">
+                                {windowSizes.map((size) => {
+                                  const active = row.size === size.value
+                                  return (
+                                    <button
+                                      key={size.value}
+                                      type="button"
+                                      onClick={() =>
+                                        updateWindowSize(group.id, row.id, "size", size.value)
+                                      }
+                                      className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
+                                        active
+                                          ? "border-brand-blue bg-brand-blue text-white"
+                                          : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                                      }`}
+                                      title={size.hint}
+                                    >
+                                      {size.label}
+                                    </button>
+                                  )
+                                })}
+                              </div>
+
+                              {group.sizes.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeWindowSize(group.id, row.id)}
+                                  className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
+                                  aria-label="Größe entfernen"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              )}
+                            </div>
+
+                            {/* Optionale genaue Maße */}
+                            <div className="mt-3 flex flex-wrap items-center gap-2">
+                              <span className="text-xs font-normal text-neutral-500">
+                                Genaue Größe pro Fenster (optional):
+                              </span>
+                              <Input
+                                type="text"
+                                inputMode="decimal"
+                                placeholder="Breite"
+                                value={row.width}
+                                onChange={(e) =>
+                                  updateWindowSize(group.id, row.id, "width", e.target.value)
+                                }
+                                className="w-20 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+                                aria-label="Breite in Metern"
+                              />
+                              <span className="text-sm text-neutral-400">m ×</span>
+                              <Input
+                                type="text"
+                                inputMode="decimal"
+                                placeholder="Höhe"
+                                value={row.height}
+                                onChange={(e) =>
+                                  updateWindowSize(group.id, row.id, "height", e.target.value)
+                                }
+                                className="w-20 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+                                aria-label="Höhe in Metern"
+                              />
+                              <span className="text-sm text-neutral-400">m</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => addWindowSize(group.id)}
+                        className="flex items-center gap-1.5 text-sm font-semibold text-brand-blue transition-colors hover:text-brand-teal cursor-pointer"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Weitere Größe hinzufügen
+                      </button>
                     </div>
                   ))}
                 </div>
 
                 <button
                   type="button"
-                  onClick={addWindowRow}
+                  onClick={addWindowGroup}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-brand-blue/40 bg-brand-blue/5 px-4 py-3 text-sm font-semibold text-brand-blue transition-colors hover:bg-brand-blue/10 cursor-pointer"
                 >
                   <Plus className="h-4 w-4" />
-                  Weitere Größe hinzufügen
+                  Weitere Fensterart hinzufügen
                 </button>
 
                 {assignedWindows > 0 && (
