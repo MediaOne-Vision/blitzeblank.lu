@@ -63,15 +63,11 @@ export function CookieConsentBanner() {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end justify-center p-4 sm:items-end sm:justify-end sm:p-6">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-brand-navy/40 backdrop-blur-sm" aria-hidden="true" />
-
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[100] flex justify-center p-4 sm:justify-end sm:p-6">
       <div
         role="dialog"
-        aria-modal="true"
         aria-labelledby="cookie-title"
-        className="relative w-full max-w-lg rounded-3xl border border-brand-navy/10 bg-white p-6 shadow-2xl sm:p-7"
+        className="pointer-events-auto relative w-full max-w-lg rounded-3xl border border-brand-navy/10 bg-white p-6 shadow-2xl sm:p-7"
       >
         <div className="mb-4 flex items-start gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-mint">
