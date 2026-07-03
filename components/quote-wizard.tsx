@@ -220,7 +220,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
           ? numericWindowRows.some((row) => row.count > 0 && row.type)
           : true
       case 3:
-        return Boolean(name.trim() && email.trim() && frequencyValue)
+        return Boolean(name.trim() && email.trim() && frequencyValue && privacyConsent)
       default:
         return true
     }
@@ -803,6 +803,28 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   className="font-light text-neutral-600 placeholder:text-neutral-400/70"
                 />
               </div>
+              <div className="flex items-start gap-3 rounded-2xl bg-brand-mint/50 p-4 sm:col-span-2">
+                <Checkbox
+                  id="privacy-consent"
+                  checked={privacyConsent}
+                  onCheckedChange={(checked) => setPrivacyConsent(checked === true)}
+                  className="mt-0.5"
+                />
+                <Label
+                  htmlFor="privacy-consent"
+                  className="text-sm font-normal leading-relaxed text-neutral-600"
+                >
+                  Ich habe die{" "}
+                  <Link
+                    href="/datenschutz"
+                    target="_blank"
+                    className="font-semibold text-brand-blue underline underline-offset-2 hover:text-brand-teal"
+                  >
+                    Datenschutzerklärung
+                  </Link>{" "}
+                  gelesen und stimme der Verarbeitung meiner Angaben zu. *
+                </Label>
+              </div>
             </div>
             </div>
           </div>
@@ -854,32 +876,9 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   vor Ort festgelegt. Ihre Angaben werden in beiden Fällen an Blitzeblank übermittelt.
                 </p>
 
-                <div className="flex items-start gap-3 rounded-2xl bg-brand-mint/50 p-4">
-                  <Checkbox
-                    id="privacy-consent"
-                    checked={privacyConsent}
-                    onCheckedChange={(checked) => setPrivacyConsent(checked === true)}
-                    className="mt-0.5"
-                  />
-                  <Label
-                    htmlFor="privacy-consent"
-                    className="text-sm font-normal leading-relaxed text-neutral-600"
-                  >
-                    Ich habe die{" "}
-                    <Link
-                      href="/datenschutz"
-                      target="_blank"
-                      className="font-semibold text-brand-blue underline underline-offset-2 hover:text-brand-teal"
-                    >
-                      Datenschutzerklärung
-                    </Link>{" "}
-                    gelesen und stimme der Verarbeitung meiner Angaben zu.
-                  </Label>
-                </div>
-
                 <div className="flex flex-col gap-3">
                   <Button
-                    disabled={submitting || !privacyConsent}
+                    disabled={submitting}
                     onClick={() => handleDecision("accepted")}
                     className="group h-16 w-full rounded-full bg-brand-blue text-lg font-bold text-white shadow-lg shadow-brand-blue/30 transition-transform hover:bg-brand-teal hover:scale-[1.02] sm:text-xl"
                   >
@@ -892,7 +891,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   </Button>
                   <Button
                     variant="ghost"
-                    disabled={submitting || !privacyConsent}
+                    disabled={submitting}
                     onClick={() => handleDecision("declined")}
                     className="rounded-full text-neutral-500 hover:bg-brand-mint hover:text-brand-navy"
                   >
