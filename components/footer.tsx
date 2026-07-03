@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Facebook, Instagram } from "lucide-react"
+import { CookieSettingsLink } from "@/components/cookie-settings-link"
 
 const services = [
   { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
@@ -136,6 +137,7 @@ export function Footer() {
             <Link href="/datenschutz" className="text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer">
               Datenschutz
             </Link>
+            <CookieSettingsLink className="text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer" />
             <span className="text-xs text-neutral-600">
               Glänzend umgesetzt von{" "}
               <a
