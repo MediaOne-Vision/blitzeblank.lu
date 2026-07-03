@@ -161,31 +161,36 @@ export const windowSizes: WindowSize[] = [
   { value: "gross", label: "Groß", hint: "z. B. Schaufenster, ab ca. 1,5 m²", pricePerWindow: 16 },
 ]
 
-export interface WindowSizeEntry {
-  /** Anzahl der Fenster dieser Größe */
+/** Eine Zeile pro Fensterart: Anzahl, Größe und optionale exakte Maße */
+export interface WindowRowEntry {
+  /** Fensterart, z. B. "Bürofenster" */
+  type: string
+  /** Anzahl der Fenster dieser Art */
   count: number
+  /** Größenkategorie (klein | mittel | gross) */
+  size: string
   /** Optionale exakte Breite in Metern (0 = nicht angegeben) */
   width: number
   /** Optionale exakte Höhe in Metern (0 = nicht angegeben) */
   height: number
 }
 
-export function calculateWindowQuotePrice(
+export function calculateWindowRowsPrice(
   service: QuoteService | undefined,
   frequency: QuoteFrequency | undefined,
-  sizes: Record<string, WindowSizeEntry>,
+  rows: WindowRowEntry[],
 ): CalculatedPrice {
   if (!service || !frequency) return { min: 0, max: 0 }
   let total = service.basePrice
-  for (const size of windowSizes) {
-    const entry = sizes[size.value]
-    if (!entry || entry.count <= 0) continue
-    if (entry.width > 0 && entry.height > 0) {
+  for (const row of rows) {
+    if (row.count <= 0) continue
+    if (row.width > 0 && row.height > 0) {
       // Exakte Maße angegeben: Fläche × Quadratmeterpreis
-      total += entry.count * entry.width * entry.height * service.pricePerSqm
+      total += row.count * row.width * row.height * service.pricePerSqm
     } else {
-      // Sonst Pauschalpreis pro Fenster
-      total += entry.count * size.pricePerWindow
+      // Sonst Pauschalpreis je nach Größe
+      const size = windowSizes.find((s) => s.value === row.size) ?? windowSizes[1]
+      total += row.count * size.pricePerWindow
     }
   }
   const withFrequency = total * frequency.multiplier
