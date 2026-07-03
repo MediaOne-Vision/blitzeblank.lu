@@ -91,7 +91,6 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const isWindow = serviceValue === "fenster"
 
   // Fenster-Zeilen in numerische Werte für die Preisberechnung umwandeln
-  const windowTypeOptions = isWindow ? selectedService?.detail.options ?? [] : []
   const numericWindowRows: WindowRowEntry[] = windowRows.map((row) => ({
     type: row.type,
     count: Number.parseInt(row.count) || 0,
@@ -162,9 +161,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
       case 0:
         return Boolean(serviceValue && address.trim())
       case 1:
-        return isWindow
-          ? numericWindowRows.some((row) => row.count > 0 && row.type)
-          : true
+        return isWindow ? numericWindowRows.some((row) => row.count > 0) : true
       case 3:
         return Boolean(name.trim() && email.trim() && frequencyValue)
       default:
@@ -377,129 +374,69 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                     Wie viele Fenster sollen gereinigt werden?
                   </h3>
                   <p className="text-sm text-neutral-500">
-                    Wählen Sie Fensterart, Größe und Anzahl. Über „Weitere Größe hinzufügen" können
-                    Sie beliebig viele verschiedene Größen und Anzahlen erfassen.
+                    Geben Sie die Anzahl an und wählen Sie die Größe. Über „Weitere Größe hinzufügen"
+                    können Sie mehrere verschiedene Größen und Anzahlen erfassen.
                   </p>
                 </div>
 
+                {/* Spaltenüberschriften */}
+                <div className="hidden gap-3 px-1 sm:flex">
+                  <span className="w-24 text-xs font-normal text-neutral-500">Anzahl</span>
+                  <span className="text-xs font-normal text-neutral-500">Größe</span>
+                </div>
+
                 <div className="space-y-3">
-                  {windowRows.map((row, index) => (
+                  {windowRows.map((row) => (
                     <div
                       key={row.id}
-                      className="rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-4"
+                      className="rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-3"
                     >
-                      <div className="flex items-center justify-between gap-4">
-                        <span className="text-sm font-semibold text-brand-navy">
-                          Fenster {index + 1}
-                        </span>
+                      <div className="flex flex-wrap items-center gap-3">
+                        {/* Anzahl links */}
+                        <Input
+                          type="number"
+                          min={0}
+                          inputMode="numeric"
+                          placeholder="0"
+                          value={row.count}
+                          onChange={(e) => updateWindowRow(row.id, "count", e.target.value)}
+                          className="w-24 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+                          aria-label="Anzahl"
+                        />
+
+                        {/* Größen */}
+                        <div className="flex flex-wrap gap-2">
+                          {windowSizes.map((size) => {
+                            const active = row.size === size.value
+                            return (
+                              <button
+                                key={size.value}
+                                type="button"
+                                onClick={() => updateWindowRow(row.id, "size", size.value)}
+                                className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
+                                  active
+                                    ? "border-brand-blue bg-brand-blue text-white"
+                                    : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                                }`}
+                                title={size.hint}
+                              >
+                                {size.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+
+                        {/* Entfernen */}
                         {windowRows.length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeWindowRow(row.id)}
-                            className="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
-                            aria-label={`Fenster ${index + 1} entfernen`}
+                            className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
+                            aria-label="Größe entfernen"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            Entfernen
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         )}
-                      </div>
-
-                      <div className="mt-3 space-y-4">
-                        <div className="space-y-2">
-                          <Label className="text-xs font-normal text-neutral-500">Art</Label>
-                          <div className="flex flex-wrap gap-2">
-                            {windowTypeOptions.map((type) => {
-                              const active = row.type === type
-                              return (
-                                <button
-                                  key={type}
-                                  type="button"
-                                  onClick={() => updateWindowRow(row.id, "type", type)}
-                                  className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
-                                    active
-                                      ? "border-brand-blue bg-brand-blue text-white"
-                                      : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                                  }`}
-                                >
-                                  {type}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap items-end gap-6">
-                          <div className="space-y-2">
-                            <Label
-                              htmlFor={`count-${row.id}`}
-                              className="text-xs font-normal text-neutral-500"
-                            >
-                              Anzahl
-                            </Label>
-                            <Input
-                              id={`count-${row.id}`}
-                              type="number"
-                              min={0}
-                              inputMode="numeric"
-                              placeholder="0"
-                              value={row.count}
-                              onChange={(e) => updateWindowRow(row.id, "count", e.target.value)}
-                              className="w-24 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label className="text-xs font-normal text-neutral-500">Größe</Label>
-                            <div className="flex flex-wrap gap-2">
-                              {windowSizes.map((size) => {
-                                const active = row.size === size.value
-                                return (
-                                  <button
-                                    key={size.value}
-                                    type="button"
-                                    onClick={() => updateWindowRow(row.id, "size", size.value)}
-                                    className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
-                                      active
-                                        ? "border-brand-blue bg-brand-blue text-white"
-                                        : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                                    }`}
-                                    title={size.hint}
-                                  >
-                                    {size.label}
-                                  </button>
-                                )
-                              })}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label className="text-xs font-normal text-neutral-500">
-                            Genaue Maße pro Fenster{" "}
-                            <span className="text-neutral-400">(optional)</span>
-                          </Label>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="text"
-                              inputMode="decimal"
-                              placeholder="Breite"
-                              value={row.width}
-                              onChange={(e) => updateWindowRow(row.id, "width", e.target.value)}
-                              className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
-                            />
-                            <span className="text-sm text-neutral-400">m ×</span>
-                            <Input
-                              type="text"
-                              inputMode="decimal"
-                              placeholder="Höhe"
-                              value={row.height}
-                              onChange={(e) => updateWindowRow(row.id, "height", e.target.value)}
-                              className="w-24 bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
-                            />
-                            <span className="text-sm text-neutral-400">m</span>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   ))}
