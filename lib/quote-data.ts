@@ -224,6 +224,24 @@ export function calculateWindowRowsPrice(
   return applyRangeAndTravel(withFrequency, options)
 }
 
+/**
+ * Dynamischer m²-Preis für die Steinreinigung (Flächenmodell).
+ * Größere Flächen werden günstiger pro m²:
+ * - bis 10 m²: 30,00 €/m²
+ * - ab 150 m²: 20,00 €/m²
+ * - dazwischen linear interpoliert.
+ * Dient ausschließlich der internen Preisberechnung.
+ */
+export function getSteinPricePerSqm(area: number): number {
+  const MIN_AREA = 10
+  const MAX_AREA = 150
+  const MAX_PRICE = 30
+  const MIN_PRICE = 20
+  if (area <= MIN_AREA) return MAX_PRICE
+  if (area >= MAX_AREA) return MIN_PRICE
+  return MAX_PRICE - ((MAX_PRICE - MIN_PRICE) / (MAX_AREA - MIN_AREA)) * (area - MIN_AREA)
+}
+
 /** Preisberechnung für flächenbasierte Leistungen (alle außer Fensterreinigung) */
 export function calculateQuotePrice(
   service: QuoteService | undefined,
@@ -232,7 +250,11 @@ export function calculateQuotePrice(
   options?: PriceOptions,
 ): CalculatedPrice {
   if (!service || !frequency) return { min: 0, max: 0 }
-  const totalBase = service.basePrice + area * service.pricePerSqm
+  // Steinreinigung nutzt das dynamische Flächenmodell ohne separaten Grundpreis.
+  const totalBase =
+    service.slug === "steinreinigung"
+      ? area * getSteinPricePerSqm(area)
+      : service.basePrice + area * service.pricePerSqm
   const withFrequency = totalBase * frequency.multiplier
   return applyRangeAndTravel(withFrequency, options)
 }
