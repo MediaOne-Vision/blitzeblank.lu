@@ -9,8 +9,7 @@
  * Rechner bleibt dadurch voll funktionsfähig.
  */
 
-/** Feste Firmenadresse als Startpunkt für die Entfernungsberechnung */
-export const COMPANY_ADDRESS = "6A, Rue Michel Rodange, 7681 Waldbillig, Luxemburg"
+import { COMPANY_ADDRESS } from "@/lib/quote-data"
 
 export interface AddressSuggestion {
   /** Vollständige, lesbare Adresse */

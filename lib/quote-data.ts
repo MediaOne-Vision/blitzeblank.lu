@@ -29,6 +29,9 @@ export interface QuoteService {
 /** Anfahrtskosten: 2,00 € pro gefahrenem Kilometer */
 export const TRAVEL_COST_PER_KM = 2
 
+/** Feste Firmenadresse als Startpunkt für die Entfernungsberechnung */
+export const COMPANY_ADDRESS = "6A, Rue Michel Rodange, 7681 Waldbillig, Luxemburg"
+
 export const quoteServices: QuoteService[] = [
   {
     slug: "industriereinigung",
