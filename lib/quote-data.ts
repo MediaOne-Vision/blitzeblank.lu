@@ -193,16 +193,22 @@ export interface PriceOptions {
 
 /**
  * Wendet Anfahrtskosten und die kunden­typ­abhängige Preisspanne an.
- * - Privatkunden: bewusst ungenaue Spanne von -15 % bis +15 %.
- * - Gewerbekunden: KEIN Abschlag, stattdessen Sicherheitsaufschlag von +15 %.
+ * Ablauf:
+ * 1. Basispreis ermitteln (Privatkunden mit 15 % Rabatt, Gewerbekunden ohne).
+ * 2. Auf diesen (rabattierten) Preis werden immer 15 % aufgeschlagen – das ergibt
+ *    den Anfangspreis (untere Grenze) der Spanne.
+ * 3. Auf den Anfangspreis kommen für die obere Grenze nochmals 15 % Spielraum.
  */
 function applyRangeAndTravel(subtotal: number, options?: PriceOptions): CalculatedPrice {
   const travelCost = (options?.travelKm ?? 0) * TRAVEL_COST_PER_KM
   const total = subtotal + travelCost
-  if (options?.isCommercial) {
-    return { min: Math.round(total), max: Math.round(total * 1.15) }
-  }
-  return { min: Math.round(total * 0.85), max: Math.round(total * 1.15) }
+  // Basispreis: Privatkunden mit -15 % Rabatt, Gewerbekunden ohne Abschlag.
+  const basePrice = options?.isCommercial ? total : total * 0.85
+  // Anfangspreis der Spanne: immer +15 % auf den (rabattierten) Basispreis.
+  const rangeStart = basePrice * 1.15
+  // Obere Grenze: +15 % Spielraum auf den Anfangspreis.
+  const rangeEnd = rangeStart * 1.15
+  return { min: Math.round(rangeStart), max: Math.round(rangeEnd) }
 }
 
 /** Preisberechnung für die Fensterreinigung anhand der einzelnen Fensterarten */
