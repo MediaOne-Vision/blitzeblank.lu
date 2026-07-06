@@ -142,6 +142,8 @@ export function getQuoteServiceBySlug(slug: string): QuoteService | undefined {
 export interface WindowType {
   value: string
   label: string
+  /** Ungefähre Größe / Beschreibung, wird unter dem Label angezeigt */
+  dimension: string
   /** Preis pro Fenster (bzw. pro m² wenn perSqm = true) in EUR */
   price: number
   /** Wenn true, gilt der Preis pro m² statt pro Stück (z. B. Rollladen) */
@@ -150,18 +152,18 @@ export interface WindowType {
 
 /** Basispreise laut Preisliste (Stand aktuell) */
 export const windowTypes: WindowType[] = [
-  { value: "xs", label: "Fenster XS", price: 3.5 },
-  { value: "s", label: "Fenster S (60×60)", price: 5 },
-  { value: "m", label: "Fenster M (100×100)", price: 7 },
-  { value: "l", label: "Fenster L (120×120)", price: 9 },
-  { value: "xl", label: "Fenster XL", price: 10.5 },
-  { value: "xxl", label: "Fenster XXL (120×170)", price: 12 },
-  { value: "front", label: "Fensterfront", price: 16 },
-  { value: "terrasse", label: "Terrassenfenster", price: 10 },
-  { value: "glastuer-m", label: "Glastür M", price: 9 },
-  { value: "glastuer-l", label: "Glastür L", price: 13 },
-  { value: "glastuer-xl", label: "Glastür XL", price: 16 },
-  { value: "rollladen", label: "Rollladen (pro m²)", price: 3, perSqm: true },
+  { value: "xs", label: "Fenster XS", dimension: "bis ca. 40 × 40 cm", price: 3.5 },
+  { value: "s", label: "Fenster S", dimension: "ca. 60 × 60 cm", price: 5 },
+  { value: "m", label: "Fenster M", dimension: "ca. 100 × 100 cm", price: 7 },
+  { value: "l", label: "Fenster L", dimension: "ca. 120 × 120 cm", price: 9 },
+  { value: "xl", label: "Fenster XL", dimension: "ca. 120 × 150 cm", price: 10.5 },
+  { value: "xxl", label: "Fenster XXL", dimension: "ca. 120 × 170 cm", price: 12 },
+  { value: "front", label: "Fensterfront", dimension: "große, zusammenhängende Glasfläche", price: 16 },
+  { value: "terrasse", label: "Terrassenfenster", dimension: "bodentiefe Verglasung", price: 10 },
+  { value: "glastuer-m", label: "Glastür M", dimension: "Standard-Glastür", price: 9 },
+  { value: "glastuer-l", label: "Glastür L", dimension: "große Glastür", price: 13 },
+  { value: "glastuer-xl", label: "Glastür XL", dimension: "sehr große Glastür", price: 16 },
+  { value: "rollladen", label: "Rollladen", dimension: "Abrechnung pro m²", price: 3, perSqm: true },
 ]
 
 export function getWindowType(value: string): WindowType | undefined {

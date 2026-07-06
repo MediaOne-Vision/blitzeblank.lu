@@ -36,8 +36,6 @@ import {
   ThumbsUp,
   ThumbsDown,
   Loader2,
-  Plus,
-  Trash2,
   Phone,
 } from "lucide-react"
 
@@ -46,13 +44,6 @@ const STEPS = ["Leistung", "Umfang", "Fotos", "Kontakt", "Angebot"]
 interface UploadedPhoto {
   name: string
   url: string
-}
-
-/** Eine Fenster-Zeile im UI (Werte als String für die Eingabefelder) */
-interface WindowRow {
-  id: number
-  type: string
-  quantity: string
 }
 
 export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
@@ -81,9 +72,8 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   // Step 3 - Fläche (flächenbasierte Leistungen)
   const [area, setArea] = useState([100])
 
-  // Fensterreinigung: eine Zeile pro Fensterart (Fensterart + Anzahl)
-  const [windowRows, setWindowRows] = useState<WindowRow[]>([{ id: 1, type: "", quantity: "" }])
-  const windowIdRef = useRef(2)
+  // Fensterreinigung: Menge (Stück bzw. m²) je Fensterart, gekeyed nach type-Wert
+  const [windowQuantities, setWindowQuantities] = useState<Record<string, string>>({})
 
   // Step 4 - Fotos
   const [photos, setPhotos] = useState<UploadedPhoto[]>([])
@@ -109,10 +99,10 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const effectiveFrequencyValue = isWindow ? frequencyValue : "einmalig"
   const selectedFrequency = quoteFrequencies.find((f) => f.value === effectiveFrequencyValue)
 
-  // UI-Zeilen in numerische Zeilen für die Preisberechnung umwandeln
-  const numericWindowRows: WindowRowEntry[] = windowRows.map((row) => ({
-    type: row.type,
-    quantity: Number.parseFloat(row.quantity.replace(",", ".")) || 0,
+  // Mengen je Fensterart in numerische Zeilen für die Preisberechnung umwandeln
+  const numericWindowRows: WindowRowEntry[] = windowTypes.map((t) => ({
+    type: t.value,
+    quantity: Number.parseFloat((windowQuantities[t.value] ?? "").replace(",", ".")) || 0,
   }))
 
   // Gesamtanzahl Fenster (Rollladen wird in m² gemessen und hier nicht mitgezählt)
@@ -143,17 +133,9 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const baseDetails = isWindow ? windowBreakdown : details
   const allDetails = customDetail.trim() ? [...baseDetails, customDetail.trim()] : baseDetails
 
-  /* ---- Fenster-Zeilen verwalten ---- */
-  const updateWindowRow = (id: number, field: "type" | "quantity", value: string) => {
-    setWindowRows((prev) => prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)))
-  }
-
-  const addWindowRow = () => {
-    setWindowRows((prev) => [...prev, { id: windowIdRef.current++, type: "", quantity: "" }])
-  }
-
-  const removeWindowRow = (id: number) => {
-    setWindowRows((prev) => (prev.length > 1 ? prev.filter((row) => row.id !== id) : prev))
+  /* ---- Fenstermengen verwalten ---- */
+  const updateWindowQuantity = (type: string, value: string) => {
+    setWindowQuantities((prev) => ({ ...prev, [type]: value }))
   }
 
   const toggleDetail = (option: string) => {
@@ -447,8 +429,8 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                     Welche Fenster sollen gereinigt werden?
                   </h3>
                   <p className="text-sm text-neutral-500">
-                    Wählen Sie pro Zeile eine Fensterart und geben Sie die Anzahl an. Sie können
-                    beliebig viele weitere Fensterarten hinzufügen.
+                    Tragen Sie je Fenstertyp die Anzahl ein (Rollladen in m²). Sie müssen nicht alle
+                    Felder ausfüllen – geben Sie nur an, was zutrifft.
                   </p>
                 </div>
 
@@ -481,72 +463,67 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  {/* Spaltenüberschriften */}
-                  <div className="hidden gap-3 px-1 sm:flex">
-                    <span className="flex-1 text-xs font-normal text-neutral-500">Fensterart</span>
-                    <span className="w-28 text-xs font-normal text-neutral-500">Anzahl / m²</span>
-                    <span className="w-8" />
+                {/* Fensterart (Mehrfachauswahl), z. B. Dachfenster */}
+                <div className="rounded-2xl bg-brand-mint/50 p-5">
+                  <Label className="text-sm font-semibold text-brand-navy">
+                    {selectedService?.detail.optionLabel}{" "}
+                    <span className="font-normal text-neutral-400">(optional, Mehrfachauswahl)</span>
+                  </Label>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {selectedService?.detail.options.map((option) => {
+                      const active = details.includes(option)
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => toggleDetail(option)}
+                          className={`rounded-full border px-4 py-1.5 text-sm transition-all cursor-pointer ${
+                            active
+                              ? "border-brand-blue bg-brand-blue text-white"
+                              : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                          }`}
+                        >
+                          {option}
+                        </button>
+                      )
+                    })}
                   </div>
+                </div>
 
-                  {windowRows.map((row) => {
-                    const type = getWindowType(row.type)
+                {/* Fenstergrößen: alle Typen untereinander, Größe je Typ darunter */}
+                <div className="space-y-3">
+                  <Label className="text-sm font-semibold text-brand-navy">Fenstergrößen &amp; Anzahl</Label>
+                  {windowTypes.map((t) => {
+                    const qty = windowQuantities[t.value] ?? ""
+                    const active = (Number.parseFloat(qty.replace(",", ".")) || 0) > 0
                     return (
                       <div
-                        key={row.id}
-                        className="flex flex-wrap items-center gap-3 rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-3 sm:flex-nowrap"
+                        key={t.value}
+                        className={`flex items-center justify-between gap-4 rounded-2xl border p-4 transition-colors ${
+                          active
+                            ? "border-brand-blue bg-brand-blue/5"
+                            : "border-brand-navy/10 bg-brand-mint/30"
+                        }`}
                       >
-                        {/* Fensterart-Auswahl */}
-                        <select
-                          value={row.type}
-                          onChange={(e) => updateWindowRow(row.id, "type", e.target.value)}
-                          className="h-11 flex-1 rounded-xl border border-brand-navy/15 bg-white px-3 text-sm text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/20 cursor-pointer"
-                          aria-label="Fensterart"
-                        >
-                          <option value="">Fensterart wählen…</option>
-                          {windowTypes.map((t) => (
-                            <option key={t.value} value={t.value}>
-                              {t.label} – {t.price.toFixed(2).replace(".", ",")} €
-                              {t.perSqm ? "/m²" : ""}
-                            </option>
-                          ))}
-                        </select>
-
-                        {/* Anzahl bzw. m² */}
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-brand-navy">{t.label}</p>
+                          <p className="mt-0.5 text-xs font-light text-neutral-400">{t.dimension}</p>
+                        </div>
                         <Input
                           type="number"
                           min={0}
-                          step={type?.perSqm ? "0.5" : "1"}
-                          inputMode={type?.perSqm ? "decimal" : "numeric"}
-                          placeholder="0"
-                          value={row.quantity}
-                          onChange={(e) => updateWindowRow(row.id, "quantity", e.target.value)}
-                          className="h-11 w-28 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                          aria-label={type?.perSqm ? "Quadratmeter" : "Anzahl"}
+                          step={t.perSqm ? "0.5" : "1"}
+                          inputMode={t.perSqm ? "decimal" : "numeric"}
+                          placeholder={t.perSqm ? "m²" : "0"}
+                          value={qty}
+                          onChange={(e) => updateWindowQuantity(t.value, e.target.value)}
+                          className="h-11 w-24 shrink-0 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+                          aria-label={`${t.label} – ${t.perSqm ? "Quadratmeter" : "Anzahl"}`}
                         />
-
-                        <button
-                          type="button"
-                          onClick={() => removeWindowRow(row.id)}
-                          disabled={windowRows.length <= 1}
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
-                          aria-label="Fensterart entfernen"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
                       </div>
                     )
                   })}
                 </div>
-
-                <button
-                  type="button"
-                  onClick={addWindowRow}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-brand-blue/40 bg-brand-blue/5 px-4 py-3 text-sm font-semibold text-brand-blue transition-colors hover:bg-brand-blue/10 cursor-pointer"
-                >
-                  <Plus className="h-4 w-4" />
-                  Weitere Fensterart hinzufügen
-                </button>
 
                 {assignedWindows > 0 && (
                   <p className="text-sm font-medium text-brand-navy">
