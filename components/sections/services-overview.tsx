@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Reveal } from "@/components/reveal"
-import { ArrowUpRight, Factory, GlassWater, Snowflake, Gem, Building2, ArrowRight } from "lucide-react"
+import { ArrowUpRight, Factory, GlassWater, Gem, Building2, ArrowRight } from "lucide-react"
 
 const featured = {
   title: "Industriereinigung",
@@ -36,14 +36,6 @@ const services = [
     icon: Gem,
     image: "/images/leistungen/naturstein-terrasse-gereinigt-ergebnis.avif",
     imageAlt: "Gereinigte Naturstein-Terrasse als Ergebnis der Steinreinigung",
-  },
-  {
-    title: "Trockeneisreinigung",
-    description: "Schonende, umweltfreundliche Reinigung ohne Chemie oder Wasser für empfindliche Oberflächen.",
-    href: "/leistungen/trockeneisreinigung",
-    icon: Snowflake,
-    image: "/images/leistungen/trockeneisreinigung-maschine-anwendung.avif",
-    imageAlt: "Trockeneisreinigung einer Maschine mit sichtbarem CO2-Strahl",
   },
 ]
 
@@ -101,7 +93,7 @@ export function ServicesOverview() {
         </Reveal>
 
         {/* Other Services - compact clickable tiles: image, icon & name only */}
-        <div className="grid gap-5 grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 grid-cols-2 lg:grid-cols-3">
           {services.map((service, i) => (
             <Reveal key={service.title} as="div" direction="up" delay={i * 100} className="h-full">
             <Link

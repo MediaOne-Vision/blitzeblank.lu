@@ -1,4 +1,4 @@
-import { Factory, Grid3X3, Snowflake, Mountain, Building2, type LucideIcon } from "lucide-react"
+import { Factory, Grid3X3, Mountain, Building2, type LucideIcon } from "lucide-react"
 
 export interface ServiceItem {
   slug: string
@@ -39,15 +39,6 @@ export const services: ServiceItem[] = [
     href: "/leistungen/steinreinigung",
     icon: Mountain,
     imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
-  },
-  {
-    slug: "trockeneisreinigung",
-    title: "Trockeneisreinigung",
-    shortDescription:
-      "Schonende und effektive Reinigung ohne Chemie oder Wasser - ideal für empfindliche Oberflächen.",
-    href: "/leistungen/trockeneisreinigung",
-    icon: Snowflake,
-    imageQuery: "dry+ice+blasting+industrial+cleaning+machine+vapor",
   },
   {
     slug: "industriereinigung",

@@ -6,7 +6,6 @@ import { CookieSettingsLink } from "@/components/cookie-settings-link"
 const services = [
   { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
   { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
-  { href: "/leistungen/trockeneisreinigung", label: "Trockeneisreinigung" },
   { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
   { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
 ]

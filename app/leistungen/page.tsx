@@ -5,12 +5,12 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { getServiceMedia } from "@/lib/service-media"
-import { ArrowRight, ArrowUpRight, Factory, Grid3X3, Snowflake, Mountain, Building2, CheckCircle2 } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Factory, Grid3X3, Mountain, Building2, CheckCircle2 } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Leistungen | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description:
-    "Entdecken Sie unsere professionellen Reinigungsdienstleistungen: Industriereinigung, Fensterreinigung, Trockeneisreinigung, Steinreinigung und Fassadenreinigung.",
+    "Entdecken Sie unsere professionellen Reinigungsdienstleistungen: Industriereinigung, Fensterreinigung, Steinreinigung und Fassadenreinigung.",
 }
 
 const services = [
@@ -49,15 +49,6 @@ const services = [
     href: "/leistungen/steinreinigung",
     slug: "steinreinigung",
     imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
-  },
-  {
-    icon: Snowflake,
-    title: "Trockeneisreinigung",
-    description: "Schonende und effektive Reinigung ohne Chemie oder Wasser - ideal für empfindliche Oberflächen.",
-    features: ["Maschinen", "Elektronik", "Oberflächen", "Produktionsanlagen"],
-    href: "/leistungen/trockeneisreinigung",
-    slug: "trockeneisreinigung",
-    imageQuery: "dry+ice+blasting+industrial+cleaning+machine+vapor",
   },
 ]
 

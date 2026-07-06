@@ -146,43 +146,6 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     ],
   },
 
-  trockeneisreinigung: {
-    hero: {
-      src: `${BASE}/trockeneisreinigung-maschine-anwendung.avif`,
-      alt: "Trockeneisreinigung in Anwendung mit sichtbarem CO2-Strahl an einer Maschine",
-    },
-    beforeAfter: [
-      {
-        beforeSrc: `${BASE}/elektromotor-verschmutzt-vor-trockeneisreinigung.avif`,
-        afterSrc: `${BASE}/elektromotor-sauber-nach-trockeneisreinigung.avif`,
-        beforeAlt: "Verölter und verschmutzter Elektromotor vor der Trockeneisreinigung",
-        afterAlt: "Sauberer Elektromotor nach der schonenden Trockeneisreinigung",
-        caption: "Elektromotor – Fett und Öl ohne Wasser entfernt",
-      },
-      {
-        beforeSrc: `${BASE}/holzbalken-russ-vor-trockeneisreinigung.avif`,
-        afterSrc: `${BASE}/holzbalken-gereinigt-nach-trockeneisreinigung.avif`,
-        beforeAlt: "Verrußte Holzbalken nach Brandschaden vor der Trockeneisreinigung",
-        afterAlt: "Gereinigte Holzbalken mit sichtbarer Maserung nach der Trockeneisreinigung",
-        caption: "Holzbalken – Ruß schonend entfernt, Material erhalten",
-      },
-    ],
-    gallery: [
-      {
-        src: `${BASE}/produktionsanlage-trockeneisreinigung-ergebnis.avif`,
-        alt: "Saubere Produktionsanlage als Ergebnis der Trockeneisreinigung",
-      },
-      {
-        src: `${BASE}/lebensmittelanlage-trockeneisreinigung.avif`,
-        alt: "Hygienische Trockeneisreinigung einer Lebensmittelanlage aus Edelstahl",
-      },
-      {
-        src: `${BASE}/trockeneisreinigung-maschine-anwendung.avif`,
-        alt: "Trockeneisreinigung einer Maschine mit CO2-Strahl in Anwendung",
-      },
-    ],
-  },
-
   industriereinigung: {
     hero: {
       src: `${BASE}/industriereinigung-produktionshalle-sauber.avif`,

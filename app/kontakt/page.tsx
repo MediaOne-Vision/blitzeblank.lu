@@ -15,7 +15,6 @@ import { Phone, Mail, MapPin, Clock, CheckCircle, Send, Sparkles, ArrowRight } f
 const services = [
   { value: "industrie", label: "Industriereinigung" },
   { value: "fenster", label: "Fensterreinigung" },
-  { value: "trockeneis", label: "Trockeneisreinigung" },
   { value: "stein", label: "Steinreinigung" },
   { value: "fassade", label: "Fassadenreinigung" },
   { value: "sonstiges", label: "Sonstiges" },

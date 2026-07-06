@@ -12,10 +12,17 @@ import {
   quoteServices,
   quoteFrequencies,
   calculateQuotePrice,
-  windowSizes,
+  windowTypes,
+  getWindowType,
   calculateWindowRowsPrice,
   type WindowRowEntry,
 } from "@/lib/quote-data"
+import {
+  getAddressSuggestions,
+  getTravelInfo,
+  type AddressSuggestion,
+  type TravelInfo,
+} from "@/app/actions/maps"
 import { submitQuote, type QuoteSubmission } from "@/app/actions/submit-quote"
 import {
   ArrowLeft,
@@ -34,17 +41,18 @@ import {
   Phone,
 } from "lucide-react"
 
-const STEPS = [
-  "Leistung",
-  "Umfang",
-  "Fotos",
-  "Kontakt",
-  "Angebot",
-]
+const STEPS = ["Leistung", "Umfang", "Fotos", "Kontakt", "Angebot"]
 
 interface UploadedPhoto {
   name: string
   url: string
+}
+
+/** Eine Fenster-Zeile im UI (Werte als String für die Eingabefelder) */
+interface WindowRow {
+  id: number
+  type: string
+  quantity: string
 }
 
 export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
@@ -57,22 +65,24 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const [details, setDetails] = useState<string[]>([])
   const [customDetail, setCustomDetail] = useState("")
   const [preferredDate, setPreferredDate] = useState("")
+
+  // Adresse + Google-Autocomplete
   const [address, setAddress] = useState("")
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [travel, setTravel] = useState<TravelInfo | null>(null)
+  const suggestTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Step 2 - Häufigkeit
+  // Step 2 - Häufigkeit (Turnus) - nur bei Fensterreinigung
   const [frequencyValue, setFrequencyValue] = useState("")
+  // Kundentyp - nur bei Fensterreinigung relevant
+  const [customerType, setCustomerType] = useState<"privat" | "gewerbe">("privat")
 
-  // Step 3 - Fläche
+  // Step 3 - Fläche (flächenbasierte Leistungen)
   const [area, setArea] = useState([100])
 
-  // Fensterreinigung: verschachtelt nach Art -> mehrere Größen-Zeilen (Anzahl + Größe + optionale Maße)
-  const [windowGroups, setWindowGroups] = useState<
-    {
-      id: number
-      type: string
-      sizes: { id: number; count: string; size: string; width: string; height: string }[]
-    }[]
-  >([{ id: 1, type: "", sizes: [{ id: 1, count: "", size: "mittel", width: "", height: "" }] }])
+  // Fensterreinigung: eine Zeile pro Fensterart (Fensterart + Anzahl)
+  const [windowRows, setWindowRows] = useState<WindowRow[]>([{ id: 1, type: "", quantity: "" }])
   const windowIdRef = useRef(2)
 
   // Step 4 - Fotos
@@ -92,110 +102,91 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const [privacyConsent, setPrivacyConsent] = useState(false)
 
   const selectedService = quoteServices.find((s) => s.value === serviceValue)
-  const selectedFrequency = quoteFrequencies.find((f) => f.value === frequencyValue)
   const isWindow = serviceValue === "fenster"
+  const isCommercial = isWindow && customerType === "gewerbe"
 
-  const windowTypeOptions = isWindow ? selectedService?.detail.options ?? [] : []
+  // Turnus gibt es nur bei der Fensterreinigung, sonst immer "Einmalig".
+  const effectiveFrequencyValue = isWindow ? frequencyValue : "einmalig"
+  const selectedFrequency = quoteFrequencies.find((f) => f.value === effectiveFrequencyValue)
 
-  // Verschachtelte Fenster-Gruppen in flache numerische Zeilen für die Preisberechnung umwandeln
-  const numericWindowRows: WindowRowEntry[] = windowGroups.flatMap((group) =>
-    group.sizes.map((row) => ({
-      type: group.type,
-      count: Number.parseInt(row.count) || 0,
-      size: row.size,
-      width: Number.parseFloat(row.width.replace(",", ".")) || 0,
-      height: Number.parseFloat(row.height.replace(",", ".")) || 0,
-    })),
-  )
-  const assignedWindows = numericWindowRows.reduce((sum, row) => sum + row.count, 0)
+  // UI-Zeilen in numerische Zeilen für die Preisberechnung umwandeln
+  const numericWindowRows: WindowRowEntry[] = windowRows.map((row) => ({
+    type: row.type,
+    quantity: Number.parseFloat(row.quantity.replace(",", ".")) || 0,
+  }))
+
+  // Gesamtanzahl Fenster (Rollladen wird in m² gemessen und hier nicht mitgezählt)
+  const assignedWindows = numericWindowRows
+    .filter((row) => row.type && getWindowType(row.type)?.perSqm !== true)
+    .reduce((sum, row) => sum + row.quantity, 0)
+
+  const travelKm = travel?.billableKm ?? 0
 
   const price = isWindow
-    ? calculateWindowRowsPrice(selectedService, selectedFrequency, numericWindowRows)
-    : calculateQuotePrice(selectedService, selectedFrequency, area[0])
+    ? calculateWindowRowsPrice(selectedService, selectedFrequency, numericWindowRows, {
+        travelKm,
+        isCommercial,
+      })
+    : calculateQuotePrice(selectedService, selectedFrequency, area[0], { travelKm })
 
-  // Fensterarten mit Anzahl + Größe als lesbare Liste, z. B. "3× Bürofenster (Mittelgroß)"
+  // Lesbare Auflistung der Fensterarten, z. B. "3× Fenster M (100×100)" oder "12 m² Rollladen"
   const windowBreakdown = numericWindowRows
-    .filter((row) => row.count > 0)
+    .filter((row) => row.quantity > 0 && row.type)
     .map((row) => {
-      const sizeLabel = windowSizes.find((s) => s.value === row.size)?.label ?? ""
-      const typeLabel = row.type ? `${row.type} ` : ""
-      const maße = row.width > 0 && row.height > 0 ? `, ${row.width} × ${row.height} m` : ""
-      return `${row.count}× ${typeLabel}(${sizeLabel}${maße})`
+      const type = getWindowType(row.type)
+      if (!type) return ""
+      const qty = Number.isInteger(row.quantity) ? row.quantity : row.quantity.toString().replace(".", ",")
+      return type.perSqm ? `${qty} m² ${type.label.replace(" (pro m²)", "")}` : `${qty}× ${type.label}`
     })
+    .filter(Boolean)
+
   const baseDetails = isWindow ? windowBreakdown : details
   const allDetails = customDetail.trim() ? [...baseDetails, customDetail.trim()] : baseDetails
 
-  const updateWindowType = (groupId: number, value: string) => {
-    setWindowGroups((prev) =>
-      prev.map((group) => (group.id === groupId ? { ...group, type: value } : group)),
-    )
+  /* ---- Fenster-Zeilen verwalten ---- */
+  const updateWindowRow = (id: number, field: "type" | "quantity", value: string) => {
+    setWindowRows((prev) => prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)))
   }
 
-  const updateWindowSize = (
-    groupId: number,
-    rowId: number,
-    field: "count" | "size" | "width" | "height",
-    value: string,
-  ) => {
-    setWindowGroups((prev) =>
-      prev.map((group) =>
-        group.id === groupId
-          ? {
-              ...group,
-              sizes: group.sizes.map((row) =>
-                row.id === rowId ? { ...row, [field]: value } : row,
-              ),
-            }
-          : group,
-      ),
-    )
+  const addWindowRow = () => {
+    setWindowRows((prev) => [...prev, { id: windowIdRef.current++, type: "", quantity: "" }])
   }
 
-  const addWindowSize = (groupId: number) => {
-    setWindowGroups((prev) =>
-      prev.map((group) =>
-        group.id === groupId
-          ? {
-              ...group,
-              sizes: [
-                ...group.sizes,
-                { id: windowIdRef.current++, count: "", size: "mittel", width: "", height: "" },
-              ],
-            }
-          : group,
-      ),
-    )
-  }
-
-  const removeWindowSize = (groupId: number, rowId: number) => {
-    setWindowGroups((prev) =>
-      prev.map((group) =>
-        group.id === groupId && group.sizes.length > 1
-          ? { ...group, sizes: group.sizes.filter((row) => row.id !== rowId) }
-          : group,
-      ),
-    )
-  }
-
-  const addWindowGroup = () => {
-    setWindowGroups((prev) => [
-      ...prev,
-      {
-        id: windowIdRef.current++,
-        type: "",
-        sizes: [{ id: windowIdRef.current++, count: "", size: "mittel", width: "", height: "" }],
-      },
-    ])
-  }
-
-  const removeWindowGroup = (groupId: number) => {
-    setWindowGroups((prev) => (prev.length > 1 ? prev.filter((group) => group.id !== groupId) : prev))
+  const removeWindowRow = (id: number) => {
+    setWindowRows((prev) => (prev.length > 1 ? prev.filter((row) => row.id !== id) : prev))
   }
 
   const toggleDetail = (option: string) => {
-    setDetails((prev) =>
-      prev.includes(option) ? prev.filter((d) => d !== option) : [...prev, option],
-    )
+    setDetails((prev) => (prev.includes(option) ? prev.filter((d) => d !== option) : [...prev, option]))
+  }
+
+  /* ---- Adress-Autocomplete (Google Places, serverseitig) ---- */
+  const handleAddressChange = (value: string) => {
+    setAddress(value)
+    // Bei manueller Änderung eine bereits ermittelte Entfernung verwerfen
+    setTravel(null)
+
+    if (suggestTimeout.current) clearTimeout(suggestTimeout.current)
+    if (value.trim().length < 3) {
+      setSuggestions([])
+      setShowSuggestions(false)
+      return
+    }
+    // Eingabe entprellen, damit nicht bei jedem Tastendruck eine Anfrage läuft
+    suggestTimeout.current = setTimeout(async () => {
+      const results = await getAddressSuggestions(value)
+      setSuggestions(results)
+      setShowSuggestions(results.length > 0)
+    }, 350)
+  }
+
+  const selectSuggestion = async (suggestion: AddressSuggestion) => {
+    setAddress(suggestion.description)
+    setSuggestions([])
+    setShowSuggestions(false)
+    // Entfernung zur Firmenadresse ermitteln (fließt später in den Schätzpreis ein)
+    const info = await getTravelInfo(suggestion.placeId)
+    setTravel(info)
   }
 
   const handleFiles = (files: FileList | null) => {
@@ -216,11 +207,10 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
       case 0:
         return Boolean(serviceValue && address.trim())
       case 1:
-        return isWindow
-          ? numericWindowRows.some((row) => row.count > 0 && row.type)
-          : true
+        return isWindow ? numericWindowRows.some((row) => row.quantity > 0 && row.type) : true
       case 3:
-        return Boolean(name.trim() && email.trim() && frequencyValue && privacyConsent)
+        // Turnus nur bei Fensterreinigung verpflichtend
+        return Boolean(name.trim() && email.trim() && privacyConsent && (!isWindow || frequencyValue))
       default:
         return true
     }
@@ -239,11 +229,13 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
       details: allDetails,
       preferredDate,
       address,
-      frequency: frequencyValue,
+      frequency: effectiveFrequencyValue,
       frequencyLabel: selectedFrequency?.label ?? "",
       area: isWindow ? 0 : area[0],
       windowCount: isWindow ? assignedWindows : undefined,
       windowBreakdown: isWindow ? windowBreakdown.join(", ") : undefined,
+      customerType: isWindow ? customerType : undefined,
+      distanceKm: travel?.distanceKm,
       photoCount: photos.length,
       name,
       email,
@@ -404,194 +396,152 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   className="font-light text-neutral-600"
                 />
               </div>
-              <div className="space-y-2">
+              {/* Adresse mit Autovervollständigung */}
+              <div className="relative space-y-2">
                 <Label htmlFor="address" className="flex items-center gap-2 text-sm font-normal text-neutral-600">
                   <MapPin className="h-4 w-4 text-brand-blue" />
                   Adresse *
                 </Label>
                 <Input
                   id="address"
-                  placeholder="Straße, PLZ, Ort"
+                  autoComplete="off"
+                  placeholder="Straße Hausnummer, PLZ Ort"
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => handleAddressChange(e.target.value)}
+                  onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                   className="font-light text-neutral-600 placeholder:text-neutral-400/70"
                 />
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-brand-navy/10 bg-white shadow-lg">
+                    {suggestions.map((s) => (
+                      <li key={s.placeId}>
+                        <button
+                          type="button"
+                          // onMouseDown statt onClick, damit die Auswahl vor dem Blur greift
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            selectSuggestion(s)
+                          }}
+                          className="flex w-full items-start gap-2 px-4 py-2.5 text-left text-sm text-brand-navy transition-colors hover:bg-brand-mint/60 cursor-pointer"
+                        >
+                          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
+                          <span>{s.description}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           </div>
         )}
 
-        {/* STEP 2 - Umfang (Fensteranzahl je Art bzw. Fläche) */}
+        {/* STEP 2 - Umfang (Fensterarten bzw. Fläche) */}
         {step === 1 && (
           <div className="space-y-8">
             {isWindow ? (
               <>
                 <div>
                   <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                    Wie viele Fenster sollen gereinigt werden?
+                    Welche Fenster sollen gereinigt werden?
                   </h3>
                   <p className="text-sm text-neutral-500">
-                    Wählen Sie zuerst die Fensterart und geben Sie dann Anzahl und Größe an. Optional
-                    können Sie die genaue Größe pro Fenster ergänzen sowie weitere Größen oder
-                    Fensterarten hinzufügen.
+                    Wählen Sie pro Zeile eine Fensterart und geben Sie die Anzahl an. Sie können
+                    beliebig viele weitere Fensterarten hinzufügen.
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  {windowGroups.map((group, groupIndex) => (
-                    <div
-                      key={group.id}
-                      className="space-y-4 rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-4"
-                    >
-                      {/* Fensterart */}
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="space-y-2">
-                          <Label className="text-xs font-normal text-neutral-500">
-                            Fensterart {groupIndex + 1}
-                          </Label>
-                          <div className="flex flex-wrap gap-2">
-                            {windowTypeOptions.map((type) => {
-                              const active = group.type === type
-                              return (
-                                <button
-                                  key={type}
-                                  type="button"
-                                  onClick={() => updateWindowType(group.id, type)}
-                                  className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
-                                    active
-                                      ? "border-brand-blue bg-brand-blue text-white"
-                                      : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                                  }`}
-                                >
-                                  {type}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </div>
-                        {windowGroups.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeWindowGroup(group.id)}
-                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
-                            aria-label="Fensterart entfernen"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        )}
-                      </div>
+                {/* Kundentyp - beeinflusst die Preiskalkulation */}
+                <div className="rounded-2xl bg-brand-mint/50 p-5">
+                  <Label className="text-sm font-semibold text-brand-navy">Kundentyp</Label>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {(
+                      [
+                        { value: "privat", label: "Privatkunde" },
+                        { value: "gewerbe", label: "Gewerbekunde" },
+                      ] as const
+                    ).map((option) => {
+                      const active = customerType === option.value
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => setCustomerType(option.value)}
+                          className={`rounded-full border px-5 py-2 text-sm font-medium transition-all cursor-pointer ${
+                            active
+                              ? "border-brand-blue bg-brand-blue text-white"
+                              : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
 
-                      {/* Spaltenüberschriften */}
-                      <div className="hidden gap-3 px-1 sm:flex">
-                        <span className="w-24 text-xs font-normal text-neutral-500">Anzahl</span>
-                        <span className="text-xs font-normal text-neutral-500">Größe</span>
-                      </div>
+                <div className="space-y-3">
+                  {/* Spaltenüberschriften */}
+                  <div className="hidden gap-3 px-1 sm:flex">
+                    <span className="flex-1 text-xs font-normal text-neutral-500">Fensterart</span>
+                    <span className="w-28 text-xs font-normal text-neutral-500">Anzahl / m²</span>
+                    <span className="w-8" />
+                  </div>
 
-                      {/* Größen-Zeilen */}
-                      <div className="space-y-3">
-                        {group.sizes.map((row) => (
-                          <div
-                            key={row.id}
-                            className="rounded-xl border border-brand-navy/10 bg-white/60 p-3"
-                          >
-                            <div className="flex flex-wrap items-center gap-3">
-                              <Input
-                                type="number"
-                                min={0}
-                                inputMode="numeric"
-                                placeholder="0"
-                                value={row.count}
-                                onChange={(e) =>
-                                  updateWindowSize(group.id, row.id, "count", e.target.value)
-                                }
-                                className="w-24 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                                aria-label="Anzahl"
-                              />
-
-                              <div className="flex flex-wrap gap-2">
-                                {windowSizes.map((size) => {
-                                  const active = row.size === size.value
-                                  return (
-                                    <button
-                                      key={size.value}
-                                      type="button"
-                                      onClick={() =>
-                                        updateWindowSize(group.id, row.id, "size", size.value)
-                                      }
-                                      className={`rounded-full border px-3.5 py-1.5 text-sm transition-all cursor-pointer ${
-                                        active
-                                          ? "border-brand-blue bg-brand-blue text-white"
-                                          : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                                      }`}
-                                      title={size.hint}
-                                    >
-                                      {size.label}
-                                    </button>
-                                  )
-                                })}
-                              </div>
-
-                              {group.sizes.length > 1 && (
-                                <button
-                                  type="button"
-                                  onClick={() => removeWindowSize(group.id, row.id)}
-                                  className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
-                                  aria-label="Größe entfernen"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </button>
-                              )}
-                            </div>
-
-                            {/* Optionale genaue Maße */}
-                            <div className="mt-3 flex flex-wrap items-center gap-2">
-                              <span className="text-xs font-normal text-neutral-500">
-                                Genaue Größe pro Fenster (optional):
-                              </span>
-                              <Input
-                                type="text"
-                                inputMode="decimal"
-                                placeholder="Breite"
-                                value={row.width}
-                                onChange={(e) =>
-                                  updateWindowSize(group.id, row.id, "width", e.target.value)
-                                }
-                                className="w-20 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                                aria-label="Breite in Metern"
-                              />
-                              <span className="text-sm text-neutral-400">m ×</span>
-                              <Input
-                                type="text"
-                                inputMode="decimal"
-                                placeholder="Höhe"
-                                value={row.height}
-                                onChange={(e) =>
-                                  updateWindowSize(group.id, row.id, "height", e.target.value)
-                                }
-                                className="w-20 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                                aria-label="Höhe in Metern"
-                              />
-                              <span className="text-sm text-neutral-400">m</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => addWindowSize(group.id)}
-                        className="flex items-center gap-1.5 text-sm font-semibold text-brand-blue transition-colors hover:text-brand-teal cursor-pointer"
+                  {windowRows.map((row) => {
+                    const type = getWindowType(row.type)
+                    return (
+                      <div
+                        key={row.id}
+                        className="flex flex-wrap items-center gap-3 rounded-2xl border border-brand-navy/10 bg-brand-mint/30 p-3 sm:flex-nowrap"
                       >
-                        <Plus className="h-4 w-4" />
-                        Weitere Größe hinzufügen
-                      </button>
-                    </div>
-                  ))}
+                        {/* Fensterart-Auswahl */}
+                        <select
+                          value={row.type}
+                          onChange={(e) => updateWindowRow(row.id, "type", e.target.value)}
+                          className="h-11 flex-1 rounded-xl border border-brand-navy/15 bg-white px-3 text-sm text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/20 cursor-pointer"
+                          aria-label="Fensterart"
+                        >
+                          <option value="">Fensterart wählen…</option>
+                          {windowTypes.map((t) => (
+                            <option key={t.value} value={t.value}>
+                              {t.label} – {t.price.toFixed(2).replace(".", ",")} €
+                              {t.perSqm ? "/m²" : ""}
+                            </option>
+                          ))}
+                        </select>
+
+                        {/* Anzahl bzw. m² */}
+                        <Input
+                          type="number"
+                          min={0}
+                          step={type?.perSqm ? "0.5" : "1"}
+                          inputMode={type?.perSqm ? "decimal" : "numeric"}
+                          placeholder="0"
+                          value={row.quantity}
+                          onChange={(e) => updateWindowRow(row.id, "quantity", e.target.value)}
+                          className="h-11 w-28 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+                          aria-label={type?.perSqm ? "Quadratmeter" : "Anzahl"}
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => removeWindowRow(row.id)}
+                          disabled={windowRows.length <= 1}
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white hover:text-brand-navy disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                          aria-label="Fensterart entfernen"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )
+                  })}
                 </div>
 
                 <button
                   type="button"
-                  onClick={addWindowGroup}
+                  onClick={addWindowRow}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-brand-blue/40 bg-brand-blue/5 px-4 py-3 text-sm font-semibold text-brand-blue transition-colors hover:bg-brand-blue/10 cursor-pointer"
                 >
                   <Plus className="h-4 w-4" />
@@ -708,44 +658,48 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
           </div>
         )}
 
-        {/* STEP 4 - Häufigkeit & Kontakt */}
+        {/* STEP 4 - Häufigkeit (nur Fenster) & Kontakt */}
         {step === 3 && (
           <div className="space-y-10">
-            <div className="space-y-5">
-              <div>
-                <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                  Wie häufig benötigen Sie die Reinigung?
-                </h3>
-                <p className="text-sm text-neutral-500">
-                  Bei regelmäßiger Reinigung sparen Sie dauerhaft.
-                </p>
-              </div>
+            {/* Turnus ausschließlich bei der Fensterreinigung anzeigen */}
+            {isWindow && (
+              <div className="space-y-5">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    Wie häufig benötigen Sie die Reinigung?
+                  </h3>
+                  <p className="text-sm text-neutral-500">
+                    Bei regelmäßiger Reinigung sparen Sie dauerhaft.
+                  </p>
+                </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                {quoteFrequencies.map((f) => {
-                  const active = frequencyValue === f.value
-                  return (
-                    <button
-                      key={f.value}
-                      type="button"
-                      onClick={() => setFrequencyValue(f.value)}
-                      className={`flex items-center justify-between rounded-2xl border p-5 text-left transition-all cursor-pointer ${
-                        active
-                          ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
-                          : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
-                      }`}
-                    >
-                      <span className="font-semibold text-brand-navy">{f.label}</span>
-                      {f.discount > 0 && (
-                        <span className="rounded-full bg-brand-blue px-2.5 py-1 text-xs font-bold text-white">
-                          -{f.discount}%
-                        </span>
-                      )}
-                    </button>
-                  )
-                })}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {quoteFrequencies.map((f) => {
+                    const active = frequencyValue === f.value
+                    return (
+                      <button
+                        key={f.value}
+                        type="button"
+                        onClick={() => setFrequencyValue(f.value)}
+                        className={`flex items-center justify-between rounded-2xl border p-5 text-left transition-all cursor-pointer ${
+                          active
+                            ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                            : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
+                        }`}
+                      >
+                        <span className="font-semibold text-brand-navy">{f.label}</span>
+                        {/* Für Gewerbekunden gibt es keinen Rabatt, daher nur bei Privatkunden anzeigen */}
+                        {f.discount > 0 && !isCommercial && (
+                          <span className="rounded-full bg-brand-blue px-2.5 py-1 text-xs font-bold text-white">
+                            -{f.discount}%
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="space-y-5">
               <div>
@@ -830,7 +784,7 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
           </div>
         )}
 
-        {/* STEP 5 - Angebot */}
+        {/* STEP 5 - Angebot (Preis erst hier, nach Abschluss aller Eingaben) */}
         {step === 4 && (
           <div className="space-y-8">
             {!submitted ? (
@@ -849,24 +803,43 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
                   <p className="mt-1 font-display text-4xl font-extrabold text-white sm:text-5xl">
                     {price.min.toLocaleString("de-DE")} - {price.max.toLocaleString("de-DE")} €
                   </p>
-                  {selectedFrequency && selectedFrequency.discount > 0 && (
+                  {/* Rabatt-Hinweis nur bei Privatkunden mit regelmäßiger Reinigung */}
+                  {!isCommercial && selectedFrequency && selectedFrequency.discount > 0 && (
                     <p className="mt-2 text-sm text-white/80">
-                      inkl. {selectedFrequency.discount}% Rabatt für {selectedFrequency.label.toLowerCase()}e Reinigung
+                      inkl. {selectedFrequency.discount}% Rabatt bei {selectedFrequency.label.toLowerCase()}er Reinigung
                     </p>
                   )}
                 </div>
+
+                {/* Pflichthinweis: Preis ist nur eine Orientierung */}
+                <p className="rounded-2xl bg-brand-mint/50 px-5 py-4 text-center text-sm text-brand-navy">
+                  Dieser Preis dient lediglich als Orientierung. Der tatsächliche Preis kann nach
+                  Besichtigung oder genauer Prüfung abweichen.
+                </p>
+
+                {/* Zusätzlicher Hinweis für Gewerbekunden */}
+                {isCommercial && (
+                  <p className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 px-5 py-4 text-center text-sm text-brand-navy">
+                    Für Gewerbekunden erfolgt in der Regel eine Besichtigung vor Ort. Der angezeigte
+                    Preis dient lediglich als Orientierung.
+                  </p>
+                )}
 
                 {/* Zusammenfassung */}
                 <div className="space-y-2.5 rounded-2xl bg-brand-mint/50 p-6 text-sm">
                   <SummaryRow label="Leistung" value={selectedService?.label ?? "-"} />
                   {allDetails.length > 0 && <SummaryRow label="Details" value={allDetails.join(", ")} />}
-                  <SummaryRow label="Häufigkeit" value={selectedFrequency?.label ?? "-"} />
+                  {isWindow && (
+                    <SummaryRow label="Kundentyp" value={customerType === "gewerbe" ? "Gewerbekunde" : "Privatkunde"} />
+                  )}
+                  {isWindow && <SummaryRow label="Turnus" value={selectedFrequency?.label ?? "-"} />}
                   {isWindow ? (
                     <SummaryRow label="Fenster gesamt" value={`${assignedWindows}`} />
                   ) : (
                     <SummaryRow label="Fläche" value={`${area[0].toLocaleString("de-DE")} m²`} />
                   )}
                   <SummaryRow label="Adresse" value={address || "-"} />
+                  {travel && <SummaryRow label="Anfahrt" value={`ca. ${travel.distanceKm.toLocaleString("de-DE")} km`} />}
                   {preferredDate && <SummaryRow label="Wunschtermin" value={preferredDate} />}
                   {photos.length > 0 && <SummaryRow label="Fotos" value={`${photos.length} hochgeladen`} />}
                 </div>

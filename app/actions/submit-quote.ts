@@ -13,6 +13,10 @@ export interface QuoteSubmission {
   windowCount?: number
   /** Nur bei Fensterreinigung: Aufschlüsselung nach Größe */
   windowBreakdown?: string
+  /** Nur bei Fensterreinigung: Privat- oder Gewerbekunde */
+  customerType?: "privat" | "gewerbe"
+  /** Einfache Entfernung zur Firmenadresse in km (falls ermittelt) */
+  distanceKm?: number
   photoCount: number
   name: string
   email: string
