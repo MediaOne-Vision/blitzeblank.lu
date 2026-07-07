@@ -1,5 +1,4 @@
 import {
-  Factory,
   Grid3X3,
   Mountain,
   Building2,
@@ -32,26 +31,9 @@ export const TRAVEL_COST_PER_KM = 2
 /** Feste Firmenadresse als Startpunkt für die Entfernungsberechnung */
 export const COMPANY_ADDRESS = "Lehnsweg 3, 54636 Wolsfeld, Deutschland"
 
+// Hinweis: Die Industriereinigung wird ausschließlich auf Anfrage kalkuliert
+// und ist daher bewusst NICHT im Preisrechner enthalten.
 export const quoteServices: QuoteService[] = [
-  {
-    slug: "industriereinigung",
-    value: "industrie",
-    label: "Industriereinigung",
-    icon: Factory,
-    basePrice: 150,
-    pricePerSqm: 2.5,
-    detail: {
-      optionLabel: "Welche Bereiche?",
-      options: [
-        "Hallenboden",
-        "Maschinen",
-        "Lager & Regale",
-        "Decken & Wände",
-        "Lüftungsanlagen",
-        "Sonderreinigung",
-      ],
-    },
-  },
   {
     slug: "fensterreinigung",
     value: "fenster",

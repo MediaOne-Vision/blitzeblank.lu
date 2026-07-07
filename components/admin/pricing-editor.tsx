@@ -5,6 +5,7 @@ import { quoteServices, quoteFrequencies, windowTypes } from "@/lib/quote-data"
 import {
   defaultPricingConfig,
   getSteinPricePerSqm,
+  getFassadePricePerSqm,
   type PricingConfig,
 } from "@/lib/pricing-config"
 import { savePricingAction } from "@/app/actions/admin"
@@ -81,6 +82,9 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
   const setStein = (field: keyof PricingConfig["stein"], v: number) =>
     setConfig((c) => ({ ...c, stein: { ...c.stein, [field]: num(v) } }))
 
+  const setFassade = (field: keyof PricingConfig["fassade"], v: number) =>
+    setConfig((c) => ({ ...c, fassade: { ...c.fassade, [field]: num(v) } }))
+
   const setTop = (field: keyof PricingConfig, v: number) =>
     setConfig((c) => ({ ...c, [field]: num(v) }))
 
@@ -151,6 +155,12 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
                 (siehe unten), der Grundpreis wird hier nicht verwendet.
               </p>
             )}
+            {s.slug === "fassadenreinigung" && (
+              <p className="mt-2 text-xs font-light text-neutral-400">
+                Hinweis: Für die Fassadenreinigung wird der Preis über das Flächenmodell berechnet
+                (siehe unten). Grundpreis und m²-Preis hier werden nicht verwendet.
+              </p>
+            )}
           </div>
         ))}
       </Section>
@@ -208,6 +218,53 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
         <div className="mt-2 rounded-xl bg-white px-4 py-3 text-xs text-neutral-500">
           Beispiel: 50 m² ≈ {getSteinPricePerSqm(50, config).toFixed(2).replace(".", ",")} €/m² ·
           100 m² ≈ {getSteinPricePerSqm(100, config).toFixed(2).replace(".", ",")} €/m²
+        </div>
+      </Section>
+
+      {/* Fassadenreinigung-Flächenmodell */}
+      <Section
+        title="Fassadenreinigung – Flächenmodell"
+        description="Der m²-Preis sinkt linear von 'Preis bei kleiner Fläche' auf 'Preis bei großer Fläche'. Für sehr kleine Flächen gilt ein Mindestpreis."
+      >
+        <div className="grid gap-2 sm:grid-cols-2">
+          <NumberField
+            label="Kleine Fläche bis"
+            value={config.fassade.minArea}
+            onChange={(v) => setFassade("minArea", v)}
+            step="1"
+            suffix="m²"
+          />
+          <NumberField
+            label="Große Fläche ab"
+            value={config.fassade.maxArea}
+            onChange={(v) => setFassade("maxArea", v)}
+            step="1"
+            suffix="m²"
+          />
+          <NumberField
+            label="Preis bei kleiner Fläche"
+            value={config.fassade.maxPrice}
+            onChange={(v) => setFassade("maxPrice", v)}
+            suffix="€/m²"
+          />
+          <NumberField
+            label="Preis bei großer Fläche"
+            value={config.fassade.minPrice}
+            onChange={(v) => setFassade("minPrice", v)}
+            suffix="€/m²"
+          />
+          <NumberField
+            label="Mindestpreis"
+            sub="Untergrenze für sehr kleine Flächen"
+            value={config.fassade.minCharge}
+            onChange={(v) => setFassade("minCharge", v)}
+            step="1"
+            suffix="€"
+          />
+        </div>
+        <div className="mt-2 rounded-xl bg-white px-4 py-3 text-xs text-neutral-500">
+          Beispiel: 50 m² ≈ {getFassadePricePerSqm(50, config).toFixed(2).replace(".", ",")} €/m² ·
+          100 m² ≈ {getFassadePricePerSqm(100, config).toFixed(2).replace(".", ",")} €/m²
         </div>
       </Section>
 
