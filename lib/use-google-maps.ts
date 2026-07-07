@@ -33,7 +33,7 @@ const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""
  */
 export function useGoogleMaps() {
   const [ready, setReady] = useState(false)
-  const autocompleteRef = useRef<google.maps.places.AutocompleteService | null>(null)
+  const placesRef = useRef<google.maps.PlacesLibrary | null>(null)
   const distanceRef = useRef<google.maps.DistanceMatrixService | null>(null)
   const sessionTokenRef = useRef<google.maps.places.AutocompleteSessionToken | null>(null)
 
@@ -44,9 +44,11 @@ export function useGoogleMaps() {
     setOptions({ key: API_KEY, v: "weekly", language: "de" })
     ;(async () => {
       try {
-        const places = await importLibrary("places")
+        // Neue Places-API (AutocompleteSuggestion) statt der für neue
+        // Kunden gesperrten AutocompleteService-Klasse.
+        const places = (await importLibrary("places")) as google.maps.PlacesLibrary
         if (cancelled) return
-        autocompleteRef.current = new places.AutocompleteService()
+        placesRef.current = places
         sessionTokenRef.current = new places.AutocompleteSessionToken()
         // DistanceMatrixService liegt in der Routes-Library
         const routes = await importLibrary("routes")
@@ -63,35 +65,32 @@ export function useGoogleMaps() {
     }
   }, [])
 
-  /** Adressvorschläge während der Eingabe (Places Autocomplete) */
+  /** Adressvorschläge während der Eingabe (neue Places AutocompleteSuggestion API) */
   const getSuggestions = useCallback(async (input: string): Promise<AddressSuggestion[]> => {
-    const service = autocompleteRef.current
+    const places = placesRef.current
     const query = input.trim()
-    if (!service || query.length < 3) return []
+    if (!places || query.length < 3) return []
 
-    return new Promise((resolve) => {
-      service.getPlacePredictions(
-        {
-          input: query,
-          sessionToken: sessionTokenRef.current ?? undefined,
-          language: "de",
-          types: ["address"],
-          componentRestrictions: { country: ["de", "lu", "be", "fr"] },
-        },
-        (predictions, status) => {
-          if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) {
-            resolve([])
-            return
-          }
-          resolve(
-            predictions.slice(0, 5).map((p) => ({
-              description: p.description,
-              placeId: p.place_id,
-            })),
-          )
-        },
-      )
-    })
+    try {
+      const { suggestions } = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        input: query,
+        sessionToken: sessionTokenRef.current ?? undefined,
+        language: "de",
+        includedRegionCodes: ["de", "lu", "be", "fr"],
+      })
+
+      return suggestions
+        .map((s) => s.placePrediction)
+        .filter((p): p is google.maps.places.PlacePrediction => p != null)
+        .slice(0, 5)
+        .map((p) => ({
+          description: p.text.toString(),
+          placeId: p.placeId,
+        }))
+    } catch (err) {
+      console.error("[v0] Adressvorschläge konnten nicht geladen werden:", err)
+      return []
+    }
   }, [])
 
   /** Fahrstrecke (PKW) von der Firmenadresse zur gewählten Adresse */
