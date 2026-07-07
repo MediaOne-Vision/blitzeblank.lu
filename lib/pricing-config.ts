@@ -22,24 +22,16 @@ export interface PricingConfig {
   services: Record<string, { basePrice: number; pricePerSqm: number }>
   /** Multiplikator je Turnus (Schlüssel = quoteFrequencies.value) */
   frequencyMultipliers: Record<string, number>
-  /** Flächenmodell der Steinreinigung */
-  stein: {
-    minArea: number
-    maxArea: number
-    maxPrice: number
-    minPrice: number
-  }
   /**
-   * Flächenmodell der Fassadenreinigung (laut Preisdynamik-Tabelle).
-   * Der m²-Preis sinkt linear von maxPrice (bei minArea) auf minPrice (bei maxArea).
-   * Zusätzlich gilt ein Mindestpreis (minCharge) für sehr kleine Flächen.
+   * Flächenmodell der Fassadenreinigung.
+   * Der m²-Preis sinkt linear vom Preis bei minArea (maxPrice) auf den Preis
+   * bei maxArea (minPrice). Beispiel: 20 €/m² bei 10 m² bis 10 €/m² bei 350 m².
    */
   fassade: {
     minArea: number
     maxArea: number
     maxPrice: number
     minPrice: number
-    minCharge: number
   }
   /** Anfahrtspauschale pro gefahrenem Kilometer, in EUR */
   travelCostPerKm: number
@@ -60,11 +52,8 @@ export const defaultPricingConfig: PricingConfig = {
     quoteServices.map((s) => [s.slug, { basePrice: s.basePrice, pricePerSqm: s.pricePerSqm }]),
   ),
   frequencyMultipliers: Object.fromEntries(quoteFrequencies.map((f) => [f.value, f.multiplier])),
-  stein: { minArea: 10, maxArea: 150, maxPrice: 30, minPrice: 20 },
-  // Werte aus der Preisdynamik-Tabelle: der m²-Preis fällt linear von 17 €/m²
-  // (bei 10 m²) auf 10 €/m² (bei 350 m²). Für Flächen bis 10 m² gilt ein
-  // Mindestpreis von 200 €.
-  fassade: { minArea: 10, maxArea: 350, maxPrice: 17, minPrice: 10, minCharge: 200 },
+  // m²-Preis fällt linear von 20 €/m² (bei 10 m²) auf 10 €/m² (bei 350 m²).
+  fassade: { minArea: 10, maxArea: 350, maxPrice: 20, minPrice: 10 },
   travelCostPerKm: 2,
   privateDiscount: 0.15,
   commercialSurcharge: 0.15,
@@ -85,7 +74,6 @@ export function mergePricingConfig(partial: Partial<PricingConfig> | null | unde
       ...defaultPricingConfig.frequencyMultipliers,
       ...partial.frequencyMultipliers,
     },
-    stein: { ...defaultPricingConfig.stein, ...partial.stein },
     fassade: { ...defaultPricingConfig.fassade, ...partial.fassade },
     travelCostPerKm: partial.travelCostPerKm ?? defaultPricingConfig.travelCostPerKm,
     privateDiscount: partial.privateDiscount ?? defaultPricingConfig.privateDiscount,
@@ -124,25 +112,12 @@ function applyRangeAndTravel(
   return { min: Math.round(rangeStart), max: Math.round(rangeEnd) }
 }
 
-/** Dynamischer m²-Preis für die Steinreinigung (Flächenmodell). */
-export function getSteinPricePerSqm(area: number, config: PricingConfig): number {
-  const { minArea, maxArea, maxPrice, minPrice } = config.stein
-  if (area <= minArea) return maxPrice
-  if (area >= maxArea) return minPrice
-  return maxPrice - ((maxPrice - minPrice) / (maxArea - minArea)) * (area - minArea)
-}
-
 /** Dynamischer m²-Preis für die Fassadenreinigung (Flächenmodell). */
 export function getFassadePricePerSqm(area: number, config: PricingConfig): number {
   const { minArea, maxArea, maxPrice, minPrice } = config.fassade
   if (area <= minArea) return maxPrice
   if (area >= maxArea) return minPrice
   return maxPrice - ((maxPrice - minPrice) / (maxArea - minArea)) * (area - minArea)
-}
-
-/** Gesamter (Netto-)Grundpreis der Fassadenreinigung inkl. Mindestpreis. */
-export function getFassadeBaseTotal(area: number, config: PricingConfig): number {
-  return Math.max(area * getFassadePricePerSqm(area, config), config.fassade.minCharge)
 }
 
 /** Preisberechnung für die Fensterreinigung anhand der einzelnen Fensterarten */
@@ -177,13 +152,11 @@ export function calculateQuotePrice(
   if (!service || !frequency) return { min: 0, max: 0 }
   const svc = config.services[service.slug]
   let totalBase: number
-  if (service.slug === "steinreinigung") {
-    totalBase = area * getSteinPricePerSqm(area, config)
-  } else if (service.slug === "fassadenreinigung") {
-    // Fassadenreinigung nutzt das Flächenmodell aus der Preisdynamik-Tabelle
-    // (inkl. Mindestpreis) ohne separaten Grundpreis.
-    totalBase = getFassadeBaseTotal(area, config)
+  if (service.slug === "fassadenreinigung") {
+    // Fassadenreinigung nutzt das Flächenmodell (dynamischer m²-Preis).
+    totalBase = area * getFassadePricePerSqm(area, config)
   } else {
+    // Alle übrigen Flächenleistungen: Grundpreis (i. d. R. 0) + m²-Preis.
     totalBase = (svc?.basePrice ?? service.basePrice) + area * (svc?.pricePerSqm ?? service.pricePerSqm)
   }
   const multiplier = config.frequencyMultipliers[frequency.value] ?? frequency.multiplier

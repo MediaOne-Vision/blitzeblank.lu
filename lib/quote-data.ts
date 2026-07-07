@@ -60,7 +60,8 @@ export const quoteServices: QuoteService[] = [
     value: "stein",
     label: "Steinreinigung",
     icon: Mountain,
-    basePrice: 120,
+    // Kein Grundpreis – die Steinreinigung wird rein über den m²-Preis kalkuliert.
+    basePrice: 0,
     pricePerSqm: 12,
     detail: {
       optionLabel: "Welche Art von Stein?",
@@ -79,7 +80,8 @@ export const quoteServices: QuoteService[] = [
     value: "fassade",
     label: "Fassadenreinigung",
     icon: Building2,
-    basePrice: 180,
+    // Kein Grundpreis – die Fassadenreinigung nutzt das Flächenmodell (m²-Preis).
+    basePrice: 0,
     pricePerSqm: 10,
     detail: {
       optionLabel: "Welches Fassadenmaterial?",
