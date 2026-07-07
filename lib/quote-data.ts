@@ -30,7 +30,7 @@ export interface QuoteService {
 export const TRAVEL_COST_PER_KM = 2
 
 /** Feste Firmenadresse als Startpunkt für die Entfernungsberechnung */
-export const COMPANY_ADDRESS = "54636 Wolsfeld, Deutschland"
+export const COMPANY_ADDRESS = "Lehnsweg 3, 54636 Wolsfeld, Deutschland"
 
 export const quoteServices: QuoteService[] = [
   {

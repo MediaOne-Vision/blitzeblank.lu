@@ -22,11 +22,10 @@ import {
   type PricingConfig,
 } from "@/lib/pricing-config"
 import {
-  getAddressSuggestions,
-  getTravelInfo,
+  useGoogleMaps,
   type AddressSuggestion,
   type TravelInfo,
-} from "@/app/actions/maps"
+} from "@/lib/use-google-maps"
 import { submitQuote, type QuoteSubmission } from "@/app/actions/submit-quote"
 import {
   ArrowLeft,
@@ -67,11 +66,13 @@ export function QuoteWizard({
   const [customDetail, setCustomDetail] = useState("")
   const [preferredDate, setPreferredDate] = useState("")
 
-  // Adresse + Google-Autocomplete
+  // Adresse + Google-Autocomplete (Client-seitige Google Maps JS API)
+  const { getSuggestions, getTravel } = useGoogleMaps()
   const [address, setAddress] = useState("")
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [travel, setTravel] = useState<TravelInfo | null>(null)
+  const [travelLoading, setTravelLoading] = useState(false)
   const suggestTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Step 2 - Häufigkeit (Turnus) - nur bei Fensterreinigung
@@ -166,7 +167,7 @@ export function QuoteWizard({
     }
     // Eingabe entprellen, damit nicht bei jedem Tastendruck eine Anfrage läuft
     suggestTimeout.current = setTimeout(async () => {
-      const results = await getAddressSuggestions(value)
+      const results = await getSuggestions(value)
       setSuggestions(results)
       setShowSuggestions(results.length > 0)
     }, 350)
@@ -177,8 +178,10 @@ export function QuoteWizard({
     setSuggestions([])
     setShowSuggestions(false)
     // Entfernung zur Firmenadresse ermitteln (fließt später in den Schätzpreis ein)
-    const info = await getTravelInfo(suggestion.placeId)
+    setTravelLoading(true)
+    const info = await getTravel(suggestion.placeId)
     setTravel(info)
+    setTravelLoading(false)
   }
 
   const handleFiles = (files: FileList | null) => {
@@ -423,6 +426,22 @@ export function QuoteWizard({
                       </li>
                     ))}
                   </ul>
+                )}
+                {/* Live-Anzeige der berechneten Entfernung + Anfahrtskosten */}
+                {travelLoading && (
+                  <p className="flex items-center gap-2 text-xs font-light text-neutral-500">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-brand-blue" />
+                    Entfernung wird berechnet…
+                  </p>
+                )}
+                {!travelLoading && travel && (
+                  <p className="text-xs font-light text-neutral-600">
+                    ca. {travel.distanceKm.toLocaleString("de-DE")} km ab Wolsfeld · Anfahrt{" "}
+                    <span className="font-semibold text-brand-navy">
+                      {Math.round(travel.billableKm * pricingConfig.travelCostPerKm).toLocaleString("de-DE")} €
+                    </span>{" "}
+                    <span className="text-neutral-400">(Hin- und Rückweg)</span>
+                  </p>
                 )}
               </div>
             </div>
