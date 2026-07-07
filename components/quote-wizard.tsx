@@ -21,11 +21,8 @@ import {
   defaultPricingConfig,
   type PricingConfig,
 } from "@/lib/pricing-config"
-import {
-  useGoogleMaps,
-  type AddressSuggestion,
-  type TravelInfo,
-} from "@/lib/use-google-maps"
+import { computeTravel, type AddressSuggestion, type TravelInfo } from "@/lib/travel"
+import { searchAddresses } from "@/app/actions/travel"
 import { submitQuote, type QuoteSubmission } from "@/app/actions/submit-quote"
 import {
   ArrowLeft,
@@ -66,8 +63,7 @@ export function QuoteWizard({
   const [customDetail, setCustomDetail] = useState("")
   const [preferredDate, setPreferredDate] = useState("")
 
-  // Adresse + Google-Autocomplete (Client-seitige Google Maps JS API)
-  const { getSuggestions, getTravel } = useGoogleMaps()
+  // Adresse + Autocomplete (kostenloses OpenStreetMap-Nominatim + Haversine)
   const [address, setAddress] = useState("")
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -153,7 +149,7 @@ export function QuoteWizard({
     setDetails((prev) => (prev.includes(option) ? prev.filter((d) => d !== option) : [...prev, option]))
   }
 
-  /* ---- Adress-Autocomplete (Google Places, serverseitig) ---- */
+  /* ---- Adress-Autocomplete (OpenStreetMap Nominatim, serverseitig) ---- */
   const handleAddressChange = (value: string) => {
     setAddress(value)
     // Bei manueller Änderung eine bereits ermittelte Entfernung verwerfen
@@ -167,20 +163,19 @@ export function QuoteWizard({
     }
     // Eingabe entprellen, damit nicht bei jedem Tastendruck eine Anfrage läuft
     suggestTimeout.current = setTimeout(async () => {
-      const results = await getSuggestions(value)
+      const results = await searchAddresses(value)
       setSuggestions(results)
       setShowSuggestions(results.length > 0)
-    }, 350)
+    }, 400)
   }
 
-  const selectSuggestion = async (suggestion: AddressSuggestion) => {
+  const selectSuggestion = (suggestion: AddressSuggestion) => {
     setAddress(suggestion.description)
     setSuggestions([])
     setShowSuggestions(false)
-    // Entfernung zur Firmenadresse ermitteln (fließt später in den Schätzpreis ein)
+    // Entfernung zur Firmenadresse per Haversine schätzen (fließt in den Preis ein)
     setTravelLoading(true)
-    const info = await getTravel(suggestion.placeId)
-    setTravel(info)
+    setTravel(computeTravel(suggestion))
     setTravelLoading(false)
   }
 
@@ -410,7 +405,7 @@ export function QuoteWizard({
                 {showSuggestions && suggestions.length > 0 && (
                   <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-brand-navy/10 bg-white shadow-lg">
                     {suggestions.map((s) => (
-                      <li key={s.placeId}>
+                      <li key={`${s.lat},${s.lon}-${s.description}`}>
                         <button
                           type="button"
                           // onMouseDown statt onClick, damit die Auswahl vor dem Blur greift
@@ -440,7 +435,7 @@ export function QuoteWizard({
                     <span className="font-semibold text-brand-navy">
                       {Math.round(travel.billableKm * pricingConfig.travelCostPerKm).toLocaleString("de-DE")} €
                     </span>{" "}
-                    <span className="text-neutral-400">(Hin- und Rückweg)</span>
+                    <span className="text-neutral-400">(Hin- und Rückweg, geschätzt)</span>
                   </p>
                 )}
               </div>
