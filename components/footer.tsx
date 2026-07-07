@@ -138,7 +138,7 @@ export function Footer() {
             </Link>
             <CookieSettingsLink className="text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer" />
             <span className="text-xs text-neutral-600">
-              Glänzend umgesetzt von{" "}
+              Website glänzend umgesetzt von{" "}
               <a
                 href="https://mediaone.dev"
                 target="_blank"
