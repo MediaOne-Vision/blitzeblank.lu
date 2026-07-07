@@ -826,7 +826,14 @@ export function QuoteWizard({
                     <SummaryRow label="Fläche" value={`${area[0].toLocaleString("de-DE")} m²`} />
                   )}
                   <SummaryRow label="Adresse" value={address || "-"} />
-                  {travel && <SummaryRow label="Anfahrt" value={`ca. ${travel.distanceKm.toLocaleString("de-DE")} km`} />}
+                  {travel && (
+                    <SummaryRow
+                      label="Anfahrt"
+                      value={`ca. ${travel.distanceKm.toLocaleString("de-DE")} km · ${Math.round(
+                        travel.billableKm * pricingConfig.travelCostPerKm,
+                      ).toLocaleString("de-DE")} €`}
+                    />
+                  )}
                   {preferredDate && <SummaryRow label="Wunschtermin" value={preferredDate} />}
                   {photos.length > 0 && <SummaryRow label="Fotos" value={`${photos.length} hochgeladen`} />}
                 </div>
