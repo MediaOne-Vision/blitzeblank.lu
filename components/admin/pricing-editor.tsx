@@ -267,16 +267,8 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
           suffix="%"
         />
         <NumberField
-          label="Aufschlag für Anfangspreis der Spanne"
-          sub="Wird immer auf den (rabattierten) Basispreis addiert."
-          value={pct(config.rangeStartMarkup)}
-          onChange={(v) => setTop("rangeStartMarkup", fromPct(v))}
-          step="1"
-          suffix="%"
-        />
-        <NumberField
-          label="Spielraum obere Grenze der Spanne"
-          sub="Zusätzlicher Aufschlag vom Anfangspreis auf den Höchstpreis."
+          label="Aufschlag obere Grenze der Spanne"
+          sub="Die untere Grenze ist der eigentliche Preis, die obere liegt um diesen Prozentsatz höher."
           value={pct(config.rangeSpread)}
           onChange={(v) => setTop("rangeSpread", fromPct(v))}
           step="1"

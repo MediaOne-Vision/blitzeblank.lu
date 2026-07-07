@@ -39,9 +39,7 @@ export interface PricingConfig {
   privateDiscount: number
   /** Sicherheitsaufschlag für Gewerbekunden (z. B. 0.15 = 15 %) */
   commercialSurcharge: number
-  /** Aufschlag auf den Basispreis für den Anfangspreis der Spanne (z. B. 0.15) */
-  rangeStartMarkup: number
-  /** Zusätzlicher Spielraum für die obere Grenze der Spanne (z. B. 0.15) */
+  /** Aufschlag für die obere Grenze der angezeigten Spanne (z. B. 0.15 = 15 %) */
   rangeSpread: number
 }
 
@@ -57,7 +55,6 @@ export const defaultPricingConfig: PricingConfig = {
   travelCostPerKm: 2,
   privateDiscount: 0.15,
   commercialSurcharge: 0.15,
-  rangeStartMarkup: 0.15,
   rangeSpread: 0.15,
 }
 
@@ -78,7 +75,6 @@ export function mergePricingConfig(partial: Partial<PricingConfig> | null | unde
     travelCostPerKm: partial.travelCostPerKm ?? defaultPricingConfig.travelCostPerKm,
     privateDiscount: partial.privateDiscount ?? defaultPricingConfig.privateDiscount,
     commercialSurcharge: partial.commercialSurcharge ?? defaultPricingConfig.commercialSurcharge,
-    rangeStartMarkup: partial.rangeStartMarkup ?? defaultPricingConfig.rangeStartMarkup,
     rangeSpread: partial.rangeSpread ?? defaultPricingConfig.rangeSpread,
   }
 }
@@ -93,9 +89,12 @@ export interface PriceOptions {
 
 /**
  * Wendet Anfahrtskosten und die kundentypabhängige Preisspanne an.
- * 1. Basispreis (Privatkunden mit Rabatt, Gewerbekunden ohne).
- * 2. Anfangspreis (untere Grenze): Basispreis + rangeStartMarkup.
- * 3. Obere Grenze: Anfangspreis + rangeSpread.
+ * 1. Eigentlicher Preis (Privatkunden mit Rabatt, Gewerbekunden mit Aufschlag).
+ *    Dieser bildet die untere Grenze der angezeigten Spanne.
+ * 2. Obere Grenze: eigentlicher Preis + rangeSpread (z. B. +15 %).
+ *
+ * Es wird bewusst NICHT mehr mehrfach aufgeschlagen – die obere Grenze liegt
+ * dadurch nur um rangeSpread über dem eigentlichen Preis.
  */
 function applyRangeAndTravel(
   subtotal: number,
@@ -104,12 +103,11 @@ function applyRangeAndTravel(
 ): CalculatedPrice {
   const travelCost = (options?.travelKm ?? 0) * config.travelCostPerKm
   const total = subtotal + travelCost
-  const basePrice = options?.isCommercial
+  const actualPrice = options?.isCommercial
     ? total * (1 + config.commercialSurcharge)
     : total * (1 - config.privateDiscount)
-  const rangeStart = basePrice * (1 + config.rangeStartMarkup)
-  const rangeEnd = rangeStart * (1 + config.rangeSpread)
-  return { min: Math.round(rangeStart), max: Math.round(rangeEnd) }
+  const rangeEnd = actualPrice * (1 + config.rangeSpread)
+  return { min: Math.round(actualPrice), max: Math.round(rangeEnd) }
 }
 
 /** Dynamischer m²-Preis für die Fassadenreinigung (Flächenmodell). */
