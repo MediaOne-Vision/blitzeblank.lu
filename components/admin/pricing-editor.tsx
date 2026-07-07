@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { quoteServices, quoteFrequencies, windowTypes } from "@/lib/quote-data"
+import { quoteFrequencies, windowTypes } from "@/lib/quote-data"
 import {
   defaultPricingConfig,
   getFassadePricePerSqm,
+  getSteinPricePerSqm,
   type PricingConfig,
 } from "@/lib/pricing-config"
 import { savePricingAction } from "@/app/actions/admin"
@@ -52,6 +53,53 @@ function NumberField({
   )
 }
 
+/**
+ * Zeile eines Flächenmodells: zeigt die (feste) Quadratmeterzahl direkt neben
+ * dem editierbaren m²-Preis, damit klar erkennbar ist, dass beide zusammengehören.
+ */
+function AreaPriceRow({
+  area,
+  price,
+  onChange,
+  disabled = false,
+  hint,
+}: {
+  area: number
+  price: number
+  onChange: (v: number) => void
+  disabled?: boolean
+  hint?: string
+}) {
+  return (
+    <div className="rounded-xl border border-brand-navy/10 bg-white px-4 py-3">
+      <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <span className="inline-flex items-center rounded-lg bg-brand-mint/60 px-3 py-1.5 text-sm font-semibold text-brand-navy">
+            {area} m²
+          </span>
+          <span className="text-neutral-400" aria-hidden="true">
+            →
+          </span>
+          <span className="text-sm text-neutral-500">kostet je m²</span>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <Input
+            type="number"
+            step="0.01"
+            value={Number.isFinite(price) ? price : 0}
+            onChange={(e) => onChange(Number.parseFloat(e.target.value))}
+            disabled={disabled}
+            aria-label={`Preis pro m² bei ${area} m²`}
+            className="h-10 w-28 text-right disabled:cursor-not-allowed disabled:opacity-60"
+          />
+          <span className="w-10 text-sm text-neutral-500">€/m²</span>
+        </div>
+      </div>
+      {hint && <p className="mt-2 text-xs font-light text-neutral-400">{hint}</p>}
+    </div>
+  )
+}
+
 function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-2xl border border-brand-navy/10 bg-brand-mint/40 p-5">
@@ -75,17 +123,14 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
   const setWindowPrice = (key: string, v: number) =>
     setConfig((c) => ({ ...c, windowPrices: { ...c.windowPrices, [key]: num(v) } }))
 
-  const setService = (slug: string, field: "basePrice" | "pricePerSqm", v: number) =>
-    setConfig((c) => ({
-      ...c,
-      services: { ...c.services, [slug]: { ...c.services[slug], [field]: num(v) } },
-    }))
-
   const setFrequency = (key: string, v: number) =>
     setConfig((c) => ({ ...c, frequencyMultipliers: { ...c.frequencyMultipliers, [key]: num(v) } }))
 
   const setFassade = (field: keyof PricingConfig["fassade"], v: number) =>
     setConfig((c) => ({ ...c, fassade: { ...c.fassade, [field]: num(v) } }))
+
+  const setStein = (field: keyof PricingConfig["stein"], v: number) =>
+    setConfig((c) => ({ ...c, stein: { ...c.stein, [field]: num(v) } }))
 
   // Preis bei kleiner Fläche ändern – bei aktivem Auto-Modus wird der Preis bei
   // großer Fläche automatisch auf die Hälfte gesetzt.
@@ -148,24 +193,6 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
         ))}
       </Section>
 
-      {/* Leistungen: Quadratmeterpreis */}
-      <Section
-        title="Leistungen: Quadratmeterpreis"
-        description="Preis pro m² für flächenbasierte Leistungen mit festem m²-Preis. Fensterreinigung wird über die Fensterpreise berechnet, die Fassadenreinigung über das Flächenmodell unten."
-      >
-        {quoteServices
-          .filter((s) => s.slug !== "fensterreinigung" && s.slug !== "fassadenreinigung")
-          .map((s) => (
-            <NumberField
-              key={s.slug}
-              label={s.label}
-              value={config.services[s.slug]?.pricePerSqm ?? s.pricePerSqm}
-              onChange={(v) => setService(s.slug, "pricePerSqm", v)}
-              suffix="€/m²"
-            />
-          ))}
-      </Section>
-
       {/* Turnus */}
       <Section
         title="Turnus-Multiplikatoren"
@@ -186,40 +213,20 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
       {/* Fassadenreinigung-Flächenmodell */}
       <Section
         title="Fassadenreinigung – Flächenmodell"
-        description="Der m²-Preis sinkt linear vom Preis bei kleiner Fläche auf den Preis bei großer Fläche. Sie legen den Preis pro m² für beide Flächen fest."
+        description="Der m²-Preis sinkt linear vom Preis bei kleiner Fläche auf den Preis bei großer Fläche. Sie legen nur die beiden Preise fest – die Flächen sind vorgegeben."
       >
-        <div className="grid gap-2 sm:grid-cols-2">
-          <NumberField
-            label="Kleine Fläche"
-            sub="Fläche, für die der erste Preis gilt"
-            value={config.fassade.minArea}
-            onChange={(v) => setFassade("minArea", v)}
-            step="1"
-            suffix="m²"
-          />
-          <NumberField
-            label="Große Fläche"
-            sub="Fläche, für die der zweite Preis gilt"
-            value={config.fassade.maxArea}
-            onChange={(v) => setFassade("maxArea", v)}
-            step="1"
-            suffix="m²"
-          />
-          <NumberField
-            label={`Preis bei ${config.fassade.minArea} m²`}
-            value={config.fassade.maxPrice}
-            onChange={(v) => setFassadeMaxPrice(v)}
-            suffix="€/m²"
-          />
-          <NumberField
-            label={`Preis bei ${config.fassade.maxArea} m²`}
-            sub={autoAdjustFassade ? "Automatisch = halber erster Preis" : undefined}
-            value={config.fassade.minPrice}
-            onChange={(v) => setFassade("minPrice", v)}
-            suffix="€/m²"
-            disabled={autoAdjustFassade}
-          />
-        </div>
+        <AreaPriceRow
+          area={config.fassade.minArea}
+          price={config.fassade.maxPrice}
+          onChange={(v) => setFassadeMaxPrice(v)}
+        />
+        <AreaPriceRow
+          area={config.fassade.maxArea}
+          price={config.fassade.minPrice}
+          onChange={(v) => setFassade("minPrice", v)}
+          disabled={autoAdjustFassade}
+          hint={autoAdjustFassade ? "Automatisch = halber erster Preis" : undefined}
+        />
 
         {/* Automatische Anpassung des zweiten Preises */}
         <label className="mt-2 flex cursor-pointer items-start gap-3 rounded-xl border border-brand-navy/10 bg-white px-4 py-3">
@@ -241,6 +248,28 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
         <div className="mt-2 rounded-xl bg-white px-4 py-3 text-xs text-neutral-500">
           Beispiel: 50 m² ≈ {getFassadePricePerSqm(50, config).toFixed(2).replace(".", ",")} €/m² ·
           100 m² ≈ {getFassadePricePerSqm(100, config).toFixed(2).replace(".", ",")} €/m²
+        </div>
+      </Section>
+
+      {/* Steinreinigung-Flächenmodell */}
+      <Section
+        title="Steinreinigung – Flächenmodell"
+        description="Der m²-Preis sinkt linear vom Preis bei kleiner Fläche auf den Preis bei großer Fläche. Sie legen nur die beiden Preise fest – die Flächen sind vorgegeben."
+      >
+        <AreaPriceRow
+          area={config.stein.minArea}
+          price={config.stein.maxPrice}
+          onChange={(v) => setStein("maxPrice", v)}
+        />
+        <AreaPriceRow
+          area={config.stein.maxArea}
+          price={config.stein.minPrice}
+          onChange={(v) => setStein("minPrice", v)}
+        />
+
+        <div className="mt-2 rounded-xl bg-white px-4 py-3 text-xs text-neutral-500">
+          Beispiel: 50 m² ≈ {getSteinPricePerSqm(50, config).toFixed(2).replace(".", ",")} €/m² ·
+          100 m² ≈ {getSteinPricePerSqm(100, config).toFixed(2).replace(".", ",")} €/m²
         </div>
       </Section>
 

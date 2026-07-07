@@ -33,6 +33,17 @@ export interface PricingConfig {
     maxPrice: number
     minPrice: number
   }
+  /**
+   * Flächenmodell der Steinreinigung.
+   * Der m²-Preis sinkt linear vom Preis bei minArea (maxPrice) auf den Preis
+   * bei maxArea (minPrice). Beispiel: 30 €/m² bei 10 m² bis 20 €/m² bei 150 m².
+   */
+  stein: {
+    minArea: number
+    maxArea: number
+    maxPrice: number
+    minPrice: number
+  }
   /** Anfahrtspauschale pro gefahrenem Kilometer, in EUR */
   travelCostPerKm: number
   /** Rabatt für Privatkunden (z. B. 0.15 = 15 %) */
@@ -52,6 +63,8 @@ export const defaultPricingConfig: PricingConfig = {
   frequencyMultipliers: Object.fromEntries(quoteFrequencies.map((f) => [f.value, f.multiplier])),
   // m²-Preis fällt linear von 20 €/m² (bei 10 m²) auf 10 €/m² (bei 350 m²).
   fassade: { minArea: 10, maxArea: 350, maxPrice: 20, minPrice: 10 },
+  // m²-Preis fällt linear von 30 €/m² (bei 10 m²) auf 20 €/m² (bei 150 m²).
+  stein: { minArea: 10, maxArea: 150, maxPrice: 30, minPrice: 20 },
   travelCostPerKm: 2,
   privateDiscount: 0.15,
   commercialSurcharge: 0.15,
@@ -72,6 +85,7 @@ export function mergePricingConfig(partial: Partial<PricingConfig> | null | unde
       ...partial.frequencyMultipliers,
     },
     fassade: { ...defaultPricingConfig.fassade, ...partial.fassade },
+    stein: { ...defaultPricingConfig.stein, ...partial.stein },
     travelCostPerKm: partial.travelCostPerKm ?? defaultPricingConfig.travelCostPerKm,
     privateDiscount: partial.privateDiscount ?? defaultPricingConfig.privateDiscount,
     commercialSurcharge: partial.commercialSurcharge ?? defaultPricingConfig.commercialSurcharge,
@@ -118,6 +132,14 @@ export function getFassadePricePerSqm(area: number, config: PricingConfig): numb
   return maxPrice - ((maxPrice - minPrice) / (maxArea - minArea)) * (area - minArea)
 }
 
+/** Dynamischer m²-Preis für die Steinreinigung (Flächenmodell). */
+export function getSteinPricePerSqm(area: number, config: PricingConfig): number {
+  const { minArea, maxArea, maxPrice, minPrice } = config.stein
+  if (area <= minArea) return maxPrice
+  if (area >= maxArea) return minPrice
+  return maxPrice - ((maxPrice - minPrice) / (maxArea - minArea)) * (area - minArea)
+}
+
 /** Preisberechnung für die Fensterreinigung anhand der einzelnen Fensterarten */
 export function calculateWindowRowsPrice(
   service: QuoteService | undefined,
@@ -153,6 +175,9 @@ export function calculateQuotePrice(
   if (service.slug === "fassadenreinigung") {
     // Fassadenreinigung nutzt das Flächenmodell (dynamischer m²-Preis).
     totalBase = area * getFassadePricePerSqm(area, config)
+  } else if (service.slug === "steinreinigung") {
+    // Steinreinigung nutzt ebenfalls ein Flächenmodell (dynamischer m²-Preis).
+    totalBase = area * getSteinPricePerSqm(area, config)
   } else {
     // Alle übrigen Flächenleistungen: Grundpreis (i. d. R. 0) + m²-Preis.
     totalBase = (svc?.basePrice ?? service.basePrice) + area * (svc?.pricePerSqm ?? service.pricePerSqm)
