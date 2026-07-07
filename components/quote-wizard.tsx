@@ -161,12 +161,12 @@ export function QuoteWizard({
       setShowSuggestions(false)
       return
     }
-    // Eingabe entprellen, damit nicht bei jedem Tastendruck eine Anfrage läuft
+    // Eingabe kurz entprellen, damit nicht bei jedem Tastendruck eine Anfrage läuft
     suggestTimeout.current = setTimeout(async () => {
       const results = await searchAddresses(value)
       setSuggestions(results)
       setShowSuggestions(results.length > 0)
-    }, 400)
+    }, 200)
   }
 
   const selectSuggestion = (suggestion: AddressSuggestion) => {
