@@ -11,12 +11,16 @@ import { Checkbox } from "@/components/ui/checkbox"
 import {
   quoteServices,
   quoteFrequencies,
-  calculateQuotePrice,
   windowTypes,
   getWindowType,
-  calculateWindowRowsPrice,
   type WindowRowEntry,
 } from "@/lib/quote-data"
+import {
+  calculateQuotePrice,
+  calculateWindowRowsPrice,
+  defaultPricingConfig,
+  type PricingConfig,
+} from "@/lib/pricing-config"
 import {
   getAddressSuggestions,
   getTravelInfo,
@@ -46,7 +50,13 @@ interface UploadedPhoto {
   url: string
 }
 
-export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
+export function QuoteWizard({
+  initialSlug,
+  pricingConfig = defaultPricingConfig,
+}: {
+  initialSlug?: string
+  pricingConfig?: PricingConfig
+}) {
   const [step, setStep] = useState(0)
 
   // Step 1 - Leistung
@@ -113,11 +123,11 @@ export function QuoteWizard({ initialSlug }: { initialSlug?: string }) {
   const travelKm = travel?.billableKm ?? 0
 
   const price = isWindow
-    ? calculateWindowRowsPrice(selectedService, selectedFrequency, numericWindowRows, {
+    ? calculateWindowRowsPrice(selectedService, selectedFrequency, numericWindowRows, pricingConfig, {
         travelKm,
         isCommercial,
       })
-    : calculateQuotePrice(selectedService, selectedFrequency, area[0], { travelKm })
+    : calculateQuotePrice(selectedService, selectedFrequency, area[0], pricingConfig, { travelKm })
 
   // Lesbare Auflistung der Fensterarten, z. B. "3× Fenster M (100×100)" oder "12 m² Rollladen"
   const windowBreakdown = numericWindowRows

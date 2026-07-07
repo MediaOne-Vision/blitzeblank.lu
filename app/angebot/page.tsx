@@ -2,7 +2,10 @@ import type { Metadata } from "next"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { QuoteWizard } from "@/components/quote-wizard"
+import { getPricingConfig } from "@/lib/pricing-store"
 import { Sparkles } from "lucide-react"
+
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Kostenloses Angebot | Blitzeblank - Professionelle Reinigung",
@@ -16,6 +19,7 @@ export default async function AngebotPage({
   searchParams: Promise<{ leistung?: string }>
 }) {
   const { leistung } = await searchParams
+  const pricingConfig = await getPricingConfig()
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -42,7 +46,7 @@ export default async function AngebotPage({
         {/* Wizard */}
         <section className="bg-brand-mint py-12 lg:py-16">
           <div className="mx-auto max-w-4xl px-6">
-            <QuoteWizard initialSlug={leistung} />
+            <QuoteWizard initialSlug={leistung} pricingConfig={pricingConfig} />
           </div>
         </section>
       </main>

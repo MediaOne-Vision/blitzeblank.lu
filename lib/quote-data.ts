@@ -183,84 +183,8 @@ export interface CalculatedPrice {
   max: number
 }
 
-/** Zusätzliche Kalkulationsoptionen (Anfahrt & Kundentyp) */
-export interface PriceOptions {
-  /** Gefahrene Kilometer (Hin- und Rückweg) für die Anfahrtspauschale */
-  travelKm?: number
-  /** true = Gewerbekunde (Sicherheitsaufschlag statt Rabatt) */
-  isCommercial?: boolean
-}
-
 /**
- * Wendet Anfahrtskosten und die kunden­typ­abhängige Preisspanne an.
- * Ablauf:
- * 1. Basispreis ermitteln (Privatkunden mit 15 % Rabatt, Gewerbekunden ohne).
- * 2. Auf diesen (rabattierten) Preis werden immer 15 % aufgeschlagen – das ergibt
- *    den Anfangspreis (untere Grenze) der Spanne.
- * 3. Auf den Anfangspreis kommen für die obere Grenze nochmals 15 % Spielraum.
+ * Die eigentliche Preisberechnung ist konfigurationsgetrieben und lebt in
+ * `lib/pricing-config.ts`. Dort wird die (im Admin-Panel bearbeitbare)
+ * Preisdynamik angewendet.
  */
-function applyRangeAndTravel(subtotal: number, options?: PriceOptions): CalculatedPrice {
-  const travelCost = (options?.travelKm ?? 0) * TRAVEL_COST_PER_KM
-  const total = subtotal + travelCost
-  // Basispreis: Privatkunden mit -15 % Rabatt, Gewerbekunden ohne Abschlag.
-  const basePrice = options?.isCommercial ? total : total * 0.85
-  // Anfangspreis der Spanne: immer +15 % auf den (rabattierten) Basispreis.
-  const rangeStart = basePrice * 1.15
-  // Obere Grenze: +15 % Spielraum auf den Anfangspreis.
-  const rangeEnd = rangeStart * 1.15
-  return { min: Math.round(rangeStart), max: Math.round(rangeEnd) }
-}
-
-/** Preisberechnung für die Fensterreinigung anhand der einzelnen Fensterarten */
-export function calculateWindowRowsPrice(
-  service: QuoteService | undefined,
-  frequency: QuoteFrequency | undefined,
-  rows: WindowRowEntry[],
-  options?: PriceOptions,
-): CalculatedPrice {
-  if (!service || !frequency) return { min: 0, max: 0 }
-  let total = service.basePrice
-  for (const row of rows) {
-    if (row.quantity <= 0) continue
-    const type = getWindowType(row.type)
-    if (!type) continue
-    total += row.quantity * type.price
-  }
-  const withFrequency = total * frequency.multiplier
-  return applyRangeAndTravel(withFrequency, options)
-}
-
-/**
- * Dynamischer m²-Preis für die Steinreinigung (Flächenmodell).
- * Größere Flächen werden günstiger pro m²:
- * - bis 10 m²: 30,00 €/m²
- * - ab 150 m²: 20,00 €/m²
- * - dazwischen linear interpoliert.
- * Dient ausschließlich der internen Preisberechnung.
- */
-export function getSteinPricePerSqm(area: number): number {
-  const MIN_AREA = 10
-  const MAX_AREA = 150
-  const MAX_PRICE = 30
-  const MIN_PRICE = 20
-  if (area <= MIN_AREA) return MAX_PRICE
-  if (area >= MAX_AREA) return MIN_PRICE
-  return MAX_PRICE - ((MAX_PRICE - MIN_PRICE) / (MAX_AREA - MIN_AREA)) * (area - MIN_AREA)
-}
-
-/** Preisberechnung für flächenbasierte Leistungen (alle außer Fensterreinigung) */
-export function calculateQuotePrice(
-  service: QuoteService | undefined,
-  frequency: QuoteFrequency | undefined,
-  area: number,
-  options?: PriceOptions,
-): CalculatedPrice {
-  if (!service || !frequency) return { min: 0, max: 0 }
-  // Steinreinigung nutzt das dynamische Flächenmodell ohne separaten Grundpreis.
-  const totalBase =
-    service.slug === "steinreinigung"
-      ? area * getSteinPricePerSqm(area)
-      : service.basePrice + area * service.pricePerSqm
-  const withFrequency = totalBase * frequency.multiplier
-  return applyRangeAndTravel(withFrequency, options)
-}
