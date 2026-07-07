@@ -117,6 +117,12 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
   // Wenn aktiv, wird der Preis bei großer Fläche automatisch auf die Hälfte des
   // Preises bei kleiner Fläche gesetzt (z. B. 20 €/m² → 10 €/m²).
   const [autoAdjustFassade, setAutoAdjustFassade] = useState(true)
+  // Bei der Steinreinigung wird der 2. Preis automatisch angepasst, wobei das
+  // aktuelle Verhältnis (Standard 30 → 20, also 2/3) beibehalten wird.
+  const [autoAdjustStein, setAutoAdjustStein] = useState(true)
+  const [steinRatio, setSteinRatio] = useState(
+    initialConfig.stein.maxPrice > 0 ? initialConfig.stein.minPrice / initialConfig.stein.maxPrice : 0,
+  )
 
   const num = (v: number) => (Number.isFinite(v) ? v : 0)
 
@@ -149,6 +155,26 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
     if (checked) {
       // Beim Aktivieren sofort angleichen.
       setConfig((c) => ({ ...c, fassade: { ...c.fassade, minPrice: c.fassade.maxPrice / 2 } }))
+    }
+  }
+
+  // Preis bei kleiner Fläche ändern – bei aktivem Auto-Modus wird der Preis bei
+  // großer Fläche unter Beibehaltung des Verhältnisses angepasst.
+  const setSteinMaxPrice = (v: number) =>
+    setConfig((c) => ({
+      ...c,
+      stein: {
+        ...c.stein,
+        maxPrice: num(v),
+        ...(autoAdjustStein ? { minPrice: Math.round(num(v) * steinRatio * 100) / 100 } : {}),
+      },
+    }))
+
+  const toggleAutoAdjustStein = (checked: boolean) => {
+    setAutoAdjustStein(checked)
+    if (checked) {
+      // Beim Aktivieren das aktuelle Verhältnis merken (Standard 20/30 = 2/3).
+      setSteinRatio(config.stein.maxPrice > 0 ? config.stein.minPrice / config.stein.maxPrice : 0)
     }
   }
 
@@ -259,13 +285,32 @@ export function PricingEditor({ initialConfig }: { initialConfig: PricingConfig 
         <AreaPriceRow
           area={config.stein.minArea}
           price={config.stein.maxPrice}
-          onChange={(v) => setStein("maxPrice", v)}
+          onChange={(v) => setSteinMaxPrice(v)}
         />
         <AreaPriceRow
           area={config.stein.maxArea}
           price={config.stein.minPrice}
           onChange={(v) => setStein("minPrice", v)}
+          disabled={autoAdjustStein}
+          hint={autoAdjustStein ? "Automatisch – Verhältnis zum ersten Preis bleibt erhalten" : undefined}
         />
+
+        {/* Automatische Anpassung des zweiten Preises */}
+        <label className="mt-2 flex cursor-pointer items-start gap-3 rounded-xl border border-brand-navy/10 bg-white px-4 py-3">
+          <input
+            type="checkbox"
+            checked={autoAdjustStein}
+            onChange={(e) => toggleAutoAdjustStein(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 accent-brand-blue"
+          />
+          <span className="text-sm text-brand-navy">
+            Zweiten Preis automatisch anpassen
+            <span className="mt-0.5 block text-xs font-light text-neutral-400">
+              Der Preis bei großer Fläche wird im gleichen Verhältnis zum ersten Preis angepasst
+              (z. B. 30 €/m² → 20 €/m²; bei 33 €/m² → 22 €/m²).
+            </span>
+          </span>
+        </label>
 
         <div className="mt-2 rounded-xl bg-white px-4 py-3 text-xs text-neutral-500">
           Beispiel: 50 m² ≈ {getSteinPricePerSqm(50, config).toFixed(2).replace(".", ",")} €/m² ·
