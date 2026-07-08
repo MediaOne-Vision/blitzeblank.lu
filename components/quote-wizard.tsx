@@ -138,22 +138,19 @@ export function QuoteWizard({
   // E-Mail nur akzeptieren, wenn sie korrekt formatiert ist (clientseitig)
   const emailValid = EMAIL_REGEX.test(email.trim())
 
-  // Standardgrößen sind immer sichtbar, gewerbliche Fensterarten nur für Gewerbekunden
-  const primaryWindowTypes = windowTypes.filter((t) => !t.commercial)
-  const moreWindowTypes = windowTypes.filter((t) => t.commercial)
+  // Standardgrößen sind immer sichtbar, sonstige Fensterarten stehen im aufklappbaren Bereich
+  const primaryWindowTypes = windowTypes.filter((t) => !t.optional)
+  const optionalWindowTypes = windowTypes.filter((t) => t.optional)
 
   // Turnus gibt es nur bei der Fensterreinigung, sonst immer "Einmalig".
   const effectiveFrequencyValue = isWindow ? frequencyValue : "einmalig"
   const selectedFrequency = quoteFrequencies.find((f) => f.value === effectiveFrequencyValue)
 
-  // Mengen je Fensterart in numerische Zeilen für die Preisberechnung umwandeln.
-  // Gewerbliche Fensterarten fließen nur für Gewerbekunden in die Kalkulation ein.
-  const numericWindowRows: WindowRowEntry[] = windowTypes
-    .filter((t) => isCommercial || !t.commercial)
-    .map((t) => ({
-      type: t.value,
-      quantity: Number.parseFloat((windowQuantities[t.value] ?? "").replace(",", ".")) || 0,
-    }))
+  // Mengen je Fensterart in numerische Zeilen für die Preisberechnung umwandeln
+  const numericWindowRows: WindowRowEntry[] = windowTypes.map((t) => ({
+    type: t.value,
+    quantity: Number.parseFloat((windowQuantities[t.value] ?? "").replace(",", ".")) || 0,
+  }))
 
   // Gesamtanzahl Fenster (Rollladen wird in m² gemessen und hier nicht mitgezählt)
   const assignedWindows = numericWindowRows
@@ -558,11 +555,7 @@ export function QuoteWizard({
                         <button
                           key={option.value}
                           type="button"
-                          onClick={() => {
-                            setCustomerType(option.value)
-                            // Bei Privatkunden den gewerblichen Bereich einklappen
-                            if (option.value === "privat") setShowMoreWindows(false)
-                          }}
+                          onClick={() => setCustomerType(option.value)}
                           className={`rounded-full border px-5 py-2 text-sm font-medium transition-all cursor-pointer ${
                             active
                               ? "border-brand-blue bg-brand-blue text-white"
@@ -576,40 +569,15 @@ export function QuoteWizard({
                   </div>
                 </div>
 
-                {/* Fensterart (Mehrfachauswahl), z. B. Dachfenster */}
-                <div className="rounded-2xl bg-brand-mint/50 p-5">
-                  <Label className="text-sm font-semibold text-brand-navy">
-                    {selectedService?.detail.optionLabel}{" "}
-                    <span className="font-normal text-neutral-400">(optional, Mehrfachauswahl)</span>
-                  </Label>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {selectedService?.detail.options.map((option) => {
-                      const active = details.includes(option)
-                      return (
-                        <button
-                          key={option}
-                          type="button"
-                          onClick={() => toggleDetail(option)}
-                          className={`rounded-full border px-4 py-1.5 text-sm transition-all cursor-pointer ${
-                            active
-                              ? "border-brand-blue bg-brand-blue text-white"
-                              : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
-                          }`}
-                        >
-                          {option}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                {/* Fenstergrößen: Standardgrößen sichtbar, weitere Arten einklappbar */}
+                {/* Fenstergrößen: Standardgrößen sichtbar, sonstige Arten einklappbar */}
                 <div className="space-y-3">
                   <Label className="text-sm font-semibold text-brand-navy">Fenstergrößen &amp; Anzahl</Label>
                   {primaryWindowTypes.map((t) => renderWindowRow(t))}
 
-                  {/* Einklappbarer, optionaler Bereich – nur für Gewerbekunden sichtbar */}
-                  {isCommercial && moreWindowTypes.length > 0 && (
+                  {/* Einklappbarer Bereich "Sonstiges" – für alle Kunden sichtbar.
+                      Enthält sonstige Fensterarten (alle) und – nur für Gewerbekunden –
+                      die Auswahl "Welche Art von Fenstern?". */}
+                  {optionalWindowTypes.length > 0 && (
                     <div className="space-y-3">
                       <button
                         type="button"
@@ -618,9 +586,9 @@ export function QuoteWizard({
                         className="flex w-full items-center justify-between gap-2 rounded-2xl border border-dashed border-brand-blue/40 bg-white px-4 py-3 text-left text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-mint/50 cursor-pointer"
                       >
                         <span>
-                          Weitere Fensterarten{" "}
+                          Sonstiges{" "}
                           <span className="font-normal text-neutral-400">
-                            (optional – Bürofenster, Schaufenster, Glasfassaden …)
+                            (optional – Fensterfront, Terrassenfenster, Glastür, Rollladen …)
                           </span>
                         </span>
                         <ChevronDown
@@ -630,7 +598,41 @@ export function QuoteWizard({
                         />
                       </button>
                       {showMoreWindows && (
-                        <div className="space-y-3">{moreWindowTypes.map((t) => renderWindowRow(t))}</div>
+                        <div className="space-y-5">
+                          {/* Sonstige Fensterarten mit Mengenangabe – für alle Kunden */}
+                          <div className="space-y-3">{optionalWindowTypes.map((t) => renderWindowRow(t))}</div>
+
+                          {/* "Welche Art von Fenstern?" – nur für Gewerbekunden */}
+                          {isCommercial && (
+                            <div className="rounded-2xl bg-brand-mint/50 p-5">
+                              <Label className="text-sm font-semibold text-brand-navy">
+                                {selectedService?.detail.optionLabel}{" "}
+                                <span className="font-normal text-neutral-400">
+                                  (optional, Mehrfachauswahl)
+                                </span>
+                              </Label>
+                              <div className="mt-3 flex flex-wrap gap-2">
+                                {selectedService?.detail.options.map((option) => {
+                                  const active = details.includes(option)
+                                  return (
+                                    <button
+                                      key={option}
+                                      type="button"
+                                      onClick={() => toggleDetail(option)}
+                                      className={`rounded-full border px-4 py-1.5 text-sm transition-all cursor-pointer ${
+                                        active
+                                          ? "border-brand-blue bg-brand-blue text-white"
+                                          : "border-brand-navy/15 bg-white text-brand-navy hover:border-brand-blue/40"
+                                      }`}
+                                    >
+                                      {option}
+                                    </button>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}

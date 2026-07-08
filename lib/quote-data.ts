@@ -130,31 +130,31 @@ export interface WindowType {
   dimension: string
   /** Preis pro Fenster (bzw. pro m² wenn perSqm = true) in EUR */
   price: number
-  /** Wenn true, gilt der Preis pro m² statt pro Stück (z. B. Glasfassade) */
+  /** Wenn true, gilt der Preis pro m² statt pro Stück (z. B. Rollladen) */
   perSqm?: boolean
   /**
-   * Gewerbliche Fensterart (z. B. Bürofenster). Diese werden nur Gewerbekunden
-   * angezeigt und stehen in einem separaten, einklappbaren Bereich.
+   * Sonstige Fensterart (z. B. Fensterfront, Glastür, Rollladen). Diese stehen
+   * für alle Kunden im einklappbaren Bereich "Sonstige Fensterarten" unten.
    */
-  commercial?: boolean
+  optional?: boolean
 }
 
 /** Basispreise laut Preisliste (Stand aktuell) */
 export const windowTypes: WindowType[] = [
-  // Standardgrößen – für alle Kunden sichtbar
+  // Standardgrößen – immer sichtbar für alle Kunden
   { value: "xs", label: "Fenster XS", dimension: "bis ca. 40 × 40 cm", price: 3.5 },
   { value: "s", label: "Fenster S", dimension: "ca. 60 × 60 cm", price: 5 },
   { value: "m", label: "Fenster M", dimension: "ca. 100 × 100 cm", price: 7 },
   { value: "l", label: "Fenster L", dimension: "ca. 120 × 120 cm", price: 9 },
   { value: "xl", label: "Fenster XL", dimension: "ca. 120 × 150 cm", price: 10.5 },
   { value: "xxl", label: "Fenster XXL", dimension: "ca. 120 × 170 cm", price: 12 },
-  // Gewerbliche Fensterarten – nur für Gewerbekunden sichtbar
-  { value: "buero", label: "Bürofenster", dimension: "Standard-Büroverglasung", price: 7, commercial: true },
-  { value: "schaufenster", label: "Schaufenster", dimension: "große Ladenfront", price: 14, commercial: true },
-  { value: "glasfassade", label: "Glasfassade", dimension: "Abrechnung pro m²", price: 5, perSqm: true, commercial: true },
-  { value: "industrie", label: "Industrieverglasung", dimension: "Hallen- / Werksverglasung", price: 12, commercial: true },
-  { value: "spezial", label: "Spezialverglasung", dimension: "z. B. Sicherheits- / Brandschutzglas", price: 15, commercial: true },
-  { value: "dachfenster", label: "Dachfenster", dimension: "Dach- / Oberlichtverglasung", price: 9, commercial: true },
+  // Sonstige Fensterarten – optional, im aufklappbaren Bereich für alle Kunden
+  { value: "front", label: "Fensterfront", dimension: "große, zusammenhängende Glasfläche", price: 16, optional: true },
+  { value: "terrasse", label: "Terrassenfenster", dimension: "bodentiefe Verglasung", price: 10, optional: true },
+  { value: "glastuer-m", label: "Glastür M", dimension: "Standard-Glastür", price: 9, optional: true },
+  { value: "glastuer-l", label: "Glastür L", dimension: "große Glastür", price: 13, optional: true },
+  { value: "glastuer-xl", label: "Glastür XL", dimension: "sehr große Glastür", price: 16, optional: true },
+  { value: "rollladen", label: "Rollladen", dimension: "Abrechnung pro m²", price: 3, perSqm: true, optional: true },
 ]
 
 export function getWindowType(value: string): WindowType | undefined {
