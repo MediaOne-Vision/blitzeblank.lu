@@ -9,8 +9,8 @@
  * 3. Ein Straßenfaktor von 1,3 schätzt die tatsächliche Fahrstrecke.
  */
 
-/** Fester Firmenstandort: Lehnsweg 3, 54636 Wolsfeld (vorab geocodiert) */
-export const COMPANY_COORDS = { lat: 49.9091887, lon: 6.4581283 } as const
+/** Fester Firmenstandort: 6A Rue Michel Rodange, 7681 Waldbillig, Luxemburg (vorab geocodiert) */
+export const COMPANY_COORDS = { lat: 49.7962878, lon: 6.2856816 } as const
 
 /** Straßen verlaufen nie schnurgerade – Luftlinie × 1,3 ≈ Fahrstrecke */
 export const ROAD_FACTOR = 1.3

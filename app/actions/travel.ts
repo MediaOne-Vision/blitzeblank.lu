@@ -43,9 +43,9 @@ export async function searchAddresses(query: string): Promise<AddressSuggestion[
     url.searchParams.set("q", q)
     url.searchParams.set("lang", "de")
     url.searchParams.set("limit", "5")
-    // Vorrang für die Region rund um Wolsfeld (Zentrum bei ~49.91, 6.46)
-    url.searchParams.set("lat", "49.909")
-    url.searchParams.set("lon", "6.458")
+    // Vorrang für die Region rund um Waldbillig (Zentrum bei ~49.80, 6.29)
+    url.searchParams.set("lat", "49.7963")
+    url.searchParams.set("lon", "6.2857")
 
     const res = await fetch(url, {
       headers: { "User-Agent": "Blitzeblank-Preisrechner/1.0 (Kostenvoranschlag)" },

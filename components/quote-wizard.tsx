@@ -33,6 +33,7 @@ import {
   MapPin,
   Calendar,
   CheckCircle2,
+  ChevronDown,
   ThumbsUp,
   ThumbsDown,
   Loader2,
@@ -40,6 +41,31 @@ import {
 } from "lucide-react"
 
 const STEPS = ["Leistung", "Umfang", "Fotos", "Kontakt", "Angebot"]
+
+/**
+ * Flächenbasierte Leistungen: Grenzen des Schiebereglers sowie der Bereich, für
+ * den ein Richtpreis berechnet wird. Außerhalb dieses Bereichs erfolgt keine
+ * automatische Kalkulation, sondern "Preis auf Anfrage".
+ */
+const AREA_LIMITS: Record<
+  string,
+  { sliderMin: number; sliderMax: number; quoteMin: number; quoteMax: number }
+> = {
+  fassade: { sliderMin: 20, sliderMax: 400, quoteMin: 100, quoteMax: 400 },
+  stein: { sliderMin: 20, sliderMax: 300, quoteMin: 50, quoteMax: 150 },
+}
+
+/** Standard-Fläche beim Wechsel der Leistung (innerhalb des kalkulierbaren Bereichs) */
+const DEFAULT_AREA_BY_SERVICE: Record<string, number> = {
+  fassade: 100,
+  stein: 50,
+}
+
+/** Einfache, aber robuste E-Mail-Prüfung für die clientseitige Validierung */
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Fensterarten, die immer sichtbar sind (Standardgrößen) */
+const PRIMARY_WINDOW_TYPES = ["xs", "s", "m", "l", "xl", "xxl"]
 
 interface UploadedPhoto {
   name: string
@@ -68,8 +94,10 @@ export function QuoteWizard({
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [travel, setTravel] = useState<TravelInfo | null>(null)
-  const [travelLoading, setTravelLoading] = useState(false)
   const suggestTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Weitere (optionale) Fensterarten – einklappbarer Bereich im Umfang-Schritt
+  const [showMoreWindows, setShowMoreWindows] = useState(false)
 
   // Step 2 - Häufigkeit (Turnus) - nur bei Fensterreinigung
   const [frequencyValue, setFrequencyValue] = useState("")
@@ -101,6 +129,19 @@ export function QuoteWizard({
   const selectedService = quoteServices.find((s) => s.value === serviceValue)
   const isWindow = serviceValue === "fenster"
   const isCommercial = isWindow && customerType === "gewerbe"
+
+  // Flächenbasierte Leistungen: Slider-Grenzen + kalkulierbarer Bereich
+  const areaLimit = selectedService ? AREA_LIMITS[selectedService.value] : undefined
+  // Außerhalb des kalkulierbaren Bereichs wird kein Richtpreis berechnet.
+  const priceOnRequest =
+    !isWindow && !!areaLimit && (area[0] < areaLimit.quoteMin || area[0] > areaLimit.quoteMax)
+
+  // E-Mail nur akzeptieren, wenn sie korrekt formatiert ist (clientseitig)
+  const emailValid = EMAIL_REGEX.test(email.trim())
+
+  // Fensterarten in Standardgrößen und optionale "weitere" Arten aufteilen
+  const primaryWindowTypes = windowTypes.filter((t) => PRIMARY_WINDOW_TYPES.includes(t.value))
+  const moreWindowTypes = windowTypes.filter((t) => !PRIMARY_WINDOW_TYPES.includes(t.value))
 
   // Turnus gibt es nur bei der Fensterreinigung, sonst immer "Einmalig".
   const effectiveFrequencyValue = isWindow ? frequencyValue : "einmalig"
@@ -145,6 +186,36 @@ export function QuoteWizard({
     setWindowQuantities((prev) => ({ ...prev, [type]: value }))
   }
 
+  // Eine Eingabezeile für eine Fensterart (wird für Standard- und weitere Arten genutzt)
+  const renderWindowRow = (t: (typeof windowTypes)[number]) => {
+    const qty = windowQuantities[t.value] ?? ""
+    const active = (Number.parseFloat(qty.replace(",", ".")) || 0) > 0
+    return (
+      <div
+        key={t.value}
+        className={`flex items-center justify-between gap-4 rounded-2xl border p-4 transition-colors ${
+          active ? "border-brand-blue bg-brand-blue/5" : "border-brand-navy/10 bg-brand-mint/30"
+        }`}
+      >
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-brand-navy">{t.label}</p>
+          <p className="mt-0.5 text-xs font-light text-neutral-400">{t.dimension}</p>
+        </div>
+        <Input
+          type="number"
+          min={0}
+          step={t.perSqm ? "0.5" : "1"}
+          inputMode={t.perSqm ? "decimal" : "numeric"}
+          placeholder={t.perSqm ? "m²" : "0"}
+          value={qty}
+          onChange={(e) => updateWindowQuantity(t.value, e.target.value)}
+          className="h-11 w-24 shrink-0 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
+          aria-label={`${t.label} – ${t.perSqm ? "Quadratmeter" : "Anzahl"}`}
+        />
+      </div>
+    )
+  }
+
   const toggleDetail = (option: string) => {
     setDetails((prev) => (prev.includes(option) ? prev.filter((d) => d !== option) : [...prev, option]))
   }
@@ -173,10 +244,9 @@ export function QuoteWizard({
     setAddress(suggestion.description)
     setSuggestions([])
     setShowSuggestions(false)
-    // Entfernung zur Firmenadresse per Haversine schätzen (fließt in den Preis ein)
-    setTravelLoading(true)
+    // Entfernung zur Firmenadresse per Haversine schätzen (fließt in den Preis ein).
+    // Angezeigt wird die Anfahrt erst in der finalen Preisübersicht.
     setTravel(computeTravel(suggestion))
-    setTravelLoading(false)
   }
 
   const handleFiles = (files: FileList | null) => {
@@ -199,8 +269,8 @@ export function QuoteWizard({
       case 1:
         return isWindow ? numericWindowRows.some((row) => row.quantity > 0 && row.type) : true
       case 3:
-        // Turnus nur bei Fensterreinigung verpflichtend
-        return Boolean(name.trim() && email.trim() && privacyConsent && (!isWindow || frequencyValue))
+        // Turnus nur bei Fensterreinigung verpflichtend, E-Mail muss gültig sein
+        return Boolean(name.trim() && emailValid && privacyConsent && (!isWindow || frequencyValue))
       default:
         return true
     }
@@ -231,8 +301,8 @@ export function QuoteWizard({
       email,
       phone,
       message,
-      estimatedMin: price.min,
-      estimatedMax: price.max,
+      estimatedMin: priceOnRequest ? 0 : price.min,
+      estimatedMax: priceOnRequest ? 0 : price.max,
       decision: choice,
     }
 
@@ -310,6 +380,10 @@ export function QuoteWizard({
                       setServiceValue(s.value)
                       setDetails([])
                       setCustomDetail("")
+                      // Fläche auf einen kalkulierbaren Startwert der Leistung setzen
+                      if (DEFAULT_AREA_BY_SERVICE[s.value]) {
+                        setArea([DEFAULT_AREA_BY_SERVICE[s.value]])
+                      }
                     }}
                     className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
                       active
@@ -422,20 +496,12 @@ export function QuoteWizard({
                     ))}
                   </ul>
                 )}
-                {/* Live-Anzeige der berechneten Entfernung + Anfahrtskosten */}
-                {travelLoading && (
-                  <p className="flex items-center gap-2 text-xs font-light text-neutral-500">
-                    <Loader2 className="h-3.5 w-3.5 animate-spin text-brand-blue" />
-                    Entfernung wird berechnet…
-                  </p>
-                )}
-                {!travelLoading && travel && (
-                  <p className="text-xs font-light text-neutral-600">
-                    ca. {travel.distanceKm.toLocaleString("de-DE")} km ab Wolsfeld · Anfahrt{" "}
-                    <span className="font-semibold text-brand-navy">
-                      {Math.round(travel.billableKm * pricingConfig.travelCostPerKm).toLocaleString("de-DE")} €
-                    </span>{" "}
-                    <span className="text-neutral-400">(Hin- und Rückweg, geschätzt)</span>
+                {/* Bestätigung, dass die Adresse übernommen wurde – die Anfahrtskosten
+                    werden bewusst erst in der finalen Preisübersicht angezeigt. */}
+                {travel && (
+                  <p className="flex items-center gap-1.5 text-xs font-light text-neutral-500">
+                    <Check className="h-3.5 w-3.5 text-brand-blue" />
+                    Adresse übernommen
                   </p>
                 )}
               </div>
@@ -514,39 +580,37 @@ export function QuoteWizard({
                   </div>
                 </div>
 
-                {/* Fenstergrößen: alle Typen untereinander, Größe je Typ darunter */}
+                {/* Fenstergrößen: Standardgrößen sichtbar, weitere Arten einklappbar */}
                 <div className="space-y-3">
                   <Label className="text-sm font-semibold text-brand-navy">Fenstergrößen &amp; Anzahl</Label>
-                  {windowTypes.map((t) => {
-                    const qty = windowQuantities[t.value] ?? ""
-                    const active = (Number.parseFloat(qty.replace(",", ".")) || 0) > 0
-                    return (
-                      <div
-                        key={t.value}
-                        className={`flex items-center justify-between gap-4 rounded-2xl border p-4 transition-colors ${
-                          active
-                            ? "border-brand-blue bg-brand-blue/5"
-                            : "border-brand-navy/10 bg-brand-mint/30"
-                        }`}
+                  {primaryWindowTypes.map((t) => renderWindowRow(t))}
+
+                  {/* Einklappbarer, optionaler Bereich für weitere Fensterarten */}
+                  {moreWindowTypes.length > 0 && (
+                    <div className="space-y-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowMoreWindows((v) => !v)}
+                        aria-expanded={showMoreWindows}
+                        className="flex w-full items-center justify-between gap-2 rounded-2xl border border-dashed border-brand-blue/40 bg-white px-4 py-3 text-left text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-mint/50 cursor-pointer"
                       >
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-brand-navy">{t.label}</p>
-                          <p className="mt-0.5 text-xs font-light text-neutral-400">{t.dimension}</p>
-                        </div>
-                        <Input
-                          type="number"
-                          min={0}
-                          step={t.perSqm ? "0.5" : "1"}
-                          inputMode={t.perSqm ? "decimal" : "numeric"}
-                          placeholder={t.perSqm ? "m²" : "0"}
-                          value={qty}
-                          onChange={(e) => updateWindowQuantity(t.value, e.target.value)}
-                          className="h-11 w-24 shrink-0 bg-white text-center font-light text-neutral-600 placeholder:text-neutral-400/70"
-                          aria-label={`${t.label} – ${t.perSqm ? "Quadratmeter" : "Anzahl"}`}
+                        <span>
+                          Weitere Fensterarten{" "}
+                          <span className="font-normal text-neutral-400">
+                            (optional – Glastüren, Fronten, Rollladen …)
+                          </span>
+                        </span>
+                        <ChevronDown
+                          className={`h-4 w-4 shrink-0 text-brand-blue transition-transform ${
+                            showMoreWindows ? "rotate-180" : ""
+                          }`}
                         />
-                      </div>
-                    )
-                  })}
+                      </button>
+                      {showMoreWindows && (
+                        <div className="space-y-3">{moreWindowTypes.map((t) => renderWindowRow(t))}</div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {assignedWindows > 0 && (
@@ -587,18 +651,36 @@ export function QuoteWizard({
                     <span className="ml-2 text-lg text-neutral-500">m²</span>
                   </div>
                   <Slider
-                    value={area}
+                    value={[Math.min(Math.max(area[0], areaLimit?.sliderMin ?? 20), areaLimit?.sliderMax ?? 1000)]}
                     onValueChange={setArea}
-                    max={1000}
-                    min={20}
+                    max={areaLimit?.sliderMax ?? 1000}
+                    min={areaLimit?.sliderMin ?? 20}
                     step={10}
                     className="[&_[role=slider]]:bg-brand-blue [&_[role=slider]]:border-brand-blue"
                   />
                   <div className="mt-3 flex justify-between text-xs text-neutral-400">
-                    <span>20 m²</span>
-                    <span>1.000 m²</span>
+                    <span>{(areaLimit?.sliderMin ?? 20).toLocaleString("de-DE")} m²</span>
+                    <span>{(areaLimit?.sliderMax ?? 1000).toLocaleString("de-DE")} m²</span>
                   </div>
                 </div>
+
+                {/* Hinweis auf "Preis auf Anfrage" außerhalb des kalkulierbaren Bereichs */}
+                {priceOnRequest && areaLimit && (
+                  <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 px-5 py-4 text-sm text-brand-navy">
+                    <p className="font-semibold">Preis auf Anfrage</p>
+                    <p className="mt-1 font-light text-neutral-600">
+                      Ein automatischer Richtpreis ist für{" "}
+                      {area[0].toLocaleString("de-DE")} m² nicht verfügbar (kalkulierbar von{" "}
+                      {areaLimit.quoteMin.toLocaleString("de-DE")}–
+                      {areaLimit.quoteMax.toLocaleString("de-DE")} m²). Größere Objekte können
+                      jederzeit individuell angefragt werden.
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-center text-xs font-light text-neutral-400">
+                  Größere Objekte können jederzeit individuell angefragt werden.
+                </p>
               </div>
             )}
           </div>
@@ -728,11 +810,22 @@ export function QuoteWizard({
                 <Input
                   id="email"
                   type="email"
+                  inputMode="email"
                   placeholder="ihre@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="font-light text-neutral-600 placeholder:text-neutral-400/70"
+                  aria-invalid={email.trim().length > 0 && !emailValid}
+                  className={`font-light text-neutral-600 placeholder:text-neutral-400/70 ${
+                    email.trim().length > 0 && !emailValid
+                      ? "border-red-400 focus-visible:ring-red-400/30"
+                      : ""
+                  }`}
                 />
+                {email.trim().length > 0 && !emailValid && (
+                  <p className="text-xs font-light text-red-500">
+                    Bitte geben Sie eine gültige E-Mail-Adresse ein.
+                  </p>
+                )}
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="phone" className="font-normal text-neutral-600">Telefon</Label>
@@ -795,27 +888,43 @@ export function QuoteWizard({
                     Ihr unverbindliches Angebot
                   </p>
                   <h3 className="font-display text-2xl font-extrabold text-brand-navy">
-                    Geschätzter Preis
+                    {priceOnRequest ? "Preis auf Anfrage" : "Geschätzter Preis"}
                   </h3>
                 </div>
 
                 <div className="rounded-3xl bg-gradient-to-br from-brand-blue to-brand-teal p-8 text-center">
-                  <p className="text-sm text-white/80">Geschätzte Preisspanne</p>
-                  <p className="mt-1 font-display text-4xl font-extrabold text-white sm:text-5xl">
-                    {price.min.toLocaleString("de-DE")} - {price.max.toLocaleString("de-DE")} €
-                  </p>
-                  {/* Rabatt-Hinweis nur bei Privatkunden mit regelmäßiger Reinigung */}
-                  {!isCommercial && selectedFrequency && selectedFrequency.discount > 0 && (
-                    <p className="mt-2 text-sm text-white/80">
-                      inkl. {selectedFrequency.discount}% Rabatt bei {selectedFrequency.label.toLowerCase()}er Reinigung
-                    </p>
+                  {priceOnRequest ? (
+                    <>
+                      <p className="text-sm text-white/80">Individuelles Angebot</p>
+                      <p className="mt-1 font-display text-3xl font-extrabold text-white sm:text-4xl">
+                        Preis auf Anfrage
+                      </p>
+                      <p className="mt-2 text-sm text-white/80">
+                        Für diese Objektgröße erstellen wir Ihnen ein persönliches Angebot.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm text-white/80">Geschätzte Preisspanne</p>
+                      <p className="mt-1 font-display text-4xl font-extrabold text-white sm:text-5xl">
+                        {price.min.toLocaleString("de-DE")} - {price.max.toLocaleString("de-DE")} €
+                      </p>
+                      {/* Rabatt-Hinweis nur bei Privatkunden mit regelmäßiger Reinigung */}
+                      {!isCommercial && selectedFrequency && selectedFrequency.discount > 0 && (
+                        <p className="mt-2 text-sm text-white/80">
+                          inkl. {selectedFrequency.discount}% Rabatt bei{" "}
+                          {selectedFrequency.label.toLowerCase()}er Reinigung
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
 
                 {/* Pflichthinweis: Preis ist nur eine Orientierung */}
                 <p className="rounded-2xl bg-brand-mint/50 px-5 py-4 text-center text-sm text-brand-navy">
-                  Dieser Preis dient lediglich als Orientierung. Der tatsächliche Preis kann nach
-                  Besichtigung oder genauer Prüfung abweichen.
+                  {priceOnRequest
+                    ? "Größere Objekte können jederzeit individuell angefragt werden. Wir melden uns mit einem maßgeschneiderten Angebot."
+                    : "Dieser Preis dient lediglich als Orientierung. Der tatsächliche Preis kann nach Besichtigung oder genauer Prüfung abweichen."}
                 </p>
 
                 {/* Zusätzlicher Hinweis für Gewerbekunden */}
@@ -868,7 +977,7 @@ export function QuoteWizard({
                     ) : (
                       <ThumbsUp className="h-5 w-5" />
                     )}
-                    Angebot annehmen
+                    {priceOnRequest ? "Angebot anfragen" : "Angebot annehmen"}
                   </Button>
                   <Button
                     variant="ghost"

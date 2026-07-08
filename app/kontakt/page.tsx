@@ -36,8 +36,8 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Adresse",
-    content: "Rue de la Gare 123, L-1234 Luxemburg",
-    href: "https://maps.google.com",
+    content: "6A Rue Michel Rodange, 7681 Waldbillig, Luxemburg",
+    href: "https://www.google.com/maps/search/?api=1&query=6A+Rue+Michel+Rodange+7681+Waldbillig",
   },
 ]
 

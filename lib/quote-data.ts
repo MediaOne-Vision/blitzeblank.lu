@@ -29,7 +29,7 @@ export interface QuoteService {
 export const TRAVEL_COST_PER_KM = 2
 
 /** Feste Firmenadresse als Startpunkt für die Entfernungsberechnung */
-export const COMPANY_ADDRESS = "Lehnsweg 3, 54636 Wolsfeld, Deutschland"
+export const COMPANY_ADDRESS = "6A Rue Michel Rodange, 7681 Waldbillig, Luxemburg"
 
 // Hinweis: Die Industriereinigung wird ausschließlich auf Anfrage kalkuliert
 // und ist daher bewusst NICHT im Preisrechner enthalten.

@@ -107,8 +107,8 @@ export function Footer() {
             <h3 className="font-display text-sm font-bold text-brand-sky mb-4">Kontakt</h3>
             <ul className="space-y-3 text-sm text-neutral-400">
               <li>
-                Rue de la Gare 123<br />
-                L-1234 Luxemburg
+                6A, Rue Michel Rodange<br />
+                7681 Waldbillig, Luxemburg
               </li>
               <li>
                 <a href="tel:+352661830493" className="hover:text-white transition-colors cursor-pointer">
