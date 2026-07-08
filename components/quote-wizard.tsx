@@ -64,9 +64,6 @@ const DEFAULT_AREA_BY_SERVICE: Record<string, number> = {
 /** Einfache, aber robuste E-Mail-Prüfung für die clientseitige Validierung */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-/** Fensterarten, die immer sichtbar sind (Standardgrößen) */
-const PRIMARY_WINDOW_TYPES = ["xs", "s", "m", "l", "xl", "xxl"]
-
 interface UploadedPhoto {
   name: string
   url: string
@@ -95,6 +92,8 @@ export function QuoteWizard({
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [travel, setTravel] = useState<TravelInfo | null>(null)
   const suggestTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Anker am Anfang des Formulars – beim Schrittwechsel wird hierher gescrollt
+  const topRef = useRef<HTMLDivElement>(null)
 
   // Weitere (optionale) Fensterarten – einklappbarer Bereich im Umfang-Schritt
   const [showMoreWindows, setShowMoreWindows] = useState(false)
@@ -139,19 +138,22 @@ export function QuoteWizard({
   // E-Mail nur akzeptieren, wenn sie korrekt formatiert ist (clientseitig)
   const emailValid = EMAIL_REGEX.test(email.trim())
 
-  // Fensterarten in Standardgrößen und optionale "weitere" Arten aufteilen
-  const primaryWindowTypes = windowTypes.filter((t) => PRIMARY_WINDOW_TYPES.includes(t.value))
-  const moreWindowTypes = windowTypes.filter((t) => !PRIMARY_WINDOW_TYPES.includes(t.value))
+  // Standardgrößen sind immer sichtbar, gewerbliche Fensterarten nur für Gewerbekunden
+  const primaryWindowTypes = windowTypes.filter((t) => !t.commercial)
+  const moreWindowTypes = windowTypes.filter((t) => t.commercial)
 
   // Turnus gibt es nur bei der Fensterreinigung, sonst immer "Einmalig".
   const effectiveFrequencyValue = isWindow ? frequencyValue : "einmalig"
   const selectedFrequency = quoteFrequencies.find((f) => f.value === effectiveFrequencyValue)
 
-  // Mengen je Fensterart in numerische Zeilen für die Preisberechnung umwandeln
-  const numericWindowRows: WindowRowEntry[] = windowTypes.map((t) => ({
-    type: t.value,
-    quantity: Number.parseFloat((windowQuantities[t.value] ?? "").replace(",", ".")) || 0,
-  }))
+  // Mengen je Fensterart in numerische Zeilen für die Preisberechnung umwandeln.
+  // Gewerbliche Fensterarten fließen nur für Gewerbekunden in die Kalkulation ein.
+  const numericWindowRows: WindowRowEntry[] = windowTypes
+    .filter((t) => isCommercial || !t.commercial)
+    .map((t) => ({
+      type: t.value,
+      quantity: Number.parseFloat((windowQuantities[t.value] ?? "").replace(",", ".")) || 0,
+    }))
 
   // Gesamtanzahl Fenster (Rollladen wird in m² gemessen und hier nicht mitgezählt)
   const assignedWindows = numericWindowRows
@@ -276,8 +278,22 @@ export function QuoteWizard({
     }
   }
 
-  const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1))
-  const back = () => setStep((s) => Math.max(s - 1, 0))
+  // Beim Schrittwechsel immer an den Anfang der Formularseite scrollen,
+  // damit der Nutzer nicht manuell hochscrollen muss.
+  const scrollToTop = () => {
+    requestAnimationFrame(() => {
+      topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    })
+  }
+
+  const next = () => {
+    setStep((s) => Math.min(s + 1, STEPS.length - 1))
+    scrollToTop()
+  }
+  const back = () => {
+    setStep((s) => Math.max(s - 1, 0))
+    scrollToTop()
+  }
 
   const handleDecision = async (choice: "accepted" | "declined") => {
     setDecision(choice)
@@ -317,7 +333,10 @@ export function QuoteWizard({
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-brand-navy/5">
+    <div
+      ref={topRef}
+      className="scroll-mt-24 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-brand-navy/5"
+    >
       {/* Progress header */}
       <div className="border-b border-brand-navy/5 bg-brand-mint/40 px-6 py-5 sm:px-8">
         <div className="flex items-center justify-between gap-2">
@@ -539,7 +558,11 @@ export function QuoteWizard({
                         <button
                           key={option.value}
                           type="button"
-                          onClick={() => setCustomerType(option.value)}
+                          onClick={() => {
+                            setCustomerType(option.value)
+                            // Bei Privatkunden den gewerblichen Bereich einklappen
+                            if (option.value === "privat") setShowMoreWindows(false)
+                          }}
                           className={`rounded-full border px-5 py-2 text-sm font-medium transition-all cursor-pointer ${
                             active
                               ? "border-brand-blue bg-brand-blue text-white"
@@ -585,8 +608,8 @@ export function QuoteWizard({
                   <Label className="text-sm font-semibold text-brand-navy">Fenstergrößen &amp; Anzahl</Label>
                   {primaryWindowTypes.map((t) => renderWindowRow(t))}
 
-                  {/* Einklappbarer, optionaler Bereich für weitere Fensterarten */}
-                  {moreWindowTypes.length > 0 && (
+                  {/* Einklappbarer, optionaler Bereich – nur für Gewerbekunden sichtbar */}
+                  {isCommercial && moreWindowTypes.length > 0 && (
                     <div className="space-y-3">
                       <button
                         type="button"
@@ -597,7 +620,7 @@ export function QuoteWizard({
                         <span>
                           Weitere Fensterarten{" "}
                           <span className="font-normal text-neutral-400">
-                            (optional – Glastüren, Fronten, Rollladen …)
+                            (optional – Bürofenster, Schaufenster, Glasfassaden …)
                           </span>
                         </span>
                         <ChevronDown
