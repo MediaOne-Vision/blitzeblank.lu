@@ -15,6 +15,13 @@ export const COMPANY_COORDS = { lat: 49.7962878, lon: 6.2856816 } as const
 /** Straßen verlaufen nie schnurgerade – Luftlinie × 1,3 ≈ Fahrstrecke */
 export const ROAD_FACTOR = 1.3
 
+/**
+ * Zusätzlicher Sicherheitszuschlag von 1,3 auf die geschätzte Anfahrt.
+ * Damit fällt die geschätzte Strecke bewusst etwas großzügiger aus, sodass die
+ * tatsächliche Anfahrt selten teurer als der angezeigte Richtwert wird.
+ */
+export const TRAVEL_SAFETY_FACTOR = 1.3
+
 export interface AddressSuggestion {
   /** Vollständige, lesbare Adresse */
   description: string
@@ -52,7 +59,8 @@ export function haversineKm(
  */
 export function computeTravel(destination: { lat: number; lon: number }): TravelInfo {
   const straightLine = haversineKm(COMPANY_COORDS, destination)
-  const distanceKm = straightLine * ROAD_FACTOR
+  // Luftlinie × Straßenfaktor × Sicherheitszuschlag (bewusst etwas großzügiger)
+  const distanceKm = straightLine * ROAD_FACTOR * TRAVEL_SAFETY_FACTOR
   return {
     distanceKm: Math.round(distanceKm * 10) / 10,
     // Hin- und Rückweg werden abgerechnet

@@ -973,12 +973,18 @@ export function QuoteWizard({
                   )}
                   <SummaryRow label="Adresse" value={address || "-"} />
                   {travel && (
-                    <SummaryRow
-                      label="Anfahrt"
-                      value={`ca. ${travel.distanceKm.toLocaleString("de-DE")} km · ${Math.round(
-                        travel.billableKm * pricingConfig.travelCostPerKm,
-                      ).toLocaleString("de-DE")} €`}
-                    />
+                    <>
+                      <SummaryRow
+                        label="Anfahrt (ungefähr)"
+                        value={`ca. ${travel.distanceKm.toLocaleString("de-DE")} km · ${Math.round(
+                          travel.billableKm * pricingConfig.travelCostPerKm,
+                        ).toLocaleString("de-DE")} €`}
+                      />
+                      <p className="text-xs font-light text-neutral-400">
+                        Die Anfahrt ist nur ein ungefährer Richtwert und kann je nach tatsächlicher
+                        Route abweichen.
+                      </p>
+                    </>
                   )}
                   {preferredDate && <SummaryRow label="Wunschtermin" value={preferredDate} />}
                   {photos.length > 0 && <SummaryRow label="Fotos" value={`${photos.length} hochgeladen`} />}
