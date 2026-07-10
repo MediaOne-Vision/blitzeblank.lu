@@ -24,7 +24,7 @@ const values = [
   {
     icon: ShieldCheck,
     title: "Qualitätsgarantie",
-    text: "Inklusive Probearbeit auf Wunsch.",
+    text: "Inklusive Testfläche auf Wunsch.",
     color: "bg-brand-teal",
   },
 ]
