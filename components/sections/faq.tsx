@@ -40,11 +40,6 @@ const faqs = [
       "Ja, bei dringenden Anliegen sind wir flexibel und passen uns Ihrem Zeitplan an. Sprechen Sie uns einfach an, und wir finden gemeinsam eine schnelle Lösung.",
   },
   {
-    question: "Sind Anfahrtskosten im Preis inbegriffen?",
-    answer:
-      "In unserem Einzugsgebiet in Luxemburg, Trier, Bitburg und der Region sind die Anfahrtskosten in der Regel im Angebot enthalten. Alle Kosten weisen wir vorab transparent aus.",
-  },
-  {
     question: "Gibt es Rabatte auf z. B. regelmäßige Buchungen?",
     answer:
       "Ja. Für regelmäßige Reinigungen bieten wir attraktive Konditionen. Je nach Häufigkeit profitieren Sie von vergünstigten Preisen - die Details halten wir in Ihrem individuellen Angebot fest.",
