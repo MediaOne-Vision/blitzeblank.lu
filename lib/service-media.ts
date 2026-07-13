@@ -104,53 +104,52 @@ export const serviceMedia: Record<string, ServiceMedia> = {
 
   steinreinigung: {
     hero: {
-      src: `${BASE}/naturstein-terrasse-gereinigt-ergebnis.avif`,
-      alt: "Gereinigte Naturstein-Terrasse als Ergebnis der Steinreinigung",
+      src: `${BASE}/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif`,
+      alt: "Gereinigte Naturstein-Terrasse mit Polygonalplatten als Ergebnis der Steinreinigung",
     },
     beforeAfter: [
       {
-        beforeSrc: `${BASE}/gartenweg-pflaster-vor-reinigung.avif`,
-        afterSrc: `${BASE}/gartenweg-kopfsteinpflaster-ergebnis.avif`,
-        beforeAlt: "Veralgter Gartenweg aus Pflastersteinen vor der Reinigung",
-        afterAlt: "Sauberes Kopfsteinpflaster des Gartenwegs nach der Reinigung",
-        caption: "Gartenweg & Pflaster – Algen und Moos restlos entfernt",
+        beforeSrc: `${BASE}/steinreinigung-natursteinterrasse-polygonalplatten-veralgt-vorher.avif`,
+        afterSrc: `${BASE}/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif`,
+        beforeAlt: "Veralgte und vermooste Naturstein-Terrasse aus Polygonalplatten vor der Reinigung",
+        afterAlt: "Saubere Naturstein-Terrasse aus Polygonalplatten in warmen Sandtönen nach der Reinigung",
+        caption: "Natursteinterrasse – Algen und Moos aus den Fugen restlos entfernt",
       },
       {
-        beforeSrc: `${BASE}/eingangsweg-pflaster-reinigung-vorher.avif`,
-        afterSrc: `${BASE}/eingangsbereich-pflaster-gereinigt.avif`,
-        beforeAlt: "Verschmutzter Eingangsweg aus Pflaster vor der Reinigung",
-        afterAlt: "Gereinigter Pflaster-Eingangsbereich nach der Reinigung",
-        caption: "Eingangsbereich – einladend sauberes Pflaster",
+        beforeSrc: `${BASE}/steinreinigung-granit-eingangsweg-verschmutzt-vorher.avif`,
+        afterSrc: `${BASE}/steinreinigung-granit-eingangsweg-sauber-nachher.avif`,
+        beforeAlt: "Verschmutzter und veralgter Granit-Eingangsweg zur Haustür vor der Reinigung",
+        afterAlt: "Sauberer, dunkler Granit-Eingangsweg zur Haustür nach der Reinigung",
+        caption: "Eingangsweg – Granitpflaster wieder tiefdunkel und gepflegt",
+      },
+      {
+        beforeSrc: `${BASE}/steinreinigung-sandstein-eingangsstufen-verschmutzt-vorher.avif`,
+        afterSrc: `${BASE}/steinreinigung-sandstein-eingangsstufen-sauber-nachher.avif`,
+        beforeAlt: "Sandstein-Eingangsstufen mit Flecken und Verschmutzungen vor der Reinigung",
+        afterAlt: "Saubere, helle Sandstein-Eingangsstufen nach der Reinigung",
+        caption: "Sandstein-Stufen – Flecken entfernt, Naturstein aufgehellt",
       },
     ],
     gallery: [
       {
-        src: `${BASE}/bodenreinigung-aussenflaeche-pflaster.avif`,
-        alt: "Bodenreinigung einer gepflasterten Außenfläche",
+        src: `${BASE}/steinreinigung-gartenweg-pflaster-sauber-nachher.avif`,
+        alt: "Sauberer geschwungener Gartenweg aus anthrazitfarbenem Pflaster nach der Steinreinigung",
       },
       {
-        src: `${BASE}/flaechenreinigung-hochdruck-mitarbeiter.avif`,
-        alt: "Mitarbeiter bei der Flächenreinigung mit dem Hochdruckreiniger",
+        src: `${BASE}/steinreinigung-granit-plattenweg-haustuer-sauber.avif`,
+        alt: "Gereinigter Granit-Plattenweg zur Haustür nach der Steinreinigung",
       },
       {
-        src: `${BASE}/einfahrt-komplett-gereinigt-sauber.avif`,
-        alt: "Komplett gereinigte und saubere Pflaster-Einfahrt",
+        src: `${BASE}/steinreinigung-terrassenfliesen-grossformat-sauber.avif`,
+        alt: "Saubere großformatige Terrassenfliesen nach der Reinigung",
       },
       {
-        src: `${BASE}/natursteinplatten-nach-reinigung.avif`,
-        alt: "Natursteinplatten nach der professionellen Reinigung",
+        src: `${BASE}/steinreinigung-kleinpflaster-eingang-gereinigt.avif`,
+        alt: "Gereinigtes Kleinpflaster im Eingangsbereich nach der Steinreinigung",
       },
       {
-        src: `${BASE}/eingangstreppe-steinreinigung-sauber.avif`,
-        alt: "Saubere Eingangstreppe nach der Steinreinigung",
-      },
-      {
-        src: `${BASE}/carport-dach-gereinigt-ergebnis.avif`,
-        alt: "Gereinigtes Carport-Dach als Ergebnis der Reinigung",
-      },
-      {
-        src: `${BASE}/dachueberstand-reinigung-naturstein.avif`,
-        alt: "Gereinigter Dachüberstand aus Naturstein",
+        src: `${BASE}/steinreinigung-verbundpflaster-detail-gereinigt.avif`,
+        alt: "Detailaufnahme von gereinigtem rot-schwarzem Verbundpflaster",
       },
     ],
   },

@@ -12,10 +12,10 @@ const showcases = [
     caption: "Fensterreinigung",
   },
   {
-    beforeSrc: "/images/leistungen/gartenweg-pflaster-vor-reinigung.avif",
-    afterSrc: "/images/leistungen/gartenweg-kopfsteinpflaster-ergebnis.avif",
-    beforeAlt: "Veralgter Gartenweg aus Pflastersteinen vor der Reinigung",
-    afterAlt: "Gereinigter Gartenweg aus Kopfsteinpflaster nach der Steinreinigung",
+    beforeSrc: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-veralgt-vorher.avif",
+    afterSrc: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
+    beforeAlt: "Veralgte und vermooste Naturstein-Terrasse aus Polygonalplatten vor der Reinigung",
+    afterAlt: "Saubere Naturstein-Terrasse aus Polygonalplatten nach der Steinreinigung",
     caption: "Steinreinigung",
   },
 ]

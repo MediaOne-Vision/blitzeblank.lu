@@ -34,8 +34,8 @@ const services = [
     description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Außenanlagen.",
     href: "/leistungen/steinreinigung",
     icon: Gem,
-    image: "/images/leistungen/naturstein-terrasse-gereinigt-ergebnis.avif",
-    imageAlt: "Gereinigte Naturstein-Terrasse als Ergebnis der Steinreinigung",
+    image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
+    imageAlt: "Gereinigte Naturstein-Terrasse mit Polygonalplatten als Ergebnis der Steinreinigung",
   },
 ]
 
