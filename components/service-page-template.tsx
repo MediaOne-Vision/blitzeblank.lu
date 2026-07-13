@@ -26,6 +26,8 @@ interface ServicePageTemplateProps {
   features: ServiceFeature[]
   benefits: string[]
   process: { step: string; description: string }[]
+  showResults?: boolean
+  showQuote?: boolean
 }
 
 export function ServicePageTemplate({
@@ -36,6 +38,8 @@ export function ServicePageTemplate({
   features,
   benefits,
   process,
+  showResults = true,
+  showQuote = true,
 }: ServicePageTemplateProps) {
   const media = getServiceMedia(slug)
 
@@ -92,16 +96,18 @@ export function ServicePageTemplate({
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </Button>
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
-                  >
-                    <Link href="#angebot" className="cursor-pointer">
-                      Kostenloses Angebot
-                    </Link>
-                  </Button>
+                  {showQuote && (
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="outline"
+                      className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
+                    >
+                      <Link href="#angebot" className="cursor-pointer">
+                        Kostenloses Angebot
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -187,7 +193,7 @@ export function ServicePageTemplate({
         </section>
 
         {/* Ergebnisse: Zwei große Vorher-Nachher-Vergleiche + Karussell */}
-        {media && (media.beforeAfter.length > 0 || media.gallery.length > 0) && (
+        {showResults && media && (media.beforeAfter.length > 0 || media.gallery.length > 0) && (
           <section className="bg-brand-mint py-16 lg:py-24">
             <div className="mx-auto max-w-6xl px-6">
               <div className="mx-auto mb-12 max-w-2xl text-center">
@@ -230,29 +236,31 @@ export function ServicePageTemplate({
         )}
 
         {/* Kostenloses Angebot Banner */}
-        <QuoteBanner slug={slug} serviceTitle={title} ctaHref="#angebot" />
+        {showQuote && <QuoteBanner slug={slug} serviceTitle={title} ctaHref="#angebot" />}
 
         {/* Service Switcher */}
         <ServiceSwitcher currentSlug={slug} />
 
         {/* Eingebettetes Angebots-Tool - direkt auf der Seite, ohne Weiterleitung */}
-        <section id="angebot" className="scroll-mt-24 bg-brand-navy py-16 lg:py-24">
-          <div className="mx-auto max-w-4xl px-6">
-            <div className="mb-10 text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-sky">
-                Kostenloses Angebot
-              </p>
-              <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
-                Ihr Richtpreis für <span className="text-brand-sky">{title}</span> - in 2 Minuten
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-white/75 text-pretty">
-                Füllen Sie das Formular direkt hier aus - unverbindlich, kostenlos und ohne
-                Weiterleitung. Sie erhalten sofort eine Preisschätzung.
-              </p>
+        {showQuote && (
+          <section id="angebot" className="scroll-mt-24 bg-brand-navy py-16 lg:py-24">
+            <div className="mx-auto max-w-4xl px-6">
+              <div className="mb-10 text-center">
+                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-sky">
+                  Kostenloses Angebot
+                </p>
+                <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+                  Ihr Richtpreis für <span className="text-brand-sky">{title}</span> - in 2 Minuten
+                </h2>
+                <p className="mx-auto mt-4 max-w-xl text-white/75 text-pretty">
+                  Füllen Sie das Formular direkt hier aus - unverbindlich, kostenlos und ohne
+                  Weiterleitung. Sie erhalten sofort eine Preisschätzung.
+                </p>
+              </div>
+              <QuoteWizard initialSlug={slug} />
             </div>
-            <QuoteWizard initialSlug={slug} />
-          </div>
-        </section>
+          </section>
+        )}
       </main>
       <Footer />
     </div>

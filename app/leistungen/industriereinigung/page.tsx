@@ -63,6 +63,8 @@ export default function IndustriereinigungPage() {
       features={features}
       benefits={benefits}
       process={process}
+      showResults={false}
+      showQuote={false}
     />
   )
 }
