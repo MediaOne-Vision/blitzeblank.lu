@@ -7,6 +7,7 @@ import { ServicesOverview } from "@/components/sections/services-overview"
 import { ResultsShowcase } from "@/components/sections/results-showcase"
 import { WhyUsSection } from "@/components/sections/why-us"
 import { OwnerSection } from "@/components/sections/owner"
+import { InActionSection } from "@/components/sections/in-action"
 import { ProcessSection } from "@/components/sections/process"
 import { QuoteBanner } from "@/components/quote-banner"
 import { TestimonialsSection } from "@/components/sections/testimonials"
@@ -30,6 +31,9 @@ export default function HomePage() {
         <WhyUsSection />
         <Reveal>
           <OwnerSection />
+        </Reveal>
+        <Reveal>
+          <InActionSection />
         </Reveal>
         <Reveal>
           <ProcessSection />

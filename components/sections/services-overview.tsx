@@ -26,8 +26,8 @@ const services = [
     description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
     href: "/leistungen/fassadenreinigung",
     icon: Building2,
-    image: "/images/leistungen/fassadenreinigung-wohngebaeude-resultat.avif",
-    imageAlt: "Saubere gelbe Wohnhaus-Fassade mit braunen Türen nach der Fassadenreinigung",
+    image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
+    imageAlt: "Saubere, helle Mehrfamilienhaus-Fassade nach der Fassadenreinigung",
   },
   {
     title: "Steinreinigung",

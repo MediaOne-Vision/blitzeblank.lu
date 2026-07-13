@@ -66,31 +66,40 @@ export const serviceMedia: Record<string, ServiceMedia> = {
 
   fassadenreinigung: {
     hero: {
-      src: `${BASE}/fassadenreinigung-wohngebaeude-resultat.avif`,
-      alt: "Saubere gelbe Wohnhaus-Fassade mit braunen Türen nach der Fassadenreinigung",
+      src: `${BASE}/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif`,
+      alt: "Saubere, helle Mehrfamilienhaus-Fassade nach der Fassadenreinigung in Luxemburg",
     },
     beforeAfter: [
       {
-        beforeSrc: `${BASE}/fassade-veralgt-vor-reinigung.avif`,
-        afterSrc: `${BASE}/fassade-gereinigt-nach-reinigung.avif`,
-        beforeAlt: "Veralgte und verschmutzte Hausfassade vor der Reinigung",
-        afterAlt: "Saubere, helle Hausfassade nach der Fassadenreinigung",
-        caption: "Wohnhaus-Fassade – Algen und Grünbelag restlos entfernt",
+        beforeSrc: `${BASE}/fassadenreinigung-mehrfamilienhaus-veralgt-vorher.avif`,
+        afterSrc: `${BASE}/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif`,
+        beforeAlt: "Veralgte und verschmutzte Mehrfamilienhaus-Fassade mit Schmutzstreifen vor der Reinigung",
+        afterAlt: "Saubere, helle Mehrfamilienhaus-Fassade nach der Fassadenreinigung",
+        caption: "Mehrfamilienhaus – Algen, Grünbelag und Schmutzstreifen restlos entfernt",
       },
       {
-        beforeSrc: `${BASE}/buerogebaeude-fassade-verschmutzt-vorher.avif`,
-        afterSrc: `${BASE}/buerogebaeude-fassade-gereinigt-nachher.avif`,
-        beforeAlt: "Verschmutzte Bürogebäude-Fassade mit Umweltablagerungen vor der Reinigung",
-        afterAlt: "Strahlend saubere Bürogebäude-Fassade nach der Reinigung",
-        caption: "Gewerbliche Fassade – Umweltablagerungen entfernt",
+        beforeSrc: `${BASE}/fassadenreinigung-einfamilienhaus-veralgt-vorher.avif`,
+        afterSrc: `${BASE}/fassadenreinigung-einfamilienhaus-gereinigt-nachher.avif`,
+        beforeAlt: "Gelbe Einfamilienhaus-Fassade mit veralgtem, verschmutztem Giebel vor der Reinigung",
+        afterAlt: "Saubere gelbe Einfamilienhaus-Fassade nach der Fassadenreinigung",
+        caption: "Einfamilienhaus – veralgter Giebel wieder strahlend sauber",
       },
-    ],
-    gallery: [
       {
-        src: `${BASE}/fassadenreinigung-wohnhaus-ergebnis.avif`,
-        alt: "Gereinigte Fassade eines Wohnhauses als Endergebnis",
+        beforeSrc: `${BASE}/fassadenreinigung-putzfassade-fensterband-verschmutzt-vorher.avif`,
+        afterSrc: `${BASE}/fassadenreinigung-putzfassade-fensterband-sauber-nachher.avif`,
+        beforeAlt: "Verschmutzte Putzfassade mit Fensterband und dunklen Ablagerungen vor der Reinigung",
+        afterAlt: "Gereinigte, helle Putzfassade mit Fensterband nach der Reinigung",
+        caption: "Putzfassade – Umweltablagerungen schonend entfernt",
+      },
+      {
+        beforeSrc: `${BASE}/fassadenreinigung-industriehalle-trennwand-verschmutzt-vorher.avif`,
+        afterSrc: `${BASE}/fassadenreinigung-industriehalle-trennwand-sauber-nachher.avif`,
+        beforeAlt: "Vergilbte, verschmutzte Trennwand in einer Industriehalle vor der Reinigung",
+        afterAlt: "Gereinigte, helle Trennwand in einer Industriehalle nach der Reinigung",
+        caption: "Industriehalle – Wandflächen wieder hell und gepflegt",
       },
     ],
+    gallery: [],
   },
 
   steinreinigung: {
