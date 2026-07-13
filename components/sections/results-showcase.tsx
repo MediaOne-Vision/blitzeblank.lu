@@ -5,10 +5,10 @@ import { ArrowRight } from "lucide-react"
 
 const showcases = [
   {
-    beforeSrc: "/images/leistungen/fenster-verschmutzt-vor-glasreinigung.avif",
-    afterSrc: "/images/leistungen/fenster-sauber-nach-glasreinigung.avif",
-    beforeAlt: "Verschmutztes Fenster mit Schlieren vor der Glasreinigung",
-    afterAlt: "Streifenfrei gereinigtes Fenster nach der Glasreinigung",
+    beforeSrc: "/images/leistungen/fensterreinigung-terrassenueberdachung-glasdach-verschmutzt-vorher.avif",
+    afterSrc: "/images/leistungen/fensterreinigung-terrassenueberdachung-glasdach-gereinigt-nachher.avif",
+    beforeAlt: "Verschmutztes Glasdach einer Terrassenüberdachung mit Wasserflecken vor der Reinigung",
+    afterAlt: "Klares, streifenfreies Glasdach einer Terrassenüberdachung nach der Fensterreinigung",
     caption: "Fensterreinigung",
   },
   {

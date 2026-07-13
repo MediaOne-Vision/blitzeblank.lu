@@ -18,8 +18,8 @@ const services = [
     description: "Streifenfreie Glasreinigung für Bürogebäude und Geschäfte - auch in großen Höhen.",
     href: "/leistungen/fensterreinigung",
     icon: GlassWater,
-    image: "/images/leistungen/fenster-sauber-nach-glasreinigung.avif",
-    imageAlt: "Streifenfrei gereinigtes Fenster nach professioneller Glasreinigung",
+    image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
+    imageAlt: "Gereinigter Glas-Wintergarten mit klaren Glasflächen nach der Fensterreinigung",
   },
   {
     title: "Fassadenreinigung",
