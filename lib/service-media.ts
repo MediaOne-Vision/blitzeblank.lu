@@ -95,11 +95,12 @@ export const serviceMedia: Record<string, ServiceMedia> = {
         caption: "Putzfassade – Umweltablagerungen schonend entfernt",
       },
       {
-        beforeSrc: `${BASE}/fassadenreinigung-industriehalle-trennwand-verschmutzt-vorher.avif`,
-        afterSrc: `${BASE}/fassadenreinigung-industriehalle-trennwand-sauber-nachher.avif`,
-        beforeAlt: "Vergilbte, verschmutzte Trennwand in einer Industriehalle vor der Reinigung",
-        afterAlt: "Gereinigte, helle Trennwand in einer Industriehalle nach der Reinigung",
-        caption: "Industriehalle – Wandflächen wieder hell und gepflegt",
+        beforeSrc: `${BASE}/fassadenreinigung-hausfassade-veralgt-schmutzstreifen-vorher.avif`,
+        afterSrc: `${BASE}/fassadenreinigung-hausfassade-gelb-gereinigt-nachher.avif`,
+        beforeAlt:
+          "Verschmutzte Hausfassade mit Algen, Grünbelag und Schmutzstreifen am Sockel vor der Fassadenreinigung",
+        afterAlt: "Frisch gereinigte, leuchtend gelbe Hausfassade mit sauberem Sockel nach der Fassadenreinigung",
+        caption: "Hausfassade – Algen und Schmutzstreifen entfernt, Putz wieder strahlend",
       },
     ],
     gallery: [],
