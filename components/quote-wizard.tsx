@@ -1042,9 +1042,17 @@ export function QuoteWizard({
                   {decision === "accepted" ? "Vielen Dank für Ihr Vertrauen!" : "Schade!"}
                 </h3>
                 <p className="mx-auto max-w-md text-neutral-600">
-                  {decision === "accepted"
-                    ? "Ihre Anfrage wurde an Blitzeblank übermittelt. Wir melden uns in Kürze bei Ihnen, um einen Termin für die kostenlose Besichtigung zu vereinbaren."
-                    : "Wir verstehen, dass die Preisspanne nicht Ihren Vorstellungen entspricht. Rufen Sie uns an - vielleicht finden wir gemeinsam eine Lösung."}
+                  {decision === "accepted" ? (
+                    <>
+                      Ihre Anfrage wurde an Blitzeblank übermittelt. Eine Bestätigung mit der
+                      Zusammenfassung haben wir an{" "}
+                      <span className="font-semibold text-brand-navy">{email}</span> gesendet. Wir
+                      melden uns in Kürze bei Ihnen, um einen Termin für die kostenlose Besichtigung
+                      zu vereinbaren.
+                    </>
+                  ) : (
+                    "Wir verstehen, dass die Preisspanne nicht Ihren Vorstellungen entspricht. Rufen Sie uns an - vielleicht finden wir gemeinsam eine Lösung."
+                  )}
                 </p>
                 {decision === "declined" && (
                   <Button
