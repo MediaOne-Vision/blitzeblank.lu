@@ -307,8 +307,15 @@ export function buildInternalEmail(s: QuoteSubmission, baseUrl: string, logoSrc 
       messageBlock,
   })
 
+  const isDeclined = s.decision === "declined"
+  // Bei abgelehntem Preis wird der Betreff mit "PREIS ABGELEHNT:" vorangestellt,
+  // damit es im Postfach sofort ersichtlich ist.
+  const subject = isDeclined
+    ? `PREIS ABGELEHNT: ${s.serviceLabel} – ${s.name}`
+    : `Neue Anfrage: ${s.serviceLabel} – ${s.name}`
+
   const text = [
-    `Neue Angebotsanfrage: ${s.serviceLabel}`,
+    isDeclined ? `PREIS ABGELEHNT: ${s.serviceLabel} – ${s.name}` : `Neue Angebotsanfrage: ${s.serviceLabel}`,
     `Status: ${decisionLabel}`,
     `Richtpreis: ${priceText(s)}`,
     "",
@@ -325,7 +332,7 @@ export function buildInternalEmail(s: QuoteSubmission, baseUrl: string, logoSrc 
     s.message.trim() ? `Nachricht:\n${s.message}` : "Nachricht: —",
   ].join("\n")
 
-  return { html, text, subject: `Neue Anfrage: ${s.serviceLabel} – ${s.name}` }
+  return { html, text, subject }
 }
 
 /** Logo als Inline-Anhang (wird im Header über cid:blitzeblank-logo referenziert) */
