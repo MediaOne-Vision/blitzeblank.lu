@@ -168,10 +168,30 @@ function emailShell(opts: { badge: string; headline: string; intro: string; body
   </div>`
 }
 
+/** Firmenkontakt für Call-to-Action in Kunden-Mails */
+const CONTACT = {
+  phone: "+352 661 830 493",
+  phoneHref: "tel:+352661830493",
+  email: "info@blitzeblank.lu",
+}
+
+/** Kontakt-CTA-Block (Telefon + E-Mail) im Blitzeblank-Look */
+function contactCta(): string {
+  return `
+    <div style="border:1px dashed ${COLORS.blue};border-radius:14px;padding:20px 22px;margin-bottom:22px;background-color:${COLORS.mint};">
+      ${sectionTitle("Sie erreichen uns direkt")}
+      <p style="margin:8px 0 0;font-size:15px;line-height:1.7;color:${COLORS.slate};">
+        Telefon: <a href="${CONTACT.phoneHref}" style="color:${COLORS.teal};font-weight:700;text-decoration:none;">${CONTACT.phone}</a><br/>
+        E-Mail: <a href="mailto:${CONTACT.email}" style="color:${COLORS.teal};font-weight:700;text-decoration:none;">${CONTACT.email}</a>
+      </p>
+    </div>`
+}
+
 /** Bestätigungs-E-Mail an den Anfragenden. logoSrc = "cid:blitzeblank-logo" im Versand, data-URI in der Vorschau. */
 export function buildCustomerEmail(s: QuoteSubmission, logoSrc = "cid:blitzeblank-logo") {
   const rows = buildSummaryRows(s)
   const firstName = s.name.split(" ")[0] || s.name
+  const isDeclined = s.decision === "declined"
 
   const summaryCard = `
     <div style="border:1px solid ${COLORS.border};border-radius:14px;padding:20px 22px;margin-bottom:20px;">
@@ -191,6 +211,52 @@ export function buildCustomerEmail(s: QuoteSubmission, logoSrc = "cid:blitzeblan
            Ihre ${s.photos.length} hochgeladenen Foto${s.photos.length === 1 ? "" : "s"} haben wir erhalten.
          </p>`
       : ""
+
+  if (isDeclined) {
+    // Kunde hat den Richtpreis abgelehnt: freundliche "Schade"-Nachricht mit offener Tür.
+    const html = emailShell({
+      logoSrc,
+      badge: "Schade, dass es diesmal nicht gepasst hat",
+      headline: `Bleiben wir im Gespräch, ${firstName}?`,
+      intro:
+        "Wir haben gesehen, dass Ihnen unser Richtpreis noch nicht zugesagt hat – das ist überhaupt kein Problem.",
+      bodyHtml:
+        `<p style="margin:0 0 20px;color:${COLORS.slate};font-size:15px;line-height:1.7;">
+           Unser Online-Richtpreis ist bewusst vorsichtig kalkuliert und berücksichtigt noch nicht die
+           Besonderheiten Ihres Objekts. Häufig lässt sich vor Ort ein <strong>faireres, passenderes Angebot</strong>
+           finden – gerade bei wiederkehrenden Aufträgen oder mehreren Leistungen zusammen.
+         </p>
+         <p style="margin:0 0 22px;color:${COLORS.slate};font-size:15px;line-height:1.7;">
+           Rufen Sie uns einfach kurz an oder schreiben Sie uns – wir schauen gemeinsam, wie wir Ihnen
+           trotzdem weiterhelfen können. Ganz unverbindlich.
+         </p>` +
+        contactCta() +
+        summaryCard +
+        photoNote +
+        `<p style="margin:0;color:${COLORS.slate};font-size:15px;line-height:1.6;">
+          Wir würden uns freuen, Sie doch noch als Kundin oder Kunde begrüßen zu dürfen!
+        </p>`,
+    })
+
+    const text = [
+      `Bleiben wir im Gespräch, ${firstName}?`,
+      "",
+      "Schade, dass Ihnen unser Online-Richtpreis noch nicht zugesagt hat - das ist kein Problem.",
+      "",
+      "Unser Richtpreis ist bewusst vorsichtig kalkuliert. Vor Ort lässt sich oft ein faireres,",
+      "passenderes Angebot finden. Rufen Sie uns an oder schreiben Sie uns - ganz unverbindlich.",
+      "",
+      `Telefon: ${CONTACT.phone}`,
+      `E-Mail: ${CONTACT.email}`,
+      "",
+      "Zusammenfassung Ihrer Anfrage:",
+      rowsToText(rows),
+      "",
+      "Blitzeblank · noreply@mail.blitzeblank.lu",
+    ].join("\n")
+
+    return { html, text, subject: `Bleiben wir im Gespräch? – Ihre Anfrage bei Blitzeblank` }
+  }
 
   const html = emailShell({
     logoSrc,
