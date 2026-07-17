@@ -12,7 +12,7 @@ import {
 
 /** Absender- und Empfängeradressen für den E-Mail-Versand */
 const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-const INTERNAL_RECIPIENT = "roman@mediaone-vision.de"
+  const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
 
 /** Baut die aktuelle Origin-URL, um absolute Links (z. B. zu Fotos) zu erzeugen */
 async function getBaseUrl(): Promise<string> {
