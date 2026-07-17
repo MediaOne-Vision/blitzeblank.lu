@@ -7,11 +7,8 @@ import {
   buildInternalEmail,
   logoAttachment,
   photoUrl,
-  type QuotePhoto,
   type QuoteSubmission,
 } from "@/lib/quote-email"
-
-export type { QuotePhoto, QuoteSubmission }
 
 /** Absender- und Empfängeradressen für den E-Mail-Versand */
 const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"

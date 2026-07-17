@@ -23,7 +23,8 @@ import {
 } from "@/lib/pricing-config"
 import { computeTravel, type AddressSuggestion, type TravelInfo } from "@/lib/travel"
 import { searchAddresses } from "@/app/actions/travel"
-import { submitQuote, type QuoteSubmission } from "@/app/actions/submit-quote"
+import { submitQuote } from "@/app/actions/submit-quote"
+import type { QuoteSubmission } from "@/lib/quote-email"
 import {
   ArrowLeft,
   ArrowRight,
