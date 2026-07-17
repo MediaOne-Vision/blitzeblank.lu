@@ -65,8 +65,14 @@ const DEFAULT_AREA_BY_SERVICE: Record<string, number> = {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 interface UploadedPhoto {
+  /** Ursprünglicher Dateiname */
   name: string
+  /** Lokale Vorschau-URL (Object-URL im Browser) */
   url: string
+  /** Pfad im Blob-Store, sobald der Upload abgeschlossen ist */
+  pathname?: string
+  /** Status des Server-Uploads */
+  status: "uploading" | "done" | "error"
 }
 
 export function QuoteWizard({
@@ -250,16 +256,52 @@ export function QuoteWizard({
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return
-    const newPhotos = Array.from(files).map((file) => ({
-      name: file.name,
-      url: URL.createObjectURL(file),
-    }))
-    setPhotos((prev) => [...prev, ...newPhotos])
+
+    Array.from(files).forEach((file) => {
+      const previewUrl = URL.createObjectURL(file)
+      // Eindeutiger Schlüssel, um genau dieses Foto nach dem Upload zu aktualisieren.
+      const key = `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`
+      const photo: UploadedPhoto & { _key: string } = {
+        name: file.name,
+        url: previewUrl,
+        status: "uploading",
+        _key: key,
+      }
+      setPhotos((prev) => [...prev, photo])
+
+      const formData = new FormData()
+      formData.append("file", file)
+
+      fetch("/api/quote-photo/upload", { method: "POST", body: formData })
+        .then(async (res) => {
+          if (!res.ok) throw new Error("upload failed")
+          return res.json() as Promise<{ pathname: string; name: string }>
+        })
+        .then((data) => {
+          setPhotos((prev) =>
+            prev.map((p) =>
+              (p as UploadedPhoto & { _key?: string })._key === key
+                ? { ...p, pathname: data.pathname, status: "done" as const }
+                : p,
+            ),
+          )
+        })
+        .catch(() => {
+          setPhotos((prev) =>
+            prev.map((p) =>
+              (p as UploadedPhoto & { _key?: string })._key === key ? { ...p, status: "error" as const } : p,
+            ),
+          )
+        })
+    })
   }
 
   const removePhoto = (index: number) => {
     setPhotos((prev) => prev.filter((_, i) => i !== index))
   }
+
+  // True, solange mindestens ein Foto noch hochgeladen wird – blockiert das Absenden.
+  const photosUploading = photos.some((p) => p.status === "uploading")
 
   const canProceed = () => {
     switch (step) {
@@ -310,6 +352,9 @@ export function QuoteWizard({
       customerType: isWindow ? customerType : undefined,
       distanceKm: travel?.distanceKm,
       photoCount: photos.length,
+      photos: photos
+        .filter((p) => p.status === "done" && p.pathname)
+        .map((p) => ({ name: p.name, pathname: p.pathname as string })),
       name,
       email,
       phone,
@@ -751,6 +796,20 @@ export function QuoteWizard({
                   <div key={i} className="group relative aspect-square overflow-hidden rounded-xl ring-1 ring-brand-navy/10">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={photo.url || "/placeholder.svg"} alt={photo.name} className="h-full w-full object-cover" />
+
+                    {/* Upload läuft */}
+                    {photo.status === "uploading" && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-brand-navy/50">
+                        <Loader2 className="h-5 w-5 animate-spin text-white" />
+                      </div>
+                    )}
+                    {/* Upload fehlgeschlagen */}
+                    {photo.status === "error" && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-red-600/70 px-1 text-center text-[10px] font-semibold text-white">
+                        Upload fehlgeschlagen
+                      </div>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => removePhoto(i)}
@@ -762,6 +821,13 @@ export function QuoteWizard({
                   </div>
                 ))}
               </div>
+            )}
+
+            {photosUploading && (
+              <p className="flex items-center gap-2 text-sm text-neutral-500">
+                <Loader2 className="h-4 w-4 animate-spin text-brand-blue" />
+                Fotos werden hochgeladen…
+              </p>
             )}
           </div>
         )}
@@ -997,9 +1063,16 @@ export function QuoteWizard({
                   vor Ort festgelegt. Ihre Angaben werden in beiden Fällen an Blitzeblank übermittelt.
                 </p>
 
+                {photosUploading && (
+                  <p className="flex items-center justify-center gap-2 text-center text-sm text-neutral-500">
+                    <Loader2 className="h-4 w-4 animate-spin text-brand-blue" />
+                    Ihre Fotos werden noch hochgeladen…
+                  </p>
+                )}
+
                 <div className="flex flex-col gap-3">
                   <Button
-                    disabled={submitting}
+                    disabled={submitting || photosUploading}
                     onClick={() => handleDecision("accepted")}
                     className="group h-16 w-full rounded-full bg-brand-blue text-lg font-bold text-white shadow-lg shadow-brand-blue/30 transition-transform hover:bg-brand-teal hover:scale-[1.02] sm:text-xl"
                   >
@@ -1012,7 +1085,7 @@ export function QuoteWizard({
                   </Button>
                   <Button
                     variant="ghost"
-                    disabled={submitting}
+                    disabled={submitting || photosUploading}
                     onClick={() => handleDecision("declined")}
                     className="rounded-full text-neutral-500 hover:bg-brand-mint hover:text-brand-navy"
                   >
