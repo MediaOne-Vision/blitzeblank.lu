@@ -134,14 +134,14 @@ function sectionTitle(text: string): string {
 }
 
 /** Grundgerüst für alle E-Mails im Blitzeblank-Look (weiße Logo-Leiste + hellblaues Banner) */
-function emailShell(opts: { badge: string; headline: string; intro: string; bodyHtml: string }): string {
-  const { badge, headline, intro, bodyHtml } = opts
+function emailShell(opts: { badge: string; headline: string; intro: string; bodyHtml: string; logoSrc: string }): string {
+  const { badge, headline, intro, bodyHtml, logoSrc } = opts
   return `
   <div style="margin:0;padding:24px 12px;background-color:${COLORS.bg};font-family:'Helvetica Neue',Arial,Helvetica,sans-serif;">
     <div style="max-width:580px;margin:0 auto;background-color:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(11,42,69,0.10);">
       <!-- Logo-Leiste -->
       <div style="padding:22px 32px;background-color:#ffffff;border-bottom:1px solid ${COLORS.border};">
-        <img src="cid:blitzeblank-logo" alt="Blitzeblank" height="26" style="height:26px;display:block;border:0;outline:none;text-decoration:none;" />
+        <img src="${logoSrc}" alt="Blitzeblank" height="30" style="height:30px;display:block;border:0;outline:none;text-decoration:none;" />
       </div>
       <!-- Hellblaues CI-Banner -->
       <div style="padding:30px 32px;background:linear-gradient(135deg,${COLORS.blue} 0%,${COLORS.teal} 100%);background-color:${COLORS.blue};">
@@ -168,8 +168,8 @@ function emailShell(opts: { badge: string; headline: string; intro: string; body
   </div>`
 }
 
-/** Bestätigungs-E-Mail an den Anfragenden */
-export function buildCustomerEmail(s: QuoteSubmission) {
+/** Bestätigungs-E-Mail an den Anfragenden. logoSrc = "cid:blitzeblank-logo" im Versand, data-URI in der Vorschau. */
+export function buildCustomerEmail(s: QuoteSubmission, logoSrc = "cid:blitzeblank-logo") {
   const rows = buildSummaryRows(s)
   const firstName = s.name.split(" ")[0] || s.name
 
@@ -193,6 +193,7 @@ export function buildCustomerEmail(s: QuoteSubmission) {
       : ""
 
   const html = emailShell({
+    logoSrc,
     badge: "Ihre Anfrage bei Blitzeblank",
     headline: `Vielen Dank, ${firstName}!`,
     intro: "Wir haben Ihre Anfrage erhalten und melden uns in Kürze bei Ihnen.",
@@ -222,8 +223,8 @@ export function buildCustomerEmail(s: QuoteSubmission) {
   return { html, text, subject: `Ihre Anfrage bei Blitzeblank – ${s.serviceLabel}` }
 }
 
-/** Interne Benachrichtigung mit allen Infos */
-export function buildInternalEmail(s: QuoteSubmission, baseUrl: string) {
+/** Interne Benachrichtigung mit allen Infos. */
+export function buildInternalEmail(s: QuoteSubmission, baseUrl: string, logoSrc = "cid:blitzeblank-logo") {
   const rows = buildSummaryRows(s)
   const decisionLabel = s.decision === "accepted" ? "Angebot angenommen" : "Angebot abgelehnt / Preis auf Anfrage"
 
@@ -282,14 +283,15 @@ export function buildInternalEmail(s: QuoteSubmission, baseUrl: string) {
        </div>`
     : ""
 
-  const statusBadge = `<span style="display:inline-block;background-color:rgba(255,255,255,0.2);color:#ffffff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;">${
+  const priceBadge = `<span style="display:inline-block;background-color:rgba(255,255,255,0.2);color:#ffffff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;">${
     s.decision === "accepted" ? "Angebot angenommen" : "Preis auf Anfrage"
   }</span>`
 
   const html = emailShell({
+    logoSrc,
     badge: "Neue Angebotsanfrage",
     headline: s.serviceLabel,
-    intro: `${statusBadge} &nbsp; <span style="display:inline-block;color:#ffffff;font-weight:700;">Richtpreis: ${priceText(
+    intro: `${priceBadge} &nbsp; <span style="display:inline-block;color:#ffffff;font-weight:700;">Richtpreis: ${priceText(
       s,
     )}</span>`,
     bodyHtml:
@@ -317,9 +319,7 @@ export function buildInternalEmail(s: QuoteSubmission, baseUrl: string) {
     rowsToText(rows),
     "",
     photos.length > 0
-      ? `Fotos (${photos.length}):\n${photos
-          .map((p, i) => `Foto ${i + 1} (${p.name}): ${photoUrl(baseUrl, p.pathname)}`)
-          .join("\n")}`
+      ? `Fotos (${photos.length}):\n${photos.map((p, i) => `Foto ${i + 1} (${p.name}): ${photoUrl(baseUrl, p.pathname)}`).join("\n")}`
       : "Fotos: keine",
     "",
     s.message.trim() ? `Nachricht:\n${s.message}` : "Nachricht: —",
