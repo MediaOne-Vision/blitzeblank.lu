@@ -5,7 +5,7 @@ import { FileText, MapPin, Phone, Mail, Shield, User, Scale } from "lucide-react
 
 export const metadata: Metadata = {
   title: "Impressum | Blitzeblank - Professionelle Reinigung in Luxemburg",
-  description: "Impressum und rechtliche Angaben von Blitzeblank Gebäudereinigung, Mustapha El-Ali, Waldbillig.",
+  description: "Impressum und rechtliche Angaben von BLITZEBLANK S.à.r.l. -S, Mustapha El-Ali, Waldbillig.",
 }
 
 const blocks = [
@@ -14,7 +14,7 @@ const blocks = [
     title: "Anbieter",
     lines: [
       "Mustapha El-Ali",
-      "Blitzeblank Gebäudereinigung",
+      "BLITZEBLANK S.à.r.l. -S",
     ],
   },
   {
