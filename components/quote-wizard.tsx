@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -130,6 +131,7 @@ export function QuoteWizard({
   const [decision, setDecision] = useState<"accepted" | "declined" | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const router = useRouter()
   const [privacyConsent, setPrivacyConsent] = useState(false)
 
   const selectedService = quoteServices.find((s) => s.value === serviceValue)
@@ -367,12 +369,16 @@ export function QuoteWizard({
 
     try {
       await submitQuote(submission)
-      setSubmitted(true)
     } catch {
-      setSubmitted(true)
-    } finally {
-      setSubmitting(false)
+      // Auch bei einem Übertragungsfehler leiten wir weiter – die Anfrage ist in
+      // aller Regel dennoch bei uns eingegangen, und der Nutzer erhält Feedback.
     }
+
+    // Weiterleitung auf die passende Danke-Seite (Conversion-Tracking via GTM).
+    const params = new URLSearchParams()
+    if (selectedService?.label) params.set("service", selectedService.label)
+    const query = params.toString() ? `?${params.toString()}` : ""
+    router.push(choice === "accepted" ? `/danke${query}` : `/danke-preisabsage${query}`)
   }
 
   return (
