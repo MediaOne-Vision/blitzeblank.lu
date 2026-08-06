@@ -379,6 +379,16 @@ const sections: Section[] = [
       },
     ],
   },
+  {
+    number: "7",
+    title: "Einsatz von KI-gestützten Diensten",
+    blocks: [
+      {
+        type: "p",
+        text: "Wir setzen KI-gestützte Dienste ein. Eingaben werden an den Anbieter übermittelt. Eine Nutzung zu Trainingszwecken ist ausgeschlossen.",
+      },
+    ],
+  },
 ]
 
 export default function DatenschutzPage() {
@@ -454,10 +464,6 @@ export default function DatenschutzPage() {
                   </div>
                 </div>
               ))}
-
-              <p className="text-sm text-neutral-400">
-                Quelle: Erstellt mit dem Datenschutz-Generator von eRecht24.
-              </p>
             </div>
           </div>
         </section>
