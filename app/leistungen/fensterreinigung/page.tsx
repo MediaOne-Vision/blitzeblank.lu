@@ -40,7 +40,7 @@ const benefits = [
   "Erfahrung mit Arbeiten in großer Höhe",
   "Verwendung von umweltfreundlichen Reinigungsmitteln",
   "Reinigung auch bei schwer zugänglichen Fenstern",
-  "Rahmen und Beschläge werden mitgereinigt",
+  "Rahmen und Beschläge werden auf Wunsch mitgereinigt (optional)",
 ]
 
 const process = [

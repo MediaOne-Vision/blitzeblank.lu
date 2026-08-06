@@ -378,7 +378,7 @@ export function QuoteWizard({
     const params = new URLSearchParams()
     if (selectedService?.label) params.set("service", selectedService.label)
     const query = params.toString() ? `?${params.toString()}` : ""
-    router.push(choice === "accepted" ? `/danke${query}` : `/danke-preisabsage${query}`)
+    router.push(choice === "accepted" ? `/danke${query}` : `/preisabsage-danke${query}`)
   }
 
   return (
