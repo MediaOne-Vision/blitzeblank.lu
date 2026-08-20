@@ -10,18 +10,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default async function DankePreisabsagePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ service?: string }>
-}) {
-  const { service } = await searchParams
-
+export default function DankePreisabsagePage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navigation />
       <main className="flex flex-1 items-center justify-center px-4 pt-32 pb-20 sm:px-6">
-        <ThankYou variant="declined" service={service} />
+        <ThankYou variant="declined" />
       </main>
       <Footer />
     </div>

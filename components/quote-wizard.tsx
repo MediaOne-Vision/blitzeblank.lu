@@ -26,6 +26,7 @@ import { computeTravel, type AddressSuggestion, type TravelInfo } from "@/lib/tr
 import { searchAddresses } from "@/app/actions/travel"
 import { submitQuote } from "@/app/actions/submit-quote"
 import type { QuoteSubmission } from "@/lib/quote-email"
+import { generateLeadId, storeLeadHandoff, type LeadStatus, type QuoteType } from "@/lib/tracking"
 import {
   ArrowLeft,
   ArrowRight,
@@ -43,6 +44,14 @@ import {
 } from "lucide-react"
 
 const STEPS = ["Leistung", "Umfang", "Fotos", "Kontakt", "Angebot"]
+
+// Reinigungen pro Jahr je Turnus – für den Jahreswert (quote_value) im Conversion-Tracking.
+const VISITS_PER_YEAR: Record<string, number> = {
+  einmalig: 1,
+  monatlich: 12,
+  quartalsweise: 4,
+  halbjaehrlich: 2,
+}
 
 /**
  * Flächenbasierte Leistungen: Grenzen des Schiebereglers sowie der Bereich, für
@@ -341,6 +350,9 @@ export function QuoteWizard({
     setDecision(choice)
     setSubmitting(true)
 
+    // Eindeutige Anfrage-ID – landet in der internen Mail und im Conversion-Tracking.
+    const leadId = generateLeadId()
+
     const submission: QuoteSubmission = {
       service: serviceValue,
       serviceLabel: selectedService?.label ?? "",
@@ -365,7 +377,26 @@ export function QuoteWizard({
       estimatedMin: priceOnRequest ? 0 : price.min,
       estimatedMax: priceOnRequest ? 0 : price.max,
       decision: choice,
+      leadId,
     }
+
+    // Tracking-Nutzlast für die Danke-Seite ablegen (Handoff via sessionStorage).
+    const quoteType: QuoteType = effectiveFrequencyValue === "einmalig" ? "onetime" : "recurring"
+    const visitsPerYear = VISITS_PER_YEAR[effectiveFrequencyValue] ?? 1
+    const perVisit = priceOnRequest ? 0 : Math.round((price.min + price.max) / 2)
+    // Bei Turnusverträgen den Jahreswert übermitteln, sonst den Einzelpreis.
+    const quoteValue = perVisit > 0 ? perVisit * visitsPerYear : undefined
+    const leadStatus: LeadStatus = choice === "accepted" ? "accepted" : "price_rejected"
+
+    storeLeadHandoff({
+      lead_status: leadStatus,
+      service: serviceValue,
+      quote_value: quoteValue,
+      quote_type: quoteType,
+      lead_id: leadId,
+      email,
+      phone,
+    })
 
     try {
       await submitQuote(submission)
@@ -375,10 +406,7 @@ export function QuoteWizard({
     }
 
     // Weiterleitung auf die passende Danke-Seite (Conversion-Tracking via GTM).
-    const params = new URLSearchParams()
-    if (selectedService?.label) params.set("service", selectedService.label)
-    const query = params.toString() ? `?${params.toString()}` : ""
-    router.push(choice === "accepted" ? `/danke${query}` : `/preisabsage-danke${query}`)
+    router.push(choice === "accepted" ? "/danke" : "/preisabsage-danke")
   }
 
   return (
