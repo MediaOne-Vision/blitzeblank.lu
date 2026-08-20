@@ -33,6 +33,8 @@ export interface QuoteSubmission {
   estimatedMin: number
   estimatedMax: number
   decision: "accepted" | "declined"
+  /** Eindeutige Anfrage-ID (z. B. BB-2026-00417) zur Korrelation mit dem Conversion-Tracking */
+  leadId?: string
 }
 
 /** Blitzeblank Markenfarben (CI) */
@@ -298,6 +300,7 @@ export function buildInternalEmail(s: QuoteSubmission, baseUrl: string, logoSrc 
     { label: "Name", value: s.name },
     { label: "E-Mail", value: s.email },
     { label: "Telefon", value: s.phone || "—" },
+    ...(s.leadId ? [{ label: "Anfrage-ID", value: s.leadId }] : []),
   ]
 
   const photos = s.photos ?? []

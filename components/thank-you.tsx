@@ -2,7 +2,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, Phone, Home, Calculator, ArrowRight } from "lucide-react"
 import { TrackLead } from "@/components/track-lead"
-import { LEAD_VALUES, type LeadOutcome } from "@/lib/tracking"
 
 const serviceLinks = [
   { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
@@ -12,17 +11,16 @@ const serviceLinks = [
 ]
 
 /**
- * Inhalt der Danke-Seiten. `variant` steuert Text/Icon, `service` fließt ins
- * Tracking-Event für die Auswertung nach Leistung.
+ * Inhalt der Danke-Seiten. `variant` steuert Text/Icon. Die Tracking-Daten
+ * kommen aus dem sessionStorage-Handoff des Formulars (siehe TrackLead).
  */
-export function ThankYou({ variant, service }: { variant: LeadOutcome; service?: string }) {
-  const value = LEAD_VALUES[variant]
+export function ThankYou({ variant }: { variant: "accepted" | "declined" }) {
   const accepted = variant === "accepted"
 
   return (
     <div className="mx-auto w-full max-w-2xl text-center">
-      {/* Feuert das generate_lead-Event (nur wirksam nach Cookie-Zustimmung) */}
-      <TrackLead outcome={variant} value={value} service={service} />
+      {/* Feuert das lead_submitted-Event (nur nach Formular-Submit & Cookie-Zustimmung) */}
+      <TrackLead expectedStatus={accepted ? "accepted" : "price_rejected"} />
 
       <div
         className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${
