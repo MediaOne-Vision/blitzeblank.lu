@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
-import { Menu, ChevronDown, Phone, Calculator } from "lucide-react"
+import { Menu, ChevronDown, Phone, Calculator, Mountain } from "lucide-react"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 
@@ -16,6 +16,7 @@ const NAV_LINKS = {
     { href: "/", label: "Startseite" },
     { href: "/leistungen", label: "Leistungen" },
     { href: "/angebot", label: "Angebot" },
+    { href: "/stein-angebot", label: "Stein-Angebot" },
     { href: "/ueber-uns", label: "Über uns" },
     { href: "/kontakt", label: "Kontakt" },
   ],
@@ -221,6 +222,7 @@ export function Navigation() {
                       onClick={() => setOpen(false)}
                     >
                       {link.href === angebotHref && <Calculator className="h-4 w-4 shrink-0" />}
+                      {link.href === localizeHref("/stein-angebot", locale) && <Mountain className="h-4 w-4 shrink-0" />}
                       {link.label}
                     </Link>
                   ),

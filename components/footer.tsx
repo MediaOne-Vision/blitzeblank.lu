@@ -24,6 +24,7 @@ const NAVIGATION = {
     { href: "/", label: "Startseite" },
     { href: "/leistungen", label: "Leistungen" },
     { href: "/angebot", label: "Kostenloses Angebot" },
+    { href: "/stein-angebot", label: "Steinpflege-Angebot" },
     { href: "/ueber-uns", label: "Über uns" },
     { href: "/kontakt", label: "Kontakt" },
   ],

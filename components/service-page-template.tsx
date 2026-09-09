@@ -4,6 +4,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ServiceSwitcher } from "@/components/service-switcher"
 import { QuoteBanner } from "@/components/quote-banner"
+import { StoneOfferCta } from "@/components/stone-offer-cta"
 import { QuoteWizard } from "@/components/quote-wizard"
 import { BeforeAfterSlider } from "@/components/before-after-slider"
 import { GalleryCarousel } from "@/components/gallery-carousel"
@@ -283,6 +284,9 @@ export function ServicePageTemplate({
             </div>
           </section>
         )}
+
+        {/* Cross-Sell: eigenständiger Steinpflege-Angebotsersteller (nur auf der Steinreinigung-Seite, nur Deutsch) */}
+        {slug === "steinreinigung" && locale === "de" && <StoneOfferCta />}
 
         {/* Kostenloses Angebot Banner */}
         {showQuote && <QuoteBanner slug={slug} serviceTitle={title} ctaHref="#angebot" locale={locale} />}
