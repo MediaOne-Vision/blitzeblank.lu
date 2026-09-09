@@ -72,5 +72,11 @@ export function loadGtm(consent: ConsentState) {
   const script = document.createElement("script")
   script.async = true
   script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`
+  // Verhindert, dass ein blockiertes/fehlgeschlagenes Laden (z. B. durch einen
+  // Adblocker oder eine Netzwerksperre in der Vorschau-Umgebung) als
+  // unbehandelter globaler "error"-Event auftaucht.
+  script.onerror = () => {
+    window.__gtmLoaded = false
+  }
   document.head.appendChild(script)
 }
