@@ -1,37 +1,69 @@
 import Image from "next/image"
 import { Reveal } from "@/components/reveal"
+import type { Locale } from "@/lib/i18n"
 
-const photos = [
-  {
-    src: "/images/einsatz/blitzeblank-mitarbeiter-pergola-hochdruckreinigung.avif",
-    alt: "Blitzeblank Mitarbeiter reinigt ein Pergola-Dach mit der Hochdruck-Teleskoplanze",
-    caption: "Hochdruckreinigung einer Terrassenüberdachung",
-  },
-  {
-    src: "/images/einsatz/blitzeblank-terrassenreinigung-flaechenreiniger-einsatz.avif",
-    alt: "Blitzeblank Mitarbeiter reinigt Terrassenplatten mit einem Flächenreiniger",
-    caption: "Flächenreinigung einer Terrasse",
-  },
-  {
-    src: "/images/einsatz/blitzeblank-team-firmenshirt-reinigungseinsatz.avif",
-    alt: "Blitzeblank Teammitglied im Firmenshirt mit Waschbär-Logo beim Reinigungseinsatz",
-    caption: "Unser Team im täglichen Einsatz",
-  },
-]
+const PHOTOS = {
+  de: [
+    {
+      src: "/images/einsatz/blitzeblank-mitarbeiter-pergola-hochdruckreinigung.avif",
+      alt: "Blitzeblank Mitarbeiter reinigt ein Pergola-Dach mit der Hochdruck-Teleskoplanze",
+      caption: "Hochdruckreinigung einer Terrassenüberdachung",
+    },
+    {
+      src: "/images/einsatz/blitzeblank-terrassenreinigung-flaechenreiniger-einsatz.avif",
+      alt: "Blitzeblank Mitarbeiter reinigt Terrassenplatten mit einem Flächenreiniger",
+      caption: "Flächenreinigung einer Terrasse",
+    },
+    {
+      src: "/images/einsatz/blitzeblank-team-firmenshirt-reinigungseinsatz.avif",
+      alt: "Blitzeblank Teammitglied im Firmenshirt mit Waschbär-Logo beim Reinigungseinsatz",
+      caption: "Unser Team im täglichen Einsatz",
+    },
+  ],
+  en: [
+    {
+      src: "/images/einsatz/blitzeblank-mitarbeiter-pergola-hochdruckreinigung.avif",
+      alt: "Blitzeblank employee cleaning a pergola roof with a high-pressure telescopic lance",
+      caption: "Pressure washing of a patio cover",
+    },
+    {
+      src: "/images/einsatz/blitzeblank-terrassenreinigung-flaechenreiniger-einsatz.avif",
+      alt: "Blitzeblank employee cleaning terrace slabs with a surface cleaner",
+      caption: "Surface cleaning of a terrace",
+    },
+    {
+      src: "/images/einsatz/blitzeblank-team-firmenshirt-reinigungseinsatz.avif",
+      alt: "Blitzeblank team member in a company shirt with raccoon logo during a cleaning job",
+      caption: "Our team at work every day",
+    },
+  ],
+}
 
-export function InActionSection() {
+const TEXT = {
+  de: {
+    eyebrow: "Im Einsatz",
+    heading: "Echte Arbeit, echtes Team",
+    body: "Keine gestellten Fotos: So sieht unser Team bei der täglichen Arbeit aus - mit professioneller Ausrüstung und dem Blick fürs Detail.",
+  },
+  en: {
+    eyebrow: "On the Job",
+    heading: "Real Work, Real Team",
+    body: "No staged photos: this is what our team looks like at work every day - with professional equipment and an eye for detail.",
+  },
+}
+
+export function InActionSection({ locale = "de" }: { locale?: Locale }) {
+  const photos = PHOTOS[locale]
+  const t = TEXT[locale]
   return (
     <section className="bg-white py-20 lg:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto mb-14 max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Im Einsatz</p>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">{t.eyebrow}</p>
           <h2 className="text-balance font-display text-3xl lg:text-5xl font-extrabold tracking-tight text-brand-navy">
-            Echte Arbeit, echtes Team
+            {t.heading}
           </h2>
-          <p className="mt-4 text-neutral-600 text-pretty leading-relaxed">
-            Keine gestellten Fotos: So sieht unser Team bei der täglichen Arbeit aus - mit
-            professioneller Ausrüstung und dem Blick fürs Detail.
-          </p>
+          <p className="mt-4 text-neutral-600 text-pretty leading-relaxed">{t.body}</p>
         </Reveal>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

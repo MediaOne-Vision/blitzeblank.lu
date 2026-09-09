@@ -8,28 +8,58 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { Menu, ChevronDown, Phone, Calculator } from "lucide-react"
+import { LanguageSwitcher } from "@/components/language-switcher"
+import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 
-const navLinks = [
-  { href: "/", label: "Startseite" },
-  { href: "/leistungen", label: "Leistungen" },
-  { href: "/angebot", label: "Angebot" },
-  { href: "/ueber-uns", label: "Über uns" },
-  { href: "/kontakt", label: "Kontakt" },
-]
+const NAV_LINKS = {
+  de: [
+    { href: "/", label: "Startseite" },
+    { href: "/leistungen", label: "Leistungen" },
+    { href: "/angebot", label: "Angebot" },
+    { href: "/ueber-uns", label: "Über uns" },
+    { href: "/kontakt", label: "Kontakt" },
+  ],
+  en: [
+    { href: "/", label: "Home" },
+    { href: "/leistungen", label: "Services" },
+    { href: "/angebot", label: "Get a Quote" },
+    { href: "/ueber-uns", label: "About Us" },
+    { href: "/kontakt", label: "Contact" },
+  ],
+}
 
-const serviceLinks = [
-  { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
-  { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
-  { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
-  { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
-]
+const SERVICE_LINKS = {
+  de: [
+    { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
+    { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
+    { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
+    { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
+  ],
+  en: [
+    { href: "/leistungen/industriereinigung", label: "Industrial Cleaning" },
+    { href: "/leistungen/fensterreinigung", label: "Window Cleaning" },
+    { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
+    { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
+  ],
+}
+
+const TEXT = {
+  de: { quote: "Preis sofort berechnen", contact: "Kontakt", contactFull: "Kontakt aufnehmen", menu: "Menü" },
+  en: { quote: "Calculate Price Instantly", contact: "Contact", contactFull: "Get in Touch", menu: "Menu" },
+}
 
 export function Navigation() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  const navLinks = NAV_LINKS[locale].map((l) => ({ ...l, href: localizeHref(l.href, locale) }))
+  const serviceLinks = SERVICE_LINKS[locale].map((l) => ({ ...l, href: localizeHref(l.href, locale) }))
+  const t = TEXT[locale]
+  const angebotHref = localizeHref("/angebot", locale)
+  const kontaktHref = localizeHref("/kontakt", locale)
 
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/"
+    if (href === "/" || href === "/en") return pathname === href
     if (href.startsWith("/#")) return false
     return pathname === href || pathname.startsWith(href + "/")
   }
@@ -38,7 +68,7 @@ export function Navigation() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-blue/10 shadow-sm">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/" className="shrink-0 cursor-pointer">
+        <Link href={localizeHref("/", locale)} className="shrink-0 cursor-pointer">
           <Image
             src="/images/logo.png"
             alt="Blitzeblank"
@@ -52,7 +82,7 @@ export function Navigation() {
         {/* Desktop Navigation - Centered */}
         <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map((link) =>
-            link.label === "Leistungen" ? (
+            link.href === localizeHref("/leistungen", locale) ? (
               <div key={link.href} className="relative group">
                 <Link
                   href={link.href}
@@ -105,9 +135,9 @@ export function Navigation() {
             variant="outline"
             className="group border-brand-blue/30 text-brand-blue hover:bg-brand-mint hover:text-brand-blue rounded-full px-4"
           >
-            <Link href="/angebot" className="cursor-pointer">
+            <Link href={angebotHref} className="cursor-pointer">
               <Calculator className="h-4 w-4" />
-              Preis sofort berechnen
+              {t.quote}
             </Link>
           </Button>
           <Button
@@ -115,11 +145,12 @@ export function Navigation() {
             size="sm"
             className="group bg-brand-blue hover:bg-brand-teal text-white rounded-full px-5 shadow-md shadow-brand-blue/30 transition-transform hover:scale-105"
           >
-            <Link href="/kontakt" className="cursor-pointer">
+            <Link href={kontaktHref} className="cursor-pointer">
               <Phone className="h-4 w-4" />
-              Kontakt
+              {t.contact}
             </Link>
           </Button>
+          <LanguageSwitcher />
         </div>
 
         {/* Mobile */}
@@ -134,10 +165,10 @@ export function Navigation() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] max-w-[85vw] bg-white p-0">
-            <SheetTitle className="sr-only">Menü</SheetTitle>
+            <SheetTitle className="sr-only">{t.menu}</SheetTitle>
             <div className="flex h-full flex-col">
               {/* Header inside sheet */}
-              <div className="flex items-center border-b border-brand-blue/10 px-6 py-5">
+              <div className="flex items-center justify-between border-b border-brand-blue/10 px-6 py-5">
                 <Image
                   src="/images/logo.png"
                   alt="Blitzeblank"
@@ -145,11 +176,12 @@ export function Navigation() {
                   height={45}
                   className="h-9 w-auto"
                 />
+                <LanguageSwitcher />
               </div>
 
               <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-5">
                 {navLinks.map((link) =>
-                  link.label === "Leistungen" ? (
+                  link.href === localizeHref("/leistungen", locale) ? (
                     <div key={link.href} className="flex flex-col">
                       <Link
                         href={link.href}
@@ -188,7 +220,7 @@ export function Navigation() {
                       )}
                       onClick={() => setOpen(false)}
                     >
-                      {link.label === "Angebot" && <Calculator className="h-4 w-4 shrink-0" />}
+                      {link.href === angebotHref && <Calculator className="h-4 w-4 shrink-0" />}
                       {link.label}
                     </Link>
                   ),
@@ -200,9 +232,9 @@ export function Navigation() {
                   asChild
                   className="w-full bg-brand-blue hover:bg-brand-teal text-white rounded-full shadow-md shadow-brand-blue/30"
                 >
-                  <Link href="/kontakt" onClick={() => setOpen(false)}>
+                  <Link href={kontaktHref} onClick={() => setOpen(false)}>
                     <Phone className="h-4 w-4" />
-                    Kontakt aufnehmen
+                    {t.contactFull}
                   </Link>
                 </Button>
               </div>

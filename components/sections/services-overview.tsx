@@ -3,59 +3,122 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Reveal } from "@/components/reveal"
 import { ArrowUpRight, Factory, GlassWater, Gem, Building2, ArrowRight } from "lucide-react"
+import { localizeHref, type Locale } from "@/lib/i18n"
 
-const featured = {
-  title: "Industriereinigung",
-  description:
-    "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen mit modernster Technik.",
-  href: "/leistungen/industriereinigung",
-  icon: Factory,
+const FEATURED = {
+  de: {
+    title: "Industriereinigung",
+    description:
+      "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen mit modernster Technik.",
+    href: "/leistungen/industriereinigung",
+    icon: Factory,
+  },
+  en: {
+    title: "Industrial Cleaning",
+    description:
+      "Professional cleaning of production halls, warehouses and industrial facilities with state-of-the-art technology.",
+    href: "/leistungen/industriereinigung",
+    icon: Factory,
+  },
 }
 
-const services = [
-  {
-    title: "Fensterreinigung",
-    description: "Streifenfreie Glasreinigung für Bürogebäude und Geschäfte - auch in großen Höhen.",
-    href: "/leistungen/fensterreinigung",
-    icon: GlassWater,
-    image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
-    imageAlt: "Gereinigter Glas-Wintergarten mit klaren Glasflächen nach der Fensterreinigung",
-  },
-  {
-    title: "Fassadenreinigung",
-    description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
-    href: "/leistungen/fassadenreinigung",
-    icon: Building2,
-    image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
-    imageAlt: "Saubere, helle Mehrfamilienhaus-Fassade nach der Fassadenreinigung",
-  },
-  {
-    title: "Steinreinigung",
-    description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Außenanlagen.",
-    href: "/leistungen/steinreinigung",
-    icon: Gem,
-    image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
-    imageAlt: "Gereinigte Naturstein-Terrasse mit Polygonalplatten als Ergebnis der Steinreinigung",
-  },
-]
+const SERVICES = {
+  de: [
+    {
+      title: "Fensterreinigung",
+      description: "Streifenfreie Glasreinigung für Bürogebäude und Geschäfte - auch in großen Höhen.",
+      href: "/leistungen/fensterreinigung",
+      icon: GlassWater,
+      image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
+      imageAlt: "Gereinigter Glas-Wintergarten mit klaren Glasflächen nach der Fensterreinigung",
+    },
+    {
+      title: "Fassadenreinigung",
+      description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
+      href: "/leistungen/fassadenreinigung",
+      icon: Building2,
+      image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
+      imageAlt: "Saubere, helle Mehrfamilienhaus-Fassade nach der Fassadenreinigung",
+    },
+    {
+      title: "Steinreinigung",
+      description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Außenanlagen.",
+      href: "/leistungen/steinreinigung",
+      icon: Gem,
+      image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
+      imageAlt: "Gereinigte Naturstein-Terrasse mit Polygonalplatten als Ergebnis der Steinreinigung",
+    },
+  ],
+  en: [
+    {
+      title: "Window Cleaning",
+      description: "Streak-free glass cleaning for office buildings and shops - even at great heights.",
+      href: "/leistungen/fensterreinigung",
+      icon: GlassWater,
+      image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
+      imageAlt: "Cleaned glass conservatory with clear glass surfaces after window cleaning",
+    },
+    {
+      title: "Facade Cleaning",
+      description: "Professional exterior cleaning for building facades of all kinds and materials.",
+      href: "/leistungen/fassadenreinigung",
+      icon: Building2,
+      image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
+      imageAlt: "Clean, bright multi-family house facade after facade cleaning",
+    },
+    {
+      title: "Stone Cleaning",
+      description: "Expert care of natural stone, paving, terraces and outdoor areas.",
+      href: "/leistungen/steinreinigung",
+      icon: Gem,
+      image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
+      imageAlt: "Cleaned natural stone terrace with polygonal slabs as a result of stone cleaning",
+    },
+  ],
+}
 
-export function ServicesOverview() {
+const TEXT = {
+  de: {
+    eyebrow: "Leistungen",
+    heading: "Reinigung für jeden Anspruch",
+    viewAll: "Alle Leistungen ansehen",
+    learnMore: "Mehr erfahren",
+    viewDetails: "Details ansehen",
+    viewDetailsAria: (title: string) => `${title} - Details ansehen`,
+    ctaText: "Entdecken Sie unser komplettes Leistungsspektrum",
+  },
+  en: {
+    eyebrow: "Services",
+    heading: "Cleaning for Every Need",
+    viewAll: "View All Services",
+    learnMore: "Learn More",
+    viewDetails: "View Details",
+    viewDetailsAria: (title: string) => `${title} - view details`,
+    ctaText: "Discover our full range of services",
+  },
+}
+
+export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
+  const featured = FEATURED[locale]
+  const services = SERVICES[locale]
+  const t = TEXT[locale]
+
   return (
     <section className="py-20 bg-brand-mint">
       <div className="mx-auto max-w-6xl px-6">
         {/* Header */}
         <Reveal className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">Leistungen</p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">{t.eyebrow}</p>
             <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy max-w-xl tracking-tight text-balance">
-              Reinigung für jeden Anspruch
+              {t.heading}
             </h2>
           </div>
           <Link
-            href="/leistungen"
+            href={localizeHref("/leistungen", locale)}
             className="inline-flex items-center gap-2 text-sm font-medium text-brand-blue hover:text-brand-teal underline underline-offset-4 cursor-pointer"
           >
-            Alle Leistungen ansehen
+            {t.viewAll}
             <ArrowUpRight className="h-4 w-4" />
           </Link>
         </Reveal>
@@ -63,7 +126,7 @@ export function ServicesOverview() {
         {/* Featured Service - wide slim banner */}
         <Reveal direction="scale">
           <Link
-            href={featured.href}
+            href={localizeHref(featured.href, locale)}
             className="group relative mb-6 flex items-center justify-between overflow-hidden rounded-3xl bg-brand-navy px-8 py-8 sm:px-10 cursor-pointer"
           >
             <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-2xl animate-float-slow" />
@@ -78,7 +141,7 @@ export function ServicesOverview() {
                 {featured.description}
               </p>
               <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-sky group-hover:gap-3 transition-all">
-                Mehr erfahren
+                {t.learnMore}
                 <ArrowUpRight className="h-4 w-4" />
               </span>
             </div>
@@ -97,8 +160,8 @@ export function ServicesOverview() {
           {services.map((service, i) => (
             <Reveal key={service.title} as="div" direction="up" delay={i * 100} className="h-full">
             <Link
-              href={service.href}
-              aria-label={`${service.title} - Details ansehen`}
+              href={localizeHref(service.href, locale)}
+              aria-label={t.viewDetailsAria(service.title)}
               className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-brand-navy shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer"
             >
               {/* Image fills the tile */}
@@ -129,7 +192,7 @@ export function ServicesOverview() {
                     {service.title}
                   </h3>
                   <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand-sky opacity-90">
-                    Details ansehen
+                    {t.viewDetails}
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </div>
@@ -141,16 +204,14 @@ export function ServicesOverview() {
 
         {/* CTA below services */}
         <div className="mt-12 flex flex-col items-center gap-4 text-center">
-          <p className="text-lg font-medium text-brand-navy text-balance">
-            Entdecken Sie unser komplettes Leistungsspektrum
-          </p>
+          <p className="text-lg font-medium text-brand-navy text-balance">{t.ctaText}</p>
           <Button
             asChild
             size="lg"
             className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/30"
           >
-            <Link href="/leistungen" className="cursor-pointer">
-              Alle Leistungen ansehen
+            <Link href={localizeHref("/leistungen", locale)} className="cursor-pointer">
+              {t.viewAll}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>

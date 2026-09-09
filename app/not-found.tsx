@@ -1,17 +1,55 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Home, Calculator, Phone, ArrowRight } from "lucide-react"
+import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 
-const serviceLinks = [
-  { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
-  { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
-  { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
-  { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
-]
+const SERVICE_LINKS = {
+  de: [
+    { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
+    { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
+    { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
+    { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
+  ],
+  en: [
+    { href: "/leistungen/industriereinigung", label: "Industrial Cleaning" },
+    { href: "/leistungen/fensterreinigung", label: "Window Cleaning" },
+    { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
+    { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
+  ],
+}
+
+const TEXT = {
+  de: {
+    heading: "Diese Seite konnten wir nicht finden",
+    body: "Die von Ihnen aufgerufene Seite existiert nicht oder wurde verschoben. Kein Problem – hier geht es zurück zu unseren Leistungen.",
+    home: "Zur Startseite",
+    calculate: "Preis berechnen",
+    ourServices: "Unsere Leistungen",
+    question: "Sie haben eine Frage?",
+    contactUs: "Kontaktieren Sie uns",
+  },
+  en: {
+    heading: "We couldn't find this page",
+    body: "The page you're looking for doesn't exist or has been moved. No worries – here's the way back to our services.",
+    home: "Back to Home",
+    calculate: "Calculate Price",
+    ourServices: "Our Services",
+    question: "Have a question?",
+    contactUs: "Contact us",
+  },
+}
 
 export default function NotFound() {
+  const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  const t = TEXT[locale]
+  const serviceLinks = SERVICE_LINKS[locale].map((s) => ({ ...s, href: localizeHref(s.href, locale) }))
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navigation />
@@ -24,13 +62,10 @@ export default function NotFound() {
           </p>
 
           <h1 className="mt-2 text-balance font-display text-2xl font-bold text-brand-navy sm:text-3xl">
-            Diese Seite konnten wir nicht finden
+            {t.heading}
           </h1>
 
-          <p className="mx-auto mt-4 max-w-md text-pretty leading-relaxed text-neutral-600">
-            Die von Ihnen aufgerufene Seite existiert nicht oder wurde verschoben. Kein Problem &ndash;
-            hier geht es zurück zu unseren Leistungen.
-          </p>
+          <p className="mx-auto mt-4 max-w-md text-pretty leading-relaxed text-neutral-600">{t.body}</p>
 
           {/* Primary actions */}
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -39,9 +74,9 @@ export default function NotFound() {
               size="lg"
               className="group w-full bg-brand-blue text-white shadow-md shadow-brand-blue/30 transition-transform hover:scale-105 hover:bg-brand-teal rounded-full sm:w-auto"
             >
-              <Link href="/" className="cursor-pointer">
+              <Link href={localizeHref("/", locale)} className="cursor-pointer">
                 <Home className="h-4 w-4" />
-                Zur Startseite
+                {t.home}
               </Link>
             </Button>
             <Button
@@ -50,18 +85,16 @@ export default function NotFound() {
               variant="outline"
               className="w-full rounded-full border-brand-blue/30 text-brand-blue hover:bg-brand-mint hover:text-brand-blue sm:w-auto"
             >
-              <Link href="/angebot" className="cursor-pointer">
+              <Link href={localizeHref("/angebot", locale)} className="cursor-pointer">
                 <Calculator className="h-4 w-4" />
-                Preis berechnen
+                {t.calculate}
               </Link>
             </Button>
           </div>
 
           {/* Service links */}
           <div className="mt-12 rounded-2xl border border-brand-blue/10 bg-white p-6 shadow-sm shadow-brand-navy/5 sm:p-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-teal">
-              Unsere Leistungen
-            </h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-teal">{t.ourServices}</h2>
             <div className="mt-4 grid gap-2 sm:grid-cols-2">
               {serviceLinks.map((service) => (
                 <Link
@@ -79,18 +112,18 @@ export default function NotFound() {
           {/* Contact hint */}
           <p className="mt-8 flex items-center justify-center gap-2 text-sm text-neutral-500">
             <Phone className="h-4 w-4 text-brand-blue" />
-            Sie haben eine Frage?{" "}
+            {t.question}{" "}
             <Link
-              href="/kontakt"
+              href={localizeHref("/kontakt", locale)}
               className="font-semibold text-brand-blue underline-offset-4 hover:underline cursor-pointer"
             >
-              Kontaktieren Sie uns
+              {t.contactUs}
             </Link>
           </p>
         </div>
       </main>
 
-      <Footer />
+      <Footer locale={locale} />
     </div>
   )
 }

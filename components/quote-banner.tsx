@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Calculator, ArrowRight, Clock, BadgeCheck, Sparkles } from "lucide-react"
+import { localizeHref, type Locale } from "@/lib/i18n"
 
 interface QuoteBannerProps {
   /** Optional service slug to preselect in the wizard */
@@ -9,10 +10,38 @@ interface QuoteBannerProps {
   serviceTitle?: string
   /** Optional CTA target. Defaults to the standalone /angebot page. */
   ctaHref?: string
+  locale?: Locale
 }
 
-export function QuoteBanner({ slug, serviceTitle, ctaHref }: QuoteBannerProps) {
-  const href = ctaHref ?? (slug ? `/angebot?leistung=${slug}` : "/angebot")
+const TEXT = {
+  de: {
+    free: "Kostenlos & unverbindlich",
+    freeShort: "Unverbindlich & kostenlos",
+    headingFor: "Kostenloses Angebot für",
+    heading: "Berechnen Sie Ihr kostenloses Angebot",
+    body: "In nur wenigen Schritten zu Ihrem unverbindlichen Richtpreis - inklusive Mengenrabatten für regelmäßige Reinigung.",
+    fast: "In 2 Minuten erledigt",
+    instant: "Sofortige Preisschätzung",
+    calculator: "Preisrechner",
+    cta: "Jetzt Preis berechnen",
+  },
+  en: {
+    free: "Free & non-binding",
+    freeShort: "Non-binding & free",
+    headingFor: "Free Quote for",
+    heading: "Calculate Your Free Quote",
+    body: "Get your non-binding estimate in just a few steps - including volume discounts for regular cleaning.",
+    fast: "Done in 2 minutes",
+    instant: "Instant price estimate",
+    calculator: "Price Calculator",
+    cta: "Calculate Price Now",
+  },
+}
+
+export function QuoteBanner({ slug, serviceTitle, ctaHref, locale = "de" }: QuoteBannerProps) {
+  const angebot = localizeHref("/angebot", locale)
+  const href = ctaHref ?? (slug ? `${angebot}?leistung=${slug}` : angebot)
+  const t = TEXT[locale]
 
   const featured = Boolean(serviceTitle)
 
@@ -29,24 +58,21 @@ export function QuoteBanner({ slug, serviceTitle, ctaHref }: QuoteBannerProps) {
               <div className="max-w-2xl">
                 <span className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-base font-bold text-brand-blue shadow-sm">
                   <Sparkles className="h-5 w-5" />
-                  Kostenlos &amp; unverbindlich
+                  {t.free}
                 </span>
                 <h2 className="text-balance font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                  Kostenloses Angebot für{" "}
+                  {t.headingFor}{" "}
                   <span className="text-brand-navy">{serviceTitle}</span>
                 </h2>
-                <p className="mt-5 text-pretty text-lg text-white/90">
-                  In nur wenigen Schritten zu Ihrem unverbindlichen Richtpreis - inklusive
-                  Mengenrabatten für regelmäßige Reinigung.
-                </p>
+                <p className="mt-5 text-pretty text-lg text-white/90">{t.body}</p>
                 <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-base text-white/90">
                   <span className="flex items-center gap-2">
                     <Clock className="h-5 w-5" />
-                    In 2 Minuten erledigt
+                    {t.fast}
                   </span>
                   <span className="flex items-center gap-2">
                     <BadgeCheck className="h-5 w-5" />
-                    Sofortige Preisschätzung
+                    {t.instant}
                   </span>
                 </div>
               </div>
@@ -57,7 +83,7 @@ export function QuoteBanner({ slug, serviceTitle, ctaHref }: QuoteBannerProps) {
                 className="group h-16 shrink-0 rounded-full bg-white px-10 text-lg font-bold text-brand-blue shadow-xl ring-4 ring-white/30 transition-transform hover:scale-105 hover:bg-brand-mint"
               >
                 <Link href={href} className="cursor-pointer">
-                  Jetzt Preis berechnen
+                  {t.cta}
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
@@ -80,23 +106,20 @@ export function QuoteBanner({ slug, serviceTitle, ctaHref }: QuoteBannerProps) {
             <div className="max-w-2xl">
               <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-brand-sky ring-1 ring-white/15 backdrop-blur">
                 <Calculator className="h-4 w-4" />
-                Preisrechner
+                {t.calculator}
               </span>
               <h2 className="text-balance font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Berechnen Sie Ihr kostenloses Angebot
+                {t.heading}
               </h2>
-              <p className="mt-3 text-pretty text-white/70">
-                In nur wenigen Schritten zu Ihrem unverbindlichen Richtpreis - inklusive
-                Mengenrabatten für regelmäßige Reinigung.
-              </p>
+              <p className="mt-3 text-pretty text-white/70">{t.body}</p>
               <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/70">
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-brand-sky" />
-                  In 2 Minuten erledigt
+                  {t.fast}
                 </span>
                 <span className="flex items-center gap-2">
                   <BadgeCheck className="h-4 w-4 text-brand-sky" />
-                  Unverbindlich &amp; kostenlos
+                  {t.freeShort}
                 </span>
               </div>
             </div>
@@ -107,7 +130,7 @@ export function QuoteBanner({ slug, serviceTitle, ctaHref }: QuoteBannerProps) {
               className="group shrink-0 rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105 hover:bg-brand-teal"
             >
               <Link href={href} className="cursor-pointer">
-                Jetzt Preis berechnen
+                {t.cta}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>

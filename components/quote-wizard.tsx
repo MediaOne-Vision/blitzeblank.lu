@@ -14,6 +14,9 @@ import {
   quoteFrequencies,
   windowTypes,
   getWindowType,
+  getLocalizedQuoteServices,
+  getLocalizedQuoteFrequencies,
+  getLocalizedWindowTypes,
   type WindowRowEntry,
 } from "@/lib/quote-data"
 import {
@@ -27,6 +30,7 @@ import { searchAddresses } from "@/app/actions/travel"
 import { submitQuote } from "@/app/actions/submit-quote"
 import type { QuoteSubmission } from "@/lib/quote-email"
 import { generateLeadId, storeLeadHandoff, type LeadStatus, type QuoteType } from "@/lib/tracking"
+import { localizeHref, type Locale } from "@/lib/i18n"
 import {
   ArrowLeft,
   ArrowRight,
@@ -43,7 +47,199 @@ import {
   Phone,
 } from "lucide-react"
 
-const STEPS = ["Leistung", "Umfang", "Fotos", "Kontakt", "Angebot"]
+const STEPS_BY_LOCALE = {
+  de: ["Leistung", "Umfang", "Fotos", "Kontakt", "Angebot"],
+  en: ["Service", "Scope", "Photos", "Contact", "Quote"],
+}
+
+const WIZARD_TEXT = {
+  de: {
+    step1Heading: "Welche Leistung benötigen Sie?",
+    step1Sub: "Wählen Sie eine Reinigungsart aus.",
+    optionalMulti: "(optional, Mehrfachauswahl)",
+    other: "Sonstiges",
+    optional: "(optional)",
+    customPlaceholderDefault: "z. B. ein anderes Material oder besondere Anforderung",
+    customPlaceholderWindow: "z. B. schwer erreichbare Fenster oder besondere Anforderung",
+    preferredDate: "Wunschtermin",
+    address: "Adresse *",
+    addressPlaceholder: "Straße Hausnummer, PLZ Ort",
+    addressConfirmed: "Adresse übernommen",
+    step2WindowHeading: "Welche Fenster sollen gereinigt werden?",
+    step2WindowSub:
+      "Tragen Sie je Fenstertyp die Anzahl ein (Rollladen in m²). Sie müssen nicht alle Felder ausfüllen – geben Sie nur an, was zutrifft.",
+    customerType: "Kundentyp",
+    customerPrivate: "Privatkunde",
+    customerCommercial: "Gewerbekunde",
+    windowSizesHeading: "Fenstergrößen & Anzahl",
+    otherOptionalWindows: "(optional – Fensterfront, Terrassenfenster, Glastür, Rollladen …)",
+    totalWindowsSelected: (n: number) => `Insgesamt ${n} Fenster ausgewählt`,
+    step2AreaHeading: "Wie groß ist die zu reinigende Fläche?",
+    step2AreaSub: "Verschieben Sie den Regler für eine Schätzung.",
+    priceOnRequest: "Preis auf Anfrage",
+    priceOnRequestBody: (area: string, min: string, max: string) =>
+      `Ein automatischer Richtpreis ist für ${area} m² nicht verfügbar (kalkulierbar von ${min}–${max} m²). Größere Objekte können jederzeit individuell angefragt werden.`,
+    largerObjectsNote: "Größere Objekte können jederzeit individuell angefragt werden.",
+    photosHeading: "Fotos hochladen",
+    photosSub: "Bilder helfen uns, Ihr Angebot genauer zu kalkulieren.",
+    photosSelect: "Fotos auswählen",
+    photosClickHint: "Klicken Sie hier, um Bilder hochzuladen",
+    uploadFailed: "Upload fehlgeschlagen",
+    removePhoto: "Foto entfernen",
+    photosUploading: "Fotos werden hochgeladen…",
+    frequencyHeading: "Wie häufig benötigen Sie die Reinigung?",
+    frequencySub: "Bei regelmäßiger Reinigung sparen Sie dauerhaft.",
+    contactHeading: "Ihre Kontaktdaten",
+    contactSub: "Damit wir Ihnen Ihr persönliches Angebot zusenden können.",
+    name: "Name *",
+    namePlaceholder: "Ihr Name",
+    email: "E-Mail *",
+    emailPlaceholder: "ihre@email.com",
+    emailInvalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    phone: "Telefon",
+    phonePlaceholder: "+352 ...",
+    message: "Anmerkungen",
+    messagePlaceholder: "Weitere Informationen zu Ihrem Anliegen...",
+    privacyPrefix: "Ich habe die",
+    privacyLink: "Datenschutzerklärung",
+    privacySuffix: "gelesen und stimme der Verarbeitung meiner Angaben zu. *",
+    yourQuote: "Ihr unverbindliches Angebot",
+    estimatedPrice: "Geschätzter Preis",
+    individualOffer: "Individuelles Angebot",
+    customQuoteBody: "Für diese Objektgröße erstellen wir Ihnen ein persönliches Angebot.",
+    estimatedRange: "Geschätzte Preisspanne",
+    discountNote: (discount: number, freq: string) => `inkl. ${discount}% Rabatt bei ${freq}er Reinigung`,
+    onRequestNote:
+      "Größere Objekte können jederzeit individuell angefragt werden. Wir melden uns mit einem maßgeschneiderten Angebot.",
+    estimateNote:
+      "Dieser Preis dient lediglich als Orientierung. Der tatsächliche Preis kann nach Besichtigung oder genauer Prüfung abweichen.",
+    commercialNote:
+      "Für Gewerbekunden erfolgt in der Regel eine Besichtigung vor Ort. Der angezeigte Preis dient lediglich als Orientierung.",
+    summaryService: "Leistung",
+    summaryDetails: "Details",
+    summaryCustomerType: "Kundentyp",
+    summaryFrequency: "Turnus",
+    summaryWindowsTotal: "Fenster gesamt",
+    summaryArea: "Fläche",
+    summaryAddress: "Adresse",
+    summaryTravel: "Anfahrt (ungefähr)",
+    travelNote: "Die Anfahrt ist nur ein ungefährer Richtwert und kann je nach tatsächlicher Route abweichen.",
+    summaryDate: "Wunschtermin",
+    summaryPhotos: "Fotos",
+    photosUploadedCount: (n: number) => `${n} hochgeladen`,
+    finalNote:
+      "Unverbindliche Schätzung. Der finale Preis wird nach einer kostenlosen Besichtigung vor Ort festgelegt. Ihre Angaben werden in beiden Fällen an Blitzeblank übermittelt.",
+    stillUploading: "Ihre Fotos werden noch hochgeladen…",
+    requestOffer: "Angebot anfragen",
+    acceptOffer: "Angebot annehmen",
+    declineOffer: "Angebot ablehnen",
+    thanksAccepted: "Vielen Dank für Ihr Vertrauen!",
+    thanksDeclined: "Schade!",
+    thanksAcceptedBody1: "Ihre Anfrage wurde an Blitzeblank übermittelt. Eine Bestätigung mit der Zusammenfassung haben wir an",
+    thanksAcceptedBody2:
+      "gesendet. Wir melden uns in Kürze bei Ihnen, um einen Termin für die kostenlose Besichtigung zu vereinbaren.",
+    thanksDeclinedBody:
+      "Wir verstehen, dass die Preisspanne nicht Ihren Vorstellungen entspricht. Rufen Sie uns an - vielleicht finden wir gemeinsam eine Lösung.",
+    backHome: "Zurück zur Startseite",
+    back: "Zurück",
+    next: "Weiter",
+    privateLabel: "Privatkunde",
+    commercialLabel: "Gewerbekunde",
+  },
+  en: {
+    step1Heading: "Which service do you need?",
+    step1Sub: "Choose a type of cleaning.",
+    optionalMulti: "(optional, multi-select)",
+    other: "Other",
+    optional: "(optional)",
+    customPlaceholderDefault: "e.g. a different material or special requirement",
+    customPlaceholderWindow: "e.g. hard-to-reach windows or special requirement",
+    preferredDate: "Preferred date",
+    address: "Address *",
+    addressPlaceholder: "Street number, postal code city",
+    addressConfirmed: "Address confirmed",
+    step2WindowHeading: "Which windows should be cleaned?",
+    step2WindowSub:
+      "Enter the quantity for each window type (roller shutters in m²). You don't need to fill in every field – just enter what applies.",
+    customerType: "Customer Type",
+    customerPrivate: "Private Customer",
+    customerCommercial: "Commercial Customer",
+    windowSizesHeading: "Window Sizes & Quantity",
+    otherOptionalWindows: "(optional – window front, patio window, glass door, roller shutter …)",
+    totalWindowsSelected: (n: number) => `${n} windows selected in total`,
+    step2AreaHeading: "How large is the area to be cleaned?",
+    step2AreaSub: "Move the slider for an estimate.",
+    priceOnRequest: "Price on Request",
+    priceOnRequestBody: (area: string, min: string, max: string) =>
+      `An automatic estimate isn't available for ${area} m² (calculable from ${min}–${max} m²). Larger objects can always be requested individually.`,
+    largerObjectsNote: "Larger objects can always be requested individually.",
+    photosHeading: "Upload Photos",
+    photosSub: "Photos help us calculate your quote more accurately.",
+    photosSelect: "Select Photos",
+    photosClickHint: "Click here to upload images",
+    uploadFailed: "Upload failed",
+    removePhoto: "Remove photo",
+    photosUploading: "Uploading photos…",
+    frequencyHeading: "How often do you need the cleaning?",
+    frequencySub: "You save permanently with regular cleaning.",
+    contactHeading: "Your Contact Details",
+    contactSub: "So we can send you your personal quote.",
+    name: "Name *",
+    namePlaceholder: "Your name",
+    email: "Email *",
+    emailPlaceholder: "your@email.com",
+    emailInvalid: "Please enter a valid email address.",
+    phone: "Phone",
+    phonePlaceholder: "+352 ...",
+    message: "Notes",
+    messagePlaceholder: "Additional information about your request...",
+    privacyPrefix: "I have read the",
+    privacyLink: "Privacy Policy",
+    privacySuffix: "and agree to the processing of my data. *",
+    yourQuote: "Your Non-Binding Quote",
+    estimatedPrice: "Estimated Price",
+    individualOffer: "Individual Quote",
+    customQuoteBody: "For this property size, we'll create a personal quote for you.",
+    estimatedRange: "Estimated Price Range",
+    discountNote: (discount: number, freq: string) => `incl. ${discount}% discount for ${freq} cleaning`,
+    onRequestNote:
+      "Larger objects can always be requested individually. We'll get back to you with a tailored offer.",
+    estimateNote:
+      "This price is for guidance only. The actual price may vary after an on-site visit or closer inspection.",
+    commercialNote:
+      "For commercial customers, an on-site visit usually takes place. The price shown is for guidance only.",
+    summaryService: "Service",
+    summaryDetails: "Details",
+    summaryCustomerType: "Customer Type",
+    summaryFrequency: "Frequency",
+    summaryWindowsTotal: "Windows Total",
+    summaryArea: "Area",
+    summaryAddress: "Address",
+    summaryTravel: "Travel (approx.)",
+    travelNote: "Travel is only an approximate estimate and may vary depending on the actual route.",
+    summaryDate: "Preferred Date",
+    summaryPhotos: "Photos",
+    photosUploadedCount: (n: number) => `${n} uploaded`,
+    finalNote:
+      "Non-binding estimate. The final price is determined after a free on-site visit. Your details will be sent to Blitzeblank in both cases.",
+    stillUploading: "Your photos are still uploading…",
+    requestOffer: "Request Quote",
+    acceptOffer: "Accept Quote",
+    declineOffer: "Decline Quote",
+    thanksAccepted: "Thank you for your trust!",
+    thanksDeclined: "Too bad!",
+    thanksAcceptedBody1: "Your request has been sent to Blitzeblank. We've sent a confirmation with a summary to",
+    thanksAcceptedBody2:
+      "We will get in touch with you shortly to arrange a free on-site visit.",
+    thanksDeclinedBody:
+      "We understand the price range doesn't match your expectations. Give us a call - maybe we can find a solution together.",
+    backHome: "Back to Home",
+    back: "Back",
+    next: "Next",
+    privateLabel: "Private",
+    commercialLabel: "Commercial",
+  },
+}
 
 // Reinigungen pro Jahr je Turnus – für den Jahreswert (quote_value) im Conversion-Tracking.
 const VISITS_PER_YEAR: Record<string, number> = {
@@ -89,15 +285,22 @@ interface UploadedPhoto {
 export function QuoteWizard({
   initialSlug,
   pricingConfig = defaultPricingConfig,
+  locale = "de",
 }: {
   initialSlug?: string
   pricingConfig?: PricingConfig
+  locale?: Locale
 }) {
+  const t = WIZARD_TEXT[locale]
+  const STEPS = STEPS_BY_LOCALE[locale]
+  const quoteServicesL = getLocalizedQuoteServices(locale)
+  const quoteFrequenciesL = getLocalizedQuoteFrequencies(locale)
+  const windowTypesL = getLocalizedWindowTypes(locale)
   const [step, setStep] = useState(0)
 
   // Step 1 - Leistung
   const [serviceValue, setServiceValue] = useState(
-    initialSlug ? quoteServices.find((s) => s.slug === initialSlug)?.value ?? "" : "",
+    initialSlug ? quoteServicesL.find((s) => s.slug === initialSlug)?.value ?? "" : "",
   )
   const [details, setDetails] = useState<string[]>([])
   const [customDetail, setCustomDetail] = useState("")
@@ -143,7 +346,7 @@ export function QuoteWizard({
   const router = useRouter()
   const [privacyConsent, setPrivacyConsent] = useState(false)
 
-  const selectedService = quoteServices.find((s) => s.value === serviceValue)
+  const selectedService = quoteServicesL.find((s) => s.value === serviceValue)
   const isWindow = serviceValue === "fenster"
   const isCommercial = isWindow && customerType === "gewerbe"
 
@@ -157,12 +360,12 @@ export function QuoteWizard({
   const emailValid = EMAIL_REGEX.test(email.trim())
 
   // Standardgrößen sind immer sichtbar, sonstige Fensterarten stehen im aufklappbaren Bereich
-  const primaryWindowTypes = windowTypes.filter((t) => !t.optional)
-  const optionalWindowTypes = windowTypes.filter((t) => t.optional)
+  const primaryWindowTypes = windowTypesL.filter((t) => !t.optional)
+  const optionalWindowTypes = windowTypesL.filter((t) => t.optional)
 
   // Turnus gibt es nur bei der Fensterreinigung, sonst immer "Einmalig".
   const effectiveFrequencyValue = isWindow ? frequencyValue : "einmalig"
-  const selectedFrequency = quoteFrequencies.find((f) => f.value === effectiveFrequencyValue)
+  const selectedFrequency = quoteFrequenciesL.find((f) => f.value === effectiveFrequencyValue)
 
   // Mengen je Fensterart in numerische Zeilen für die Preisberechnung umwandeln
   const numericWindowRows: WindowRowEntry[] = windowTypes.map((t) => ({
@@ -378,6 +581,7 @@ export function QuoteWizard({
       estimatedMax: priceOnRequest ? 0 : price.max,
       decision: choice,
       leadId,
+      locale,
     }
 
     // Tracking-Nutzlast für die Danke-Seite ablegen (Handoff via sessionStorage).
@@ -406,7 +610,7 @@ export function QuoteWizard({
     }
 
     // Weiterleitung auf die passende Danke-Seite (Conversion-Tracking via GTM).
-    router.push(choice === "accepted" ? "/danke" : "/preisabsage-danke")
+    router.push(localizeHref(choice === "accepted" ? "/danke" : "/preisabsage-danke", locale))
   }
 
   return (
@@ -459,14 +663,12 @@ export function QuoteWizard({
         {step === 0 && (
           <div className="space-y-8">
             <div>
-              <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                Welche Leistung benötigen Sie?
-              </h3>
-              <p className="text-sm text-neutral-500">Wählen Sie eine Reinigungsart aus.</p>
+              <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">{t.step1Heading}</h3>
+              <p className="text-sm text-neutral-500">{t.step1Sub}</p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {quoteServices.map((s) => {
+              {quoteServicesL.map((s) => {
                 const active = serviceValue === s.value
                 return (
                   <button
@@ -505,7 +707,7 @@ export function QuoteWizard({
               <div className="rounded-2xl bg-brand-mint/50 p-5">
                 <Label className="text-sm font-semibold text-brand-navy">
                   {selectedService.detail.optionLabel}{" "}
-                  <span className="font-normal text-neutral-400">(optional, Mehrfachauswahl)</span>
+                  <span className="font-normal text-neutral-400">{t.optionalMulti}</span>
                 </Label>
 
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -529,11 +731,11 @@ export function QuoteWizard({
                 </div>
                 <div className="mt-4 space-y-2">
                   <Label htmlFor="customDetail" className="text-sm font-normal text-neutral-600">
-                    Sonstiges <span className="text-neutral-400">(optional)</span>
+                    {t.other} <span className="text-neutral-400">{t.optional}</span>
                   </Label>
                   <Input
                     id="customDetail"
-                    placeholder="z. B. ein anderes Material oder besondere Anforderung"
+                    placeholder={t.customPlaceholderDefault}
                     value={customDetail}
                     onChange={(e) => setCustomDetail(e.target.value)}
                     className="bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
@@ -546,7 +748,7 @@ export function QuoteWizard({
               <div className="space-y-2">
                 <Label htmlFor="date" className="flex items-center gap-2 text-sm font-normal text-neutral-600">
                   <Calendar className="h-4 w-4 text-brand-blue" />
-                  Wunschtermin <span className="text-neutral-400">(optional)</span>
+                  {t.preferredDate} <span className="text-neutral-400">{t.optional}</span>
                 </Label>
                 <Input
                   id="date"
@@ -560,12 +762,12 @@ export function QuoteWizard({
               <div className="relative space-y-2">
                 <Label htmlFor="address" className="flex items-center gap-2 text-sm font-normal text-neutral-600">
                   <MapPin className="h-4 w-4 text-brand-blue" />
-                  Adresse *
+                  {t.address}
                 </Label>
                 <Input
                   id="address"
                   autoComplete="off"
-                  placeholder="Straße Hausnummer, PLZ Ort"
+                  placeholder={t.addressPlaceholder}
                   value={address}
                   onChange={(e) => handleAddressChange(e.target.value)}
                   onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
@@ -597,7 +799,7 @@ export function QuoteWizard({
                 {travel && (
                   <p className="flex items-center gap-1.5 text-xs font-light text-neutral-500">
                     <Check className="h-3.5 w-3.5 text-brand-blue" />
-                    Adresse übernommen
+                    {t.addressConfirmed}
                   </p>
                 )}
               </div>
@@ -612,23 +814,20 @@ export function QuoteWizard({
               <>
                 <div>
                   <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                    Welche Fenster sollen gereinigt werden?
+                    {t.step2WindowHeading}
                   </h3>
-                  <p className="text-sm text-neutral-500">
-                    Tragen Sie je Fenstertyp die Anzahl ein (Rollladen in m²). Sie müssen nicht alle
-                    Felder ausfüllen – geben Sie nur an, was zutrifft.
-                  </p>
+                  <p className="text-sm text-neutral-500">{t.step2WindowSub}</p>
                 </div>
 
                 {/* Kundentyp - beeinflusst die Preiskalkulation */}
                 <div className="rounded-2xl bg-brand-mint/50 p-5">
-                  <Label className="text-sm font-semibold text-brand-navy">Kundentyp</Label>
+                  <Label className="text-sm font-semibold text-brand-navy">{t.customerType}</Label>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {(
                       [
-                        { value: "privat", label: "Privatkunde" },
-                        { value: "gewerbe", label: "Gewerbekunde" },
-                      ] as const
+                        { value: "privat" as const, label: t.customerPrivate },
+                        { value: "gewerbe" as const, label: t.customerCommercial },
+                      ]
                     ).map((option) => {
                       const active = customerType === option.value
                       return (
@@ -651,8 +850,8 @@ export function QuoteWizard({
 
                 {/* Fenstergrößen: Standardgrößen sichtbar, sonstige Arten einklappbar */}
                 <div className="space-y-3">
-                  <Label className="text-sm font-semibold text-brand-navy">Fenstergrößen &amp; Anzahl</Label>
-                  {primaryWindowTypes.map((t) => renderWindowRow(t))}
+                  <Label className="text-sm font-semibold text-brand-navy">{t.windowSizesHeading}</Label>
+                  {primaryWindowTypes.map((wt) => renderWindowRow(wt))}
 
                   {/* Einklappbarer Bereich "Sonstiges" – für alle Kunden sichtbar.
                       Enthält sonstige Fensterarten (alle) und – nur für Gewerbekunden –
@@ -666,10 +865,8 @@ export function QuoteWizard({
                         className="flex w-full items-center justify-between gap-2 rounded-2xl border border-dashed border-brand-blue/40 bg-white px-4 py-3 text-left text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-mint/50 cursor-pointer"
                       >
                         <span>
-                          Sonstiges{" "}
-                          <span className="font-normal text-neutral-400">
-                            (optional – Fensterfront, Terrassenfenster, Glastür, Rollladen …)
-                          </span>
+                          {t.other}{" "}
+                          <span className="font-normal text-neutral-400">{t.otherOptionalWindows}</span>
                         </span>
                         <ChevronDown
                           className={`h-4 w-4 shrink-0 text-brand-blue transition-transform ${
@@ -687,9 +884,7 @@ export function QuoteWizard({
                             <div className="rounded-2xl bg-brand-mint/50 p-5">
                               <Label className="text-sm font-semibold text-brand-navy">
                                 {selectedService?.detail.optionLabel}{" "}
-                                <span className="font-normal text-neutral-400">
-                                  (optional, Mehrfachauswahl)
-                                </span>
+                                <span className="font-normal text-neutral-400">{t.optionalMulti}</span>
                               </Label>
                               <div className="mt-3 flex flex-wrap gap-2">
                                 {selectedService?.detail.options.map((option) => {
@@ -719,18 +914,16 @@ export function QuoteWizard({
                 </div>
 
                 {assignedWindows > 0 && (
-                  <p className="text-sm font-medium text-brand-navy">
-                    Insgesamt {assignedWindows} Fenster ausgewählt
-                  </p>
+                  <p className="text-sm font-medium text-brand-navy">{t.totalWindowsSelected(assignedWindows)}</p>
                 )}
 
                 <div className="space-y-2">
                   <Label htmlFor="customDetail" className="text-sm font-normal text-neutral-600">
-                    Sonstiges <span className="text-neutral-400">(optional)</span>
+                    {t.other} <span className="text-neutral-400">{t.optional}</span>
                   </Label>
                   <Input
                     id="customDetail"
-                    placeholder="z. B. schwer erreichbare Fenster oder besondere Anforderung"
+                    placeholder={t.customPlaceholderWindow}
                     value={customDetail}
                     onChange={(e) => setCustomDetail(e.target.value)}
                     className="bg-white font-light text-neutral-600 placeholder:text-neutral-400/70"
@@ -741,11 +934,9 @@ export function QuoteWizard({
               <div className="space-y-5">
                 <div>
                   <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                    Wie groß ist die zu reinigende Fläche?
+                    {t.step2AreaHeading}
                   </h3>
-                  <p className="text-sm text-neutral-500">
-                    Verschieben Sie den Regler für eine Schätzung.
-                  </p>
+                  <p className="text-sm text-neutral-500">{t.step2AreaSub}</p>
                 </div>
 
                 <div className="rounded-2xl bg-brand-mint/50 p-8">
@@ -772,20 +963,18 @@ export function QuoteWizard({
                 {/* Hinweis auf "Preis auf Anfrage" außerhalb des kalkulierbaren Bereichs */}
                 {priceOnRequest && areaLimit && (
                   <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 px-5 py-4 text-sm text-brand-navy">
-                    <p className="font-semibold">Preis auf Anfrage</p>
+                    <p className="font-semibold">{t.priceOnRequest}</p>
                     <p className="mt-1 font-light text-neutral-600">
-                      Ein automatischer Richtpreis ist für{" "}
-                      {area[0].toLocaleString("de-DE")} m² nicht verfügbar (kalkulierbar von{" "}
-                      {areaLimit.quoteMin.toLocaleString("de-DE")}–
-                      {areaLimit.quoteMax.toLocaleString("de-DE")} m²). Größere Objekte können
-                      jederzeit individuell angefragt werden.
+                      {t.priceOnRequestBody(
+                        area[0].toLocaleString("de-DE"),
+                        areaLimit.quoteMin.toLocaleString("de-DE"),
+                        areaLimit.quoteMax.toLocaleString("de-DE"),
+                      )}
                     </p>
                   </div>
                 )}
 
-                <p className="text-center text-xs font-light text-neutral-400">
-                  Größere Objekte können jederzeit individuell angefragt werden.
-                </p>
+                <p className="text-center text-xs font-light text-neutral-400">{t.largerObjectsNote}</p>
               </div>
             )}
           </div>
@@ -796,11 +985,9 @@ export function QuoteWizard({
           <div className="space-y-8">
             <div>
               <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                Fotos hochladen <span className="text-neutral-400">(optional)</span>
+                {t.photosHeading} <span className="text-neutral-400">{t.optional}</span>
               </h3>
-              <p className="text-sm text-neutral-500">
-                Bilder helfen uns, Ihr Angebot genauer zu kalkulieren.
-              </p>
+              <p className="text-sm text-neutral-500">{t.photosSub}</p>
             </div>
 
             <button
@@ -812,8 +999,8 @@ export function QuoteWizard({
                 <Upload className="h-6 w-6 text-brand-blue" />
               </div>
               <div>
-                <p className="font-semibold text-brand-navy">Fotos auswählen</p>
-                <p className="text-sm text-neutral-500">Klicken Sie hier, um Bilder hochzuladen</p>
+                <p className="font-semibold text-brand-navy">{t.photosSelect}</p>
+                <p className="text-sm text-neutral-500">{t.photosClickHint}</p>
               </div>
             </button>
             <input
@@ -841,7 +1028,7 @@ export function QuoteWizard({
                     {/* Upload fehlgeschlagen */}
                     {photo.status === "error" && (
                       <div className="absolute inset-0 flex items-center justify-center bg-red-600/70 px-1 text-center text-[10px] font-semibold text-white">
-                        Upload fehlgeschlagen
+                        {t.uploadFailed}
                       </div>
                     )}
 
@@ -849,7 +1036,7 @@ export function QuoteWizard({
                       type="button"
                       onClick={() => removePhoto(i)}
                       className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand-navy/80 text-white opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer"
-                      aria-label="Foto entfernen"
+                      aria-label={t.removePhoto}
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
@@ -861,7 +1048,7 @@ export function QuoteWizard({
             {photosUploading && (
               <p className="flex items-center gap-2 text-sm text-neutral-500">
                 <Loader2 className="h-4 w-4 animate-spin text-brand-blue" />
-                Fotos werden hochgeladen…
+                {t.photosUploading}
               </p>
             )}
           </div>
@@ -875,15 +1062,13 @@ export function QuoteWizard({
               <div className="space-y-5">
                 <div>
                   <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                    Wie häufig benötigen Sie die Reinigung?
+                    {t.frequencyHeading}
                   </h3>
-                  <p className="text-sm text-neutral-500">
-                    Bei regelmäßiger Reinigung sparen Sie dauerhaft.
-                  </p>
+                  <p className="text-sm text-neutral-500">{t.frequencySub}</p>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {quoteFrequencies.map((f) => {
+                  {quoteFrequenciesL.map((f) => {
                     const active = frequencyValue === f.value
                     return (
                       <button
@@ -913,31 +1098,29 @@ export function QuoteWizard({
             <div className="space-y-5">
               <div>
                 <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                  Ihre Kontaktdaten
+                  {t.contactHeading}
                 </h3>
-                <p className="text-sm text-neutral-500">
-                  Damit wir Ihnen Ihr persönliches Angebot zusenden können.
-                </p>
+                <p className="text-sm text-neutral-500">{t.contactSub}</p>
               </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name" className="font-normal text-neutral-600">Name *</Label>
+                <Label htmlFor="name" className="font-normal text-neutral-600">{t.name}</Label>
                 <Input
                   id="name"
-                  placeholder="Ihr Name"
+                  placeholder={t.namePlaceholder}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="font-light text-neutral-600 placeholder:text-neutral-400/70"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email" className="font-normal text-neutral-600">E-Mail *</Label>
+                <Label htmlFor="email" className="font-normal text-neutral-600">{t.email}</Label>
                 <Input
                   id="email"
                   type="email"
                   inputMode="email"
-                  placeholder="ihre@email.com"
+                  placeholder={t.emailPlaceholder}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   aria-invalid={email.trim().length > 0 && !emailValid}
@@ -948,17 +1131,15 @@ export function QuoteWizard({
                   }`}
                 />
                 {email.trim().length > 0 && !emailValid && (
-                  <p className="text-xs font-light text-red-500">
-                    Bitte geben Sie eine gültige E-Mail-Adresse ein.
-                  </p>
+                  <p className="text-xs font-light text-red-500">{t.emailInvalid}</p>
                 )}
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="phone" className="font-normal text-neutral-600">Telefon</Label>
+                <Label htmlFor="phone" className="font-normal text-neutral-600">{t.phone}</Label>
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="+352 ..."
+                  placeholder={t.phonePlaceholder}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="font-light text-neutral-600 placeholder:text-neutral-400/70"
@@ -966,12 +1147,12 @@ export function QuoteWizard({
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="message" className="font-normal text-neutral-600">
-                  Anmerkungen <span className="text-neutral-400">(optional)</span>
+                  {t.message} <span className="text-neutral-400">{t.optional}</span>
                 </Label>
                 <Textarea
                   id="message"
                   rows={3}
-                  placeholder="Weitere Informationen zu Ihrem Anliegen..."
+                  placeholder={t.messagePlaceholder}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="font-light text-neutral-600 placeholder:text-neutral-400/70"
@@ -988,15 +1169,15 @@ export function QuoteWizard({
                   htmlFor="privacy-consent"
                   className="text-sm font-normal leading-relaxed text-neutral-600"
                 >
-                  Ich habe die{" "}
+                  {t.privacyPrefix}{" "}
                   <Link
-                    href="/datenschutz"
+                    href={localizeHref("/datenschutz", locale)}
                     target="_blank"
                     className="font-semibold text-brand-blue underline underline-offset-2 hover:text-brand-teal"
                   >
-                    Datenschutzerklärung
+                    {t.privacyLink}
                   </Link>{" "}
-                  gelesen und stimme der Verarbeitung meiner Angaben zu. *
+                  {t.privacySuffix}
                 </Label>
               </div>
             </div>
@@ -1011,35 +1192,32 @@ export function QuoteWizard({
               <>
                 <div className="text-center">
                   <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand-blue">
-                    Ihr unverbindliches Angebot
+                    {t.yourQuote}
                   </p>
                   <h3 className="font-display text-2xl font-extrabold text-brand-navy">
-                    {priceOnRequest ? "Preis auf Anfrage" : "Geschätzter Preis"}
+                    {priceOnRequest ? t.priceOnRequest : t.estimatedPrice}
                   </h3>
                 </div>
 
                 <div className="rounded-3xl bg-gradient-to-br from-brand-blue to-brand-teal p-8 text-center">
                   {priceOnRequest ? (
                     <>
-                      <p className="text-sm text-white/80">Individuelles Angebot</p>
+                      <p className="text-sm text-white/80">{t.individualOffer}</p>
                       <p className="mt-1 font-display text-3xl font-extrabold text-white sm:text-4xl">
-                        Preis auf Anfrage
+                        {t.priceOnRequest}
                       </p>
-                      <p className="mt-2 text-sm text-white/80">
-                        Für diese Objektgröße erstellen wir Ihnen ein persönliches Angebot.
-                      </p>
+                      <p className="mt-2 text-sm text-white/80">{t.customQuoteBody}</p>
                     </>
                   ) : (
                     <>
-                      <p className="text-sm text-white/80">Geschätzte Preisspanne</p>
+                      <p className="text-sm text-white/80">{t.estimatedRange}</p>
                       <p className="mt-1 font-display text-4xl font-extrabold text-white sm:text-5xl">
                         {price.min.toLocaleString("de-DE")} - {price.max.toLocaleString("de-DE")} €
                       </p>
                       {/* Rabatt-Hinweis nur bei Privatkunden mit regelmäßiger Reinigung */}
                       {!isCommercial && selectedFrequency && selectedFrequency.discount > 0 && (
                         <p className="mt-2 text-sm text-white/80">
-                          inkl. {selectedFrequency.discount}% Rabatt bei{" "}
-                          {selectedFrequency.label.toLowerCase()}er Reinigung
+                          {t.discountNote(selectedFrequency.discount, selectedFrequency.label.toLowerCase())}
                         </p>
                       )}
                     </>
@@ -1048,60 +1226,56 @@ export function QuoteWizard({
 
                 {/* Pflichthinweis: Preis ist nur eine Orientierung */}
                 <p className="rounded-2xl bg-brand-mint/50 px-5 py-4 text-center text-sm text-brand-navy">
-                  {priceOnRequest
-                    ? "Größere Objekte können jederzeit individuell angefragt werden. Wir melden uns mit einem maßgeschneiderten Angebot."
-                    : "Dieser Preis dient lediglich als Orientierung. Der tatsächliche Preis kann nach Besichtigung oder genauer Prüfung abweichen."}
+                  {priceOnRequest ? t.onRequestNote : t.estimateNote}
                 </p>
 
                 {/* Zusätzlicher Hinweis für Gewerbekunden */}
                 {isCommercial && (
                   <p className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 px-5 py-4 text-center text-sm text-brand-navy">
-                    Für Gewerbekunden erfolgt in der Regel eine Besichtigung vor Ort. Der angezeigte
-                    Preis dient lediglich als Orientierung.
+                    {t.commercialNote}
                   </p>
                 )}
 
                 {/* Zusammenfassung */}
                 <div className="space-y-2.5 rounded-2xl bg-brand-mint/50 p-6 text-sm">
-                  <SummaryRow label="Leistung" value={selectedService?.label ?? "-"} />
-                  {allDetails.length > 0 && <SummaryRow label="Details" value={allDetails.join(", ")} />}
+                  <SummaryRow label={t.summaryService} value={selectedService?.label ?? "-"} />
+                  {allDetails.length > 0 && <SummaryRow label={t.summaryDetails} value={allDetails.join(", ")} />}
                   {isWindow && (
-                    <SummaryRow label="Kundentyp" value={customerType === "gewerbe" ? "Gewerbekunde" : "Privatkunde"} />
+                    <SummaryRow
+                      label={t.summaryCustomerType}
+                      value={customerType === "gewerbe" ? t.commercialLabel : t.privateLabel}
+                    />
                   )}
-                  {isWindow && <SummaryRow label="Turnus" value={selectedFrequency?.label ?? "-"} />}
+                  {isWindow && <SummaryRow label={t.summaryFrequency} value={selectedFrequency?.label ?? "-"} />}
                   {isWindow ? (
-                    <SummaryRow label="Fenster gesamt" value={`${assignedWindows}`} />
+                    <SummaryRow label={t.summaryWindowsTotal} value={`${assignedWindows}`} />
                   ) : (
-                    <SummaryRow label="Fläche" value={`${area[0].toLocaleString("de-DE")} m²`} />
+                    <SummaryRow label={t.summaryArea} value={`${area[0].toLocaleString("de-DE")} m²`} />
                   )}
-                  <SummaryRow label="Adresse" value={address || "-"} />
+                  <SummaryRow label={t.summaryAddress} value={address || "-"} />
                   {travel && (
                     <>
                       <SummaryRow
-                        label="Anfahrt (ungefähr)"
-                        value={`ca. ${travel.distanceKm.toLocaleString("de-DE")} km · ${Math.round(
+                        label={t.summaryTravel}
+                        value={`${travel.distanceKm.toLocaleString("de-DE")} km · ${Math.round(
                           travel.billableKm * pricingConfig.travelCostPerKm,
                         ).toLocaleString("de-DE")} €`}
                       />
-                      <p className="text-xs font-light text-neutral-400">
-                        Die Anfahrt ist nur ein ungefährer Richtwert und kann je nach tatsächlicher
-                        Route abweichen.
-                      </p>
+                      <p className="text-xs font-light text-neutral-400">{t.travelNote}</p>
                     </>
                   )}
-                  {preferredDate && <SummaryRow label="Wunschtermin" value={preferredDate} />}
-                  {photos.length > 0 && <SummaryRow label="Fotos" value={`${photos.length} hochgeladen`} />}
+                  {preferredDate && <SummaryRow label={t.summaryDate} value={preferredDate} />}
+                  {photos.length > 0 && (
+                    <SummaryRow label={t.summaryPhotos} value={t.photosUploadedCount(photos.length)} />
+                  )}
                 </div>
 
-                <p className="text-center text-xs text-neutral-400">
-                  Unverbindliche Schätzung. Der finale Preis wird nach einer kostenlosen Besichtigung
-                  vor Ort festgelegt. Ihre Angaben werden in beiden Fällen an Blitzeblank übermittelt.
-                </p>
+                <p className="text-center text-xs text-neutral-400">{t.finalNote}</p>
 
                 {photosUploading && (
                   <p className="flex items-center justify-center gap-2 text-center text-sm text-neutral-500">
                     <Loader2 className="h-4 w-4 animate-spin text-brand-blue" />
-                    Ihre Fotos werden noch hochgeladen…
+                    {t.stillUploading}
                   </p>
                 )}
 
@@ -1116,7 +1290,7 @@ export function QuoteWizard({
                     ) : (
                       <ThumbsUp className="h-5 w-5" />
                     )}
-                    {priceOnRequest ? "Angebot anfragen" : "Angebot annehmen"}
+                    {priceOnRequest ? t.requestOffer : t.acceptOffer}
                   </Button>
                   <Button
                     variant="ghost"
@@ -1129,7 +1303,7 @@ export function QuoteWizard({
                     ) : (
                       <ThumbsDown className="h-4 w-4" />
                     )}
-                    Angebot ablehnen
+                    {t.declineOffer}
                   </Button>
                 </div>
               </>
@@ -1147,19 +1321,16 @@ export function QuoteWizard({
                   )}
                 </div>
                 <h3 className="mb-3 font-display text-2xl font-extrabold text-brand-navy">
-                  {decision === "accepted" ? "Vielen Dank für Ihr Vertrauen!" : "Schade!"}
+                  {decision === "accepted" ? t.thanksAccepted : t.thanksDeclined}
                 </h3>
                 <p className="mx-auto max-w-md text-neutral-600">
                   {decision === "accepted" ? (
                     <>
-                      Ihre Anfrage wurde an Blitzeblank übermittelt. Eine Bestätigung mit der
-                      Zusammenfassung haben wir an{" "}
-                      <span className="font-semibold text-brand-navy">{email}</span> gesendet. Wir
-                      melden uns in Kürze bei Ihnen, um einen Termin für die kostenlose Besichtigung
-                      zu vereinbaren.
+                      {t.thanksAcceptedBody1}{" "}
+                      <span className="font-semibold text-brand-navy">{email}</span> {t.thanksAcceptedBody2}
                     </>
                   ) : (
-                    "Wir verstehen, dass die Preisspanne nicht Ihren Vorstellungen entspricht. Rufen Sie uns an - vielleicht finden wir gemeinsam eine Lösung."
+                    t.thanksDeclinedBody
                   )}
                 </p>
                 {decision === "declined" && (
@@ -1185,8 +1356,8 @@ export function QuoteWizard({
                         : "mt-8 rounded-full bg-brand-blue text-white hover:bg-brand-teal"
                     }
                   >
-                    <Link href="/" className="cursor-pointer">
-                      Zurück zur Startseite
+                    <Link href={localizeHref("/", locale)} className="cursor-pointer">
+                      {t.backHome}
                     </Link>
                   </Button>
                 </div>
@@ -1206,7 +1377,7 @@ export function QuoteWizard({
               className="text-brand-navy hover:bg-brand-mint disabled:opacity-0"
             >
               <ArrowLeft className="h-4 w-4" />
-              Zurück
+              {t.back}
             </Button>
 
             {step < STEPS.length - 1 && (
@@ -1216,7 +1387,7 @@ export function QuoteWizard({
                 disabled={!canProceed()}
                 className="group rounded-full bg-brand-blue text-white hover:bg-brand-teal disabled:opacity-40"
               >
-                Weiter
+                {t.next}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             )}

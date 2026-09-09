@@ -2,13 +2,67 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Cookie, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { loadConsent, saveConsent, loadGtm, type ConsentState } from "@/lib/cookie-consent"
+import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
+
+const TEXT = {
+  de: {
+    titleSettings: "Cookie-Einstellungen",
+    title: "Wir verwenden Cookies",
+    bodySettings:
+      "Wählen Sie, welche Cookies Sie zulassen möchten. Notwendige Cookies sind für den Betrieb der Website erforderlich.",
+    body: "Wir nutzen Cookies, um unsere Website zu verbessern und – mit Ihrer Zustimmung – die Nutzung zu analysieren. Marketing- und Statistik-Tools (Google Tag Manager) werden erst nach Ihrer Einwilligung geladen.",
+    necessary: "Notwendig",
+    necessaryDesc: "Erforderlich für grundlegende Funktionen der Website. Immer aktiv.",
+    necessaryAria: "Notwendige Cookies (immer aktiv)",
+    statistics: "Statistik",
+    statisticsDesc: "Hilft uns zu verstehen, wie Besucher die Website nutzen (z. B. Google Analytics via GTM).",
+    statisticsAria: "Statistik-Cookies zulassen",
+    marketing: "Marketing",
+    marketingDesc: "Wird genutzt, um Werbung relevanter zu gestalten und deren Wirkung zu messen.",
+    marketingAria: "Marketing-Cookies zulassen",
+    save: "Auswahl speichern",
+    acceptAll: "Alle akzeptieren",
+    reject: "Ablehnen",
+    settings: "Einstellungen",
+    more: "Mehr Informationen in unserer",
+    privacy: "Datenschutzerklärung",
+    back: "Zurück",
+  },
+  en: {
+    titleSettings: "Cookie Settings",
+    title: "We Use Cookies",
+    bodySettings:
+      "Choose which cookies you want to allow. Necessary cookies are required for the website to function.",
+    body: "We use cookies to improve our website and – with your consent – to analyze its usage. Marketing and statistics tools (Google Tag Manager) are only loaded after your consent.",
+    necessary: "Necessary",
+    necessaryDesc: "Required for basic functionality of the website. Always active.",
+    necessaryAria: "Necessary cookies (always active)",
+    statistics: "Statistics",
+    statisticsDesc: "Helps us understand how visitors use the website (e.g. Google Analytics via GTM).",
+    statisticsAria: "Allow statistics cookies",
+    marketing: "Marketing",
+    marketingDesc: "Used to make advertising more relevant and to measure its effectiveness.",
+    marketingAria: "Allow marketing cookies",
+    save: "Save selection",
+    acceptAll: "Accept all",
+    reject: "Reject",
+    settings: "Settings",
+    more: "More information in our",
+    privacy: "Privacy Policy",
+    back: "Back",
+  },
+}
 
 export function CookieConsentBanner() {
+  const pathname = usePathname()
+  const locale = getLocaleFromPathname(pathname)
+  const t = TEXT[locale]
   const [open, setOpen] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [statistics, setStatistics] = useState(false)
@@ -78,12 +132,10 @@ export function CookieConsentBanner() {
               id="cookie-title"
               className="font-display text-lg font-extrabold text-brand-navy"
             >
-              {showSettings ? "Cookie-Einstellungen" : "Wir verwenden Cookies"}
+              {showSettings ? t.titleSettings : t.title}
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-neutral-600">
-              {showSettings
-                ? "Wählen Sie, welche Cookies Sie zulassen möchten. Notwendige Cookies sind für den Betrieb der Website erforderlich."
-                : "Wir nutzen Cookies, um unsere Website zu verbessern und – mit Ihrer Zustimmung – die Nutzung zu analysieren. Marketing- und Statistik-Tools (Google Tag Manager) werden erst nach Ihrer Einwilligung geladen."}
+              {showSettings ? t.bodySettings : t.body}
             </p>
           </div>
         </div>
@@ -93,29 +145,25 @@ export function CookieConsentBanner() {
             {/* Notwendig */}
             <div className="flex items-start justify-between gap-4 rounded-2xl border border-brand-navy/10 bg-brand-mint/40 p-4">
               <div>
-                <p className="text-sm font-semibold text-brand-navy">Notwendig</p>
-                <p className="mt-0.5 text-xs text-neutral-500">
-                  Erforderlich für grundlegende Funktionen der Website. Immer aktiv.
-                </p>
+                <p className="text-sm font-semibold text-brand-navy">{t.necessary}</p>
+                <p className="mt-0.5 text-xs text-neutral-500">{t.necessaryDesc}</p>
               </div>
-              <Switch checked disabled aria-label="Notwendige Cookies (immer aktiv)" />
+              <Switch checked disabled aria-label={t.necessaryAria} />
             </div>
 
             {/* Statistik */}
             <div className="flex items-start justify-between gap-4 rounded-2xl border border-brand-navy/10 p-4">
               <div>
                 <Label htmlFor="consent-statistics" className="text-sm font-semibold text-brand-navy">
-                  Statistik
+                  {t.statistics}
                 </Label>
-                <p className="mt-0.5 text-xs text-neutral-500">
-                  Hilft uns zu verstehen, wie Besucher die Website nutzen (z. B. Google Analytics via GTM).
-                </p>
+                <p className="mt-0.5 text-xs text-neutral-500">{t.statisticsDesc}</p>
               </div>
               <Switch
                 id="consent-statistics"
                 checked={statistics}
                 onCheckedChange={setStatistics}
-                aria-label="Statistik-Cookies zulassen"
+                aria-label={t.statisticsAria}
               />
             </div>
 
@@ -123,17 +171,15 @@ export function CookieConsentBanner() {
             <div className="flex items-start justify-between gap-4 rounded-2xl border border-brand-navy/10 p-4">
               <div>
                 <Label htmlFor="consent-marketing" className="text-sm font-semibold text-brand-navy">
-                  Marketing
+                  {t.marketing}
                 </Label>
-                <p className="mt-0.5 text-xs text-neutral-500">
-                  Wird genutzt, um Werbung relevanter zu gestalten und deren Wirkung zu messen.
-                </p>
+                <p className="mt-0.5 text-xs text-neutral-500">{t.marketingDesc}</p>
               </div>
               <Switch
                 id="consent-marketing"
                 checked={marketing}
                 onCheckedChange={setMarketing}
-                aria-label="Marketing-Cookies zulassen"
+                aria-label={t.marketingAria}
               />
             </div>
           </div>
@@ -146,14 +192,14 @@ export function CookieConsentBanner() {
                 onClick={saveSelection}
                 className="flex-1 rounded-full bg-brand-blue font-semibold text-white hover:bg-brand-teal"
               >
-                Auswahl speichern
+                {t.save}
               </Button>
               <Button
                 onClick={acceptAll}
                 variant="outline"
                 className="flex-1 rounded-full border-brand-navy/15 font-semibold text-brand-navy hover:bg-brand-mint"
               >
-                Alle akzeptieren
+                {t.acceptAll}
               </Button>
             </>
           ) : (
@@ -162,34 +208,34 @@ export function CookieConsentBanner() {
                 onClick={acceptAll}
                 className="flex-1 rounded-full bg-brand-blue font-semibold text-white hover:bg-brand-teal"
               >
-                Alle akzeptieren
+                {t.acceptAll}
               </Button>
               <Button
                 onClick={rejectAll}
                 variant="outline"
                 className="flex-1 rounded-full border-brand-navy/15 font-semibold text-brand-navy hover:bg-brand-mint"
               >
-                Ablehnen
+                {t.reject}
               </Button>
               <Button
                 onClick={() => setShowSettings(true)}
                 variant="ghost"
                 className="flex-1 rounded-full font-semibold text-neutral-500 hover:bg-brand-mint hover:text-brand-navy"
               >
-                Einstellungen
+                {t.settings}
               </Button>
             </>
           )}
         </div>
 
         <p className="mt-4 text-center text-xs text-neutral-400">
-          Mehr Informationen in unserer{" "}
+          {t.more}{" "}
           <Link
-            href="/datenschutz"
+            href={localizeHref("/datenschutz", locale)}
             target="_blank"
             className="font-semibold text-brand-blue underline underline-offset-2 hover:text-brand-teal"
           >
-            Datenschutzerklärung
+            {t.privacy}
           </Link>
           .
         </p>
@@ -199,7 +245,7 @@ export function CookieConsentBanner() {
             type="button"
             onClick={() => setShowSettings(false)}
             className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-brand-mint hover:text-brand-navy cursor-pointer"
-            aria-label="Zurück"
+            aria-label={t.back}
           >
             <X className="h-4 w-4" />
           </button>
