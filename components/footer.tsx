@@ -67,7 +67,7 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
 
   return (
-    <footer className="bg-neutral-900 text-white">
+    <footer className="bg-brand-navy text-white">
       <div className="mx-auto max-w-6xl px-6">
         {/* Main Footer */}
         <div className="py-16 grid grid-cols-2 lg:grid-cols-5 gap-8">
@@ -89,7 +89,7 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Blitzeblank auf Facebook"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800 text-neutral-300 transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-neutral-300 transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
               >
                 <Facebook className="h-5 w-5" />
               </a>
@@ -98,7 +98,7 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Blitzeblank auf Instagram"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800 text-neutral-300 transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-neutral-300 transition-colors hover:bg-brand-blue hover:text-white cursor-pointer"
               >
                 <Instagram className="h-5 w-5" />
               </a>
@@ -169,7 +169,7 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
         </div>
 
         {/* Bottom */}
-        <div className="py-6 border-t border-neutral-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="py-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <p className="text-xs text-neutral-500">
             {new Date().getFullYear()} Blitzeblank. {t.rights}
           </p>
