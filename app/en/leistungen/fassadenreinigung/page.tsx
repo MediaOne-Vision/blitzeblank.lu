@@ -6,6 +6,13 @@ export const metadata: Metadata = {
   title: "Facade Cleaning | Blitzeblank - Professional Cleaning in Luxembourg",
   description:
     "Professional facade cleaning in Luxembourg. Exterior cleaning for building facades of all kinds - from office buildings to industrial sites.",
+  alternates: {
+    canonical: "/en/leistungen/fassadenreinigung",
+    languages: {
+      de: "/leistungen/fassadenreinigung",
+      en: "/en/leistungen/fassadenreinigung",
+    },
+  },
 }
 
 const features = [

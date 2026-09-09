@@ -6,6 +6,13 @@ import { FileText, MapPin, Phone, Mail, Shield, User, Scale } from "lucide-react
 export const metadata: Metadata = {
   title: "Impressum | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description: "Impressum und rechtliche Angaben von BLITZEBLANK S.à.r.l. -S, Mustapha El-Ali, Waldbillig.",
+  alternates: {
+    canonical: "/impressum",
+    languages: {
+      de: "/impressum",
+      en: "/en/impressum",
+    },
+  },
 }
 
 const blocks = [

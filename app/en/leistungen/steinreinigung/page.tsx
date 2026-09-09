@@ -6,6 +6,13 @@ export const metadata: Metadata = {
   title: "Stone Cleaning | Blitzeblank - Professional Cleaning in Luxembourg",
   description:
     "Professional stone cleaning in Luxembourg. Expert care and cleaning of natural stone, paving, terraces and outdoor areas.",
+  alternates: {
+    canonical: "/en/leistungen/steinreinigung",
+    languages: {
+      de: "/leistungen/steinreinigung",
+      en: "/en/leistungen/steinreinigung",
+    },
+  },
 }
 
 const features = [

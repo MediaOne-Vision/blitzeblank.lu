@@ -5,6 +5,13 @@ import { ServicePageTemplate } from "@/components/service-page-template"
 export const metadata: Metadata = {
   title: "Fensterreinigung | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description: "Professionelle Fensterreinigung in Luxemburg. Streifenfreie Glasreinigung für Bürogebäude, Geschäfte und Industrieanlagen jeder Größe.",
+  alternates: {
+    canonical: "/leistungen/fensterreinigung",
+    languages: {
+      de: "/leistungen/fensterreinigung",
+      en: "/en/leistungen/fensterreinigung",
+    },
+  },
 }
 
 const features = [

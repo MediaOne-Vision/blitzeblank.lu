@@ -6,6 +6,13 @@ export const metadata: Metadata = {
   title: "Window Cleaning | Blitzeblank - Professional Cleaning in Luxembourg",
   description:
     "Professional window cleaning in Luxembourg. Streak-free glass cleaning for office buildings, shops and industrial sites of any size.",
+  alternates: {
+    canonical: "/en/leistungen/fensterreinigung",
+    languages: {
+      de: "/leistungen/fensterreinigung",
+      en: "/en/leistungen/fensterreinigung",
+    },
+  },
 }
 
 const features = [

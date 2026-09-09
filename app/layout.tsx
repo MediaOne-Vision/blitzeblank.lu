@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CookieConsentBanner } from '@/components/cookie-consent-banner'
+import { HtmlLangSync } from '@/components/html-lang-sync'
 import './globals.css'
 
 const inter = Inter({ 
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="de" className="scroll-smooth">
       <body className={`${inter.variable} ${jakarta.variable} font-sans antialiased`}>
         {children}
+        <HtmlLangSync />
         <CookieConsentBanner />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

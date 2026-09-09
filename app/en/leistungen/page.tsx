@@ -5,6 +5,13 @@ export const metadata: Metadata = {
   title: "Services | Blitzeblank - Professional Cleaning in Luxembourg",
   description:
     "Discover our professional cleaning services: industrial cleaning, window cleaning, stone cleaning and facade cleaning.",
+  alternates: {
+    canonical: "/en/leistungen",
+    languages: {
+      de: "/leistungen",
+      en: "/en/leistungen",
+    },
+  },
 }
 
 export default function LeistungenEnPage() {
