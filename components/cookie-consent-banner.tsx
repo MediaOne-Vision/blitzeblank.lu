@@ -35,7 +35,6 @@ const TEXT = {
     more: "Mehr Informationen in unserer",
     privacy: "Datenschutzerklärung",
     back: "Zurück",
-    creditPrefix: "Cookies und Website von",
   },
   en: {
     titleSettings: "Cookie Settings",
@@ -60,7 +59,6 @@ const TEXT = {
     more: "More information in our",
     privacy: "Privacy Policy",
     back: "Back",
-    creditPrefix: "Cookies and website by",
   },
 }
 
@@ -290,26 +288,6 @@ export function CookieConsentBanner() {
               </p>
             </>
           )}
-        </div>
-
-        {/* Fußleiste: Cookies und Website von MediaOne */}
-        <div className="flex items-center justify-center gap-3 border-t border-brand-navy/10 bg-brand-mint/60 px-6 py-4">
-          <span className="text-sm text-neutral-600">{t.creditPrefix}</span>
-          <a
-            href="https://mediaone-vision.de"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center transition-opacity hover:opacity-80"
-            aria-label="MediaOne - mediaone-vision.de"
-          >
-            <Image
-              src="/images/mediaone-logo.png"
-              alt="MediaOne"
-              width={260}
-              height={66}
-              className="h-12 w-auto sm:h-14"
-            />
-          </a>
         </div>
       </div>
     </div>
