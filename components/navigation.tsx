@@ -16,7 +16,7 @@ const NAV_LINKS = {
     { href: "/", label: "Startseite" },
     { href: "/leistungen", label: "Leistungen" },
     { href: "/angebot", label: "Angebot" },
-    { href: "/stein-angebot", label: "Stein-Angebot" },
+    { href: "/stein-angebot", label: "Steinpflege-Rechner" },
     { href: "/ueber-uns", label: "Über uns" },
     { href: "/kontakt", label: "Kontakt" },
   ],

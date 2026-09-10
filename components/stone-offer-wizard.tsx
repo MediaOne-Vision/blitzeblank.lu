@@ -10,32 +10,36 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
-import { stoneOfferServices, stoneAreaTypes } from "@/lib/stone-offer-data"
+import {
+  stoneAreaTypes,
+  stoneColors,
+  colorSwatches,
+  usageClasses,
+  jointProperties,
+  jointMaterials,
+  filterJointMaterials,
+  protectionOptions,
+  thermalWeedInfo,
+  stoneDimensionDefaults,
+} from "@/lib/stone-offer-data"
 import { submitStoneOffer } from "@/app/actions/submit-stone-offer"
 import type { StoneOfferSubmission } from "@/lib/stone-offer-email"
 import {
   ArrowLeft,
   ArrowRight,
   Check,
-  Upload,
-  X,
-  MapPin,
-  Calendar,
   CheckCircle2,
   Loader2,
+  MapPin,
+  Plus,
+  RotateCcw,
+  ClipboardList,
 } from "lucide-react"
 
-const STEPS = ["Leistungen", "Fläche", "Fotos", "Kontakt"]
+const STEPS = ["Fläche", "Material", "Nutzung", "Fuge", "Farbe", "Fugenwahl", "Schutz", "Unkraut", "Kontakt"]
 
 /** Einfache, aber robuste E-Mail-Prüfung für die clientseitige Validierung */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-interface UploadedPhoto {
-  name: string
-  url: string
-  pathname?: string
-  status: "uploading" | "done" | "error"
-}
 
 function generateStoneLeadId(): string {
   const year = new Date().getFullYear()
@@ -45,26 +49,51 @@ function generateStoneLeadId(): string {
   return `BB-STEIN-${year}-${rand}`
 }
 
+function ColorDot({ name, className = "" }: { name: string; className?: string }) {
+  return (
+    <span
+      className={`inline-block rounded-full ring-1 ring-brand-navy/15 ${className}`}
+      style={{ backgroundColor: colorSwatches[name] ?? "#cbd5e1" }}
+    />
+  )
+}
+
 export function StoneOfferWizard() {
   const [step, setStep] = useState(0)
   const [renderedAt] = useState(() => Date.now())
   const topRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
-  // Step 1 - Leistungen
-  const [selectedServices, setSelectedServices] = useState<string[]>([])
-
-  // Step 2 - Fläche
+  // Step 0 - Fläche
   const [areaType, setAreaType] = useState("pflaster")
   const [areaSize, setAreaSize] = useState([50])
-  const [condition, setCondition] = useState("")
-  const [preferredDate, setPreferredDate] = useState("")
 
-  // Step 3 - Fotos
-  const [photos, setPhotos] = useState<(UploadedPhoto & { _key: string })[]>([])
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  // Step 1 - Materialbedarf
+  const [steinbreite, setSteinbreite] = useState([stoneDimensionDefaults.steinbreite])
+  const [steinlaenge, setSteinlaenge] = useState([stoneDimensionDefaults.steinlaenge])
+  const [fugenbreite, setFugenbreite] = useState([stoneDimensionDefaults.fugenbreite])
+  const [fugentiefe, setFugentiefe] = useState([stoneDimensionDefaults.fugentiefe])
 
-  // Step 4 - Kontakt
+  // Step 2 - Nutzung
+  const [usage, setUsage] = useState<string | null>(null)
+
+  // Step 3 - Fugeneigenschaften
+  const [properties, setProperties] = useState<string[]>([])
+
+  // Step 4 - Steinfarbe
+  const [stoneColor, setStoneColor] = useState<string | null>(null)
+
+  // Step 5 - Passende Fuge
+  const [jointMaterialId, setJointMaterialId] = useState<string | null>(null) // id | "none" | null
+  const [jointColor, setJointColor] = useState<string | null>(null)
+
+  // Step 6 - Schutz
+  const [protectionId, setProtectionId] = useState<string | null>(null) // id | "none" | null
+
+  // Step 7 - Thermische Unkrautentfernung
+  const [thermalWeed, setThermalWeed] = useState<boolean | null>(null)
+
+  // Step 8 - Kontakt
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
@@ -77,47 +106,52 @@ export function StoneOfferWizard() {
 
   const emailValid = EMAIL_REGEX.test(email.trim())
 
-  const toggleService = (id: string) => {
-    setSelectedServices((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]))
+  // Gefilterte Fugenmaterialien nach Nutzung + Eigenschaften
+  const filtered = filterJointMaterials(usage ?? "", properties)
+  const fallback = filtered.length === 0
+  const shownMaterials = fallback ? jointMaterials.filter((m) => !usage || m.usage.includes(usage)) : filtered
+
+  const toggleProperty = (value: string) => {
+    setProperties((prev) => (prev.includes(value) ? prev.filter((p) => p !== value) : [...prev, value]))
+    // Auswahl der Fuge zurücksetzen, da sich die Filterergebnisse ändern
+    setJointMaterialId(null)
+    setJointColor(null)
   }
 
-  const handleFiles = (files: FileList | null) => {
-    if (!files) return
-    Array.from(files).forEach((file) => {
-      const previewUrl = URL.createObjectURL(file)
-      const key = `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2)}`
-      setPhotos((prev) => [...prev, { name: file.name, url: previewUrl, status: "uploading", _key: key }])
-
-      const formData = new FormData()
-      formData.append("file", file)
-
-      fetch("/api/quote-photo/upload", { method: "POST", body: formData })
-        .then(async (res) => {
-          if (!res.ok) throw new Error("upload failed")
-          return res.json() as Promise<{ pathname: string; name: string }>
-        })
-        .then((data) => {
-          setPhotos((prev) =>
-            prev.map((p) => (p._key === key ? { ...p, pathname: data.pathname, status: "done" as const } : p)),
-          )
-        })
-        .catch(() => {
-          setPhotos((prev) => prev.map((p) => (p._key === key ? { ...p, status: "error" as const } : p)))
-        })
-    })
+  const selectUsage = (value: string) => {
+    setUsage(value)
+    setJointMaterialId(null)
+    setJointColor(null)
   }
 
-  const removePhoto = (index: number) => {
-    setPhotos((prev) => prev.filter((_, i) => i !== index))
+  const selectJointMaterial = (id: string) => {
+    setJointMaterialId(id)
+    const material = jointMaterials.find((m) => m.id === id)
+    setJointColor((prev) => (prev && material?.colors.includes(prev) ? prev : material?.colors[0] ?? null))
   }
 
-  const photosUploading = photos.some((p) => p.status === "uploading")
+  const resetDimensions = () => {
+    setSteinbreite([stoneDimensionDefaults.steinbreite])
+    setSteinlaenge([stoneDimensionDefaults.steinlaenge])
+    setFugenbreite([stoneDimensionDefaults.fugenbreite])
+    setFugentiefe([stoneDimensionDefaults.fugentiefe])
+  }
 
   const canProceed = () => {
     switch (step) {
       case 0:
-        return selectedServices.length > 0
-      case 3:
+        return areaSize[0] > 0
+      case 2:
+        return usage !== null
+      case 4:
+        return stoneColor !== null
+      case 5:
+        return jointMaterialId !== null
+      case 6:
+        return protectionId !== null
+      case 7:
+        return thermalWeed !== null
+      case 8:
         return Boolean(name.trim() && emailValid && privacyConsent)
       default:
         return true
@@ -139,135 +173,127 @@ export function StoneOfferWizard() {
     scrollToTop()
   }
 
-  const handleSubmit = async () => {
-    setSubmitting(true)
-
-    const selectedTitles = stoneOfferServices.filter((s) => selectedServices.includes(s.id)).map((s) => s.title)
+  const buildSubmission = (): StoneOfferSubmission => {
     const areaTypeLabel = stoneAreaTypes.find((a) => a.value === areaType)?.label ?? areaType
+    const usageLabel = usageClasses.find((u) => u.value === usage)?.label ?? "Keine Angabe"
+    const jointPropertyLabels = properties.map(
+      (p) => jointProperties.find((jp) => jp.value === p)?.label ?? p,
+    )
+    const stoneColorLabel = stoneColors.find((c) => c.value === stoneColor)?.label ?? "Keine Angabe"
 
-    const submission: StoneOfferSubmission = {
-      services: selectedTitles,
+    let jointChoice: StoneOfferSubmission["jointChoice"] = null
+    if (jointMaterialId && jointMaterialId !== "none") {
+      const material = jointMaterials.find((m) => m.id === jointMaterialId)
+      if (material) {
+        jointChoice = { materialLabel: material.title, colorLabel: jointColor ?? material.colors[0] ?? "—" }
+      }
+    }
+
+    const protectionLabel =
+      protectionId && protectionId !== "none"
+        ? protectionOptions.find((p) => p.id === protectionId)?.title ?? null
+        : null
+
+    return {
       areaTypeLabel,
       areaSize: areaSize[0],
-      condition,
-      preferredDate,
-      address,
-      photos: photos.filter((p) => p.status === "done" && p.pathname).map((p) => ({ name: p.name, pathname: p.pathname as string })),
+      dimensions: {
+        steinbreite: steinbreite[0],
+        steinlaenge: steinlaenge[0],
+        fugenbreite: fugenbreite[0],
+        fugentiefe: fugentiefe[0],
+      },
+      usageLabel,
+      jointPropertyLabels,
+      stoneColorLabel,
+      jointChoice,
+      protectionLabel,
+      thermalWeed: thermalWeed === true,
       name,
       email,
       phone,
+      address,
       message,
       leadId: generateStoneLeadId(),
     }
+  }
 
+  const handleSubmit = async () => {
+    setSubmitting(true)
     try {
-      await submitStoneOffer({ submission, honeypot, renderedAt })
+      await submitStoneOffer({ submission: buildSubmission(), honeypot, renderedAt })
     } catch {
       // Auch bei einem Übertragungsfehler leiten wir weiter – die Anfrage ist in
       // aller Regel dennoch bei uns eingegangen, und der Nutzer erhält Feedback.
     }
-
     router.push("/stein-angebot/danke")
   }
 
-  return (
-    <div ref={topRef} className="scroll-mt-24 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-brand-navy/5">
-      {/* Progress header */}
-      <div className="border-b border-brand-navy/5 bg-brand-mint/40 px-6 py-5 sm:px-8">
-          <div className="flex items-center justify-between gap-2">
-            {STEPS.map((label, i) => (
-              <div key={label} className="flex flex-1 flex-col items-center gap-2">
-                <div className="flex w-full items-center">
-                  <div
-                    className={`hidden h-1 flex-1 rounded-full sm:block ${
-                      i === 0 ? "opacity-0" : i <= step ? "bg-brand-blue" : "bg-brand-navy/10"
-                    }`}
-                  />
-                  <div
-                    className={`mx-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-display font-extrabold transition-colors ${
-                      i < step
-                        ? "bg-brand-blue text-white"
-                        : i === step
-                          ? "bg-brand-navy text-white ring-4 ring-brand-blue/20"
-                          : "bg-brand-navy/10 text-brand-navy/50"
-                    }`}
-                  >
-                    {i < step ? <Check className="h-4 w-4" /> : i + 1}
-                  </div>
-                  <div
-                    className={`hidden h-1 flex-1 rounded-full sm:block ${
-                      i === STEPS.length - 1 ? "opacity-0" : i < step ? "bg-brand-blue" : "bg-brand-navy/10"
-                    }`}
-                  />
-                </div>
-                <span
-                  className={`text-center text-[11px] font-medium sm:text-xs ${
-                    i === step ? "text-brand-navy" : "text-brand-navy/50"
-                  }`}
-                >
-                  {label}
-                </span>
-              </div>
-            ))}
-          </div>
-      </div>
+  /* ----------------------- Live-Konfigurationsübersicht ----------------------- */
 
-      <div className="px-6 py-8 sm:px-10 sm:py-10">
-            {/* STEP 1 - Leistungen */}
+  const selectedUsageLabel = usageClasses.find((u) => u.value === usage)?.label
+  const selectedStoneColorLabel = stoneColors.find((c) => c.value === stoneColor)?.label
+  const selectedJointMaterial = jointMaterials.find((m) => m.id === jointMaterialId)
+  const selectedProtectionLabel =
+    protectionId === "none" ? "Ohne Schutz" : protectionOptions.find((p) => p.id === protectionId)?.title
+
+  const summaryItems: { label: string; value: string; swatch?: string }[] = []
+  if (areaSize[0] > 0) {
+    const at = stoneAreaTypes.find((a) => a.value === areaType)?.label ?? areaType
+    summaryItems.push({ label: "Fläche", value: `${at} · ${areaSize[0]} m²` })
+  }
+  if (selectedUsageLabel) summaryItems.push({ label: "Nutzung", value: selectedUsageLabel })
+  if (properties.length > 0) {
+    summaryItems.push({
+      label: "Fugeneigenschaften",
+      value: properties.map((p) => jointProperties.find((jp) => jp.value === p)?.label ?? p).join(", "),
+    })
+  }
+  if (selectedStoneColorLabel) {
+    summaryItems.push({ label: "Steinfarbe", value: selectedStoneColorLabel, swatch: selectedStoneColorLabel })
+  }
+  if (jointMaterialId === "none") {
+    summaryItems.push({ label: "Fuge", value: "Ohne Fugensanierung" })
+  } else if (selectedJointMaterial) {
+    summaryItems.push({
+      label: "Fuge",
+      value: `${selectedJointMaterial.title}${jointColor ? ` · ${jointColor}` : ""}`,
+      swatch: jointColor ?? undefined,
+    })
+  }
+  if (selectedProtectionLabel) summaryItems.push({ label: "Schutz", value: selectedProtectionLabel })
+  if (thermalWeed !== null) {
+    summaryItems.push({ label: "Unkrautentfernung", value: thermalWeed ? "Thermisch, gewünscht" : "Nein" })
+  }
+
+  return (
+    <div ref={topRef} className="scroll-mt-24">
+      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_300px] md:items-start">
+        {/* -------------------------------- Wizard -------------------------------- */}
+        <div className="overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-brand-navy/5">
+          {/* Compact progress header */}
+          <div className="border-b border-brand-navy/5 bg-brand-mint/40 px-6 py-4 sm:px-8">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="font-display text-sm font-extrabold text-brand-navy">
+                Schritt {step + 1} <span className="text-brand-navy/40">von {STEPS.length}</span>
+              </p>
+              <p className="text-sm font-semibold text-brand-blue">{STEPS[step]}</p>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-brand-navy/10">
+              <div
+                className="h-full rounded-full bg-brand-blue transition-all duration-300"
+                style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="px-6 py-8 sm:px-10 sm:py-10">
+            {/* STEP 0 - Fläche */}
             {step === 0 && (
               <div className="space-y-8">
                 <div>
-                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                    Welche Leistungen benötigen Sie?
-                  </h3>
-                  <p className="text-sm text-neutral-500">Wählen Sie eine oder mehrere Leistungen aus.</p>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {stoneOfferServices.map((service) => {
-                    const active = selectedServices.includes(service.id)
-                    return (
-                      <button
-                        key={service.id}
-                        type="button"
-                        onClick={() => toggleService(service.id)}
-                        className={`flex items-start gap-4 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
-                          active
-                            ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
-                            : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
-                        }`}
-                      >
-                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-brand-mint">
-                          <Image src={service.image} alt={service.title} fill sizes="64px" className="object-cover" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="text-sm font-semibold text-brand-navy">{service.title}</p>
-                            <div
-                              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-                                active ? "border-brand-blue bg-brand-blue" : "border-brand-navy/20"
-                              }`}
-                            >
-                              {active && <Check className="h-3 w-3 text-white" />}
-                            </div>
-                          </div>
-                          <p className="mt-1 text-xs leading-relaxed text-neutral-500">{service.description}</p>
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* STEP 2 - Fläche */}
-            {step === 1 && (
-              <div className="space-y-8">
-                <div>
-                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                    Angaben zu Ihrer Fläche
-                  </h3>
-                  <p className="text-sm text-neutral-500">Diese Angaben helfen uns bei der Vorbereitung Ihres Termins.</p>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">Wie groß ist Ihre Fläche?</h3>
+                  <p className="text-sm text-neutral-500">Wählen Sie die Art der Fläche und die ungefähre Größe.</p>
                 </div>
 
                 <div className="rounded-2xl bg-brand-mint/50 p-5">
@@ -294,120 +320,492 @@ export function StoneOfferWizard() {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm font-semibold text-brand-navy">Ungefähre Flächengröße</Label>
-                    <span className="font-display text-lg font-extrabold text-brand-blue">{areaSize[0]} m²</span>
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <Label className="text-sm font-semibold text-brand-navy">Gesamtfläche</Label>
+                      <p className="mt-1 font-display text-2xl font-extrabold text-brand-blue">
+                        {areaSize[0]} m²
+                      </p>
+                    </div>
+                    <span className="text-sm text-neutral-500">Über 300 m² auf Anfrage</span>
                   </div>
-                  <Slider min={10} max={500} step={5} value={areaSize} onValueChange={setAreaSize} />
-                </div>
-
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="condition" className="font-normal text-neutral-600">
-                      Zustand der Fläche <span className="text-neutral-400">(optional)</span>
-                    </Label>
-                    <Textarea
-                      id="condition"
-                      rows={3}
-                      placeholder="z. B. verwittert, Moosbewuchs, alte Fugen bröckeln..."
-                      value={condition}
-                      onChange={(e) => setCondition(e.target.value)}
-                      className="font-light text-neutral-600 placeholder:text-neutral-400/70"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="date" className="flex items-center gap-2 text-sm font-normal text-neutral-600">
-                      <Calendar className="h-4 w-4 text-brand-blue" />
-                      Wunschtermin <span className="text-neutral-400">(optional)</span>
-                    </Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={preferredDate}
-                      onChange={(e) => setPreferredDate(e.target.value)}
-                      className="font-light text-neutral-600"
-                    />
-                  </div>
+                  <Slider min={0} max={300} step={5} value={areaSize} onValueChange={setAreaSize} />
                 </div>
               </div>
             )}
 
-            {/* STEP 3 - Fotos */}
+            {/* STEP 1 - Materialbedarf */}
+            {step === 1 && (
+              <div className="space-y-8">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    Materialbedarf der Fuge berechnen
+                  </h3>
+                  <p className="text-sm text-neutral-500">
+                    Wenn Sie unsicher sind, lassen Sie einfach die Standardwerte - diese sind die gängigsten Maße für
+                    Pflastersteinflächen.
+                  </p>
+                </div>
+
+                <div className="grid gap-8 sm:grid-cols-2">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-brand-navy">Steinbreite</Label>
+                      <span className="font-display text-sm font-extrabold text-brand-blue">{steinbreite[0]} cm</span>
+                    </div>
+                    <Slider min={5} max={60} step={1} value={steinbreite} onValueChange={setSteinbreite} />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-brand-navy">Steinlänge</Label>
+                      <span className="font-display text-sm font-extrabold text-brand-blue">{steinlaenge[0]} cm</span>
+                    </div>
+                    <Slider min={5} max={60} step={1} value={steinlaenge} onValueChange={setSteinlaenge} />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-brand-navy">Fugenbreite</Label>
+                      <span className="font-display text-sm font-extrabold text-brand-blue">{fugenbreite[0]} mm</span>
+                    </div>
+                    <Slider min={1} max={20} step={1} value={fugenbreite} onValueChange={setFugenbreite} />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-semibold text-brand-navy">Fugentiefe</Label>
+                      <span className="font-display text-sm font-extrabold text-brand-blue">{fugentiefe[0]} mm</span>
+                    </div>
+                    <Slider min={10} max={80} step={1} value={fugentiefe} onValueChange={setFugentiefe} />
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={resetDimensions}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-blue underline underline-offset-4 hover:text-brand-teal cursor-pointer"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    Zurück zu Standardwerten
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2 - Nutzung */}
             {step === 2 && (
               <div className="space-y-8">
                 <div>
                   <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
-                    Fotos hochladen <span className="text-neutral-400">(optional)</span>
+                    Wie stark wird die Fläche genutzt?
                   </h3>
-                  <p className="text-sm text-neutral-500">Bilder helfen uns, Ihre Anfrage genauer einzuschätzen.</p>
+                  <p className="text-sm text-neutral-500">
+                    Wählen Sie die Belastungsklasse - wir zeigen Ihnen nur Materialien, die dafür geeignet sind.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {usageClasses.map((u) => {
+                    const active = usage === u.value
+                    const Icon = u.icon
+                    return (
+                      <button
+                        key={u.value}
+                        type="button"
+                        onClick={() => selectUsage(u.value)}
+                        className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
+                          active
+                            ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                            : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
+                        }`}
+                      >
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-sky/40 text-brand-navy">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className="text-sm font-semibold text-brand-navy">{u.label}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* STEP 3 - Fugeneigenschaften */}
+            {step === 3 && (
+              <div className="space-y-8">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    Welche Eigenschaften sind Ihnen bei der neuen Fuge wichtig?
+                  </h3>
+                  <p className="text-sm text-neutral-500">
+                    Wählen Sie die Eigenschaften, die Ihre neue Fuge erfüllen muss - wir filtern die passenden
+                    Materialien automatisch.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {jointProperties.map((p) => {
+                    const active = properties.includes(p.value)
+                    const Icon = p.icon
+                    return (
+                      <button
+                        key={p.value}
+                        type="button"
+                        onClick={() => toggleProperty(p.value)}
+                        className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
+                          active
+                            ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                            : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
+                        }`}
+                      >
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-sky/40 text-brand-navy">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className="flex-1 text-sm font-semibold text-brand-navy">{p.label}</span>
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                            active ? "border-brand-blue bg-brand-blue" : "border-brand-navy/20"
+                          }`}
+                        >
+                          {active && <Check className="h-3 w-3 text-white" />}
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+                <p className="text-sm text-neutral-500">Kein Muss - Sie können diesen Schritt auch überspringen.</p>
+              </div>
+            )}
+
+            {/* STEP 4 - Steinfarbe */}
+            {step === 4 && (
+              <div className="space-y-8">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    Welche Farbe hat Ihr Stein?
+                  </h3>
+                  <p className="text-sm text-neutral-500">
+                    Wir fragen nach der aktuellen Steinfarbe, um im nächsten Schritt eine Fugenfarbe auszuwählen, die
+                    perfekt zu Ihrem Stil passt.
+                  </p>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-semibold text-brand-navy">Aktuelle Steinfarbe</Label>
+                  <div className="mt-4 flex flex-wrap gap-5">
+                    {stoneColors.map((c) => {
+                      const active = stoneColor === c.value
+                      return (
+                        <button
+                          key={c.value}
+                          type="button"
+                          onClick={() => setStoneColor(c.value)}
+                          className="flex flex-col items-center gap-2 cursor-pointer"
+                        >
+                          <span
+                            className={`h-14 w-14 rounded-xl ring-2 transition-all ${
+                              active ? "ring-brand-blue ring-offset-2" : "ring-transparent"
+                            }`}
+                            style={{ backgroundColor: colorSwatches[c.label] ?? "#cbd5e1" }}
+                          />
+                          <span
+                            className={`text-xs ${active ? "font-semibold text-brand-navy" : "text-neutral-500"}`}
+                          >
+                            {c.label}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 5 - Passende Fuge */}
+            {step === 5 && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">Passende Fuge wählen</h3>
+                  <p className="text-sm text-neutral-500">
+                    {fallback
+                      ? "Für Ihre Kombination gibt es keine exakte Übereinstimmung - hier alle für Ihre Nutzung geeigneten Fugen. Wir beraten Sie gerne."
+                      : "Auf Basis Ihrer Nutzung und Eigenschaften passen diese Fugen zu Ihrer Fläche."}
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {shownMaterials.map((m) => {
+                    const active = jointMaterialId === m.id
+                    return (
+                      <div
+                        key={m.id}
+                        className={`overflow-hidden rounded-2xl border transition-all ${
+                          active
+                            ? "border-brand-blue ring-2 ring-brand-blue/20"
+                            : "border-brand-navy/10 hover:border-brand-blue/40"
+                        }`}
+                      >
+                        <div className="relative h-32 w-full bg-brand-mint">
+                          <Image src={m.image} alt={m.title} fill sizes="(max-width:640px) 100vw, 300px" className="object-cover" />
+                        </div>
+                        <div className="p-4">
+                          <p className="text-sm font-semibold text-brand-navy">{m.title}</p>
+                          <p className="mt-1 text-xs leading-relaxed text-neutral-500">{m.description}</p>
+
+                          <p className="mt-3 text-xs font-semibold text-brand-navy">Fugenfarbe wählen</p>
+                          <div className="mt-2 flex flex-wrap gap-3">
+                            {m.colors.map((color) => {
+                              const colorActive = active && jointColor === color
+                              return (
+                                <button
+                                  key={color}
+                                  type="button"
+                                  onClick={() => {
+                                    setJointMaterialId(m.id)
+                                    setJointColor(color)
+                                  }}
+                                  className="flex flex-col items-center gap-1 cursor-pointer"
+                                >
+                                  <ColorDot
+                                    name={color}
+                                    className={`h-7 w-7 ${colorActive ? "ring-2 ring-brand-blue ring-offset-1" : ""}`}
+                                  />
+                                  <span className="text-[10px] text-neutral-500">{color}</span>
+                                </button>
+                              )
+                            })}
+                          </div>
+
+                          <Button
+                            type="button"
+                            variant={active ? "default" : "outline"}
+                            onClick={() => selectJointMaterial(m.id)}
+                            className={`mt-4 w-full rounded-full ${
+                              active
+                                ? "bg-brand-blue text-white hover:bg-brand-teal"
+                                : "border-brand-blue/40 text-brand-blue hover:bg-brand-mint hover:text-brand-blue"
+                            }`}
+                          >
+                            {active ? (
+                              <>
+                                <Check className="h-4 w-4" />
+                                Ausgewählt
+                              </>
+                            ) : (
+                              <>
+                                <Plus className="h-4 w-4" />
+                                Auswählen
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Ohne Fugensanierung */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setJointMaterialId("none")
+                    setJointColor(null)
+                  }}
+                  className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
+                    jointMaterialId === "none"
+                      ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                      : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                      jointMaterialId === "none" ? "border-brand-blue bg-brand-blue" : "border-brand-navy/20"
+                    }`}
+                  >
+                    {jointMaterialId === "none" && <Check className="h-3 w-3 text-white" />}
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-brand-navy">Weiter ohne Fugensanierung</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-neutral-500">
+                      Wählen Sie diese Option, wenn Sie nur eine Reinigung möchten. Beachten Sie: Die alte Fuge wird
+                      dabei ausgewaschen.
+                    </span>
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {/* STEP 6 - Schutz */}
+            {step === 6 && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    Schutz für eine langlebige Oberfläche
+                  </h3>
+                  <p className="text-sm text-neutral-500">
+                    Ein Schutz erhält das Ergebnis länger - wählen Sie eine Behandlung oder fahren Sie ohne fort.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {protectionOptions.map((p) => {
+                    const active = protectionId === p.id
+                    return (
+                      <div
+                        key={p.id}
+                        className={`overflow-hidden rounded-2xl border transition-all ${
+                          active
+                            ? "border-brand-blue ring-2 ring-brand-blue/20"
+                            : "border-brand-navy/10 hover:border-brand-blue/40"
+                        }`}
+                      >
+                        <div className="flex flex-col sm:flex-row">
+                          <div className="relative h-40 w-full shrink-0 bg-brand-mint sm:h-auto sm:w-40">
+                            <Image src={p.image} alt={p.title} fill sizes="(max-width:640px) 100vw, 160px" className="object-cover" />
+                          </div>
+                          <div className="flex-1 p-4">
+                            <p className="text-sm font-semibold text-brand-navy">{p.title}</p>
+                            <p className="mt-1 text-xs leading-relaxed text-neutral-500">{p.description}</p>
+                            <Button
+                              type="button"
+                              variant={active ? "default" : "outline"}
+                              onClick={() => setProtectionId(p.id)}
+                              className={`mt-4 w-full rounded-full sm:w-auto ${
+                                active
+                                  ? "bg-brand-blue text-white hover:bg-brand-teal"
+                                  : "border-brand-blue/40 text-brand-blue hover:bg-brand-mint hover:text-brand-blue"
+                              }`}
+                            >
+                              {active ? (
+                                <>
+                                  <Check className="h-4 w-4" />
+                                  Ausgewählt
+                                </>
+                              ) : (
+                                <>
+                                  <Plus className="h-4 w-4" />
+                                  Auswählen
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-brand-blue/30 bg-brand-mint/40 px-6 py-12 text-center transition-colors hover:border-brand-blue/60 hover:bg-brand-mint/70 cursor-pointer"
+                  onClick={() => setProtectionId("none")}
+                  className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
+                    protectionId === "none"
+                      ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                      : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
+                  }`}
                 >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue/10">
-                    <Upload className="h-6 w-6 text-brand-blue" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-brand-navy">Fotos auswählen</p>
-                    <p className="text-sm text-neutral-500">Klicken Sie hier, um Bilder hochzuladen</p>
-                  </div>
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                      protectionId === "none" ? "border-brand-blue bg-brand-blue" : "border-brand-navy/20"
+                    }`}
+                  >
+                    {protectionId === "none" && <Check className="h-3 w-3 text-white" />}
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-brand-navy">Weiter ohne Imprägnierung</span>
+                    <span className="mt-1 block text-xs leading-relaxed text-neutral-500">
+                      Wir empfehlen nach der Reinigung eine Imprägnierung - sonst bildet sich durch die geöffneten
+                      Poren schnell wieder Grünbelag.
+                    </span>
+                  </span>
                 </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => handleFiles(e.target.files)}
-                />
-
-                {photos.length > 0 && (
-                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-                    {photos.map((photo, i) => (
-                      <div key={photo._key} className="group relative aspect-square overflow-hidden rounded-xl ring-1 ring-brand-navy/10">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={photo.url || "/placeholder.svg"} alt={photo.name} className="h-full w-full object-cover" />
-                        {photo.status === "uploading" && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-brand-navy/50">
-                            <Loader2 className="h-5 w-5 animate-spin text-white" />
-                          </div>
-                        )}
-                        {photo.status === "error" && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-red-600/70 px-1 text-center text-[10px] font-semibold text-white">
-                            Upload fehlgeschlagen
-                          </div>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removePhoto(i)}
-                          className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand-navy/80 text-white opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer"
-                          aria-label="Foto entfernen"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {photosUploading && (
-                  <p className="flex items-center gap-2 text-sm text-neutral-500">
-                    <Loader2 className="h-4 w-4 animate-spin text-brand-blue" />
-                    Fotos werden hochgeladen…
-                  </p>
-                )}
               </div>
             )}
 
-            {/* STEP 4 - Kontakt */}
-            {step === 3 && (
+            {/* STEP 7 - Thermische Unkrautentfernung */}
+            {step === 7 && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">
+                    <span className="bg-brand-sky/60 px-1">Starkes Unkrautproblem?</span> Wir behandeln thermisch.
+                  </h3>
+                </div>
+
+                <div
+                  className={`overflow-hidden rounded-2xl border transition-all ${
+                    thermalWeed === true
+                      ? "border-brand-blue ring-2 ring-brand-blue/20"
+                      : "border-brand-navy/10 hover:border-brand-blue/40"
+                  }`}
+                >
+                  <div className="relative h-44 w-full bg-brand-mint">
+                    <Image
+                      src={thermalWeedInfo.image}
+                      alt={thermalWeedInfo.title}
+                      fill
+                      sizes="(max-width:640px) 100vw, 600px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <p className="text-sm font-semibold text-brand-navy">{thermalWeedInfo.title}</p>
+                    <p className="mt-1 text-sm text-neutral-600">{thermalWeedInfo.description}</p>
+                    <p className="mt-3 border-t border-brand-navy/5 pt-3 text-xs leading-relaxed text-neutral-500">
+                      {thermalWeedInfo.detail}
+                    </p>
+                    <Button
+                      type="button"
+                      variant={thermalWeed === true ? "default" : "outline"}
+                      onClick={() => setThermalWeed(true)}
+                      className={`mt-4 w-full rounded-full sm:w-auto ${
+                        thermalWeed === true
+                          ? "bg-brand-blue text-white hover:bg-brand-teal"
+                          : "border-brand-blue/40 text-brand-blue hover:bg-brand-mint hover:text-brand-blue"
+                      }`}
+                    >
+                      {thermalWeed === true ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          Ausgewählt
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-4 w-4" />
+                          Auswählen
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setThermalWeed(false)}
+                  className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-all cursor-pointer ${
+                    thermalWeed === false
+                      ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                      : "border-brand-navy/10 hover:border-brand-blue/40 hover:bg-brand-mint/40"
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                      thermalWeed === false ? "border-brand-blue bg-brand-blue" : "border-brand-navy/20"
+                    }`}
+                  >
+                    {thermalWeed === false && <Check className="h-3 w-3 text-white" />}
+                  </span>
+                  <span className="text-sm font-semibold text-brand-navy">
+                    Weiter ohne thermische Unkrautbehandlung
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {/* STEP 8 - Kontakt */}
+            {step === 8 && (
               <div className="space-y-8">
                 <div>
                   <h3 className="mb-1 font-display text-xl font-extrabold text-brand-navy">Ihre Kontaktdaten</h3>
-                  <p className="text-sm text-neutral-500">Damit wir uns bei Ihnen melden können.</p>
+                  <p className="text-sm text-neutral-500">Damit wir Ihnen Ihr persönliches Angebot zusenden können.</p>
                 </div>
 
                 <div className="grid gap-5 sm:grid-cols-2">
@@ -516,15 +914,8 @@ export function StoneOfferWizard() {
                   </div>
                 </div>
 
-                {photosUploading && (
-                  <p className="flex items-center justify-center gap-2 text-center text-sm text-neutral-500">
-                    <Loader2 className="h-4 w-4 animate-spin text-brand-blue" />
-                    Ihre Fotos werden noch hochgeladen…
-                  </p>
-                )}
-
                 <Button
-                  disabled={!canProceed() || submitting || photosUploading}
+                  disabled={!canProceed() || submitting}
                   onClick={handleSubmit}
                   className="group h-16 w-full rounded-full bg-brand-blue text-lg font-bold text-white shadow-lg shadow-brand-blue/30 transition-transform hover:bg-brand-teal hover:scale-[1.02] disabled:opacity-40 sm:text-xl"
                 >
@@ -535,19 +926,19 @@ export function StoneOfferWizard() {
             )}
 
             {/* Navigation */}
-            {step !== 3 && (
-              <div className="mt-10 flex items-center justify-between">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={back}
-                  disabled={step === 0}
-                  className="text-brand-navy hover:bg-brand-mint disabled:opacity-0"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Zurück
-                </Button>
+            <div className="mt-10 flex items-center justify-between">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={back}
+                disabled={step === 0}
+                className="text-brand-navy hover:bg-brand-mint disabled:opacity-0"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Zurück
+              </Button>
 
+              {step !== STEPS.length - 1 && (
                 <Button
                   type="button"
                   onClick={next}
@@ -557,21 +948,46 @@ export function StoneOfferWizard() {
                   Weiter
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
-              </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ---------------------- Live-Konfigurationsübersicht ---------------------- */}
+        <aside className="md:sticky md:top-24">
+          <div className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-brand-navy/5">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
+                <ClipboardList className="h-4 w-4" />
+              </span>
+              <h4 className="font-display text-base font-extrabold text-brand-navy">Ihre Konfiguration</h4>
+            </div>
+
+            {summaryItems.length === 0 ? (
+              <p className="text-sm leading-relaxed text-neutral-500">
+                Ihre Auswahl erscheint hier, während Sie den Rechner durchlaufen.
+              </p>
+            ) : (
+              <ul className="space-y-3">
+                {summaryItems.map((item) => (
+                  <li key={item.label} className="border-b border-brand-navy/5 pb-3 last:border-0 last:pb-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-navy/40">
+                      {item.label}
+                    </p>
+                    <div className="mt-0.5 flex items-center gap-2">
+                      {item.swatch && <ColorDot name={item.swatch} className="h-4 w-4 shrink-0" />}
+                      <p className="text-sm font-semibold text-brand-navy">{item.value}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             )}
-            {step === 3 && (
-              <div className="mt-6 flex items-center justify-start">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={back}
-                  className="text-brand-navy hover:bg-brand-mint"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Zurück
-                </Button>
-              </div>
-            )}
+
+            <p className="mt-5 rounded-xl bg-brand-mint/60 px-4 py-3 text-xs leading-relaxed text-neutral-500">
+              Kostenlos &amp; unverbindlich - Sie erhalten anschließend Ihr persönliches Angebot.
+            </p>
+          </div>
+        </aside>
       </div>
     </div>
   )

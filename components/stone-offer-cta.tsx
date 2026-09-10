@@ -16,14 +16,14 @@ export function StoneOfferCta() {
             <div className="max-w-2xl">
               <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-mint px-4 py-1.5 text-sm font-semibold text-brand-teal">
                 <Sparkles className="h-4 w-4" />
-                Steinpflege-Angebotsersteller
+                Steinpflege-Rechner
               </span>
               <h2 className="text-balance font-display text-2xl font-extrabold tracking-tight text-brand-navy sm:text-3xl">
                 Fugensand, Imprägnierung oder Pflegeöl gesucht?
               </h2>
               <p className="mt-3 text-pretty text-neutral-600">
-                Stellen Sie Ihre individuelle Anfrage für Fugensand, VarioSand, Fugenmörtel, Imprägnierung,
-                Pflegeöl, thermische Unkrautentfernung oder Steinfarben zusammen - kostenlos und unverbindlich.
+                Konfigurieren Sie Schritt für Schritt Ihre passende Fuge, Steinfarbe, Imprägnierung, Pflegeöl oder
+                thermische Unkrautentfernung - kostenlos und unverbindlich.
               </p>
             </div>
             <Button
@@ -32,7 +32,7 @@ export function StoneOfferCta() {
               className="group shrink-0 rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105 hover:bg-brand-teal"
             >
               <Link href="/stein-angebot" className="cursor-pointer">
-                Zum Angebotsersteller
+                Zum Steinpflege-Rechner
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>

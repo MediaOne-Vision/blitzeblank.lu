@@ -1,23 +1,27 @@
-import { logoAttachment, photoUrl } from "@/lib/quote-email"
-
-export interface StoneOfferPhoto {
-  name: string
-  /** Pfad im privaten Blob-Store */
-  pathname: string
-}
+import { logoAttachment } from "@/lib/quote-email"
 
 export interface StoneOfferSubmission {
-  /** Titel der ausgewählten Leistungen, z. B. ["Fugensand", "Pflegeöl"] */
-  services: string[]
   areaTypeLabel: string
   areaSize?: number
-  condition: string
-  preferredDate: string
-  address: string
-  photos?: StoneOfferPhoto[]
+  /** Maße für den Materialbedarf der Fuge */
+  dimensions: {
+    steinbreite: number
+    steinlaenge: number
+    fugenbreite: number
+    fugentiefe: number
+  }
+  usageLabel: string
+  jointPropertyLabels: string[]
+  stoneColorLabel: string
+  /** Gewählte Fuge inkl. Farbe, oder null wenn "ohne Fugensanierung" */
+  jointChoice: { materialLabel: string; colorLabel: string } | null
+  /** Gewählter Schutz, oder null wenn "ohne Schutz" */
+  protectionLabel: string | null
+  thermalWeed: boolean
   name: string
   email: string
   phone: string
+  address: string
   message: string
   /** Eindeutige Anfrage-ID zur Wiedererkennung in Rückfragen */
   leadId: string
@@ -46,20 +50,26 @@ const escapeHtml = (value: string) =>
 
 function buildSummaryRows(s: StoneOfferSubmission): { label: string; value: string }[] {
   const rows: { label: string; value: string }[] = []
-  if (s.services.length > 0) {
-    rows.push({ label: "Gewünschte Leistungen", value: s.services.join(", ") })
-  }
   rows.push({ label: "Art der Fläche", value: s.areaTypeLabel })
   if (s.areaSize) {
     rows.push({ label: "Ungefähre Fläche", value: `${s.areaSize} m²` })
   }
-  if (s.condition.trim()) {
-    rows.push({ label: "Zustand / Anmerkungen zur Fläche", value: s.condition })
-  }
-  rows.push({ label: "Adresse", value: s.address || "—" })
-  if (s.preferredDate) {
-    rows.push({ label: "Wunschtermin", value: s.preferredDate })
-  }
+  rows.push({ label: "Nutzung / Belastung", value: s.usageLabel })
+  rows.push({
+    label: "Materialbedarf (Fuge)",
+    value: `Stein ${s.dimensions.steinbreite}×${s.dimensions.steinlaenge} cm · Fuge ${s.dimensions.fugenbreite} mm breit, ${s.dimensions.fugentiefe} mm tief`,
+  })
+  rows.push({ label: "Aktuelle Steinfarbe", value: s.stoneColorLabel })
+  rows.push({
+    label: "Wichtige Fugeneigenschaften",
+    value: s.jointPropertyLabels.length > 0 ? s.jointPropertyLabels.join(", ") : "Keine Angabe",
+  })
+  rows.push({
+    label: "Gewählte Fuge",
+    value: s.jointChoice ? `${s.jointChoice.materialLabel} (Farbe: ${s.jointChoice.colorLabel})` : "Ohne Fugensanierung",
+  })
+  rows.push({ label: "Oberflächenschutz", value: s.protectionLabel ?? "Ohne Schutz" })
+  rows.push({ label: "Thermische Unkrautentfernung", value: s.thermalWeed ? "Ja, gewünscht" : "Nein" })
   return rows
 }
 
@@ -68,7 +78,7 @@ function rowsToHtml(rows: { label: string; value: string }[]): string {
     .map(
       (r, i) => `
         <tr>
-          <td style="padding:10px 0;color:${COLORS.slateLight};font-size:14px;vertical-align:top;width:170px;${
+          <td style="padding:10px 0;color:${COLORS.slateLight};font-size:14px;vertical-align:top;width:190px;${
             i === 0 ? "" : `border-top:1px solid ${COLORS.border};`
           }">${escapeHtml(r.label)}</td>
           <td style="padding:10px 0;color:${COLORS.ink};font-size:14px;font-weight:600;${
@@ -144,25 +154,17 @@ export function buildStoneOfferCustomerEmail(s: StoneOfferSubmission, logoSrc = 
 
   const summaryCard = `
     <div style="border:1px solid ${COLORS.border};border-radius:14px;padding:20px 22px;margin-bottom:20px;">
-      ${sectionTitle("Zusammenfassung Ihrer Anfrage")}
+      ${sectionTitle("Zusammenfassung Ihrer Konfiguration")}
       <table style="width:100%;border-collapse:collapse;margin-top:8px;">${rowsToHtml(rows)}</table>
     </div>`
-
-  const photoNote =
-    s.photos && s.photos.length > 0
-      ? `<p style="margin:0 0 20px;color:${COLORS.slate};font-size:14px;line-height:1.6;">
-           Ihre ${s.photos.length} hochgeladenen Foto${s.photos.length === 1 ? "" : "s"} haben wir erhalten.
-         </p>`
-      : ""
 
   const html = emailShell({
     logoSrc,
     badge: "Ihre Anfrage bei Blitzeblank",
     headline: `Vielen Dank, ${firstName}!`,
-    intro: "Wir haben Ihre Anfrage zur Pflasterflächen- und Steinpflege erhalten und melden uns in Kürze bei Ihnen.",
+    intro: "Wir haben Ihre Anfrage über den Steinpflege-Rechner erhalten und melden uns in Kürze mit Ihrem persönlichen Angebot.",
     bodyHtml:
       summaryCard +
-      photoNote +
       contactCta() +
       `<p style="margin:0;color:${COLORS.slate};font-size:15px;line-height:1.6;">
         Bei Fragen erreichen Sie uns jederzeit. Wir freuen uns darauf, für Sie tätig zu werden!
@@ -172,9 +174,9 @@ export function buildStoneOfferCustomerEmail(s: StoneOfferSubmission, logoSrc = 
   const text = [
     `Vielen Dank, ${s.name}!`,
     "",
-    "Wir haben Ihre Anfrage zur Pflasterflächen- und Steinpflege erhalten und melden uns in Kürze bei Ihnen.",
+    "Wir haben Ihre Anfrage über den Steinpflege-Rechner erhalten und melden uns in Kürze mit Ihrem persönlichen Angebot.",
     "",
-    "Zusammenfassung:",
+    "Zusammenfassung Ihrer Konfiguration:",
     rowsToText(rows),
     "",
     `Telefon: ${CONTACT.phone}`,
@@ -183,59 +185,20 @@ export function buildStoneOfferCustomerEmail(s: StoneOfferSubmission, logoSrc = 
     "Blitzeblank · noreply@mail.blitzeblank.lu",
   ].join("\n")
 
-  return { html, text, subject: "Ihre Anfrage zur Pflasterflächen- & Steinpflege bei Blitzeblank" }
+  return { html, text, subject: "Ihre Anfrage über den Steinpflege-Rechner bei Blitzeblank" }
 }
 
-/** Interne Benachrichtigung mit allen Infos zur neuen Stein-Angebotsanfrage. */
-export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, baseUrl: string, logoSrc = "cid:blitzeblank-logo") {
+/** Interne Benachrichtigung mit allen Infos zur neuen Steinpflege-Anfrage. */
+export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, logoSrc = "cid:blitzeblank-logo") {
   const rows = buildSummaryRows(s)
 
   const contactRows: { label: string; value: string }[] = [
     { label: "Name", value: s.name },
     { label: "E-Mail", value: s.email },
     { label: "Telefon", value: s.phone || "—" },
+    { label: "Adresse", value: s.address || "—" },
     { label: "Anfrage-ID", value: s.leadId },
   ]
-
-  const photos = s.photos ?? []
-  const photosBlock =
-    photos.length > 0
-      ? `
-        <div style="border:1px solid ${COLORS.border};border-radius:14px;padding:20px 22px;margin-bottom:22px;">
-          ${sectionTitle(`Fotos (${photos.length})`)}
-          <p style="margin:6px 0 14px;color:${COLORS.slateLight};font-size:13px;">
-            Die Fotos sind dieser E-Mail als Anhang beigefügt und können zusätzlich über die folgenden Links geöffnet werden:
-          </p>
-          <table style="border-collapse:collapse;">
-            <tr>
-              ${photos
-                .map(
-                  (p) => `
-                <td style="padding:0 8px 8px 0;vertical-align:top;">
-                  <a href="${photoUrl(baseUrl, p.pathname)}" target="_blank" style="text-decoration:none;">
-                    <img src="${photoUrl(baseUrl, p.pathname)}" alt="${escapeHtml(
-                      p.name,
-                    )}" width="96" height="96" style="width:96px;height:96px;object-fit:cover;border-radius:10px;border:1px solid ${
-                      COLORS.border
-                    };display:block;" />
-                  </a>
-                </td>`,
-                )
-                .join("")}
-            </tr>
-          </table>
-          <p style="margin:14px 0 0;font-size:13px;line-height:1.7;">
-            ${photos
-              .map(
-                (p, i) =>
-                  `<a href="${photoUrl(baseUrl, p.pathname)}" target="_blank" style="color:${
-                    COLORS.teal
-                  };font-weight:600;">Foto ${i + 1} öffnen (${escapeHtml(p.name)})</a>`,
-              )
-              .join("<br/>")}
-          </p>
-        </div>`
-      : ""
 
   const messageBlock = s.message.trim()
     ? `<div style="border:1px solid ${COLORS.border};border-radius:14px;padding:20px 22px;margin-bottom:22px;">
@@ -248,8 +211,8 @@ export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, baseUrl: s
 
   const html = emailShell({
     logoSrc,
-    badge: "Neue Anfrage: Pflasterflächen- & Steinpflege",
-    headline: s.services.length > 0 ? s.services.join(", ") : "Steinpflege-Angebotsersteller",
+    badge: "Neue Anfrage: Steinpflege-Rechner",
+    headline: s.jointChoice ? s.jointChoice.materialLabel : "Steinpflege-Anfrage",
     intro: `<span style="display:inline-block;color:#ffffff;font-weight:700;">Anfrage-ID: ${escapeHtml(s.leadId)}</span>`,
     bodyHtml:
       `<div style="border:1px solid ${COLORS.border};border-radius:14px;padding:20px 22px;margin-bottom:22px;">
@@ -257,25 +220,24 @@ export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, baseUrl: s
          <table style="width:100%;border-collapse:collapse;margin-top:8px;">${rowsToHtml(contactRows)}</table>
        </div>` +
       `<div style="border:1px solid ${COLORS.border};border-radius:14px;padding:20px 22px;margin-bottom:22px;">
-         ${sectionTitle("Details der Anfrage")}
+         ${sectionTitle("Konfiguration")}
          <table style="width:100%;border-collapse:collapse;margin-top:8px;">${rowsToHtml(rows)}</table>
        </div>` +
-      photosBlock +
       messageBlock,
   })
 
   const text = [
-    `Neue Anfrage: Pflasterflächen- & Steinpflege (${s.leadId})`,
+    `Neue Anfrage: Steinpflege-Rechner (${s.leadId})`,
     "",
     "Kontaktdaten:",
     rowsToText(contactRows),
     "",
-    "Details der Anfrage:",
+    "Konfiguration:",
     rowsToText(rows),
     s.message.trim() ? `\nNachricht:\n${s.message.trim()}` : "",
   ].join("\n")
 
-  return { html, text, subject: `Neue Anfrage: Pflasterflächen- & Steinpflege (${s.leadId})` }
+  return { html, text, subject: `Neue Anfrage: Steinpflege-Rechner (${s.leadId})` }
 }
 
-export { logoAttachment, photoUrl }
+export { logoAttachment }

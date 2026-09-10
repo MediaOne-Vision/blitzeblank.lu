@@ -6,13 +6,13 @@ import {
   buildStoneOfferCustomerEmail,
   buildStoneOfferInternalEmail,
   logoAttachment,
-  photoUrl,
   type StoneOfferSubmission,
 } from "@/lib/stone-offer-email"
 import { isRateLimited } from "@/lib/simple-rate-limit"
 
 const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
+/** Interne Benachrichtigung für den Steinpflege-Rechner geht ausschließlich hierhin. */
+const INTERNAL_RECIPIENT = "felicia@mediaone-vision.de"
 
 /** Erlaubt max. 5 Absendungen pro IP innerhalb von 10 Minuten */
 const RATE_LIMIT = { max: 5, windowMs: 10 * 60 * 1000 }
@@ -25,18 +25,6 @@ function isValidEmail(email: string): boolean {
   const [, domain] = trimmed.split("@")
   if (!domain || domain.startsWith(".") || domain.endsWith(".")) return false
   return true
-}
-
-async function getBaseUrl(): Promise<string> {
-  try {
-    const h = await headers()
-    const host = h.get("x-forwarded-host") ?? h.get("host")
-    const proto = h.get("x-forwarded-proto") ?? "https"
-    if (host) return `${proto}://${host}`
-  } catch {
-    // headers() nicht verfügbar – Fallback unten
-  }
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://blitzeblank.lu"
 }
 
 interface SubmitStoneOfferInput {
@@ -52,13 +40,13 @@ export async function submitStoneOffer(input: SubmitStoneOfferInput) {
 
   // Honeypot ausgefüllt -> stiller Erfolg, keine Verarbeitung.
   if (honeypot.trim().length > 0) {
-    console.log("[v0] Stein-Angebot: Honeypot ausgelöst, Anfrage verworfen")
+    console.log("[v0] Steinpflege-Rechner: Honeypot ausgelöst, Anfrage verworfen")
     return { success: true as const, emailed: false as const }
   }
 
   // Formular zu schnell abgesendet (< 3 Sekunden) -> vermutlich Bot.
   if (Date.now() - renderedAt < 3000) {
-    console.log("[v0] Stein-Angebot: Timing-Check ausgelöst, Anfrage verworfen")
+    console.log("[v0] Steinpflege-Rechner: Timing-Check ausgelöst, Anfrage verworfen")
     return { success: true as const, emailed: false as const }
   }
 
@@ -69,7 +57,7 @@ export async function submitStoneOffer(input: SubmitStoneOfferInput) {
   const h = await headers()
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "unknown"
   if (isRateLimited(`stone-offer:${ip}`, RATE_LIMIT)) {
-    console.log("[v0] Stein-Angebot: Rate-Limit erreicht für IP", ip)
+    console.log("[v0] Steinpflege-Rechner: Rate-Limit erreicht für IP", ip)
     return { success: true as const, emailed: false as const }
   }
 
@@ -81,19 +69,9 @@ export async function submitStoneOffer(input: SubmitStoneOfferInput) {
   }
 
   const resend = new Resend(apiKey)
-  const baseUrl = await getBaseUrl()
 
   const customerEmail = buildStoneOfferCustomerEmail(submission)
-  const internalEmail = buildStoneOfferInternalEmail(submission, baseUrl)
-
-  const photoAttachments = (submission.photos ?? []).map((p, i) => {
-    const ext = p.name.split(".").pop()?.toLowerCase()
-    const safeExt = ext && /^[a-z0-9]+$/.test(ext) ? ext : "jpg"
-    return {
-      filename: `Foto-${i + 1}.${safeExt}`,
-      path: photoUrl(baseUrl, p.pathname),
-    }
-  })
+  const internalEmail = buildStoneOfferInternalEmail(submission)
 
   try {
     const internalResult = await resend.emails.send({
@@ -103,11 +81,11 @@ export async function submitStoneOffer(input: SubmitStoneOfferInput) {
       subject: internalEmail.subject,
       html: internalEmail.html,
       text: internalEmail.text,
-      attachments: [logoAttachment, ...photoAttachments],
+      attachments: [logoAttachment],
     })
 
     if (internalResult.error) {
-      console.log("[v0] Fehler beim Versand der internen Stein-Angebot-Mail:", internalResult.error)
+      console.log("[v0] Fehler beim Versand der internen Steinpflege-Mail:", internalResult.error)
     }
 
     const customerResult = await resend.emails.send({
@@ -120,13 +98,13 @@ export async function submitStoneOffer(input: SubmitStoneOfferInput) {
     })
 
     if (customerResult.error) {
-      console.log("[v0] Fehler beim Versand der Stein-Angebot-Kundenbestätigung:", customerResult.error)
+      console.log("[v0] Fehler beim Versand der Steinpflege-Kundenbestätigung:", customerResult.error)
     }
 
     const emailed = !internalResult.error && !customerResult.error
     return { success: true as const, emailed }
   } catch (error) {
-    console.log("[v0] Unerwarteter Fehler beim Stein-Angebot-E-Mail-Versand:", error)
+    console.log("[v0] Unerwarteter Fehler beim Steinpflege-E-Mail-Versand:", error)
     return { success: true as const, emailed: false as const }
   }
 }

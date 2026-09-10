@@ -5,9 +5,9 @@ import { StoneOfferWizard } from "@/components/stone-offer-wizard"
 import { Mountain } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Steinpflege-Angebotsersteller | Blitzeblank - Professionelle Reinigung",
+  title: "Steinpflege-Rechner | Blitzeblank - Professionelle Reinigung",
   description:
-    "Erstellen Sie in wenigen Schritten Ihre individuelle Anfrage für Fugensand, Imprägnierung, Pflegeöl und weitere Steinpflege-Leistungen.",
+    "Konfigurieren Sie Schritt für Schritt Ihre Pflasterflächen- und Steinpflege: Fläche, Fuge, Steinfarbe, Schutz und thermische Unkrautentfernung - kostenlos und unverbindlich.",
   alternates: {
     canonical: "/stein-angebot",
   },
@@ -27,18 +27,19 @@ export default function SteinAngebotPage() {
               Pflasterflächen- &amp; Steinpflege
             </span>
             <h1 className="mb-4 text-balance font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-              Ihr Steinpflege-Angebotsersteller
+              Ihr Steinpflege-Rechner
             </h1>
             <p className="text-pretty text-lg text-white/75">
-              Fugensand, VarioSand, Imprägnierung, Pflegeöl, thermische Unkrautentfernung oder Steinfarben - stellen
-              Sie in wenigen Schritten Ihre individuelle Anfrage zusammen. Kostenlos und unverbindlich.
+              Konfigurieren Sie Schritt für Schritt Ihre Pflasterflächen- und Steinpflege - von der Fläche über die
+              passende Fuge und Steinfarbe bis zu Schutz und thermischer Unkrautentfernung. Kostenlos und
+              unverbindlich.
             </p>
           </div>
         </section>
 
         {/* Wizard */}
         <section className="bg-brand-mint py-12 lg:py-16">
-          <div className="mx-auto max-w-4xl px-6">
+          <div className="mx-auto max-w-6xl px-6">
             <StoneOfferWizard />
           </div>
         </section>
