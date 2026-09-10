@@ -128,36 +128,20 @@ export interface JointMaterial {
 
 export const jointMaterials: JointMaterial[] = [
   {
-    id: "standard-fugensand",
-    title: "Standard Fugensand (Quarzsand)",
-    description: "Gebrochener Fugensand für Pflaster und Terrassen - stabile, langlebige Fugen im Außenbereich.",
-    image: "/images/products/fugensand.png",
-    properties: ["wasserdurchlaessig", "oekologisch"],
-    usage: ["fussgaenger"],
-    colors: ["Natur"],
-  },
-  {
-    id: "premium-fugensand",
-    title: "Premium Fugensand",
-    description: "Quarzsand mit hohem pH-Wert - reduziert Unkraut- und Moosbewuchs auf der Pflasterfläche.",
-    image: "/images/products/fugensand.png",
-    properties: ["wasserdurchlaessig", "unkrauthemmend", "oekologisch"],
-    usage: ["fussgaenger", "pkw"],
-    colors: ["Basalt", "Natur", "Steingrau"],
-  },
-  {
     id: "variosand",
-    title: "VarioSand (Polymer-Fugensand)",
-    description: "Elastischer Fugensand mit Bindemittel - fest, unkrauthemmend und dennoch wasserdurchlässig.",
+    title: "vdw VarioSand (Fugensand)",
+    description:
+      "Bindiger Spezialfugensand für die ungebundene Bauweise - unkrauthemmend, staubarm zu verarbeiten und wasserdurchlässig. Ideal für Einfahrten, Gehwege und Betonsteinpflaster mit engen Fugen (2-4 mm).",
     image: "/images/products/variosand.png",
-    properties: ["fest", "unkrauthemmend", "wasserdurchlaessig"],
+    properties: ["fest", "unkrauthemmend", "wasserdurchlaessig", "oekologisch"],
     usage: ["fussgaenger", "pkw"],
     colors: ["Natur", "Steingrau", "Basalt"],
   },
   {
     id: "fugenmoertel",
-    title: "Fugenmörtel",
-    description: "Feste, dauerhafte Verfugung für stark beanspruchte Flächen - auch für PKW und LKW geeignet.",
+    title: "vdw 400 ZementfugenMörtel",
+    description:
+      "Zementärer, schnellhärtender Fugenmörtel für PKW-beanspruchte Flächen im Innen- und Außenbereich. Hoher Frost-/Tausalzwiderstand, früh begehbar und belastbar - für Terrassen, Einfahrten und Gartenwege.",
     image: "/images/products/fugenmoertel.png",
     properties: ["fest", "unkrauthemmend"],
     usage: ["fussgaenger", "pkw", "lkw"],
