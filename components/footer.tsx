@@ -47,7 +47,6 @@ const TEXT = {
     rights: "Alle Rechte vorbehalten.",
     impressum: "Impressum",
     datenschutz: "Datenschutz",
-    credit: "Website glänzend umgesetzt von",
   },
   en: {
     tagline:
@@ -58,7 +57,6 @@ const TEXT = {
     rights: "All rights reserved.",
     impressum: "Legal Notice",
     datenschutz: "Privacy Policy",
-    credit: "Website shined up by",
   },
 }
 
@@ -188,17 +186,6 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
               {t.datenschutz}
             </Link>
             <CookieSettingsLink className="text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer" />
-            <span className="text-xs text-neutral-600">
-              {t.credit}{" "}
-              <a
-                href="https://mediaone.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-neutral-500 hover:text-white transition-colors cursor-pointer"
-              >
-                MediaOne
-              </a>
-            </span>
           </div>
         </div>
       </div>
