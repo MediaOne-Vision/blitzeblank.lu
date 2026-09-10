@@ -544,8 +544,14 @@ export function StoneOfferWizard() {
                             : "border-brand-navy/10 hover:border-brand-blue/40"
                         }`}
                       >
-                        <div className="relative h-32 w-full bg-brand-mint">
-                          <Image src={m.image} alt={m.title} fill sizes="(max-width:640px) 100vw, 300px" className="object-cover" />
+                        <div className="relative h-44 w-full bg-white">
+                          <Image
+                            src={m.image}
+                            alt={m.title}
+                            fill
+                            sizes="(max-width:640px) 100vw, 300px"
+                            className="object-contain p-3"
+                          />
                         </div>
                         <div className="p-4">
                           <p className="text-sm font-semibold text-brand-navy">{m.title}</p>
