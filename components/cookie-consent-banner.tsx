@@ -139,10 +139,14 @@ export function CookieConsentBanner() {
         aria-labelledby="cookie-title"
         className="relative my-auto w-full max-w-xl overflow-hidden rounded-3xl bg-white shadow-2xl"
       >
-        {/* CI-Kreis oben rechts */}
+        {/* CI-Kreise oben rechts: hellerer Kreis liegt unter dem kräftigen Kreis */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-gradient-to-br from-brand-sky to-brand-blue opacity-90"
+          className="pointer-events-none absolute -right-28 -top-24 h-64 w-64 rounded-full bg-brand-sky/40"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-gradient-to-br from-brand-sky to-brand-blue opacity-90"
         />
 
         <div className="relative p-6 sm:p-8">
@@ -301,9 +305,9 @@ export function CookieConsentBanner() {
             <Image
               src="/images/mediaone-logo.png"
               alt="MediaOne"
-              width={190}
-              height={48}
-              className="h-8 w-auto sm:h-9"
+              width={260}
+              height={66}
+              className="h-12 w-auto sm:h-14"
             />
           </a>
         </div>
