@@ -1,18 +1,34 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { services } from "@/lib/services"
+import { getLocalizedServices } from "@/lib/services"
+import type { Locale } from "@/lib/i18n"
 
-export function ServiceSwitcher({ currentSlug }: { currentSlug?: string }) {
+const TEXT = {
+  de: {
+    eyebrow: "Weitere Leistungen",
+    heading: "Entdecken Sie unser gesamtes Angebot",
+    current: "Aktuelle Seite",
+    view: "Ansehen",
+  },
+  en: {
+    eyebrow: "More Services",
+    heading: "Discover Our Full Range of Services",
+    current: "Current Page",
+    view: "View",
+  },
+}
+
+export function ServiceSwitcher({ currentSlug, locale = "de" }: { currentSlug?: string; locale?: Locale }) {
+  const services = getLocalizedServices(locale)
+  const t = TEXT[locale]
   return (
     <section className="bg-brand-mint py-16 lg:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">
-            Weitere Leistungen
-          </p>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">{t.eyebrow}</p>
           <h2 className="font-display text-3xl lg:text-4xl font-extrabold text-brand-navy tracking-tight text-balance">
-            Entdecken Sie unser gesamtes Angebot
+            {t.heading}
           </h2>
         </div>
 
@@ -46,10 +62,10 @@ export function ServiceSwitcher({ currentSlug }: { currentSlug?: string }) {
                 </div>
                 <span className="font-display text-sm font-bold leading-tight">{service.title}</span>
                 {isCurrent ? (
-                  <span className="text-xs font-medium text-white/80">Aktuelle Seite</span>
+                  <span className="text-xs font-medium text-white/80">{t.current}</span>
                 ) : (
                   <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-blue">
-                    Ansehen
+                    {t.view}
                     <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                   </span>
                 )}

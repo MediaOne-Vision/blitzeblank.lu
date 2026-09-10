@@ -1,7 +1,10 @@
 // Cookie-Consent Hilfsfunktionen und GTM-Loader
 // GTM wird ausschließlich nach ausdrücklicher Zustimmung geladen.
 
-export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-WGV442WX"
+// GTM-Container-ID bewusst als Klartext-Konstante (kein Env-Var):
+// Das Projekt wird via GitHub Actions deployt, wo NEXT_PUBLIC_* zur Build-Zeit
+// nicht injiziert wird und GTM sonst still ausfiele. Die ID ist nicht sensibel.
+export const GTM_ID = "GTM-WGV442WX"
 
 export const CONSENT_STORAGE_KEY = "bb-cookie-consent"
 // Version erhöhen, wenn sich Kategorien ändern -> Banner erscheint erneut
@@ -72,5 +75,11 @@ export function loadGtm(consent: ConsentState) {
   const script = document.createElement("script")
   script.async = true
   script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`
+  // Verhindert, dass ein blockiertes/fehlgeschlagenes Laden (z. B. durch einen
+  // Adblocker oder eine Netzwerksperre in der Vorschau-Umgebung) als
+  // unbehandelter globaler "error"-Event auftaucht.
+  script.onerror = () => {
+    window.__gtmLoaded = false
+  }
   document.head.appendChild(script)
 }

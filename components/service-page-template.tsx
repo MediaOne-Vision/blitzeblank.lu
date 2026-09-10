@@ -4,12 +4,14 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ServiceSwitcher } from "@/components/service-switcher"
 import { QuoteBanner } from "@/components/quote-banner"
+import { StoneOfferCta } from "@/components/stone-offer-cta"
 import { QuoteWizard } from "@/components/quote-wizard"
 import { BeforeAfterSlider } from "@/components/before-after-slider"
 import { GalleryCarousel } from "@/components/gallery-carousel"
 import { getServiceMedia } from "@/lib/service-media"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle2, MapPin, type LucideIcon } from "lucide-react"
+import { localizeHref, type Locale } from "@/lib/i18n"
 
 interface ServiceFeature {
   title: string
@@ -28,6 +30,50 @@ interface ServicePageTemplateProps {
   process: { step: string; description: string }[]
   showResults?: boolean
   showQuote?: boolean
+  locale?: Locale
+}
+
+const TEXT = {
+  de: {
+    services: "Leistungen",
+    activeIn: "Aktiv in Luxemburg, Trier, Bitburg & Region",
+    freeConsult: "Kostenlose Beratung",
+    freeQuote: "Kostenloses Angebot",
+    detailEyebrow: "Im Detail",
+    detailHeading: "Unsere Leistungen im Detail",
+    benefitsEyebrow: "Ihre Vorteile",
+    benefitsHeading: "Darauf können Sie sich verlassen",
+    processHeading: "Unser Ablauf",
+    resultsEyebrow: "Ergebnisse",
+    resultsHeading: "Sehen Sie den Unterschied",
+    resultsBody: "Ziehen Sie den Regler, um das Vorher-Nachher-Ergebnis zu vergleichen.",
+    moreImpressions: "Weitere Eindrücke",
+    quoteEyebrow: "Kostenloses Angebot",
+    quoteHeadingPrefix: "Ihr Richtpreis für",
+    quoteHeadingSuffix: "- in 2 Minuten",
+    quoteBody:
+      "Füllen Sie das Formular direkt hier aus - unverbindlich, kostenlos und ohne Weiterleitung. Sie erhalten sofort eine Preisschätzung.",
+  },
+  en: {
+    services: "Services",
+    activeIn: "Active in Luxembourg, Trier, Bitburg & the region",
+    freeConsult: "Free Consultation",
+    freeQuote: "Free Quote",
+    detailEyebrow: "In Detail",
+    detailHeading: "Our Services in Detail",
+    benefitsEyebrow: "Your Benefits",
+    benefitsHeading: "What You Can Rely On",
+    processHeading: "Our Process",
+    resultsEyebrow: "Results",
+    resultsHeading: "See the Difference",
+    resultsBody: "Drag the slider to compare the before-and-after result.",
+    moreImpressions: "More Impressions",
+    quoteEyebrow: "Free Quote",
+    quoteHeadingPrefix: "Your Estimate for",
+    quoteHeadingSuffix: "- in 2 Minutes",
+    quoteBody:
+      "Fill out the form right here - non-binding, free, and without being redirected. You'll get an instant price estimate.",
+  },
 }
 
 export function ServicePageTemplate({
@@ -40,8 +86,10 @@ export function ServicePageTemplate({
   process,
   showResults = true,
   showQuote = true,
+  locale = "de",
 }: ServicePageTemplateProps) {
   const media = getServiceMedia(slug)
+  const t = TEXT[locale]
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -70,8 +118,8 @@ export function ServicePageTemplate({
               <div>
                 {/* Breadcrumb */}
                 <nav className="mb-6 flex items-center gap-2 text-sm text-white/60">
-                  <Link href="/leistungen" className="hover:text-brand-sky cursor-pointer">
-                    Leistungen
+                  <Link href={localizeHref("/leistungen", locale)} className="hover:text-brand-sky cursor-pointer">
+                    {t.services}
                   </Link>
                   <span>/</span>
                   <span className="text-white/90">{title}</span>
@@ -83,7 +131,7 @@ export function ServicePageTemplate({
                 <p className="mb-4 text-lg text-white/75 text-pretty">{subtitle}</p>
                 <div className="mb-8 flex items-center gap-2 text-base font-semibold text-brand-sky">
                   <MapPin className="h-5 w-5 shrink-0" />
-                  <span>Aktiv in Luxemburg, Trier, Bitburg &amp; Region</span>
+                  <span>{t.activeIn}</span>
                 </div>
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <Button
@@ -91,8 +139,8 @@ export function ServicePageTemplate({
                     size="lg"
                     className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
                   >
-                    <Link href="/kontakt" className="cursor-pointer">
-                      Kostenlose Beratung
+                    <Link href={localizeHref("/kontakt", locale)} className="cursor-pointer">
+                      {t.freeConsult}
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </Button>
@@ -104,7 +152,7 @@ export function ServicePageTemplate({
                       className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
                     >
                       <Link href="#angebot" className="cursor-pointer">
-                        Kostenloses Angebot
+                        {t.freeQuote}
                       </Link>
                     </Button>
                   )}
@@ -131,9 +179,9 @@ export function ServicePageTemplate({
         <section className="bg-brand-mint py-16 lg:py-24">
           <div className="mx-auto max-w-6xl px-6">
             <div className="mx-auto mb-12 max-w-2xl text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Im Detail</p>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">{t.detailEyebrow}</p>
               <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-brand-navy">
-                Unsere Leistungen im Detail
+                {t.detailHeading}
               </h2>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -158,9 +206,11 @@ export function ServicePageTemplate({
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
               <div>
-                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Ihre Vorteile</p>
+                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">
+                  {t.benefitsEyebrow}
+                </p>
                 <h2 className="mb-6 text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-brand-navy">
-                  Darauf können Sie sich verlassen
+                  {t.benefitsHeading}
                 </h2>
                 <ul className="space-y-4">
                   {benefits.map((benefit, index) => (
@@ -173,7 +223,7 @@ export function ServicePageTemplate({
               </div>
 
               <div className="rounded-3xl bg-brand-navy p-8 shadow-lg">
-                <h3 className="mb-6 font-display text-xl font-bold text-white">Unser Ablauf</h3>
+                <h3 className="mb-6 font-display text-xl font-bold text-white">{t.processHeading}</h3>
                 <div className="space-y-5">
                   {process.map((item, index) => (
                     <div key={index} className="flex gap-4">
@@ -197,14 +247,14 @@ export function ServicePageTemplate({
           <section className="bg-brand-mint py-16 lg:py-24">
             <div className="mx-auto max-w-6xl px-6">
               <div className="mx-auto mb-12 max-w-2xl text-center">
-                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">Ergebnisse</p>
+                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">
+                  {t.resultsEyebrow}
+                </p>
                 <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-brand-navy">
-                  Sehen Sie den Unterschied
+                  {t.resultsHeading}
                 </h2>
                 {media.beforeAfter.length > 0 && (
-                  <p className="mt-3 text-neutral-600 text-pretty">
-                    Ziehen Sie den Regler, um das Vorher-Nachher-Ergebnis zu vergleichen.
-                  </p>
+                  <p className="mt-3 text-neutral-600 text-pretty">{t.resultsBody}</p>
                 )}
               </div>
 
@@ -226,7 +276,7 @@ export function ServicePageTemplate({
               {media.gallery.length > 0 && (
                 <div className="mx-auto max-w-4xl">
                   <h3 className="mb-6 text-center font-display text-xl font-bold text-brand-navy">
-                    Weitere Eindrücke
+                    {t.moreImpressions}
                   </h3>
                   <GalleryCarousel images={media.gallery} />
                 </div>
@@ -235,11 +285,14 @@ export function ServicePageTemplate({
           </section>
         )}
 
+        {/* Cross-Sell: eigenständiger Steinpflege-Angebotsersteller (nur auf der Steinreinigung-Seite, nur Deutsch) */}
+        {slug === "steinreinigung" && locale === "de" && <StoneOfferCta />}
+
         {/* Kostenloses Angebot Banner */}
-        {showQuote && <QuoteBanner slug={slug} serviceTitle={title} ctaHref="#angebot" />}
+        {showQuote && <QuoteBanner slug={slug} serviceTitle={title} ctaHref="#angebot" locale={locale} />}
 
         {/* Service Switcher */}
-        <ServiceSwitcher currentSlug={slug} />
+        <ServiceSwitcher currentSlug={slug} locale={locale} />
 
         {/* Eingebettetes Angebots-Tool - direkt auf der Seite, ohne Weiterleitung */}
         {showQuote && (
@@ -247,22 +300,19 @@ export function ServicePageTemplate({
             <div className="mx-auto max-w-4xl px-6">
               <div className="mb-10 text-center">
                 <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-sky">
-                  Kostenloses Angebot
+                  {t.quoteEyebrow}
                 </p>
                 <h2 className="text-balance font-display text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
-                  Ihr Richtpreis für <span className="text-brand-sky">{title}</span> - in 2 Minuten
+                  {t.quoteHeadingPrefix} <span className="text-brand-sky">{title}</span> {t.quoteHeadingSuffix}
                 </h2>
-                <p className="mx-auto mt-4 max-w-xl text-white/75 text-pretty">
-                  Füllen Sie das Formular direkt hier aus - unverbindlich, kostenlos und ohne
-                  Weiterleitung. Sie erhalten sofort eine Preisschätzung.
-                </p>
+                <p className="mx-auto mt-4 max-w-xl text-white/75 text-pretty">{t.quoteBody}</p>
               </div>
-              <QuoteWizard initialSlug={slug} />
+              <QuoteWizard initialSlug={slug} locale={locale} />
             </div>
           </section>
         )}
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </div>
   )
 }

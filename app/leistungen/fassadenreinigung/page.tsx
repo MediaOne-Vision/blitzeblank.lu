@@ -5,6 +5,13 @@ import { ServicePageTemplate } from "@/components/service-page-template"
 export const metadata: Metadata = {
   title: "Fassadenreinigung | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description: "Professionelle Fassadenreinigung in Luxemburg. Außenreinigung für Gebäudefassaden aller Art - vom Bürogebäude bis zur Industrieanlage.",
+  alternates: {
+    canonical: "/leistungen/fassadenreinigung",
+    languages: {
+      de: "/leistungen/fassadenreinigung",
+      en: "/en/leistungen/fassadenreinigung",
+    },
+  },
 }
 
 const features = [

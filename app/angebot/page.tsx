@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   title: "Kostenloses Angebot | Blitzeblank - Professionelle Reinigung",
   description:
     "Berechnen Sie in wenigen Schritten Ihren unverbindlichen Richtpreis und fordern Sie ein kostenloses Angebot für Ihre Reinigung an.",
+  alternates: {
+    canonical: "/angebot",
+    languages: {
+      de: "/angebot",
+      en: "/en/angebot",
+    },
+  },
 }
 
 export default async function AngebotPage({

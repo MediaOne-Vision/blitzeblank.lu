@@ -7,6 +7,13 @@ export const metadata: Metadata = {
   title: "Datenschutzerklärung | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description:
     "Datenschutzerklärung von Blitzeblank Gebäudereinigung. Informationen zur Verarbeitung Ihrer personenbezogenen Daten gemäß DSGVO.",
+  alternates: {
+    canonical: "/datenschutz",
+    languages: {
+      de: "/datenschutz",
+      en: "/en/datenschutz",
+    },
+  },
 }
 
 type Block =
@@ -313,7 +320,7 @@ const sections: Section[] = [
       { type: "sub", text: "Instagram" },
       {
         type: "p",
-        text: "Auf dieser Website sind Funktionen des Dienstes Instagram eingebunden. Diese Funktionen werden angeboten durch die Meta Platforms Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland. Wenn das Social-Media-Element aktiv ist, wird eine direkte Verbindung zwischen Ihrem Endgerät und dem Instagram-Server hergestellt. Instagram erhält dadurch Informationen über den Besuch dieser Website durch Sie.",
+        text: "Auf dieser Website sind Funktionen des Dienstes Instagram eingebunden. Diese Funktionen werden angeboten durch die Meta Platforms Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland. Wenn das Social-Media-Element aktiv ist, wird eine direkte Verbindung zwischen Ihrem Endgerät und dem Instagram-Server hergestellt. Instagram erhält dadurch Informationen ��ber den Besuch dieser Website durch Sie.",
       },
       {
         type: "p",
