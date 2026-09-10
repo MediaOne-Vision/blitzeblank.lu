@@ -13,17 +13,13 @@ import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 
 const NAV_LINKS = {
   de: [
-    { href: "/", label: "Startseite" },
     { href: "/leistungen", label: "Leistungen" },
-    { href: "/angebot", label: "Angebot" },
     { href: "/stein-angebot", label: "Steinpflege-Rechner" },
     { href: "/ueber-uns", label: "Über uns" },
     { href: "/kontakt", label: "Kontakt" },
   ],
   en: [
-    { href: "/", label: "Home" },
     { href: "/leistungen", label: "Services" },
-    { href: "/angebot", label: "Get a Quote" },
     { href: "/ueber-uns", label: "About Us" },
     { href: "/kontakt", label: "Contact" },
   ],

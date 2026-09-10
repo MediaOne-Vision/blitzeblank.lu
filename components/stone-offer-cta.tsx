@@ -19,11 +19,11 @@ export function StoneOfferCta() {
                 Steinpflege-Rechner
               </span>
               <h2 className="text-balance font-display text-2xl font-extrabold tracking-tight text-brand-navy sm:text-3xl">
-                Fugensand, Imprägnierung oder Pflegeöl gesucht?
+                Ihre Pflasterfläche verdient die richtige Pflege
               </h2>
               <p className="mt-3 text-pretty text-neutral-600">
-                Konfigurieren Sie Schritt für Schritt Ihre passende Fuge, Steinfarbe, Imprägnierung, Pflegeöl oder
-                thermische Unkrautentfernung - kostenlos und unverbindlich.
+                Beantworten Sie ein paar kurze Fragen zu Ihrer Fläche und wir stellen Ihnen die passende Lösung
+                zusammen - von der Fuge über den Schutz bis zur Unkrautentfernung. Kostenlos und unverbindlich.
               </p>
             </div>
             <Button
