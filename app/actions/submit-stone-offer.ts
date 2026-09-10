@@ -11,8 +11,8 @@ import {
 import { isRateLimited } from "@/lib/simple-rate-limit"
 
 const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-/** Interne Benachrichtigung für den Steinpflege-Rechner geht ausschließlich hierhin. */
-const INTERNAL_RECIPIENT = "felicia@mediaone-vision.de"
+/** Interne Benachrichtigung für den Steinpflege-Rechner. */
+const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
 
 /** Erlaubt max. 5 Absendungen pro IP innerhalb von 10 Minuten */
 const RATE_LIMIT = { max: 5, windowMs: 10 * 60 * 1000 }
