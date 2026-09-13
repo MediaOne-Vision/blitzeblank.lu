@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
+import { TrackLead } from "@/components/track-lead"
 import { CheckCircle2, Home, Phone } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -17,6 +18,10 @@ export default function SteinAngebotDankePage() {
       <Navigation />
       <main className="flex flex-1 items-center justify-center px-4 pt-32 pb-20 sm:px-6">
         <div className="mx-auto w-full max-w-2xl text-center">
+          {/* Feuert das lead_submitted-Event (service=steinreinigung, accepted).
+              Nur nach echtem Formular-Submit; sonst Redirect auf die Startseite. */}
+          <TrackLead expectedStatus="accepted" />
+
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-blue/10">
             <CheckCircle2 className="h-10 w-10 text-brand-blue" />
           </div>
