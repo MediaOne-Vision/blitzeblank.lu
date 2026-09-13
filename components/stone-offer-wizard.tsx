@@ -24,6 +24,7 @@ import {
 } from "@/lib/stone-offer-data"
 import { submitStoneOffer } from "@/app/actions/submit-stone-offer"
 import type { StoneOfferSubmission } from "@/lib/stone-offer-email"
+import { storeLeadHandoff } from "@/lib/tracking"
 import {
   ArrowLeft,
   ArrowRight,
@@ -173,7 +174,7 @@ export function StoneOfferWizard() {
     scrollToTop()
   }
 
-  const buildSubmission = (): StoneOfferSubmission => {
+  const buildSubmission = (leadId: string): StoneOfferSubmission => {
     const areaTypeLabel = stoneAreaTypes.find((a) => a.value === areaType)?.label ?? areaType
     const usageLabel = usageClasses.find((u) => u.value === usage)?.label ?? "Keine Angabe"
     const jointPropertyLabels = properties.map(
@@ -214,14 +215,32 @@ export function StoneOfferWizard() {
       phone,
       address,
       message,
-      leadId: generateStoneLeadId(),
+      leadId,
     }
   }
 
   const handleSubmit = async () => {
     setSubmitting(true)
+
+    // Dieselbe ID für die interne Mail und das Conversion-Tracking verwenden,
+    // damit GTM die Conversion pro Anfrage eindeutig deduplizieren kann.
+    const leadId = generateStoneLeadId()
+
+    // Tracking-Nutzlast für die Danke-Seite ablegen (Handoff via sessionStorage).
+    // service/lead_status sind für diese Seite fixe Kleinschreib-Werte.
+    // quote_value wird bewusst weggelassen: der Steinpflege-Konfigurator
+    // berechnet derzeit keine Angebotssumme (siehe Hinweis im Response).
+    storeLeadHandoff({
+      lead_status: "accepted",
+      service: "steinreinigung",
+      quote_type: "onetime",
+      lead_id: leadId,
+      email,
+      phone,
+    })
+
     try {
-      await submitStoneOffer({ submission: buildSubmission(), honeypot, renderedAt })
+      await submitStoneOffer({ submission: buildSubmission(leadId), honeypot, renderedAt })
     } catch {
       // Auch bei einem Übertragungsfehler leiten wir weiter – die Anfrage ist in
       // aller Regel dennoch bei uns eingegangen, und der Nutzer erhält Feedback.
