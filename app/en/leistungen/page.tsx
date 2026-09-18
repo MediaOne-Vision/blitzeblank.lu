@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Discover our professional cleaning services: industrial cleaning, window cleaning, stone cleaning and facade cleaning.",
   alternates: {
-    canonical: "/en/leistungen",
+    canonical: "https://blitzeblank.lu/en/leistungen",
     languages: {
       de: "/leistungen",
       en: "/en/leistungen",

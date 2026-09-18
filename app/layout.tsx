@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   description: 'Blitzeblank bietet professionelle Industrie-, Fenster-, Stein- und Fassadenreinigung in Luxemburg, Trier, Bitburg und der Region. Schnelle Reaktionszeit, kostenloser Besichtigungstermin und transparente Kommunikation.',
   keywords: ['Reinigungsfirma Luxemburg', 'Reinigungsfirma Trier', 'Reinigungsfirma Bitburg', 'Industriereinigung', 'Fensterreinigung', 'Steinreinigung', 'Fassadenreinigung', 'Gewerbereinigung'],
   authors: [{ name: 'Blitzeblank' }],
+  metadataBase: new URL('https://blitzeblank.lu'),
   openGraph: {
     title: 'Blitzeblank | Professionelle Reinigungsdienstleistungen',
     description: 'Ihr Partner für professionelle Reinigung in Luxemburg, Trier, Bitburg & Region',

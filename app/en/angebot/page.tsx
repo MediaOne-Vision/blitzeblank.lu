@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Calculate your no-obligation price estimate in just a few steps and request a free quote for your cleaning.",
   alternates: {
-    canonical: "/en/angebot",
+    canonical: "https://blitzeblank.lu/en/angebot",
     languages: {
       de: "/angebot",
       en: "/en/angebot",

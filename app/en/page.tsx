@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     locale: "en_US",
   },
   alternates: {
-    canonical: "/en",
+    canonical: "https://blitzeblank.lu/en",
     languages: {
       de: "/",
       en: "/en",

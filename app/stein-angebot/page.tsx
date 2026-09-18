@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Konfigurieren Sie Schritt für Schritt Ihre Pflasterflächen- und Steinpflege: Fläche, Fuge, Steinfarbe, Schutz und thermische Unkrautentfernung - kostenlos und unverbindlich.",
   alternates: {
-    canonical: "/stein-angebot",
+    canonical: "https://blitzeblank.lu/stein-angebot",
   },
 }
 
