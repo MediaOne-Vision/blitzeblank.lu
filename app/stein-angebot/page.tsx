@@ -39,7 +39,7 @@ export default function SteinAngebotPage() {
 
         {/* Wizard */}
         <section className="bg-brand-mint py-12 lg:py-16">
-          <div className="mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-7xl px-6">
             <StoneOfferWizard />
           </div>
         </section>

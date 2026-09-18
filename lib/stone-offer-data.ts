@@ -131,7 +131,7 @@ export const jointMaterials: JointMaterial[] = [
     id: "vdw800",
     title: "vdw 800 (2K-PflasterfugenMörtel)",
     description:
-      "Der bekannte Klassiker unter den Pflasterfugensystemen mit breitem Einsatzspektrum für Pflaster- und Klinkerbeläge. Schnelle, saubere und selbstverdichtende Verfugung ab 5 mm Fugenbreite - kehrsaugmaschinenfest und abriebfest.",
+      "Der Klassiker für Pflaster- und Klinkerbeläge ab 5 mm Fugenbreite. Schnell, sauber und selbstverdichtend.",
     image: "/images/products/vdw-800.png",
     properties: ["fest", "wasserdurchlaessig"],
     usage: ["fussgaenger", "pkw"],
@@ -141,7 +141,7 @@ export const jointMaterials: JointMaterial[] = [
     id: "vdw815plus",
     title: "vdw 815 plus (2K-PlattenfugenMörtel)",
     description:
-      "Hochfließfähiger Plattenfugenmörtel für die enge Fuge ab 3 mm. Selbstverdichtend, saubere Oberfläche ohne Abdecken und auch bei niedrigen Temperaturen und Regen verarbeitbar - ideal für Terrassenplatten und Gartenwege.",
+      "Hochfließfähig für enge Fugen ab 3 mm. Ideal für Terrassenplatten und Gartenwege, auch bei Regen verarbeitbar.",
     image: "/images/products/vdw-815-plus.png",
     properties: ["fest", "wasserdurchlaessig"],
     usage: ["fussgaenger", "pkw"],
@@ -151,7 +151,7 @@ export const jointMaterials: JointMaterial[] = [
     id: "vdw850plus",
     title: "vdw 850 plus (2K-FugenMörtel selbstverdichtend)",
     description:
-      "Der Top-Allrounder unter den Pflasterfugenmörteln für besonders breite Fugen ab 5 mm - hervorragend für befahrene Flächen geeignet. Hoher Frost-/Tausalzwiderstand und dauerhaft verfüllte Fuge, auch bei Regen und niedrigen Temperaturen verarbeitbar.",
+      "Der Allrounder für besonders breite, befahrene Fugen ab 5 mm. Frostsicher und dauerhaft verfüllt.",
     image: "/images/products/vdw-850-plus.png",
     properties: ["fest", "wasserdurchlaessig"],
     usage: ["fussgaenger", "pkw", "lkw"],
@@ -160,8 +160,7 @@ export const jointMaterials: JointMaterial[] = [
   {
     id: "fugenmoertel",
     title: "vdw 400 ZementfugenMörtel",
-    description:
-      "Zementärer, schnellhärtender Fugenmörtel für PKW-beanspruchte Flächen im Innen- und Außenbereich. Hoher Frost-/Tausalzwiderstand, früh begehbar und belastbar - für Terrassen, Einfahrten und Gartenwege.",
+    description: "Schnellhärtender Fugenmörtel für PKW-beanspruchte Flächen. Früh begehbar und frostsicher.",
     image: "/images/products/fugenmoertel.png",
     properties: ["fest", "unkrauthemmend"],
     usage: ["fussgaenger", "pkw", "lkw"],
