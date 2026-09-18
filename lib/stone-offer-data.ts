@@ -128,14 +128,34 @@ export interface JointMaterial {
 
 export const jointMaterials: JointMaterial[] = [
   {
-    id: "variosand",
-    title: "vdw VarioSand (Fugensand)",
+    id: "vdw800",
+    title: "vdw 800 (2K-PflasterfugenMörtel)",
     description:
-      "Bindiger Spezialfugensand für die ungebundene Bauweise - unkrauthemmend, staubarm zu verarbeiten und wasserdurchlässig. Ideal für Einfahrten, Gehwege und Betonsteinpflaster mit engen Fugen (2-4 mm).",
-    image: "/images/products/variosand.png",
-    properties: ["fest", "unkrauthemmend", "wasserdurchlaessig", "oekologisch"],
+      "Der bekannte Klassiker unter den Pflasterfugensystemen mit breitem Einsatzspektrum für Pflaster- und Klinkerbeläge. Schnelle, saubere und selbstverdichtende Verfugung ab 5 mm Fugenbreite - kehrsaugmaschinenfest und abriebfest.",
+    image: "/images/products/vdw-800.png",
+    properties: ["fest", "wasserdurchlaessig"],
     usage: ["fussgaenger", "pkw"],
-    colors: ["Natur", "Steingrau", "Basalt"],
+    colors: ["Sandbeige", "Steingrau", "Basalt"],
+  },
+  {
+    id: "vdw815plus",
+    title: "vdw 815 plus (2K-PlattenfugenMörtel)",
+    description:
+      "Hochfließfähiger Plattenfugenmörtel für die enge Fuge ab 3 mm. Selbstverdichtend, saubere Oberfläche ohne Abdecken und auch bei niedrigen Temperaturen und Regen verarbeitbar - ideal für Terrassenplatten und Gartenwege.",
+    image: "/images/products/vdw-815-plus.png",
+    properties: ["fest", "wasserdurchlaessig"],
+    usage: ["fussgaenger", "pkw"],
+    colors: ["Sandbeige", "Steingrau", "Basalt"],
+  },
+  {
+    id: "vdw850plus",
+    title: "vdw 850 plus (2K-FugenMörtel selbstverdichtend)",
+    description:
+      "Der Top-Allrounder unter den Pflasterfugenmörteln für besonders breite Fugen ab 5 mm - hervorragend für befahrene Flächen geeignet. Hoher Frost-/Tausalzwiderstand und dauerhaft verfüllte Fuge, auch bei Regen und niedrigen Temperaturen verarbeitbar.",
+    image: "/images/products/vdw-850-plus.png",
+    properties: ["fest", "wasserdurchlaessig"],
+    usage: ["fussgaenger", "pkw", "lkw"],
+    colors: ["Sandbeige", "Steingrau", "Basalt"],
   },
   {
     id: "fugenmoertel",
