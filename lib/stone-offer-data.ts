@@ -128,22 +128,32 @@ export interface JointMaterial {
 
 export const jointMaterials: JointMaterial[] = [
   {
-    id: "variosand",
-    title: "vdw VarioSand (Fugensand)",
+    id: "vdw800",
+    title: "vdw 800 (2K-PflasterfugenMörtel)",
     description:
-      "Bindiger Spezialfugensand für die ungebundene Bauweise - unkrauthemmend, staubarm zu verarbeiten und wasserdurchlässig. Ideal für Einfahrten, Gehwege und Betonsteinpflaster mit engen Fugen (2-4 mm).",
-    image: "/images/products/variosand.png",
-    properties: ["fest", "unkrauthemmend", "wasserdurchlaessig", "oekologisch"],
+      "Der Klassiker für Pflaster- und Klinkerbeläge ab 5 mm Fugenbreite. Schnell, sauber und selbstverdichtend.",
+    image: "/images/products/vdw-800.png",
+    properties: ["fest", "wasserdurchlaessig"],
     usage: ["fussgaenger", "pkw"],
-    colors: ["Natur", "Steingrau", "Basalt"],
+    colors: ["Sandbeige", "Steingrau", "Basalt"],
   },
   {
-    id: "fugenmoertel",
-    title: "vdw 400 ZementfugenMörtel",
+    id: "vdw815plus",
+    title: "vdw 815 plus (2K-PlattenfugenMörtel)",
     description:
-      "Zementärer, schnellhärtender Fugenmörtel für PKW-beanspruchte Flächen im Innen- und Außenbereich. Hoher Frost-/Tausalzwiderstand, früh begehbar und belastbar - für Terrassen, Einfahrten und Gartenwege.",
-    image: "/images/products/fugenmoertel.png",
-    properties: ["fest", "unkrauthemmend"],
+      "Hochfließfähig für enge Fugen ab 3 mm. Ideal für Terrassenplatten und Gartenwege, auch bei Regen verarbeitbar.",
+    image: "/images/products/vdw-815-plus.png",
+    properties: ["fest", "wasserdurchlaessig"],
+    usage: ["fussgaenger", "pkw"],
+    colors: ["Sandbeige", "Steingrau", "Basalt"],
+  },
+  {
+    id: "vdw850plus",
+    title: "vdw 850 plus (2K-FugenMörtel selbstverdichtend)",
+    description:
+      "Der Allrounder für besonders breite, befahrene Fugen ab 5 mm. Frostsicher und dauerhaft verfüllt.",
+    image: "/images/products/vdw-850-plus.png",
+    properties: ["fest", "wasserdurchlaessig"],
     usage: ["fussgaenger", "pkw", "lkw"],
     colors: ["Sandbeige", "Steingrau", "Basalt"],
   },

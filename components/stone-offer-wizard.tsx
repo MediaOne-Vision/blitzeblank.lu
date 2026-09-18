@@ -551,77 +551,80 @@ export function StoneOfferWizard() {
                   </p>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-4">
                   {shownMaterials.map((m) => {
                     const active = jointMaterialId === m.id
                     return (
                       <div
                         key={m.id}
-                        className={`overflow-hidden rounded-2xl border transition-all ${
+                        className={`flex flex-col overflow-hidden rounded-2xl border transition-all sm:flex-row sm:items-center ${
                           active
                             ? "border-brand-blue ring-2 ring-brand-blue/20"
                             : "border-brand-navy/10 hover:border-brand-blue/40"
                         }`}
                       >
-                        <div className="relative h-44 w-full bg-white">
+                        <div className="relative h-28 w-full shrink-0 bg-white sm:h-24 sm:w-24">
                           <Image
                             src={m.image}
                             alt={m.title}
                             fill
-                            sizes="(max-width:640px) 100vw, 300px"
-                            className="object-contain p-3"
+                            sizes="(max-width:640px) 100vw, 96px"
+                            className="object-contain p-2"
                           />
                         </div>
-                        <div className="p-4">
-                          <p className="text-sm font-semibold text-brand-navy">{m.title}</p>
-                          <p className="mt-1 text-xs leading-relaxed text-neutral-500">{m.description}</p>
-
-                          <p className="mt-3 text-xs font-semibold text-brand-navy">Fugenfarbe wählen</p>
-                          <div className="mt-2 flex flex-wrap gap-3">
-                            {m.colors.map((color) => {
-                              const colorActive = active && jointColor === color
-                              return (
-                                <button
-                                  key={color}
-                                  type="button"
-                                  onClick={() => {
-                                    setJointMaterialId(m.id)
-                                    setJointColor(color)
-                                  }}
-                                  className="flex flex-col items-center gap-1 cursor-pointer"
-                                >
-                                  <ColorDot
-                                    name={color}
-                                    className={`h-7 w-7 ${colorActive ? "ring-2 ring-brand-blue ring-offset-1" : ""}`}
-                                  />
-                                  <span className="text-[10px] text-neutral-500">{color}</span>
-                                </button>
-                              )
-                            })}
+                        <div className="flex flex-1 flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="flex-1">
+                            <p className="text-lg font-bold text-brand-navy">{m.title}</p>
+                            <p className="mt-1 text-xs leading-relaxed text-neutral-500">{m.description}</p>
                           </div>
 
-                          <Button
-                            type="button"
-                            variant={active ? "default" : "outline"}
-                            onClick={() => selectJointMaterial(m.id)}
-                            className={`mt-4 w-full rounded-full ${
-                              active
-                                ? "bg-brand-blue text-white hover:bg-brand-teal"
-                                : "border-brand-blue/40 text-brand-blue hover:bg-brand-mint hover:text-brand-blue"
-                            }`}
-                          >
-                            {active ? (
-                              <>
-                                <Check className="h-4 w-4" />
-                                Ausgewählt
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="h-4 w-4" />
-                                Auswählen
-                              </>
-                            )}
-                          </Button>
+                          <div className="flex flex-wrap items-center gap-4 sm:shrink-0">
+                            <div className="flex flex-wrap gap-3">
+                              {m.colors.map((color) => {
+                                const colorActive = active && jointColor === color
+                                return (
+                                  <button
+                                    key={color}
+                                    type="button"
+                                    onClick={() => {
+                                      setJointMaterialId(m.id)
+                                      setJointColor(color)
+                                    }}
+                                    className="flex flex-col items-center gap-1 cursor-pointer"
+                                  >
+                                    <ColorDot
+                                      name={color}
+                                      className={`h-6 w-6 ${colorActive ? "ring-2 ring-brand-blue ring-offset-1" : ""}`}
+                                    />
+                                    <span className="text-[10px] text-neutral-500">{color}</span>
+                                  </button>
+                                )
+                              })}
+                            </div>
+
+                            <Button
+                              type="button"
+                              variant={active ? "default" : "outline"}
+                              onClick={() => selectJointMaterial(m.id)}
+                              className={`rounded-full whitespace-nowrap ${
+                                active
+                                  ? "bg-brand-blue text-white hover:bg-brand-teal"
+                                  : "border-brand-blue/40 text-brand-blue hover:bg-brand-mint hover:text-brand-blue"
+                              }`}
+                            >
+                              {active ? (
+                                <>
+                                  <Check className="h-4 w-4" />
+                                  Ausgewählt
+                                </>
+                              ) : (
+                                <>
+                                  <Plus className="h-4 w-4" />
+                                  Auswählen
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     )
