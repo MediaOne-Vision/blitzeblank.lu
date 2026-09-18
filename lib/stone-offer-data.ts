@@ -157,15 +157,6 @@ export const jointMaterials: JointMaterial[] = [
     usage: ["fussgaenger", "pkw", "lkw"],
     colors: ["Sandbeige", "Steingrau", "Basalt"],
   },
-  {
-    id: "fugenmoertel",
-    title: "vdw 400 ZementfugenMörtel",
-    description: "Schnellhärtender Fugenmörtel für PKW-beanspruchte Flächen. Früh begehbar und frostsicher.",
-    image: "/images/products/fugenmoertel.png",
-    properties: ["fest", "unkrauthemmend"],
-    usage: ["fussgaenger", "pkw", "lkw"],
-    colors: ["Sandbeige", "Steingrau", "Basalt"],
-  },
 ]
 
 /**

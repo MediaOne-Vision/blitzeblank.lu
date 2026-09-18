@@ -574,7 +574,7 @@ export function StoneOfferWizard() {
                         </div>
                         <div className="flex flex-1 flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex-1">
-                            <p className="text-sm font-semibold text-brand-navy">{m.title}</p>
+                            <p className="text-lg font-bold text-brand-navy">{m.title}</p>
                             <p className="mt-1 text-xs leading-relaxed text-neutral-500">{m.description}</p>
                           </div>
 
