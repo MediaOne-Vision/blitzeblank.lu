@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Datenschutzerklärung von Blitzeblank Gebäudereinigung. Informationen zur Verarbeitung Ihrer personenbezogenen Daten gemäß DSGVO.",
   alternates: {
-    canonical: "/datenschutz",
+    canonical: "https://blitzeblank.lu/datenschutz",
     languages: {
       de: "/datenschutz",
       en: "/en/datenschutz",

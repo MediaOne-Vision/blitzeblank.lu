@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Entdecken Sie unsere professionellen Reinigungsdienstleistungen: Industriereinigung, Fensterreinigung, Steinreinigung und Fassadenreinigung.",
   alternates: {
-    canonical: "/leistungen",
+    canonical: "https://blitzeblank.lu/leistungen",
     languages: {
       de: "/leistungen",
       en: "/en/leistungen",

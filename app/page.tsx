@@ -3,7 +3,7 @@ import { HomeContent } from "@/components/home-content"
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: "/",
+    canonical: "https://blitzeblank.lu/",
     languages: {
       de: "/",
       en: "/en",

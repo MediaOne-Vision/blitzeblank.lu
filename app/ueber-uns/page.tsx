@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Über uns | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description: "Lernen Sie Blitzeblank kennen. Erfahren Sie mehr über unseren Gründer Mustapha El-Ali und unsere Werte für professionelle Reinigungsdienstleistungen.",
   alternates: {
-    canonical: "/ueber-uns",
+    canonical: "https://blitzeblank.lu/ueber-uns",
     languages: {
       de: "/ueber-uns",
       en: "/en/ueber-uns",

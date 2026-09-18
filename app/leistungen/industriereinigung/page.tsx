@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Industriereinigung | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description: "Professionelle Industriereinigung in Luxemburg. Wir reinigen Produktionshallen, Lager, Werkstätten und Industrieanlagen nach höchsten Standards.",
   alternates: {
-    canonical: "/leistungen/industriereinigung",
+    canonical: "https://blitzeblank.lu/leistungen/industriereinigung",
     languages: {
       de: "/leistungen/industriereinigung",
       en: "/en/leistungen/industriereinigung",

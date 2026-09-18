@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Professional industrial cleaning in Luxembourg. We clean production halls, warehouses, workshops and industrial facilities to the highest standards.",
   alternates: {
-    canonical: "/en/leistungen/industriereinigung",
+    canonical: "https://blitzeblank.lu/en/leistungen/industriereinigung",
     languages: {
       de: "/leistungen/industriereinigung",
       en: "/en/leistungen/industriereinigung",

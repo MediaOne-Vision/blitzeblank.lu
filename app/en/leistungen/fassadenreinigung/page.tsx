@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Professional facade cleaning in Luxembourg. Exterior cleaning for building facades of all kinds - from office buildings to industrial sites.",
   alternates: {
-    canonical: "/en/leistungen/fassadenreinigung",
+    canonical: "https://blitzeblank.lu/en/leistungen/fassadenreinigung",
     languages: {
       de: "/leistungen/fassadenreinigung",
       en: "/en/leistungen/fassadenreinigung",

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Legal Notice | Blitzeblank - Professional Cleaning in Luxembourg",
   description: "Legal notice and legal information for BLITZEBLANK S.à.r.l. -S, Mustapha El-Ali, Waldbillig.",
   alternates: {
-    canonical: "/en/impressum",
+    canonical: "https://blitzeblank.lu/en/impressum",
     languages: {
       de: "/impressum",
       en: "/en/impressum",

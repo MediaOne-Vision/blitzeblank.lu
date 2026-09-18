@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Get to know Blitzeblank. Learn more about our founder Mustapha El-Ali and our values for professional cleaning services.",
   alternates: {
-    canonical: "/en/ueber-uns",
+    canonical: "https://blitzeblank.lu/en/ueber-uns",
     languages: {
       de: "/ueber-uns",
       en: "/en/ueber-uns",

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Steinreinigung | Blitzeblank - Professionelle Reinigung in Luxemburg",
   description: "Professionelle Steinreinigung in Luxemburg. Fachgerechte Pflege und Reinigung von Naturstein, Pflaster, Terrassen und Außenanlagen.",
   alternates: {
-    canonical: "/leistungen/steinreinigung",
+    canonical: "https://blitzeblank.lu/leistungen/steinreinigung",
     languages: {
       de: "/leistungen/steinreinigung",
       en: "/en/leistungen/steinreinigung",
