@@ -410,17 +410,17 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
             onCheckedChange={(v) => setPrivacy(v === true)}
             className="mt-0.5"
           />
-          <Label htmlFor="b2b-privacy" className="text-sm font-normal leading-relaxed text-neutral-600">
-            {t.privacyPrefix}{" "}
-            <Link
-              href={localizeHref("/datenschutz", locale)}
-              target="_blank"
-              className="font-semibold text-brand-blue underline underline-offset-2 hover:text-brand-teal"
-            >
-              {t.privacyLink}
-            </Link>{" "}
-            {t.privacySuffix}
-          </Label>
+        <Label htmlFor="b2b-privacy" className="block text-sm font-normal leading-relaxed text-neutral-600">
+              {t.privacyPrefix}{" "}
+              <Link
+                href={localizeHref("/datenschutz", locale)}
+                target="_blank"
+                className="font-semibold text-brand-blue underline underline-offset-2 hover:text-brand-teal"
+              >
+                {t.privacyLink}
+              </Link>{" "}
+              {t.privacySuffix}
+            </Label>
         </div>
 
         {error && (

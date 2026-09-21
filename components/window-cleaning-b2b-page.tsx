@@ -204,7 +204,7 @@ export function WindowCleaningB2BPage({ locale = "de" }: { locale?: Locale }) {
                   <button
                     type="button"
                     onClick={() => scrollToForm("hero")}
-                    className="group inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-blue px-8 font-semibold text-white shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105 hover:bg-brand-teal"
+                    className="group inline-flex h-12 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full bg-brand-blue px-8 font-semibold text-white shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105 hover:bg-brand-teal"
                   >
                     {t.ctaPrimary}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -212,7 +212,7 @@ export function WindowCleaningB2BPage({ locale = "de" }: { locale?: Locale }) {
                   <a
                     href={CONTACT.phoneHref}
                     onClick={() => handlePhoneClick("hero")}
-                    className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/30 bg-white/5 px-8 font-semibold text-white transition-colors hover:bg-white/15"
+                    className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/30 bg-white/5 px-8 font-semibold text-white transition-colors hover:bg-white/15"
                   >
                     <Phone className="h-4 w-4" />
                     {t.ctaCall}
