@@ -89,6 +89,17 @@ export function hasLeadSeen(): boolean {
 }
 
 /**
+ * Generisches Event in den dataLayer schieben (z. B. B2B-Formular-Events).
+ * Wirkt nur, wenn GTM nach Cookie-Zustimmung geladen wurde – sonst liegt das
+ * Event wirkungslos im Array. Feldnamen sind mit dem GTM-Container abgestimmt.
+ */
+export function pushDataLayerEvent(event: string, data: Record<string, unknown> = {}) {
+  if (typeof window === "undefined") return
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({ event, ...data })
+}
+
+/**
  * Schiebt das `lead_submitted`-Event in den dataLayer.
  * In GTM triggert dieses Event die Google-Ads- bzw. Meta-Conversion.
  */
