@@ -28,19 +28,19 @@ const TEXT = {
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-20">
-      <div className="relative z-10 flex w-full flex-col items-center gap-10 px-6 py-16 sm:px-8 lg:min-h-[44.5rem] lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-16 lg:py-24 xl:px-24">
+    <section className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-8 lg:pt-20">
+      <div className="relative z-10 flex w-full flex-col items-center gap-6 px-6 py-8 sm:px-8 lg:min-h-[44.5rem] lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-16 lg:py-24 xl:px-24">
         <div className="min-w-0 max-w-2xl text-center lg:flex-1 lg:text-left">
-          <span className="mb-6 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8">
+          <span className="mb-4 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8">
             {t.badge}
           </span>
 
-          <h1 className="mb-6 text-balance font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-white sm:mb-8 sm:text-6xl sm:leading-[0.98] md:text-7xl lg:text-[4.25rem]">
+          <h1 className="mb-4 text-balance font-display text-6xl font-extrabold leading-[1.02] tracking-tight text-white sm:mb-8 sm:text-6xl sm:leading-[0.98] md:text-7xl lg:text-[4.25rem]">
             <span className="font-extrabold">{t.heading}</span><br />
             <span className="font-medium">{t.headingAccent}</span>
           </h1>
 
-          <p className="mx-auto mb-8 max-w-xl text-balance text-base leading-relaxed text-white sm:mb-10 sm:text-lg lg:mx-0 lg:text-xl">
+          <p className="mx-auto mb-6 max-w-xl text-balance text-lg leading-relaxed text-white sm:mb-10 sm:text-lg lg:mx-0 lg:text-xl">
             {t.bodyBefore}{" "}
             <strong className="font-extrabold">{t.regions}</strong>
           </p>
