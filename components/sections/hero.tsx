@@ -13,6 +13,7 @@ const TEXT = {
     regions: "Luxemburg, Trier, Bitburg und der Region.",
     consult: "Kostenlose Beratung",
     quote: "Angebot online erstellen",
+    trustValues: ["Antwort innerhalb von 24 Stunden", "Kostenlose Besichtigung vor Ort", "Transparente, faire Preise", "Qualitätsgarantie inklusive"],
   },
   en: {
     badge: "Commercial Cleaning by Professionals",
@@ -22,14 +23,15 @@ const TEXT = {
     regions: "Luxembourg, Trier, Bitburg and the surrounding region.",
     consult: "Free Consultation",
     quote: "Create an offer online",
+    trustValues: ["We reply within 24 hours", "Free on-site visit", "Transparent, fair pricing", "Quality guarantee included"],
   },
 }
 
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="relative flex min-h-[85vh] items-start overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pb-24 pt-5 lg:min-h-[56rem] lg:items-start lg:pb-40 lg:pt-12">
-      <div className="relative z-10 flex w-full flex-col items-center gap-6 px-6 py-2 sm:px-8 sm:py-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
+    <section className="relative flex min-h-[85vh] items-start overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pb-24 pt-14 lg:min-h-[56rem] lg:items-start lg:pb-40 lg:pt-24">
+      <div className="relative z-10 flex w-full flex-col items-center gap-6 px-6 py-4 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
         <div className="min-w-0 max-w-2xl text-center lg:flex-1 lg:text-left">
           <span className="mb-4 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8">
             {t.badge}
@@ -58,6 +60,17 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
               </Link>
             </Button>
           </div>
+
+          <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center text-sm text-white/80 sm:gap-x-6 lg:justify-start">
+            {t.trustValues.map((value, i) => (
+              <li key={value} className="flex items-center gap-x-4 sm:gap-x-6">
+                <span className="text-balance">{value}</span>
+                {i < t.trustValues.length - 1 && (
+                  <span className="hidden h-1 w-1 rounded-full bg-white/40 sm:block" aria-hidden="true" />
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="mx-auto shrink-0 animate-float lg:mx-0">

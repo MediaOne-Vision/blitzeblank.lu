@@ -94,21 +94,21 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
   const active = services[activeIndex]
 
   return (
-    <section className="bg-brand-navy py-16 sm:py-20 lg:py-28">
+    <section className="bg-brand-mint py-16 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-6">
         {/* Header */}
         <Reveal className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between mb-10 lg:mb-14">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-sky mb-3">{t.eyebrow}</p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-teal mb-3">{t.eyebrow}</p>
             <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
-              <span className="text-white">{t.headingLine1}</span>
+              <span className="text-brand-navy">{t.headingLine1}</span>
               <br />
-              <span className="text-brand-sky">{t.headingLine2}</span>
+              <span className="text-brand-teal">{t.headingLine2}</span>
             </h2>
           </div>
           <Link
             href={localizeHref("/leistungen", locale)}
-            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-white/70 hover:text-white transition-colors cursor-pointer whitespace-nowrap"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-neutral-600 hover:text-brand-navy transition-colors cursor-pointer whitespace-nowrap"
           >
             {t.viewAll}
             <span aria-hidden="true">&gt;</span>
@@ -122,7 +122,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
               {services.map((service, i) => {
                 const isActive = i === activeIndex
                 return (
-                  <li key={service.title} className={i > 0 ? "border-t border-white/15" : ""}>
+                  <li key={service.title} className={i > 0 ? "border-t border-brand-navy/10" : ""}>
                     <button
                       type="button"
                       onMouseEnter={() => setActiveIndex(i)}
@@ -133,14 +133,14 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
                     >
                       <span
                         className={`font-display font-extrabold tabular-nums transition-all duration-300 ${
-                          isActive ? "text-5xl sm:text-6xl text-brand-sky" : "text-4xl sm:text-5xl text-white/25"
+                          isActive ? "text-5xl sm:text-6xl text-brand-teal" : "text-4xl sm:text-5xl text-brand-navy/20"
                         }`}
                       >
                         {i + 1}
                       </span>
                       <span
                         className={`font-display font-bold text-balance transition-all duration-300 ${
-                          isActive ? "text-2xl sm:text-3xl text-white" : "text-xl sm:text-2xl text-white/60"
+                          isActive ? "text-2xl sm:text-3xl text-brand-navy" : "text-xl sm:text-2xl text-neutral-500"
                         }`}
                       >
                         {service.title}
@@ -151,7 +151,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
               })}
             </ol>
 
-            <p className="mt-8 text-white/60 leading-relaxed max-w-sm text-balance">
+            <p className="mt-8 text-neutral-600 leading-relaxed max-w-sm text-balance">
               {locale === "de" ? (
                 <>
                   Entdecken Sie unser
@@ -168,7 +168,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
             </p>
             <Link
               href={localizeHref("/leistungen", locale)}
-              className="mt-5 inline-flex items-center justify-center rounded-full border border-white/30 px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
+              className="mt-5 inline-flex items-center justify-center rounded-full border border-brand-navy/20 px-7 py-3 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white cursor-pointer"
             >
               {t.viewAll}
             </Link>

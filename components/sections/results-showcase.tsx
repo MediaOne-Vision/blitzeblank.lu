@@ -58,17 +58,14 @@ export function ResultsShowcase({ locale = "de" }: { locale?: Locale }) {
   const showcases = SHOWCASES[locale]
   const t = TEXT[locale]
   return (
-    <section className="relative overflow-hidden bg-brand-navy py-16 lg:py-24">
-      {/* Dekorative, weiche Farbakzente für den dunklen Auftritt */}
-      <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-brand-blue/20 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 h-96 w-96 rounded-full bg-brand-sky/10 blur-3xl" />
-      <div className="relative mx-auto max-w-6xl px-6">
+    <section className="bg-brand-sand py-16 lg:py-24">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-sky">{t.eyebrow}</p>
-          <h2 className="text-balance font-display text-3xl lg:text-5xl font-extrabold tracking-tight text-white">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-teal">{t.eyebrow}</p>
+          <h2 className="text-balance font-display text-3xl lg:text-5xl font-extrabold tracking-tight text-brand-navy">
             {t.heading}
           </h2>
-          <p className="mt-4 text-white/70 text-pretty leading-relaxed">{t.body}</p>
+          <p className="mt-4 text-neutral-600 text-pretty leading-relaxed">{t.body}</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -80,13 +77,13 @@ export function ResultsShowcase({ locale = "de" }: { locale?: Locale }) {
               beforeAlt={item.beforeAlt}
               afterAlt={item.afterAlt}
               caption={item.caption}
-              captionClassName="text-white/85"
+              captionClassName="text-brand-navy/70"
             />
           ))}
         </div>
 
         <div className="mt-10 flex justify-center">
-          <Button asChild size="lg" className="rounded-full bg-white px-8 text-brand-navy hover:bg-brand-sky">
+          <Button asChild size="lg" className="rounded-full bg-brand-navy px-8 text-white hover:bg-brand-teal">
             <Link href={localizeHref("/leistungen", locale)} className="cursor-pointer">
               {t.cta}
               <ArrowRight className="h-4 w-4" />

@@ -33,21 +33,19 @@ export function ProcessSection({ locale = "de" }: { locale?: Locale }) {
   const steps = STEPS[locale]
   const t = TEXT[locale]
   return (
-    <section className="py-24 bg-brand-navy relative overflow-hidden">
-      <div className="absolute top-0 right-0 h-80 w-80 rounded-full bg-brand-blue/20 blur-3xl" />
-      <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-brand-teal/20 blur-3xl" />
+    <section className="py-24 bg-brand-mint relative overflow-hidden">
       <div className="relative mx-auto max-w-6xl px-6">
         {/* Header */}
         <div className="text-center mb-20">
-          <p className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-brand-sky mb-4">
-            <span className="h-px w-8 bg-brand-sky/50" />
+          <p className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-brand-teal mb-4">
+            <span className="h-px w-8 bg-brand-teal/40" />
             {t.eyebrow}
-            <span className="h-px w-8 bg-brand-sky/50" />
+            <span className="h-px w-8 bg-brand-teal/40" />
           </p>
-          <h2 className="font-display text-4xl lg:text-6xl font-extrabold text-white max-w-2xl mx-auto text-balance">
+          <h2 className="font-display text-4xl lg:text-6xl font-extrabold text-brand-navy max-w-2xl mx-auto text-balance">
             {t.heading}
           </h2>
-          <p className="mt-5 text-lg text-white/60 max-w-xl mx-auto text-pretty">{t.body}</p>
+          <p className="mt-5 text-lg text-neutral-600 max-w-xl mx-auto text-pretty">{t.body}</p>
         </div>
 
         {/* Steps with connecting line */}
@@ -59,19 +57,19 @@ export function ProcessSection({ locale = "de" }: { locale?: Locale }) {
             {steps.map((step) => (
               <div key={step.number} className="relative flex h-full flex-col items-center text-center group">
                 {/* Icon node */}
-                <div className="relative z-10 mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-brand-blue ring-8 ring-brand-navy shadow-lg shadow-brand-blue/30 transition-transform group-hover:scale-110">
+                <div className="relative z-10 mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-brand-blue ring-8 ring-brand-mint shadow-lg shadow-brand-blue/30 transition-transform group-hover:scale-110">
                   <step.icon className="h-8 w-8 text-white" strokeWidth={2.2} />
                 </div>
 
                 {/* Card */}
-                <div className="flex h-full w-full flex-col rounded-2xl bg-white/[0.06] ring-1 ring-white/10 p-6 backdrop-blur-sm transition-colors group-hover:bg-white/[0.1]">
-                  <span className="font-display text-5xl font-extrabold text-white/10 block leading-none mb-3">
+                <div className="flex h-full w-full flex-col rounded-2xl bg-white ring-1 ring-brand-navy/10 p-6 transition-colors group-hover:bg-neutral-50">
+                  <span className="font-display text-5xl font-extrabold text-brand-navy/10 block leading-none mb-3">
                     {step.number}
                   </span>
-                  <h3 className="font-display text-xl font-extrabold text-white mb-3 text-balance">
+                  <h3 className="font-display text-xl font-extrabold text-brand-navy mb-3 text-balance">
                     {step.title}
                   </h3>
-                  <p className="text-[15px] text-white/70 leading-relaxed text-pretty">
+                  <p className="text-[15px] text-neutral-600 leading-relaxed text-pretty">
                     {step.description}
                   </p>
                 </div>
