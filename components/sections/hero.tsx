@@ -66,7 +66,7 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
             alt="Blitzeblank Maskottchen"
             width={560}
             height={560}
-            className="h-40 w-auto sm:h-48 lg:h-48 xl:h-60 2xl:h-72"
+            className="h-40 w-auto sm:h-48 lg:h-64 xl:h-80 2xl:h-96"
             priority
           />
         </div>

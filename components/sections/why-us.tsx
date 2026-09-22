@@ -1,21 +1,25 @@
 import Link from "next/link"
-import { Zap, Repeat, UserCheck, Award, ArrowRight } from "lucide-react"
+import { Clock, ShieldCheck, MapPin, CircleDollarSign, GitFork, UserCircle, ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/reveal"
 import { Button } from "@/components/ui/button"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const FEATURES = {
   de: [
-    { icon: Zap, title: "Zuverlässigkeit", text: "Termingerechte Ausführung und konstant hohe Qualität sind für uns selbstverständlich." },
-    { icon: Repeat, title: "Flexibilität", text: "Kurzfristige Terminvergabe und schnelle Reaktionszeiten - wir passen uns Ihrem Zeitplan an." },
-    { icon: UserCheck, title: "Persönlicher Kontakt", text: "Ein fester Ansprechpartner für alle Ihre Anliegen. Direkte Kommunikation ohne Umwege." },
-    { icon: Award, title: "Qualitätsgarantie", text: "Unsere Arbeit wird erst abgeschlossen, wenn Sie vollständig zufrieden sind." },
+    { icon: Clock, title: "Schnelle Reaktion", text: "Antwort auf Ihre Anfrage innerhalb von 24 Stunden." },
+    { icon: ShieldCheck, title: "Qualitätsgarantie", text: "Inklusive Testfläche auf Wunsch." },
+    { icon: MapPin, title: "Kostenlose Besichtigung", text: "Vor-Ort-Termin für ein präzises Angebot - gratis." },
+    { icon: CircleDollarSign, title: "Transparente Preise", text: "Faire Konditionen ohne versteckte Kosten." },
+    { icon: GitFork, title: "Flexibilität", text: "Kurzfristige Terminvergabe und schnelle Reaktionszeiten." },
+    { icon: UserCircle, title: "Persönlicher Kontakt", text: "Ein fester Ansprechpartner für alle Ihre Anliegen." },
   ],
   en: [
-    { icon: Zap, title: "Reliability", text: "On-time execution and consistently high quality are a given for us." },
-    { icon: Repeat, title: "Flexibility", text: "Short-notice scheduling and fast response times - we adapt to your timeline." },
-    { icon: UserCheck, title: "Personal Contact", text: "One dedicated point of contact for all your needs. Direct communication, no detours." },
-    { icon: Award, title: "Quality Guarantee", text: "Our work is only complete once you're fully satisfied." },
+    { icon: Clock, title: "Fast Response", text: "We respond to your inquiry within 24 hours." },
+    { icon: ShieldCheck, title: "Quality Guarantee", text: "Test area available on request." },
+    { icon: MapPin, title: "Free Site Visit", text: "On-site appointment for an accurate quote - free of charge." },
+    { icon: CircleDollarSign, title: "Transparent Pricing", text: "Fair terms with no hidden costs." },
+    { icon: GitFork, title: "Flexibility", text: "Short-notice scheduling and fast response times." },
+    { icon: UserCircle, title: "Personal Contact", text: "One dedicated point of contact for all your needs." },
   ],
 }
 
@@ -40,38 +44,35 @@ export function WhyUsSection({ locale = "de" }: { locale?: Locale }) {
   const features = FEATURES[locale]
   const t = TEXT[locale]
   return (
-    <section className="py-20 bg-white">
-      <div className="mx-auto max-w-6xl px-6">
-        {/* Header */}
-        <Reveal className="max-w-3xl mb-16">
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">{t.eyebrow}</p>
-          <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy tracking-tight text-balance mb-6">
+    <section className="bg-white py-16 lg:py-24">
+      <div className="mx-auto max-w-5xl px-6">
+        <Reveal className="mx-auto mb-12 max-w-2xl text-center lg:mb-16">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.08em] text-brand-blue">{t.eyebrow}</p>
+          <h2 className="mb-5 text-balance font-display text-3xl font-extrabold tracking-tight text-brand-navy lg:text-5xl">
             {t.heading}
           </h2>
-          <p className="text-neutral-600 leading-relaxed text-pretty">{t.body}</p>
+          <p className="text-pretty leading-relaxed text-neutral-600">{t.body}</p>
         </Reveal>
 
-        {/* Features */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-x-12 gap-y-8 sm:grid-cols-2 lg:gap-x-16">
           {features.map((feature, i) => (
             <Reveal
               key={feature.title}
               direction="up"
-              delay={i * 100}
-              className="rounded-2xl bg-brand-mint p-6 transition-transform duration-300 hover:-translate-y-1.5"
+              delay={i * 120}
+              className="flex gap-4 border-b border-neutral-200 pb-6"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-blue">
-                <feature.icon className="h-6 w-6 text-white" />
+              <feature.icon className="h-8 w-8 shrink-0 text-brand-navy" strokeWidth={1.75} />
+              <div>
+                <h3 className="mb-1 font-display text-lg font-bold text-brand-navy">{feature.title}</h3>
+                <p className="text-sm leading-relaxed text-neutral-600">{feature.text}</p>
               </div>
-              <h3 className="font-display text-lg font-bold text-brand-navy mb-2">{feature.title}</h3>
-              <p className="text-sm text-neutral-600 leading-relaxed">{feature.text}</p>
             </Reveal>
           ))}
         </div>
 
-        {/* CTA */}
-        <Reveal className="mt-12 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center">
-          <p className="text-brand-navy font-medium text-pretty">{t.ctaText}</p>
+        <Reveal delay={720} className="mt-12 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-center">
+          <p className="text-pretty font-medium text-brand-navy">{t.ctaText}</p>
           <Button
             asChild
             size="lg"
