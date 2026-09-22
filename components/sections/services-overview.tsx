@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Reveal } from "@/components/reveal"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowUpRight, ChevronDown } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const SERVICES = {
@@ -92,6 +92,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   const [activeIndex, setActiveIndex] = useState(0)
   const active = services[activeIndex]
+  const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
     <section className="bg-brand-mint py-16 sm:py-20 lg:py-28">
@@ -115,7 +116,92 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
           </Link>
         </Reveal>
 
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-start">
+        {/* Mobile accordion */}
+        <div className="lg:hidden">
+          <Reveal direction="up">
+            <div className="flex flex-col">
+              {services.map((service, i) => {
+                const isOpen = i === openIndex
+                return (
+                  <div key={service.title} className={i > 0 ? "border-t border-brand-navy/10" : ""}>
+                    <button
+                      type="button"
+                      onClick={() => setOpenIndex(isOpen ? null : i)}
+                      aria-expanded={isOpen}
+                      className="group flex w-full items-center gap-4 py-5 text-left cursor-pointer"
+                    >
+                      <span
+                        className={`font-display font-extrabold tabular-nums transition-all duration-300 ${
+                          isOpen ? "text-4xl text-brand-blue" : "text-3xl text-brand-navy/20"
+                        }`}
+                      >
+                        {i + 1}
+                      </span>
+                      <span
+                        className={`flex-1 font-display font-bold text-balance transition-all duration-300 ${
+                          isOpen ? "text-2xl text-brand-navy" : "text-xl text-neutral-500"
+                        }`}
+                      >
+                        {service.title}
+                      </span>
+                      <ChevronDown
+                        className={`h-5 w-5 shrink-0 transition-all duration-300 ${
+                          isOpen ? "rotate-180 text-brand-blue" : "text-brand-navy/40"
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <div
+                      className={`grid transition-all duration-300 ease-out ${
+                        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <Link
+                          href={localizeHref(service.href, locale)}
+                          className="group relative mb-5 block aspect-[4/5] overflow-hidden rounded-3xl cursor-pointer"
+                        >
+                          <Image
+                            src={service.image || "/placeholder.svg"}
+                            alt={service.imageAlt}
+                            fill
+                            sizes="100vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            priority={false}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent" />
+                          <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-sm transition-all group-hover:bg-white group-hover:text-brand-navy">
+                            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+                          </div>
+                          <div className="absolute inset-x-0 bottom-0 p-6">
+                            <h3 className="font-display text-2xl font-bold text-white">{service.title}</h3>
+                            <span className="mt-3 mb-4 block h-0.5 w-14 bg-brand-sky" />
+                            <ul className="space-y-1.5">
+                              {service.bullets.map((bullet) => (
+                                <li key={bullet} className="text-white/85 text-sm">
+                                  • {bullet}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <Link
+              href={localizeHref("/leistungen", locale)}
+              className="mt-8 inline-flex w-full items-center justify-center rounded-full border border-brand-navy/20 px-7 py-3 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white cursor-pointer"
+            >
+              {t.viewAll}
+            </Link>
+          </Reveal>
+        </div>
+
+        <div className="hidden lg:grid gap-10 lg:grid-cols-2 lg:gap-16 items-start">
           {/* Numbered list */}
           <Reveal direction="up">
             <ol className="flex flex-col">
