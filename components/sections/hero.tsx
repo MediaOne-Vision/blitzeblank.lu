@@ -29,13 +29,13 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
     <section className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-20">
-      <div className="relative z-10 flex w-full items-center px-6 py-20 lg:min-h-[44.5rem] lg:px-16 lg:py-24 xl:px-24">
-        <div className="w-full max-w-4xl lg:w-[62%]">
+      <div className="relative z-10 flex w-full flex-col items-center gap-12 px-6 py-20 lg:min-h-[44.5rem] lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-16 lg:py-24 xl:px-24">
+        <div className="min-w-0 max-w-2xl lg:flex-1">
           <span className="mb-8 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky">
             {t.badge}
           </span>
 
-          <h1 className="mb-8 max-w-3xl text-balance font-display text-6xl font-extrabold leading-[0.98] tracking-tight text-white sm:text-7xl lg:text-[4.25rem]">
+          <h1 className="mb-8 text-balance font-display text-6xl font-extrabold leading-[0.98] tracking-tight text-white sm:text-7xl lg:text-[4.25rem]">
             <span className="whitespace-nowrap font-extrabold">{t.heading}</span><br />
             <span className="font-medium">{t.headingAccent}</span>
           </h1>
@@ -60,13 +60,13 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute bottom-0 right-4 hidden lg:block xl:right-16">
+        <div className="hidden shrink-0 xl:block">
           <Image
             src="/images/mascot.png"
             alt="Blitzeblank Maskottchen"
             width={560}
             height={560}
-            className="h-[26rem] w-auto xl:h-[28rem]"
+            className="h-[22rem] w-auto 2xl:h-[26rem]"
             priority
           />
         </div>
