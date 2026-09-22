@@ -99,11 +99,11 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
         {/* Header */}
         <Reveal className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between mb-10 lg:mb-14">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-teal mb-3">{t.eyebrow}</p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">{t.eyebrow}</p>
             <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
               <span className="text-brand-navy">{t.headingLine1}</span>
               <br />
-              <span className="text-brand-teal">{t.headingLine2}</span>
+              <span className="text-brand-blue">{t.headingLine2}</span>
             </h2>
           </div>
           <Link
@@ -133,7 +133,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
                     >
                       <span
                         className={`font-display font-extrabold tabular-nums transition-all duration-300 ${
-                          isActive ? "text-5xl sm:text-6xl text-brand-teal" : "text-4xl sm:text-5xl text-brand-navy/20"
+                          isActive ? "text-5xl sm:text-6xl text-brand-blue" : "text-4xl sm:text-5xl text-brand-navy/20"
                         }`}
                       >
                         {i + 1}
