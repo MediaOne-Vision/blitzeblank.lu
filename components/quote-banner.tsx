@@ -100,7 +100,7 @@ export function QuoteBanner({ slug, serviceTitle, ctaHref, locale = "de" }: Quot
   }
 
   return (
-    <section className="relative isolate overflow-hidden py-20 sm:py-28">
+    <section className="relative isolate overflow-hidden py-20 sm:py-28 -mt-px">
       <Image
         src="/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif"
         alt="Gepflegte Natursteinterrasse als Hintergrund"

@@ -26,25 +26,21 @@ export function HomeContent({ locale = "de" }: { locale?: Locale }) {
           <TrustBar locale={locale} />
         </Reveal>
         <ServicesOverview locale={locale} />
+        <WhyUsSection locale={locale} />
         <Reveal>
           <ResultsShowcase locale={locale} />
         </Reveal>
-        <WhyUsSection locale={locale} />
         <Reveal>
           <OwnerSection locale={locale} />
-        </Reveal>
-        <Reveal>
-          <InActionSection locale={locale} />
         </Reveal>
         <Reveal>
           <ProcessSection locale={locale} />
         </Reveal>
         <Reveal>
-          <section className="py-16 lg:py-24">
-            <div className="mx-auto max-w-7xl px-6">
-              <QuoteBanner locale={locale} />
-            </div>
-          </section>
+          <InActionSection locale={locale} />
+        </Reveal>
+        <Reveal>
+          <QuoteBanner locale={locale} />
         </Reveal>
         <Reveal>
           <TestimonialsSection locale={locale} />
