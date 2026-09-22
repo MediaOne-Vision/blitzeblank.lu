@@ -61,7 +61,7 @@ export function Navigation() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-blue/10 shadow-sm">
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-2 px-4 sm:px-6">
+      <div className="mx-auto flex h-20 w-full max-w-[1600px] items-center justify-between gap-4 px-6 sm:px-10 lg:px-16">
         {/* Logo */}
         <Link href={localizeHref("/", locale)} className="shrink-0 cursor-pointer">
           <Image
@@ -75,7 +75,7 @@ export function Navigation() {
         </Link>
 
         {/* Desktop Navigation - Centered */}
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex flex-1 items-center justify-center gap-1">
           {navLinks.map((link) =>
             link.href === localizeHref("/leistungen", locale) ? (
               <div key={link.href} className="relative group">
@@ -124,7 +124,6 @@ export function Navigation() {
 
         {/* CTA */}
         <div className="hidden lg:flex items-center gap-3 shrink-0">
-          <LanguageSwitcher />
           <Button
             asChild
             size="sm"
@@ -146,6 +145,7 @@ export function Navigation() {
               {t.contact}
             </Link>
           </Button>
+          <LanguageSwitcher />
         </div>
 
         {/* Mobile */}
