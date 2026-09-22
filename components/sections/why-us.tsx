@@ -62,7 +62,7 @@ export function WhyUsSection({ locale = "de" }: { locale?: Locale }) {
               delay={i * 120}
               className="flex gap-4 border-b border-neutral-200 pb-6"
             >
-              <feature.icon className="h-8 w-8 shrink-0 text-brand-navy" strokeWidth={1.75} />
+              <feature.icon className="h-10 w-10 shrink-0 text-brand-navy sm:h-11 sm:w-11" strokeWidth={1.5} />
               <div>
                 <h3 className="mb-1 font-display text-lg font-bold text-brand-navy">{feature.title}</h3>
                 <p className="text-sm leading-relaxed text-neutral-600">{feature.text}</p>
