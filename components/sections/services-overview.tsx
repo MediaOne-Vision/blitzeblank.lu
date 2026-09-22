@@ -1,78 +1,71 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import { Reveal } from "@/components/reveal"
-import { ArrowUpRight, Factory, GlassWater, Gem, Building2, ArrowRight } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
-
-const FEATURED = {
-  de: {
-    title: "Industriereinigung",
-    description:
-      "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen mit modernster Technik.",
-    href: "/leistungen/industriereinigung",
-    icon: Factory,
-  },
-  en: {
-    title: "Industrial Cleaning",
-    description:
-      "Professional cleaning of production halls, warehouses and industrial facilities with state-of-the-art technology.",
-    href: "/leistungen/industriereinigung",
-    icon: Factory,
-  },
-}
 
 const SERVICES = {
   de: [
     {
+      title: "Industriereinigung",
+      href: "/leistungen/industriereinigung",
+      image: "/images/leistungen/industriereinigung-reinraum-industriesauger-skyvac.avif",
+      imageAlt: "Mitarbeiter im Schutzanzug reinigt einen industriellen Doppelboden mit Industriesauger",
+      bullets: ["Hallenboden", "Decken & Wände", "Maschinen", "Lagerräume", "Lüftungen"],
+    },
+    {
       title: "Fensterreinigung",
-      description: "Streifenfreie Glasreinigung für Bürogebäude und Geschäfte - auch in großen Höhen.",
       href: "/leistungen/fensterreinigung",
-      icon: GlassWater,
       image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
-      imageAlt: "Gereinigter Glas-Wintergarten mit klaren Glasflächen nach der Fensterreinigung",
+      imageAlt: "Gereinigter Glas-Wintergarten mit klaren Glasflächen",
+      bullets: ["Bürofenster", "Schaufenster", "Glasfassaden", "Wintergärten", "Solaranlagen"],
     },
     {
       title: "Fassadenreinigung",
-      description: "Professionelle Außenreinigung für Gebäudefassaden aller Art und Materialien.",
       href: "/leistungen/fassadenreinigung",
-      icon: Building2,
       image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
       imageAlt: "Saubere, helle Mehrfamilienhaus-Fassade nach der Fassadenreinigung",
+      bullets: ["Putzfassaden", "Klinkerfassaden", "Metallfassaden", "Glasfassaden", "Betonfassaden"],
     },
     {
       title: "Steinreinigung",
-      description: "Fachgerechte Pflege von Naturstein, Pflaster, Terrassen und Außenanlagen.",
       href: "/leistungen/steinreinigung",
-      icon: Gem,
       image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
-      imageAlt: "Gereinigte Naturstein-Terrasse mit Polygonalplatten als Ergebnis der Steinreinigung",
+      imageAlt: "Gereinigte Naturstein-Terrasse mit Polygonalplatten",
+      bullets: ["Naturstein", "Pflaster", "Terrassen", "Treppen", "Mauerwerk"],
     },
   ],
   en: [
     {
+      title: "Industrial Cleaning",
+      href: "/leistungen/industriereinigung",
+      image: "/images/leistungen/industriereinigung-reinraum-industriesauger-skyvac.avif",
+      imageAlt: "Employee in protective suit cleaning an industrial raised floor with an industrial vacuum",
+      bullets: ["Hall floors", "Ceilings & walls", "Machinery", "Storage areas", "Ventilation"],
+    },
+    {
       title: "Window Cleaning",
-      description: "Streak-free glass cleaning for office buildings and shops - even at great heights.",
       href: "/leistungen/fensterreinigung",
-      icon: GlassWater,
       image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
-      imageAlt: "Cleaned glass conservatory with clear glass surfaces after window cleaning",
+      imageAlt: "Cleaned glass conservatory with clear glass surfaces",
+      bullets: ["Office windows", "Shop windows", "Glass facades", "Conservatories", "Solar panels"],
     },
     {
       title: "Facade Cleaning",
-      description: "Professional exterior cleaning for building facades of all kinds and materials.",
       href: "/leistungen/fassadenreinigung",
-      icon: Building2,
       image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
       imageAlt: "Clean, bright multi-family house facade after facade cleaning",
+      bullets: ["Rendered facades", "Brick facades", "Metal facades", "Glass facades", "Concrete facades"],
     },
     {
       title: "Stone Cleaning",
-      description: "Expert care of natural stone, paving, terraces and outdoor areas.",
       href: "/leistungen/steinreinigung",
-      icon: Gem,
       image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
-      imageAlt: "Cleaned natural stone terrace with polygonal slabs as a result of stone cleaning",
+      imageAlt: "Cleaned natural stone terrace with polygonal slabs",
+      bullets: ["Natural stone", "Paving", "Terraces", "Steps", "Masonry"],
     },
   ],
 }
@@ -80,141 +73,138 @@ const SERVICES = {
 const TEXT = {
   de: {
     eyebrow: "Leistungen",
-    heading: "Reinigung für jeden Anspruch",
+    headingLine1: "Reinigung für",
+    headingLine2: "jeden Anspruch.",
     viewAll: "Alle Leistungen ansehen",
-    learnMore: "Mehr erfahren",
-    viewDetails: "Details ansehen",
-    viewDetailsAria: (title: string) => `${title} - Details ansehen`,
     ctaText: "Entdecken Sie unser komplettes Leistungsspektrum",
   },
   en: {
     eyebrow: "Services",
-    heading: "Cleaning for Every Need",
-    viewAll: "View All Services",
-    learnMore: "Learn More",
-    viewDetails: "View Details",
-    viewDetailsAria: (title: string) => `${title} - view details`,
+    headingLine1: "Cleaning for",
+    headingLine2: "every need.",
+    viewAll: "View all services",
     ctaText: "Discover our full range of services",
   },
 }
 
 export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
-  const featured = FEATURED[locale]
   const services = SERVICES[locale]
   const t = TEXT[locale]
+  const [activeIndex, setActiveIndex] = useState(0)
+  const active = services[activeIndex]
 
   return (
-    <section className="py-20 bg-brand-mint">
+    <section className="bg-brand-navy py-16 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-6">
         {/* Header */}
-        <Reveal className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14">
+        <Reveal className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between mb-10 lg:mb-14">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">{t.eyebrow}</p>
-            <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy max-w-xl tracking-tight text-balance">
-              {t.heading}
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-sky mb-3">{t.eyebrow}</p>
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-balance">
+              <span className="text-white">{t.headingLine1}</span>
+              <br />
+              <span className="text-brand-sky">{t.headingLine2}</span>
             </h2>
           </div>
           <Link
             href={localizeHref("/leistungen", locale)}
-            className="inline-flex items-center gap-2 text-sm font-medium text-brand-blue hover:text-brand-teal underline underline-offset-4 cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-white/70 hover:text-white transition-colors cursor-pointer whitespace-nowrap"
           >
             {t.viewAll}
-            <ArrowUpRight className="h-4 w-4" />
+            <span aria-hidden="true">&gt;</span>
           </Link>
         </Reveal>
 
-        {/* Featured Service - wide slim banner */}
-        <Reveal direction="scale">
-          <Link
-            href={localizeHref(featured.href, locale)}
-            className="group relative mb-6 flex items-center justify-between overflow-hidden rounded-3xl bg-brand-navy px-8 py-8 sm:px-10 cursor-pointer"
-          >
-            <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-brand-blue/20 blur-2xl animate-float-slow" />
-            <div className="relative max-w-xl">
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue">
-                <featured.icon className="h-7 w-7 text-white" />
-              </div>
-              <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-3">
-                {featured.title}
-              </h3>
-              <p className="text-white/70 leading-relaxed mb-5">
-                {featured.description}
-              </p>
-              <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-sky group-hover:gap-3 transition-all">
-                {t.learnMore}
-                <ArrowUpRight className="h-4 w-4" />
-              </span>
-            </div>
-            <Image
-              src="/images/mascot.png"
-              alt="Blitzeblank Waschbär Maskottchen"
-              width={260}
-              height={260}
-              className="relative hidden md:block h-44 lg:h-52 w-auto flex-shrink-0 transition-transform group-hover:scale-105"
-            />
-          </Link>
-        </Reveal>
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-start">
+          {/* Numbered list */}
+          <Reveal direction="up">
+            <ol className="flex flex-col">
+              {services.map((service, i) => {
+                const isActive = i === activeIndex
+                return (
+                  <li key={service.title} className={i > 0 ? "border-t border-white/15" : ""}>
+                    <button
+                      type="button"
+                      onMouseEnter={() => setActiveIndex(i)}
+                      onFocus={() => setActiveIndex(i)}
+                      onClick={() => setActiveIndex(i)}
+                      aria-pressed={isActive}
+                      className="group flex w-full items-center gap-5 py-5 text-left cursor-pointer"
+                    >
+                      <span
+                        className={`font-display font-extrabold tabular-nums transition-all duration-300 ${
+                          isActive ? "text-5xl sm:text-6xl text-brand-sky" : "text-4xl sm:text-5xl text-white/25"
+                        }`}
+                      >
+                        {i + 1}
+                      </span>
+                      <span
+                        className={`font-display font-bold text-balance transition-all duration-300 ${
+                          isActive ? "text-2xl sm:text-3xl text-white" : "text-xl sm:text-2xl text-white/60"
+                        }`}
+                      >
+                        {service.title}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
 
-        {/* Other Services - compact clickable tiles: image, icon & name only */}
-        <div className="grid gap-5 grid-cols-2 lg:grid-cols-3">
-          {services.map((service, i) => (
-            <Reveal key={service.title} as="div" direction="up" delay={i * 100} className="h-full">
+            <p className="mt-8 text-white/60 leading-relaxed max-w-sm text-balance">
+              {locale === "de" ? (
+                <>
+                  Entdecken Sie unser
+                  <br />
+                  komplettes Leistungsspektrum
+                </>
+              ) : (
+                <>
+                  Discover our
+                  <br />
+                  full range of services
+                </>
+              )}
+            </p>
             <Link
-              href={localizeHref(service.href, locale)}
-              aria-label={t.viewDetailsAria(service.title)}
-              className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-brand-navy shadow-sm ring-1 ring-brand-navy/5 transition-all hover:shadow-xl hover:-translate-y-1 cursor-pointer"
+              href={localizeHref("/leistungen", locale)}
+              className="mt-5 inline-flex items-center justify-center rounded-full border border-white/30 px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-brand-navy cursor-pointer"
             >
-              {/* Image fills the tile */}
-              <div className="relative aspect-[5/4] overflow-hidden">
-                <Image
-                  src={service.image || "/placeholder.svg"}
-                  alt={service.imageAlt ?? service.title}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                {/* Dark gradient for legible title */}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/30 to-transparent" />
+              {t.viewAll}
+            </Link>
+          </Reveal>
 
-                {/* Icon badge top-left */}
-                <div className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue/90 shadow-lg shadow-brand-blue/30 ring-1 ring-white/20 backdrop-blur-sm transition-colors group-hover:bg-brand-teal">
-                  <service.icon className="h-6 w-6 text-white" strokeWidth={2} />
-                </div>
-
-                {/* Click affordance top-right */}
-                <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-sm transition-all group-hover:bg-white group-hover:text-brand-navy">
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
-                </div>
-
-                {/* Name + hint at the bottom */}
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <h3 className="font-display text-base lg:text-lg font-bold text-white text-balance">
-                    {service.title}
-                  </h3>
-                  <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand-sky opacity-90">
-                    {t.viewDetails}
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </div>
+          {/* Active service image panel */}
+          <Reveal direction="scale" key={active.title}>
+            <Link
+              href={localizeHref(active.href, locale)}
+              className="group relative block aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5] overflow-hidden rounded-3xl cursor-pointer"
+            >
+              <Image
+                src={active.image || "/placeholder.svg"}
+                alt={active.imageAlt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                priority={false}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent" />
+              <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-sm transition-all group-hover:bg-white group-hover:text-brand-navy">
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+              </div>
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                <h3 className="font-display text-2xl sm:text-3xl font-bold text-white">{active.title}</h3>
+                <span className="mt-3 mb-4 block h-0.5 w-14 bg-brand-sky" />
+                <ul className="space-y-1.5">
+                  {active.bullets.map((bullet) => (
+                    <li key={bullet} className="text-white/85 text-sm sm:text-base">
+                      • {bullet}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Link>
-            </Reveal>
-          ))}
-        </div>
-
-        {/* CTA below services */}
-        <div className="mt-12 flex flex-col items-center gap-4 text-center">
-          <p className="text-lg font-medium text-brand-navy text-balance">{t.ctaText}</p>
-          <Button
-            asChild
-            size="lg"
-            className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/30"
-          >
-            <Link href={localizeHref("/leistungen", locale)} className="cursor-pointer">
-              {t.viewAll}
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
+          </Reveal>
         </div>
       </div>
     </section>
