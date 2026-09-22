@@ -28,8 +28,8 @@ const TEXT = {
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-5 lg:pt-12">
-      <div className="relative z-10 flex w-full flex-col items-center gap-6 px-6 py-2 sm:px-8 sm:py-4 lg:min-h-[42rem] lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:px-16 lg:py-20 xl:px-24">
+    <section className="relative flex min-h-[85vh] items-start overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pb-24 pt-5 lg:min-h-[56rem] lg:items-start lg:pb-40 lg:pt-12">
+      <div className="relative z-10 flex w-full flex-col items-center gap-6 px-6 py-2 sm:px-8 sm:py-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
         <div className="min-w-0 max-w-2xl text-center lg:flex-1 lg:text-left">
           <span className="mb-4 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8">
             {t.badge}

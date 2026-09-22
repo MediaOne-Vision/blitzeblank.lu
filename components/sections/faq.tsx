@@ -5,8 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { HelpCircle, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const FAQS = {
@@ -109,52 +108,43 @@ export function FaqSection({ locale = "de" }: { locale?: Locale }) {
   const faqs = FAQS[locale]
   const t = TEXT[locale]
   return (
-    <section className="py-20 bg-brand-mint">
-      <div className="mx-auto max-w-3xl px-6">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-brand-blue/10">
-            <HelpCircle className="h-6 w-6 text-brand-blue" />
+    <section className="bg-white py-20 lg:py-28">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
+          {/* Left column: heading + contact */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">{t.eyebrow}</p>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight text-brand-navy text-balance lg:text-4xl">
+              {t.heading}
+            </h2>
+            <p className="mt-4 text-neutral-600 leading-relaxed text-pretty">{t.body}</p>
+
+            <div className="mt-10 border-t border-brand-navy/10 pt-6">
+              <p className="font-display font-bold text-brand-navy text-balance">{t.ctaHeading}</p>
+              <p className="mt-1.5 text-sm text-neutral-600 text-pretty">{t.ctaBody}</p>
+              <Link
+                href={localizeHref("/kontakt", locale)}
+                className="group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-blue hover:text-brand-teal"
+              >
+                {t.ctaButton}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand-blue mb-3">{t.eyebrow}</p>
-          <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-brand-navy tracking-tight text-balance">
-            {t.heading}
-          </h2>
-          <p className="text-neutral-600 leading-relaxed mt-4 text-pretty">{t.body}</p>
-        </div>
 
-        {/* Accordion */}
-        <Accordion type="single" collapsible className="space-y-3">
-          {faqs.map((faq, index) => (
-            <AccordionItem
-              key={index}
-              value={`item-${index}`}
-              className="rounded-2xl border border-brand-blue/10 bg-white px-6 last:border-b"
-            >
-              <AccordionTrigger className="text-left font-display font-bold text-brand-navy hover:no-underline">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-neutral-600 leading-relaxed">
-                {faq.answer}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-
-        {/* CTA below FAQ */}
-        <div className="mt-12 rounded-2xl bg-white border border-brand-blue/10 px-6 py-8 text-center">
-          <p className="font-display text-xl font-bold text-brand-navy mb-2 text-balance">{t.ctaHeading}</p>
-          <p className="text-neutral-600 mb-6 text-pretty">{t.ctaBody}</p>
-          <Button
-            asChild
-            size="lg"
-            className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/30"
-          >
-            <Link href={localizeHref("/kontakt", locale)} className="cursor-pointer">
-              {t.ctaButton}
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
+          {/* Right column: accordion */}
+          <Accordion type="single" collapsible className="divide-y divide-brand-navy/10 border-t border-brand-navy/10">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`} className="border-none">
+                <AccordionTrigger className="py-5 text-left font-display font-bold text-brand-navy hover:no-underline">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="pb-5 text-neutral-600 leading-relaxed">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Phone, ArrowRight } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
@@ -19,32 +20,35 @@ const TEXT = {
 export function CtaSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="py-20 bg-white">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-blue to-brand-teal px-8 py-16 lg:px-16 text-center">
-          <div className="absolute -top-16 -left-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-brand-navy/20 blur-3xl" />
-          <div className="relative">
-            <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-white mb-4 tracking-tight text-balance">
-              {t.heading}
-            </h2>
-            <p className="text-white/85 max-w-xl mx-auto mb-8 leading-relaxed">{t.body}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="group bg-white text-brand-navy hover:bg-brand-mint rounded-full px-8 shadow-lg transition-transform hover:scale-105">
-                <Link href={localizeHref("/kontakt", locale)} className="cursor-pointer">
-                  {t.cta}
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20 rounded-full px-8">
-                <a href="tel:+352661830493" className="cursor-pointer">
-                  <Phone className="h-4 w-4" />
-                  +352 661 830 493
-                </a>
-              </Button>
-            </div>
+    <section className="bg-brand-navy">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-10 px-6 py-16 lg:flex-row lg:justify-between lg:gap-16 lg:py-20">
+        <div className="max-w-xl text-center lg:text-left">
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-white text-balance lg:text-4xl">
+            {t.heading}
+          </h2>
+          <p className="mt-4 leading-relaxed text-white/70 text-pretty">{t.body}</p>
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
+            <Button asChild size="lg" className="group rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-black/20 hover:bg-brand-teal">
+              <Link href={localizeHref("/kontakt", locale)} className="cursor-pointer">
+                {t.cta}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="rounded-full border-white/30 bg-transparent text-white hover:bg-white/10">
+              <a href="tel:+352661830493" className="cursor-pointer">
+                <Phone className="h-4 w-4" />
+                +352 661 830 493
+              </a>
+            </Button>
           </div>
         </div>
+        <Image
+          src="/images/mascot.png"
+          alt="Blitzeblank Maskottchen"
+          width={280}
+          height={280}
+          className="h-32 w-auto shrink-0 lg:h-44"
+        />
       </div>
     </section>
   )
