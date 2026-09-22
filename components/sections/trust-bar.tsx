@@ -1,37 +1,23 @@
-import { Clock, MapPinned, BadgeEuro, ShieldCheck } from "lucide-react"
 import type { Locale } from "@/lib/i18n"
 
 const VALUES = {
-  de: [
-    { icon: Clock, title: "Schnelle Reaktion", text: "Antwort innerhalb von 24 Stunden." },
-    { icon: MapPinned, title: "Kostenlose Besichtigung", text: "Vor-Ort-Termin, präzises Angebot." },
-    { icon: BadgeEuro, title: "Transparente Preise", text: "Faire Konditionen, keine versteckten Kosten." },
-    { icon: ShieldCheck, title: "Qualitätsgarantie", text: "Inklusive Testfläche auf Wunsch." },
-  ],
-  en: [
-    { icon: Clock, title: "Fast Response", text: "We reply within 24 hours." },
-    { icon: MapPinned, title: "Free Site Visit", text: "On-site appointment, precise quote." },
-    { icon: BadgeEuro, title: "Transparent Pricing", text: "Fair terms, no hidden costs." },
-    { icon: ShieldCheck, title: "Quality Guarantee", text: "Includes a test area on request." },
-  ],
+  de: ["Antwort innerhalb von 24 Stunden", "Kostenlose Besichtigung vor Ort", "Transparente, faire Preise", "Qualitätsgarantie inklusive"],
+  en: ["We reply within 24 hours", "Free on-site visit", "Transparent, fair pricing", "Quality guarantee included"],
 }
 
 export function TrustBar({ locale = "de" }: { locale?: Locale }) {
   const values = VALUES[locale]
   return (
-    <section className="border-b border-brand-navy/10 bg-white py-10 lg:py-12">
+    <section className="bg-white py-6">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-brand-navy/10">
-          {values.map((value) => (
-            <div key={value.title} className="flex items-start gap-4 lg:px-6 lg:first:pl-0 lg:last:pr-0">
-              <value.icon className="mt-0.5 h-6 w-6 flex-shrink-0 text-brand-blue" strokeWidth={1.75} />
-              <div>
-                <h3 className="font-display text-sm font-bold text-brand-navy">{value.title}</h3>
-                <p className="mt-0.5 text-sm leading-relaxed text-neutral-600">{value.text}</p>
-              </div>
-            </div>
+        <ul className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center text-sm text-neutral-600 sm:justify-between sm:gap-x-6 sm:text-[0.95rem]">
+          {values.map((value, i) => (
+            <li key={value} className="flex items-center gap-x-3 sm:gap-x-6">
+              <span className="text-balance">{value}</span>
+              {i < values.length - 1 && <span className="hidden h-1 w-1 rounded-full bg-brand-blue/40 sm:block" aria-hidden="true" />}
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )
