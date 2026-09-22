@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
@@ -45,8 +45,16 @@ const TEXT = {
 
 export function Navigation() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const locale = getLocaleFromPathname(pathname)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
   const navLinks = NAV_LINKS[locale].map((l) => ({ ...l, href: localizeHref(l.href, locale) }))
   const serviceLinks = SERVICE_LINKS[locale].map((l) => ({ ...l, href: localizeHref(l.href, locale) }))
   const t = TEXT[locale]
@@ -59,8 +67,18 @@ export function Navigation() {
     return pathname === href || pathname.startsWith(href + "/")
   }
 
+  const isHome = pathname === localizeHref("/", locale)
+  const transparent = isHome && !scrolled
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-blue/10 shadow-sm">
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-colors duration-300",
+        transparent
+          ? "border-b border-transparent bg-transparent"
+          : "border-b border-brand-blue/10 bg-white/90 shadow-sm backdrop-blur-md",
+      )}
+    >
       <div className="mx-auto flex h-20 w-full max-w-[1600px] items-center justify-between gap-4 px-6 sm:px-10 lg:px-16">
         {/* Logo */}
         <Link href={localizeHref("/", locale)} className="shrink-0 cursor-pointer">
@@ -69,7 +87,7 @@ export function Navigation() {
             alt="Blitzeblank"
             width={220}
             height={55}
-            className="h-9 w-auto sm:h-11 lg:h-12"
+            className={cn("h-9 w-auto sm:h-11 lg:h-12", transparent && "brightness-0 invert")}
             priority
           />
         </Link>
@@ -84,8 +102,12 @@ export function Navigation() {
                   className={cn(
                     "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors cursor-pointer",
                     isActive(link.href)
-                      ? "bg-brand-blue/10 text-brand-blue"
-                      : "text-neutral-600 hover:bg-brand-mint hover:text-brand-blue",
+                      ? transparent
+                        ? "bg-white/15 text-white"
+                        : "bg-brand-blue/10 text-brand-blue"
+                      : transparent
+                        ? "text-white/90 hover:bg-white/10 hover:text-white"
+                        : "text-neutral-600 hover:bg-brand-mint hover:text-brand-blue",
                   )}
                 >
                   {link.label}
@@ -112,8 +134,12 @@ export function Navigation() {
                 className={cn(
                   "rounded-full px-4 py-2 text-sm font-medium transition-colors cursor-pointer",
                   isActive(link.href)
-                    ? "bg-brand-blue/10 text-brand-blue"
-                    : "text-neutral-600 hover:bg-brand-mint hover:text-brand-blue",
+                    ? transparent
+                      ? "bg-white/15 text-white"
+                      : "bg-brand-blue/10 text-brand-blue"
+                    : transparent
+                      ? "text-white/90 hover:bg-white/10 hover:text-white"
+                      : "text-neutral-600 hover:bg-brand-mint hover:text-brand-blue",
                 )}
               >
                 {link.label}
@@ -128,7 +154,12 @@ export function Navigation() {
             asChild
             size="sm"
             variant="outline"
-            className="group border-brand-blue/30 text-brand-blue hover:bg-brand-mint hover:text-brand-blue rounded-full px-4"
+            className={cn(
+              "group rounded-full px-4",
+              transparent
+                ? "border-transparent bg-white text-brand-blue hover:bg-white/90 hover:text-brand-blue"
+                : "border-brand-blue/30 text-brand-blue hover:bg-brand-mint hover:text-brand-blue",
+            )}
           >
             <Link href={angebotHref} className="cursor-pointer">
               <Calculator className="h-4 w-4" />
@@ -154,7 +185,12 @@ export function Navigation() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-10 w-10 shrink-0 rounded-full text-brand-navy hover:bg-brand-mint hover:text-brand-blue"
+              className={cn(
+                "h-10 w-10 shrink-0 rounded-full",
+                transparent
+                  ? "text-white hover:bg-white/10 hover:text-white"
+                  : "text-brand-navy hover:bg-brand-mint hover:text-brand-blue",
+              )}
             >
               <Menu className="h-5 w-5" />
             </Button>

@@ -30,7 +30,17 @@ const TEXT = {
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="relative flex min-h-[85vh] flex-col overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-20 lg:min-h-[56rem] lg:pt-24">
+    <section className="relative flex min-h-[85vh] flex-col overflow-hidden pt-20 lg:min-h-[56rem] lg:pt-24">
+      <Image
+        src="/images/hero-glasfassade-buerogebaeude.png"
+        alt="Moderne Glasfassade eines Bürogebäudes in blauem Licht"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-right"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/85 via-brand-navy/55 to-brand-navy/45 lg:bg-gradient-to-r lg:from-brand-navy/90 lg:via-brand-navy/45 lg:to-transparent" />
+
       <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-8 px-6 py-8 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
         <div className="min-w-0 max-w-2xl text-center lg:mt-24 lg:flex-1 lg:text-left">
           <span className="mb-4 block text-xs font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8 sm:text-sm">
@@ -74,7 +84,7 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
         </div>
       </div>
 
-      <div className="relative z-10 border-t border-white/10 bg-black/10">
+      <div className="relative z-10 border-t border-white/15 bg-brand-navy/50 backdrop-blur-sm">
         <ul className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-6 py-5 text-center text-sm font-medium text-white/85 sm:px-8 lg:justify-between lg:px-16 xl:px-24">
           {t.trustValues.map((value) => (
             <li key={value} className="text-balance">
