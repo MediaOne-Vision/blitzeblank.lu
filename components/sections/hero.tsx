@@ -30,19 +30,19 @@ const TEXT = {
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="relative flex min-h-[85vh] flex-col overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-14 lg:min-h-[56rem] lg:pt-24">
-      <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-6 px-6 py-4 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
+    <section className="relative flex min-h-[85vh] flex-col overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-20 lg:min-h-[56rem] lg:pt-24">
+      <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-8 px-6 py-8 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
         <div className="min-w-0 max-w-2xl text-center lg:mt-24 lg:flex-1 lg:text-left">
-          <span className="mb-4 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8">
+          <span className="mb-4 block text-xs font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8 sm:text-sm">
             {t.badge}
           </span>
 
-          <h1 className="mb-4 text-balance font-display text-6xl font-extrabold leading-[1.02] tracking-tight text-white sm:mb-8 sm:text-6xl sm:leading-[0.98] md:text-7xl lg:text-[4.25rem]">
+          <h1 className="mb-4 text-balance font-display text-[2.75rem] font-extrabold leading-[1.05] tracking-tight text-white sm:mb-8 sm:text-6xl sm:leading-[0.98] md:text-7xl lg:text-[4.25rem]">
             <span className="font-extrabold">{t.heading}</span><br />
             <span className="font-medium">{t.headingAccent}</span>
           </h1>
 
-          <p className="mx-auto mb-6 max-w-xl text-balance text-lg leading-relaxed text-white sm:mb-10 sm:text-lg lg:mx-0 lg:text-xl">
+          <p className="mx-auto mb-6 max-w-xl text-balance text-base leading-relaxed text-white sm:mb-10 sm:text-lg lg:mx-0 lg:text-xl">
             {t.bodyBefore}{" "}
             <strong className="font-extrabold">{t.regions}</strong>
           </p>
