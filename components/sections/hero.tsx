@@ -39,7 +39,8 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
         sizes="100vw"
         className="object-cover object-right"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/85 via-brand-navy/55 to-brand-navy/45 lg:bg-gradient-to-r lg:from-brand-navy/90 lg:via-brand-navy/45 lg:to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/95 via-brand-navy/80 to-brand-navy/70 lg:bg-gradient-to-r lg:from-brand-navy lg:via-brand-navy/70 lg:to-brand-navy/30" />
+      <div className="absolute inset-0 bg-brand-navy/25" />
 
       <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-8 px-6 py-8 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
         <div className="min-w-0 max-w-2xl text-center lg:mt-24 lg:flex-1 lg:text-left">
@@ -72,13 +73,13 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
           </div>
         </div>
 
-        <div className="mx-auto shrink-0 self-center animate-float lg:mx-0 lg:mt-16 lg:self-center">
+        <div className="mx-auto shrink-0 self-end lg:mx-0 lg:mt-24 lg:self-end">
           <Image
             src="/images/mascot.png"
             alt="Blitzeblank Maskottchen"
             width={560}
             height={560}
-            className="h-40 w-auto sm:h-48 lg:h-64 xl:h-80 2xl:h-96"
+            className="h-44 w-auto drop-shadow-[0_18px_28px_rgba(10,25,55,0.55)] sm:h-52 lg:h-72 xl:h-80 2xl:h-96"
             priority
           />
         </div>
