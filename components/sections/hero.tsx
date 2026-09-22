@@ -9,7 +9,8 @@ const TEXT = {
     badge: "Gewerbliche Reinigung vom Profi",
     heading: "Strahlend sauber.",
     headingAccent: "Garantiert.",
-    body: "Von der Industriereinigung bis zur Fassadenpflege: maßgeschneiderte Reinigungslösungen für Unternehmen in Luxemburg, Trier, Bitburg und der Region.",
+    bodyBefore: "Von der Industriereinigung bis zur Fassadenpflege: maßgeschneiderte Reinigungslösungen für Unternehmen in",
+    regions: "Luxemburg, Trier, Bitburg und der Region.",
     consult: "Kostenlose Beratung",
     quote: "Angebot online erstellen",
   },
@@ -17,7 +18,8 @@ const TEXT = {
     badge: "Commercial Cleaning by Professionals",
     heading: "Sparkling clean.",
     headingAccent: "Guaranteed.",
-    body: "From industrial cleaning to facade care: tailored cleaning solutions for businesses in Luxembourg, Trier, Bitburg and the surrounding region.",
+    bodyBefore: "From industrial cleaning to facade care: tailored cleaning solutions for businesses in",
+    regions: "Luxembourg, Trier, Bitburg and the surrounding region.",
     consult: "Free Consultation",
     quote: "Create an offer online",
   },
@@ -27,19 +29,20 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
     <section className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-20">
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl items-center px-6 py-20 lg:min-h-[44.5rem] lg:px-16 lg:py-24">
-        <div className="max-w-3xl">
+      <div className="relative z-10 flex w-full items-center px-6 py-20 lg:min-h-[44.5rem] lg:px-16 lg:py-24 xl:px-24">
+        <div className="w-full max-w-4xl lg:w-[62%]">
           <span className="mb-8 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky">
             {t.badge}
           </span>
 
-          <h1 className="mb-8 max-w-3xl text-balance font-display text-6xl font-extrabold leading-[0.98] tracking-tight text-white sm:text-7xl lg:text-[5.25rem]">
-            {t.heading}<br />
-            {t.headingAccent}
+          <h1 className="mb-8 max-w-3xl text-balance font-display text-6xl font-extrabold leading-[0.98] tracking-tight text-white sm:text-7xl lg:text-[4.25rem]">
+            <span className="whitespace-nowrap font-extrabold">{t.heading}</span><br />
+            <span className="font-medium">{t.headingAccent}</span>
           </h1>
 
           <p className="mb-10 max-w-xl text-lg leading-relaxed text-white sm:text-xl">
-            {t.body}
+            {t.bodyBefore}{" "}
+            <strong className="font-extrabold">{t.regions}</strong>
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -57,7 +60,7 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute bottom-0 right-0 hidden lg:block">
+        <div className="pointer-events-none absolute bottom-0 right-4 hidden lg:block xl:right-16">
           <Image
             src="/images/mascot.png"
             alt="Blitzeblank Maskottchen"

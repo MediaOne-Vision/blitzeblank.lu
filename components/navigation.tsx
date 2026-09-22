@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 import { cn } from "@/lib/utils"
 import { Menu, ChevronDown, Phone, Calculator, Mountain } from "lucide-react"
 import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
+import { LanguageSwitcher } from "@/components/language-switcher"
 
 const NAV_LINKS = {
   de: [
@@ -124,7 +125,8 @@ export function Navigation() {
         </nav>
 
         {/* CTA */}
-        <div className="hidden lg:flex items-center gap-2 shrink-0">
+        <div className="hidden lg:flex items-center gap-3 shrink-0">
+          <LanguageSwitcher />
           <Button
             asChild
             size="sm"
@@ -171,7 +173,8 @@ export function Navigation() {
                   height={45}
                   className="h-9 w-auto"
                 />
-                    </div>
+                <LanguageSwitcher />
+              </div>
 
               <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-5">
                 {navLinks.map((link) =>
