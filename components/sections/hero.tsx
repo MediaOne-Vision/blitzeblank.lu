@@ -32,7 +32,7 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   return (
     <section className="relative flex min-h-[85vh] flex-col overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-14 lg:min-h-[56rem] lg:pt-24">
       <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-6 px-6 py-4 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
-        <div className="min-w-0 max-w-2xl text-center lg:flex-1 lg:text-left">
+        <div className="min-w-0 max-w-2xl text-center lg:mt-24 lg:flex-1 lg:text-left">
           <span className="mb-4 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8">
             {t.badge}
           </span>
@@ -62,7 +62,7 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
           </div>
         </div>
 
-        <div className="mx-auto shrink-0 self-center animate-float lg:mx-0 lg:self-end">
+        <div className="mx-auto shrink-0 self-center animate-float lg:mx-0 lg:mt-16 lg:self-center">
           <Image
             src="/images/mascot.png"
             alt="Blitzeblank Maskottchen"
