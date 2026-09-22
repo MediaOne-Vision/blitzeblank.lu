@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { Menu, ChevronDown, Phone, Calculator, Mountain } from "lucide-react"
-import { LanguageSwitcher } from "@/components/language-switcher"
 import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 
 const NAV_LINKS = {
@@ -147,7 +146,6 @@ export function Navigation() {
               {t.contact}
             </Link>
           </Button>
-          <LanguageSwitcher />
         </div>
 
         {/* Mobile */}
@@ -173,8 +171,7 @@ export function Navigation() {
                   height={45}
                   className="h-9 w-auto"
                 />
-                <LanguageSwitcher />
-              </div>
+                    </div>
 
               <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-5">
                 {navLinks.map((link) =>
