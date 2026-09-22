@@ -30,8 +30,8 @@ const TEXT = {
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="relative flex min-h-[85vh] items-start overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pb-24 pt-14 lg:min-h-[56rem] lg:items-start lg:pb-40 lg:pt-24">
-      <div className="relative z-10 flex w-full flex-col items-center gap-6 px-6 py-4 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
+    <section className="relative flex min-h-[85vh] flex-col overflow-hidden bg-gradient-to-r from-[#103f54] via-[#216886] to-[#4ca8df] pt-14 lg:min-h-[56rem] lg:pt-24">
+      <div className="relative z-10 flex w-full flex-1 flex-col items-center gap-6 px-6 py-4 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
         <div className="min-w-0 max-w-2xl text-center lg:flex-1 lg:text-left">
           <span className="mb-4 block text-sm font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8">
             {t.badge}
@@ -60,20 +60,9 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
               </Link>
             </Button>
           </div>
-
-          <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center text-sm text-white/80 sm:gap-x-6 lg:justify-start">
-            {t.trustValues.map((value, i) => (
-              <li key={value} className="flex items-center gap-x-4 sm:gap-x-6">
-                <span className="text-balance">{value}</span>
-                {i < t.trustValues.length - 1 && (
-                  <span className="hidden h-1 w-1 rounded-full bg-white/40 sm:block" aria-hidden="true" />
-                )}
-              </li>
-            ))}
-          </ul>
         </div>
 
-        <div className="mx-auto shrink-0 animate-float lg:mx-0">
+        <div className="mx-auto shrink-0 self-center animate-float lg:mx-0 lg:self-end">
           <Image
             src="/images/mascot.png"
             alt="Blitzeblank Maskottchen"
@@ -83,6 +72,16 @@ export function HeroSection({ locale = "de" }: { locale?: Locale }) {
             priority
           />
         </div>
+      </div>
+
+      <div className="relative z-10 border-t border-white/10 bg-black/10">
+        <ul className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-6 py-5 text-center text-sm font-medium text-white/85 sm:px-8 lg:justify-between lg:px-16 xl:px-24">
+          {t.trustValues.map((value) => (
+            <li key={value} className="text-balance">
+              {value}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )

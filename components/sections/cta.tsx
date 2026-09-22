@@ -26,7 +26,7 @@ const TEXT = {
 export function CtaSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="bg-brand-sand">
+    <section className="bg-brand-mint">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-10 px-6 py-16 lg:flex-row lg:justify-between lg:gap-16 lg:py-20">
         <div className="max-w-xl text-center lg:text-left">
           <h2 className="font-display text-3xl font-extrabold tracking-tight text-brand-navy text-balance lg:text-4xl">
