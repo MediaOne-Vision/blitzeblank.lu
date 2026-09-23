@@ -4,7 +4,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { getServiceMedia } from "@/lib/service-media"
-import { ArrowRight, ArrowUpRight, Factory, Grid3X3, Mountain, Building2, CheckCircle2 } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Calculator, Factory, Grid3X3, Mountain, Building2, CheckCircle2 } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const SERVICES = {
@@ -97,10 +97,15 @@ const TEXT = {
     intro:
       "Von der Industriereinigung bis zur Fassadenpflege - wir bieten professionelle Reinigungslösungen für jeden Bedarf. Entdecken Sie unser umfassendes Angebot.",
     learnMore: "Mehr erfahren",
+    priceCalc: "Preis berechnen",
     ctaHeading: "Nicht sicher, welche Leistung Sie benötigen?",
     ctaBody:
       "Kontaktieren Sie uns für eine kostenlose Beratung. Wir analysieren Ihre Anforderungen und empfehlen die optimale Lösung für Sie.",
     ctaButton: "Kostenlose Beratung anfragen",
+    ctaCalcHeading: "Lieber sofort einen Preis sehen?",
+    ctaCalcBody: "Nutzen Sie unseren Online-Rechner und erhalten Sie in 2 Minuten eine unverbindliche Preisschätzung.",
+    ctaCalcButton: "Angebot online erstellen",
+    ctaStoneButton: "Steinpflege-Rechner",
   },
   en: {
     eyebrow: "Services",
@@ -108,10 +113,15 @@ const TEXT = {
     intro:
       "From industrial cleaning to facade care - we offer professional cleaning solutions for every need. Discover our full range of services.",
     learnMore: "Learn More",
+    priceCalc: "Calculate Price",
     ctaHeading: "Not sure which service you need?",
     ctaBody:
       "Contact us for a free consultation. We'll analyze your requirements and recommend the optimal solution for you.",
     ctaButton: "Request Free Consultation",
+    ctaCalcHeading: "Prefer to see a price right away?",
+    ctaCalcBody: "Use our online calculator and get a non-binding price estimate in 2 minutes.",
+    ctaCalcButton: "Create an Offer Online",
+    ctaStoneButton: "Stone Care Calculator",
   },
 }
 
@@ -177,15 +187,34 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                           </li>
                         ))}
                       </ul>
-                      <Button
-                        asChild
-                        className="group/btn w-fit bg-brand-blue text-white hover:bg-brand-teal rounded-full px-6 shadow-lg shadow-brand-blue/30"
-                      >
-                        <Link href={localizeHref(service.href, locale)} className="cursor-pointer">
-                          {t.learnMore}
-                          <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                        </Link>
-                      </Button>
+                      <div className="flex flex-wrap gap-3">
+                        <Button
+                          asChild
+                          className="group/btn w-fit bg-brand-blue text-white hover:bg-brand-teal rounded-full px-6 shadow-lg shadow-brand-blue/30"
+                        >
+                          <Link href={localizeHref(service.href, locale)} className="cursor-pointer">
+                            {t.learnMore}
+                            <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                          </Link>
+                        </Button>
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="group/btn w-fit rounded-full border-brand-navy/20 px-6 text-brand-navy hover:bg-brand-navy hover:text-white"
+                        >
+                          <Link
+                            href={
+                              service.slug === "steinreinigung"
+                                ? "/stein-angebot"
+                                : `${localizeHref("/angebot", locale)}?leistung=${service.slug}`
+                            }
+                            className="cursor-pointer"
+                          >
+                            <Calculator className="h-4 w-4" />
+                            {t.priceCalc}
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 )
@@ -211,6 +240,45 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
+          </div>
+        </section>
+
+        {/* Calculator CTA */}
+        <section className="py-16 lg:py-24">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="relative overflow-hidden rounded-3xl bg-brand-navy px-6 py-14 text-center lg:py-20">
+              <div className="absolute -top-20 -right-16 h-72 w-72 rounded-full bg-brand-blue/20 blur-3xl" />
+              <div className="relative mx-auto max-w-2xl">
+                <h2 className="mb-4 text-balance font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
+                  {t.ctaCalcHeading}
+                </h2>
+                <p className="mb-8 text-white/75 text-pretty">{t.ctaCalcBody}</p>
+                <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
+                  >
+                    <Link href={localizeHref("/angebot", locale)} className="cursor-pointer">
+                      <Calculator className="h-4 w-4" />
+                      {t.ctaCalcButton}
+                    </Link>
+                  </Button>
+                  {locale === "de" && (
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="outline"
+                      className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
+                    >
+                      <Link href="/stein-angebot" className="cursor-pointer">
+                        {t.ctaStoneButton}
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>

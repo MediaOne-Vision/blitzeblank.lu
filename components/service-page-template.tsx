@@ -184,17 +184,14 @@ export function ServicePageTemplate({
                 {t.detailHeading}
               </h2>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-4xl gap-x-12 gap-y-8 sm:grid-cols-2">
               {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-navy/5 transition-all hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-blue">
-                    <CheckCircle2 className="h-5 w-5 text-white" />
+                <div key={index} className="flex gap-4 border-b border-brand-navy/10 pb-6">
+                  <CheckCircle2 className="h-10 w-10 shrink-0 text-brand-blue" strokeWidth={1.5} />
+                  <div>
+                    <h3 className="mb-1 font-display text-lg font-bold text-brand-navy">{feature.title}</h3>
+                    <p className="text-sm leading-relaxed text-neutral-600">{feature.description}</p>
                   </div>
-                  <h3 className="mb-2 font-display text-lg font-bold text-brand-navy">{feature.title}</h3>
-                  <p className="text-sm leading-relaxed text-neutral-600">{feature.description}</p>
                 </div>
               ))}
             </div>

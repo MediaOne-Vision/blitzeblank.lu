@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { MapPin, Sparkles, ArrowRight, Calculator } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const TEXT = {
@@ -9,80 +9,90 @@ const TEXT = {
     badge: "Gewerbliche Reinigung vom Profi",
     heading: "Strahlend sauber.",
     headingAccent: "Garantiert.",
-    body: "Von der Industriereinigung bis zur Fassadenpflege: maßgeschneiderte Reinigungslösungen für Unternehmen in Luxemburg, Trier, Bitburg und der Region.",
-    activeIn: "Aktiv in Luxemburg, Trier, Bitburg & Region",
+    bodyBefore: "Von der Industriereinigung bis zur Fassadenpflege: maßgeschneiderte Reinigungslösungen für Unternehmen in",
+    regions: "Luxemburg, Trier, Bitburg und der Region.",
     consult: "Kostenlose Beratung",
-    quote: "Kostenloses Angebot",
+    quote: "Angebot online erstellen",
+    trustValues: ["Antwort innerhalb von 24 Stunden", "Kostenlose Besichtigung vor Ort", "Transparente, faire Preise", "Qualitätsgarantie inklusive"],
   },
   en: {
     badge: "Commercial Cleaning by Professionals",
     heading: "Sparkling clean.",
     headingAccent: "Guaranteed.",
-    body: "From industrial cleaning to facade care: tailored cleaning solutions for businesses in Luxembourg, Trier, Bitburg and the surrounding region.",
-    activeIn: "Active in Luxembourg, Trier, Bitburg & the region",
+    bodyBefore: "From industrial cleaning to facade care: tailored cleaning solutions for businesses in",
+    regions: "Luxembourg, Trier, Bitburg and the surrounding region.",
     consult: "Free Consultation",
-    quote: "Free Quote",
+    quote: "Create an offer online",
+    trustValues: ["We reply within 24 hours", "Free on-site visit", "Transparent, fair pricing", "Quality guarantee included"],
   },
 }
 
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   return (
-    <section className="relative min-h-[92vh] bg-brand-navy pt-20 flex items-center overflow-hidden">
-      {/* Colorful gradient backdrop (analogous navy -> teal -> blue) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-brand-teal/40 to-brand-blue/30" />
-      <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-brand-blue/30 blur-3xl animate-float-slow" />
-      <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-brand-sky/20 blur-3xl animate-float" />
+    <section className="relative flex min-h-[85vh] flex-col overflow-hidden pt-20 lg:min-h-[56rem] lg:pt-24">
+      <Image
+        src="/images/hero-glasfassade-buerogebaeude.png"
+        alt="Moderne Glasfassade eines Bürogebäudes in blauem Licht"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-right"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/95 via-brand-navy/80 to-brand-navy/70 lg:bg-gradient-to-r lg:from-brand-navy lg:via-brand-navy/70 lg:to-brand-navy/30" />
+      <div className="absolute inset-0 bg-brand-navy/25" />
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-20 lg:py-28 w-full">
-        <div className="max-w-2xl">
-          <span className="animate-fade-up inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-4 py-1.5 text-sm font-medium text-brand-sky mb-8 ring-1 ring-white/15" style={{ animationDelay: "0.05s" }}>
-            <Sparkles className="h-4 w-4" />
+      <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-8 px-6 py-8 sm:px-8 sm:py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-8 lg:px-16 lg:py-16 xl:px-24">
+        <div className="min-w-0 max-w-2xl text-center lg:mt-24 lg:flex-1 lg:text-left">
+          <span className="mb-4 block text-xs font-medium uppercase tracking-[0.08em] text-brand-sky sm:mb-8 sm:text-sm">
             {t.badge}
           </span>
 
-          <h1 className="animate-fade-up font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-8 text-balance" style={{ animationDelay: "0.15s" }}>
-            {t.heading}{" "}
-            <span className="text-brand-sky">{t.headingAccent}</span>
+          <h1 className="mb-4 text-balance font-display text-[2.75rem] font-extrabold leading-[1.05] tracking-tight text-white sm:mb-8 sm:text-6xl sm:leading-[0.98] md:text-7xl lg:text-[4.25rem]">
+            <span className="font-extrabold">{t.heading}</span><br />
+            <span className="font-medium">{t.headingAccent}</span>
           </h1>
 
-          <p className="animate-fade-up text-white/70 text-lg max-w-lg mb-8 leading-relaxed" style={{ animationDelay: "0.3s" }}>
-            {t.body}
+          <p className="mx-auto mb-6 max-w-xl text-balance text-base leading-relaxed text-white sm:mb-10 sm:text-lg lg:mx-0 lg:text-xl">
+            {t.bodyBefore}{" "}
+            <strong className="font-extrabold">{t.regions}</strong>
           </p>
 
-          <div className="animate-fade-up flex items-center gap-2.5 text-lg sm:text-xl font-semibold text-brand-sky mb-10" style={{ animationDelay: "0.42s" }}>
-            <MapPin className="h-6 w-6 text-brand-sky" />
-            <span>{t.activeIn}</span>
-          </div>
-
-          <div className="animate-fade-up flex flex-col sm:flex-row gap-4" style={{ animationDelay: "0.54s" }}>
-            <Button asChild size="lg" className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
+            <Button asChild size="lg" className="group w-full rounded-full bg-brand-blue px-7 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-lg shadow-brand-blue/40 hover:bg-brand-teal sm:w-auto">
               <Link href={localizeHref("/kontakt", locale)} className="cursor-pointer">
                 {t.consult}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8">
+            <Button asChild size="lg" variant="outline" className="w-full rounded-full border-2 border-white bg-transparent px-7 text-sm font-semibold uppercase tracking-[0.08em] text-white hover:bg-white/10 hover:text-white sm:w-auto">
               <Link href={localizeHref("/angebot", locale)} className="cursor-pointer">
-                <Calculator className="h-4 w-4" />
                 {t.quote}
               </Link>
             </Button>
           </div>
         </div>
+
+        <div className="mx-auto shrink-0 self-end lg:mx-0 lg:mt-24 lg:self-end">
+          <Image
+            src="/images/mascot.png"
+            alt="Blitzeblank Maskottchen"
+            width={560}
+            height={560}
+            className="h-44 w-auto drop-shadow-[0_18px_28px_rgba(10,25,55,0.55)] sm:h-52 lg:h-72 xl:h-80 2xl:h-96"
+            priority
+          />
+        </div>
       </div>
 
-      {/* Mascot - Bottom Right */}
-      <div className="absolute bottom-0 right-0 lg:right-16 opacity-30 lg:opacity-100 pointer-events-none">
-        <Image
-          src="/images/mascot.png"
-          alt="Blitzeblank Maskottchen"
-          width={420}
-          height={420}
-          className="h-64 lg:h-[26rem] w-auto drop-shadow-2xl animate-float"
-          priority
-        />
+      <div className="relative z-10 border-t border-white/15 bg-brand-navy/50 backdrop-blur-sm">
+        <ul className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-3 px-6 py-5 text-center text-sm font-medium text-white/85 sm:px-8 lg:justify-between lg:px-16 xl:px-24">
+          {t.trustValues.map((value) => (
+            <li key={value} className="text-balance">
+              {value}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )

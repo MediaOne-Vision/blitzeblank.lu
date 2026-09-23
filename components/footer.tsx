@@ -170,7 +170,18 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
         {/* Bottom */}
         <div className="py-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <p className="text-xs text-neutral-500">
-            {new Date().getFullYear()} Blitzeblank. {t.rights}
+            {new Date().getFullYear()} Blitzeblank. {t.rights}{" "}
+            <span className="block sm:inline">
+              Website glänzend umgesetzt von{" "}
+              <a
+                href="https://mediaone-vision.de"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors cursor-pointer"
+              >
+                MediaOne
+              </a>
+            </span>
           </p>
           <div className="flex items-center gap-6">
             <Link
