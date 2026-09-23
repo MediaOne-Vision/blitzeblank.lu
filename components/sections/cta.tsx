@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Phone, ArrowRight, Facebook, Instagram } from "lucide-react"
+import { Phone, ArrowRight, Calculator, Facebook, Instagram } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const TEXT = {
@@ -9,6 +9,7 @@ const TEXT = {
     heading: "Sprechen Sie mit uns über Ihr Projekt",
     body: "Kontaktieren Sie uns für eine kostenlose und unverbindliche Beratung in Luxemburg, Trier, Bitburg und der Region. Wir erstellen Ihnen ein maßgeschneidertes Angebot.",
     cta: "Kontakt aufnehmen",
+    calcCta: "Angebot online erstellen",
     followLabel: "Folgen Sie uns",
     facebookAria: "Blitzeblank auf Facebook",
     instagramAria: "Blitzeblank auf Instagram",
@@ -17,6 +18,7 @@ const TEXT = {
     heading: "Talk to Us About Your Project",
     body: "Contact us for a free, no-obligation consultation in Luxembourg, Trier, Bitburg and the surrounding region. We'll create a tailored quote for you.",
     cta: "Get in Touch",
+    calcCta: "Create an Offer Online",
     followLabel: "Follow us",
     facebookAria: "Blitzeblank on Facebook",
     instagramAria: "Blitzeblank on Instagram",
@@ -41,12 +43,20 @@ export function CtaSection({ locale = "de" }: { locale?: Locale }) {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full border-brand-navy/20 bg-transparent text-brand-navy hover:bg-brand-navy/5">
-              <a href="tel:+352661830493" className="cursor-pointer">
-                <Phone className="h-4 w-4" />
-                +352 661 830 493
-              </a>
+              <Link href={localizeHref("/angebot", locale)} className="cursor-pointer">
+                <Calculator className="h-4 w-4" />
+                {t.calcCta}
+              </Link>
             </Button>
           </div>
+
+          <a
+            href="tel:+352661830493"
+            className="mt-4 inline-flex items-center justify-center gap-2 text-sm font-semibold text-brand-navy hover:text-brand-blue lg:justify-start"
+          >
+            <Phone className="h-4 w-4" />
+            +352 661 830 493
+          </a>
 
           <div className="mt-6 flex items-center justify-center gap-3 lg:justify-start">
             <span className="text-sm text-neutral-500">{t.followLabel}</span>

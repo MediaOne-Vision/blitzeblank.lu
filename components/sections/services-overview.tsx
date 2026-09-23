@@ -96,6 +96,20 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
 
   return (
     <section className="bg-brand-mint py-16 sm:py-20 lg:py-28">
+      {/* Preload every service image up front so switching the active/open item never waits on a fresh network fetch. */}
+      <div aria-hidden="true" className="sr-only">
+        {services.map((service, i) => (
+          <Image
+            key={service.title}
+            src={service.image || "/placeholder.svg"}
+            alt=""
+            width={1}
+            height={1}
+            priority={i > 0}
+          />
+        ))}
+      </div>
+
       <div className="mx-auto max-w-6xl px-6">
         {/* Header */}
         <Reveal className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between mb-10 lg:mb-14">
@@ -167,7 +181,8 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
                             fill
                             sizes="100vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            priority={false}
+                            priority={i === 0}
+                            loading={i === 0 ? "eager" : "lazy"}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent" />
                           <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-sm transition-all group-hover:bg-white group-hover:text-brand-navy">
@@ -272,7 +287,8 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
-                priority={false}
+                priority={activeIndex === 0}
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent" />
               <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur-sm transition-all group-hover:bg-white group-hover:text-brand-navy">

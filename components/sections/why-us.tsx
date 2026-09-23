@@ -60,11 +60,16 @@ export function WhyUsSection({ locale = "de" }: { locale?: Locale }) {
               key={feature.title}
               direction="up"
               delay={i * 120}
-              className="flex gap-4 border-b border-neutral-200 pb-6"
+              className="group flex gap-4 rounded-2xl border-b border-neutral-200 p-4 -m-4 pb-6 transition-all duration-300 hover:-translate-y-1 hover:border-transparent hover:bg-brand-mint/60 hover:shadow-lg hover:shadow-brand-navy/5 cursor-default"
             >
-              <feature.icon className="h-10 w-10 shrink-0 text-brand-navy sm:h-11 sm:w-11" strokeWidth={1.5} />
+              <feature.icon
+                className="h-10 w-10 shrink-0 text-brand-navy transition-all duration-300 group-hover:scale-110 group-hover:text-brand-blue sm:h-11 sm:w-11"
+                strokeWidth={1.5}
+              />
               <div>
-                <h3 className="mb-1 font-display text-lg font-bold text-brand-navy">{feature.title}</h3>
+                <h3 className="mb-1 font-display text-lg font-bold text-brand-navy transition-colors group-hover:text-brand-blue">
+                  {feature.title}
+                </h3>
                 <p className="text-sm leading-relaxed text-neutral-600">{feature.text}</p>
               </div>
             </Reveal>

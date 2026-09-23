@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Quote, Shield, Heart, Target, Handshake, Compass, Sparkles } from "lucide-react"
+import { ArrowRight, Calculator, Quote, Shield, Heart, Target, Handshake, Compass, Sparkles } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Über uns | Blitzeblank - Professionelle Reinigung in Luxemburg",
@@ -212,16 +212,29 @@ export default function UeberUnsPage() {
                   Vereinbaren Sie einen kostenlosen Besichtigungstermin und überzeugen Sie sich 
                   selbst von unserer Professionalität.
                 </p>
-                <Button
-                  asChild
-                  size="lg"
-                  className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
-                >
-                  <Link href="/kontakt" className="cursor-pointer">
-                    Kontakt aufnehmen
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </Button>
+                <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
+                  >
+                    <Link href="/kontakt" className="cursor-pointer">
+                      Kontakt aufnehmen
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="border-white/30 bg-white/5 text-white hover:bg-white/15 rounded-full px-8"
+                  >
+                    <Link href="/angebot" className="cursor-pointer">
+                      <Calculator className="h-4 w-4" />
+                      Angebot online erstellen
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
