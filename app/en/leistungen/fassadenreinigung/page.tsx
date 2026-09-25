@@ -47,7 +47,7 @@ const benefits = [
   "Preserves the value of your property",
   "Different techniques for every facade material",
   "Work at height by trained personnel",
-  "Environmentally friendly cleaning agents",
+  "High-quality, material-safe cleaning agents",
   "Optional facade protection against renewed soiling",
 ]
 
