@@ -46,7 +46,7 @@ const benefits = [
   "Erfahrung mit allen gängigen Industrieumgebungen",
   "Einhaltung aller Sicherheits- und Hygienevorschriften",
   "Regelmäßige Reinigung oder einmalige Grundreinigung",
-  "Moderne Reinigungstechniken und umweltfreundliche Mittel",
+  "Moderne Reinigungstechniken und professionelle Reinigungsmittel",
   "Dokumentierte Qualitätskontrolle nach jedem Einsatz",
 ]
 

@@ -44,7 +44,7 @@ const features = [
 const benefits = [
   "Fachgerechte Behandlung verschiedener Steinarten",
   "Hochdruckreinigung mit angepasstem Druck",
-  "Umweltfreundliche Reinigungsmittel",
+  "Hochwertige, materialschonende Reinigungsmittel",
   "Entfernung von Moos, Algen und Verfärbungen",
   "Optionale Imprägnierung für langanhaltenden Schutz",
   "Aufwertung des Erscheinungsbildes Ihrer Immobilie",

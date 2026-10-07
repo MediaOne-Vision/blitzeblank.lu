@@ -3,7 +3,7 @@ import {
   Droplets,
   Flame,
   Footprints,
-  Leaf,
+  Layers,
   Paintbrush,
   ShieldCheck,
   Sprout,
@@ -72,7 +72,7 @@ export const jointProperties: JointProperty[] = [
   { value: "fest", label: "Feste Fuge", icon: ShieldCheck },
   { value: "unkrauthemmend", label: "Unkrauthemmend", icon: Sprout },
   { value: "wasserdurchlaessig", label: "Wasserdurchlässig", icon: Droplets },
-  { value: "oekologisch", label: "Ökologisch", icon: Leaf },
+  { value: "mineralisch", label: "Mineralisch", icon: Layers },
 ]
 
 /* -------------------------------------------------------------------------- */
@@ -209,7 +209,7 @@ export const protectionOptions: ProtectionOption[] = [
 
 export const thermalWeedInfo = {
   title: "Thermische Unkrautbehandlung",
-  description: "Effektive und umweltfreundliche Unkrautbekämpfung mit Heißwasser - ganz ohne Chemie.",
+  description: "Effektive Unkrautbekämpfung mit Heißwasser - ganz ohne Chemie.",
   image: "/images/products/unkrautbehandlung.png",
   icon: Flame,
   detail:

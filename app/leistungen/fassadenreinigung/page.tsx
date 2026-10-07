@@ -46,7 +46,7 @@ const benefits = [
   "Werterhalt Ihrer Immobilie",
   "Verschiedene Techniken für jedes Fassadenmaterial",
   "Arbeit in großer Höhe durch geschultes Personal",
-  "Umweltfreundliche Reinigungsmittel",
+  "Hochwertige, materialschonende Reinigungsmittel",
   "Optionaler Fassadenschutz gegen erneute Verschmutzung",
 ]
 

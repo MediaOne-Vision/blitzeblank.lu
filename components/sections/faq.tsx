@@ -31,9 +31,9 @@ const FAQS = {
         "Wir antworten auf Ihre Anfrage innerhalb von 24 Stunden und bieten kurzfristige Termine an. Bei Bedarf können wir die Reinigung oft schon innerhalb weniger Tage durchführen.",
     },
     {
-      question: "Sind die Reinigungsmittel umweltfreundlich?",
+      question: "Welche Reinigungsmittel verwenden Sie?",
       answer:
-        "Wir setzen auf hochwertige, schonende und nach Möglichkeit umweltfreundliche Reinigungsmittel, die sowohl effektiv als auch materialschonend sind.",
+        "Wir setzen auf hochwertige, professionelle Reinigungsmittel, die passend zur jeweiligen Oberfläche ausgewählt werden und sowohl effektiv als auch materialschonend sind.",
     },
     {
       question: "Bieten Sie auch Notfalldienste an?",
@@ -68,9 +68,9 @@ const FAQS = {
         "We respond to your inquiry within 24 hours and offer short-notice appointments. If needed, we can often carry out the cleaning within just a few days.",
     },
     {
-      question: "Are the cleaning products eco-friendly?",
+      question: "What cleaning products do you use?",
       answer:
-        "We rely on high-quality, gentle and, where possible, environmentally friendly cleaning products that are both effective and gentle on materials.",
+        "We rely on high-quality, professional cleaning products selected to match each surface, ensuring effective results that are gentle on materials.",
     },
     {
       question: "Do you offer emergency services?",

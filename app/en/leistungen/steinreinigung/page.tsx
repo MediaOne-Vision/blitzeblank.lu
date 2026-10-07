@@ -45,7 +45,7 @@ const features = [
 const benefits = [
   "Expert treatment of different stone types",
   "Pressure washing with adapted pressure levels",
-  "Environmentally friendly cleaning agents",
+  "High-quality, material-safe cleaning agents",
   "Removal of moss, algae and discoloration",
   "Optional impregnation for long-lasting protection",
   "Enhances the appearance of your property",
