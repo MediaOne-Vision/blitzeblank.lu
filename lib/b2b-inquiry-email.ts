@@ -79,13 +79,13 @@ export function cleaningNeedLabel(value: B2BCleaningNeed): string {
   return CLEANING_NEED_LABELS[value] ?? "—"
 }
 
-function sectionTitle(text: string): string {
+export function sectionTitle(text: string): string {
   return `<p style="margin:0 0 4px;color:${COLORS.blue};font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">${escapeHtml(
     text,
   )}</p>`
 }
 
-function rowsToHtml(rows: { label: string; value: string }[]): string {
+export function rowsToHtml(rows: { label: string; value: string }[]): string {
   return rows
     .map(
       (r, i) => `
@@ -101,12 +101,12 @@ function rowsToHtml(rows: { label: string; value: string }[]): string {
     .join("")
 }
 
-function rowsToText(rows: { label: string; value: string }[]): string {
+export function rowsToText(rows: { label: string; value: string }[]): string {
   return rows.map((r) => `${r.label}: ${r.value}`).join("\n")
 }
 
 /** Grundgerüst für alle E-Mails im Blitzeblank-Look (weiße Logo-Leiste + hellblaues Banner) */
-function emailShell(opts: { badge: string; headline: string; intro: string; bodyHtml: string; logoSrc: string }): string {
+export function emailShell(opts: { badge: string; headline: string; intro: string; bodyHtml: string; logoSrc: string }): string {
   const { badge, headline, intro, bodyHtml, logoSrc } = opts
   return `
   <div style="margin:0;padding:24px 12px;background-color:${COLORS.bg};font-family:'Helvetica Neue',Arial,Helvetica,sans-serif;">

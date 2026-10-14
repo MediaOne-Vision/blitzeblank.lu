@@ -8,7 +8,7 @@ import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { loadConsent, saveConsent, loadGtm, type ConsentState } from "@/lib/cookie-consent"
+import { loadConsent, saveConsent, applyConsent, initConsentDefaults, type ConsentState } from "@/lib/cookie-consent"
 import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 
 const TEXT = {
@@ -73,11 +73,12 @@ export function CookieConsentBanner() {
 
   // Beim Laden: bestehende Zustimmung prüfen und ggf. GTM laden
   useEffect(() => {
+    initConsentDefaults()
     const existing = loadConsent()
     if (existing) {
       setStatistics(existing.statistics)
       setMarketing(existing.marketing)
-      loadGtm(existing)
+      applyConsent(existing)
     } else {
       setOpen(true)
     }
@@ -107,7 +108,7 @@ export function CookieConsentBanner() {
   }, [open])
 
   const persist = (state: ConsentState) => {
-    loadGtm(state)
+    applyConsent(state)
     setOpen(false)
     setShowSettings(false)
   }

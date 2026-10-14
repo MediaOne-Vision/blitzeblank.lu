@@ -29,7 +29,10 @@ import { computeTravel, type AddressSuggestion, type TravelInfo } from "@/lib/tr
 import { searchAddresses } from "@/app/actions/travel"
 import { submitQuote } from "@/app/actions/submit-quote"
 import type { QuoteSubmission } from "@/lib/quote-email"
-import { generateLeadId, storeLeadHandoff, type LeadStatus, type QuoteType } from "@/lib/tracking"
+import { storeLeadHandoff, type QuoteType } from "@/lib/tracking"
+import { FormHoneypot } from "@/components/form-honeypot"
+import { formErrorMessage } from "@/lib/form-errors"
+import { useSubmissionId } from "@/lib/submission-id"
 import { localizeHref, type Locale } from "@/lib/i18n"
 import {
   ArrowLeft,
@@ -343,6 +346,10 @@ export function QuoteWizard({
   const [decision, setDecision] = useState<"accepted" | "declined" | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const honeypotRef = useRef<HTMLInputElement>(null)
+  const renderedAt = useRef(Date.now())
+  const submissionId = useSubmissionId()
   const router = useRouter()
   const [privacyConsent, setPrivacyConsent] = useState(false)
 
@@ -550,13 +557,12 @@ export function QuoteWizard({
   }
 
   const handleDecision = async (choice: "accepted" | "declined") => {
+    if (submitting) return
     setDecision(choice)
     setSubmitting(true)
+    setSubmitError(null)
 
-    // Eindeutige Anfrage-ID – landet in der internen Mail und im Conversion-Tracking.
-    const leadId = generateLeadId()
-
-    const submission: QuoteSubmission = {
+    const submission: Omit<QuoteSubmission, "leadId"> = {
       service: serviceValue,
       serviceLabel: selectedService?.label ?? "",
       details: allDetails,
@@ -580,37 +586,40 @@ export function QuoteWizard({
       estimatedMin: priceOnRequest ? 0 : price.min,
       estimatedMax: priceOnRequest ? 0 : price.max,
       decision: choice,
-      leadId,
       locale,
     }
 
-    // Tracking-Nutzlast für die Danke-Seite ablegen (Handoff via sessionStorage).
     const quoteType: QuoteType = effectiveFrequencyValue === "einmalig" ? "onetime" : "recurring"
     const visitsPerYear = VISITS_PER_YEAR[effectiveFrequencyValue] ?? 1
     const perVisit = priceOnRequest ? 0 : Math.round((price.min + price.max) / 2)
-    // Bei Turnusverträgen den Jahreswert übermitteln, sonst den Einzelpreis.
+    // Bei Turnusverträgen den Jahreswert übermitteln, sonst den Einzelpreis (Richtpreis, kein Umsatz).
     const quoteValue = perVisit > 0 ? perVisit * visitsPerYear : undefined
-    const leadStatus: LeadStatus = choice === "accepted" ? "accepted" : "price_rejected"
-
-    storeLeadHandoff({
-      lead_status: leadStatus,
-      service: serviceValue,
-      quote_value: quoteValue,
-      quote_type: quoteType,
-      lead_id: leadId,
-      email,
-      phone,
-    })
 
     try {
-      await submitQuote(submission)
-    } catch {
-      // Auch bei einem Übertragungsfehler leiten wir weiter – die Anfrage ist in
-      // aller Regel dennoch bei uns eingegangen, und der Nutzer erhält Feedback.
-    }
+      const result = await submitQuote({
+        submission,
+        tracking: { quoteType, quoteValue },
+        honeypot: honeypotRef.current?.value ?? "",
+        renderedAt: renderedAt.current,
+        submissionId: submissionId.get(),
+      })
 
-    // Weiterleitung auf die passende Danke-Seite (Conversion-Tracking via GTM).
-    router.push(localizeHref(choice === "accepted" ? "/danke" : "/preisabsage-danke", locale))
+      if (result.status === "error") {
+        setSubmitError(formErrorMessage(result.code, locale))
+        setSubmitting(false)
+        setDecision(null)
+        return
+      }
+
+      // Nur bei bestätigter Annahme durch den Versanddienst entsteht ein Erfolgsnachweis.
+      if (result.status === "confirmed" && result.proof) storeLeadHandoff(result.proof)
+      submissionId.renew()
+      router.push(localizeHref(choice === "accepted" ? "/danke" : "/preisabsage-danke", locale))
+    } catch {
+      setSubmitError(formErrorMessage("network", locale))
+      setSubmitting(false)
+      setDecision(null)
+    }
   }
 
   return (
@@ -1276,6 +1285,17 @@ export function QuoteWizard({
                   <p className="flex items-center justify-center gap-2 text-center text-sm text-neutral-500">
                     <Loader2 className="h-4 w-4 animate-spin text-brand-blue" />
                     {t.stillUploading}
+                  </p>
+                )}
+
+                <FormHoneypot inputRef={honeypotRef} />
+
+                {submitError && (
+                  <p
+                    role="alert"
+                    className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700"
+                  >
+                    {submitError}
                   </p>
                 )}
 
