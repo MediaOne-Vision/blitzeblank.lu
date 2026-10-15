@@ -8,11 +8,11 @@ import {
 } from "@/lib/b2b-inquiry-email"
 import { runFormPipeline } from "@/lib/form-pipeline"
 import { clientIpFrom, clip, isValidEmail, isValidPhone } from "@/lib/form-security"
+import { internalRecipient } from "@/lib/mailer"
 import { logoAttachment } from "@/lib/quote-email"
 import type { SubmitResult } from "@/lib/form-types"
 
-const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
+const FROM_ADDRESS = "Blitzeblank <no-reply@mail.blitzeblank.lu>"
 
 export interface SubmitB2BInput {
   submission: B2BInquirySubmission
@@ -56,7 +56,7 @@ export async function submitB2BInquiry(input: SubmitB2BInput): Promise<SubmitRes
       return {
         internal: {
           from: FROM_ADDRESS,
-          to: INTERNAL_RECIPIENT,
+          to: internalRecipient(),
           replyTo: full.email || undefined,
           ...internal,
           attachments: [logoAttachment],

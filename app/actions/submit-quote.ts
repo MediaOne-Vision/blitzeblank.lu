@@ -10,10 +10,10 @@ import {
   photoUrl,
   type QuoteSubmission,
 } from "@/lib/quote-email"
+import { internalRecipient } from "@/lib/mailer"
 import type { LeadStatus, QuoteType, SubmitResult } from "@/lib/form-types"
 
-const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
+const FROM_ADDRESS = "Blitzeblank <no-reply@mail.blitzeblank.lu>"
 
 /** Baut die aktuelle Origin-URL, um absolute Links (z. B. zu Fotos) zu erzeugen */
 async function getBaseUrl(): Promise<string> {
@@ -73,7 +73,7 @@ export async function submitQuote(input: SubmitQuoteInput): Promise<SubmitResult
       return {
         internal: {
           from: FROM_ADDRESS,
-          to: INTERNAL_RECIPIENT,
+          to: internalRecipient(),
           replyTo: full.email,
           subject: internalEmail.subject,
           html: internalEmail.html,

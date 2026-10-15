@@ -58,6 +58,13 @@ export function emailLogoUrl(): string {
   return `${site}/images/logo.png`
 }
 
+const DEFAULT_INTERNAL_RECIPIENT = "info@blitzeblank.lu"
+
+/** Empfänger der internen Benachrichtigungen. Per `BREVO_TO_EMAIL` überschreibbar. */
+export function internalRecipient(): string {
+  return process.env.BREVO_TO_EMAIL?.trim() || DEFAULT_INTERNAL_RECIPIENT
+}
+
 /** Zerlegt `Name <adresse@domain>` in Name und Adresse. */
 export function parseAddress(value: string): { email: string; name?: string } {
   const match = value.match(/^\s*(.*?)\s*<([^>]+)>\s*$/)

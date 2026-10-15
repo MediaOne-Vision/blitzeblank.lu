@@ -21,6 +21,7 @@ jobs:
       BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
       BREVO_FROM_EMAIL: ${{ vars.BREVO_FROM_EMAIL }}
       BREVO_FROM_NAME: ${{ vars.BREVO_FROM_NAME }}
+      BREVO_TO_EMAIL: ${{ vars.BREVO_TO_EMAIL }}
       LEAD_PROOF_SECRET: ${{ secrets.LEAD_PROOF_SECRET }}
       EMAIL_LOGO_URL: ${{ vars.EMAIL_LOGO_URL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}

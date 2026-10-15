@@ -4,11 +4,11 @@ import { headers } from "next/headers"
 import { buildContactCustomerEmail, buildContactInternalEmail } from "@/lib/contact-email"
 import { runFormPipeline } from "@/lib/form-pipeline"
 import { clientIpFrom, clip, isValidEmail, isValidPhone } from "@/lib/form-security"
+import { internalRecipient } from "@/lib/mailer"
 import { logoAttachment } from "@/lib/quote-email"
 import type { SubmitResult } from "@/lib/form-types"
 
-const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
+const FROM_ADDRESS = "Blitzeblank <no-reply@mail.blitzeblank.lu>"
 
 const SERVICE_LABELS: Record<string, string> = {
   industrie: "Industriereinigung",
@@ -70,7 +70,7 @@ export async function submitContact(input: SubmitContactInput): Promise<SubmitRe
       const internal = buildContactInternalEmail(submission)
       const customer = buildContactCustomerEmail(submission)
       return {
-        internal: { from: FROM_ADDRESS, to: INTERNAL_RECIPIENT, replyTo: email, ...internal, attachments: [logoAttachment] },
+        internal: { from: FROM_ADDRESS, to: internalRecipient(), replyTo: email, ...internal, attachments: [logoAttachment] },
         customer: { from: FROM_ADDRESS, to: email, ...customer, attachments: [logoAttachment] },
       }
     },
