@@ -9,11 +9,10 @@ import {
   logoAttachment,
   type StoneOfferSubmission,
 } from "@/lib/stone-offer-email"
+import { internalRecipient } from "@/lib/mailer"
 import type { SubmitResult } from "@/lib/form-types"
 
-const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-/** Interne Benachrichtigung für den Steinpflege-Rechner. */
-const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
+const FROM_ADDRESS = "Blitzeblank <no-reply@mail.blitzeblank.lu>"
 
 export interface SubmitStoneOfferInput {
   submission: Omit<StoneOfferSubmission, "leadId">
@@ -45,7 +44,7 @@ export async function submitStoneOffer(input: SubmitStoneOfferInput): Promise<Su
       return {
         internal: {
           from: FROM_ADDRESS,
-          to: INTERNAL_RECIPIENT,
+          to: internalRecipient(),
           replyTo: full.email,
           subject: internalEmail.subject,
           html: internalEmail.html,

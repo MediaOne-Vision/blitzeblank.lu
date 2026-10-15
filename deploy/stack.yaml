@@ -11,6 +11,7 @@ services:
       BREVO_API_KEY: "{{ .Env.BREVO_API_KEY }}"
       BREVO_FROM_EMAIL: "{{ .Env.BREVO_FROM_EMAIL }}"
       BREVO_FROM_NAME: "{{ .Env.BREVO_FROM_NAME }}"
+      BREVO_TO_EMAIL: "{{ .Env.BREVO_TO_EMAIL }}"
       LEAD_PROOF_SECRET: "{{ .Env.LEAD_PROOF_SECRET }}"
       EMAIL_LOGO_URL: "{{ .Env.EMAIL_LOGO_URL }}"
       ADMIN_PASSWORD: "{{ .Env.ADMIN_PASSWORD }}"
