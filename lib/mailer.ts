@@ -60,6 +60,9 @@ export function emailLogoUrl(): string {
 
 const DEFAULT_INTERNAL_RECIPIENT = "info@blitzeblank.lu"
 
+/** Antworten auf Mails ohne eigenen Reply-To (z. B. Bestätigungen an Kunden) gehen an das Postfach der Firma. */
+const DEFAULT_REPLY_TO = "info@blitzeblank.lu"
+
 /** Empfänger der internen Benachrichtigungen. Per `BREVO_TO_EMAIL` überschreibbar. */
 export function internalRecipient(): string {
   return process.env.BREVO_TO_EMAIL?.trim() || DEFAULT_INTERNAL_RECIPIENT
@@ -89,7 +92,7 @@ export function buildBrevoPayload(message: MailMessage, options: { includeRemote
   return {
     sender: senderFor(message),
     to: [{ email: message.to }],
-    replyTo: message.replyTo ? { email: message.replyTo } : undefined,
+    replyTo: { email: message.replyTo || DEFAULT_REPLY_TO },
     subject: message.subject,
     htmlContent: message.html.split(LOGO_CID_REFERENCE).join(emailLogoUrl()),
     textContent: message.text,
