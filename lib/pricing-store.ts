@@ -1,5 +1,9 @@
 import "server-only"
-import { put, get } from "@vercel/blob"
+import { mkdir, readFile, writeFile } from "node:fs/promises"
+import path from "node:path"
+import type { RowDataPacket } from "mysql2"
+import { getDb, isDbConfigured } from "@/lib/db"
+import { devPricingFilePath } from "@/lib/storage"
 import {
   defaultPricingConfig,
   mergePricingConfig,
@@ -8,40 +12,68 @@ import {
 
 /**
  * Server-seitiger Speicher für die Preisdynamik.
- * Die Konfiguration wird als einzelne JSON-Datei in einem privaten
- * Vercel-Blob-Store abgelegt und nur serverseitig gelesen/geschrieben.
+ * Produktion: eine Zeile in der MySQL-Tabelle `app_settings`.
+ * Lokale Entwicklung ohne Datenbank: JSON-Datei im Upload-Verzeichnis.
  */
-const BLOB_PATHNAME = "pricing/config.json"
+const SETTING_KEY = "pricing_config"
 
-/**
- * Lädt die aktuelle Preisdynamik aus Vercel Blob.
- * Fällt auf die Default-Werte zurück, wenn noch nichts gespeichert wurde
- * oder der Store nicht erreichbar ist.
- */
-export async function getPricingConfig(): Promise<PricingConfig> {
+function parseStored(value: unknown): Partial<PricingConfig> | null {
+  if (value == null) return null
+  if (typeof value === "string") return JSON.parse(value) as Partial<PricingConfig>
+  if (Buffer.isBuffer(value)) return JSON.parse(value.toString("utf8")) as Partial<PricingConfig>
+  return value as Partial<PricingConfig>
+}
+
+async function readFromDb(): Promise<Partial<PricingConfig> | null> {
+  const pool = await getDb()
+  const [rows] = await pool.query<RowDataPacket[]>(
+    "SELECT setting_value FROM app_settings WHERE setting_key = ? LIMIT 1",
+    [SETTING_KEY],
+  )
+  return parseStored(rows[0]?.setting_value)
+}
+
+async function readFromDevFile(): Promise<Partial<PricingConfig> | null> {
   try {
-    const result = await get(BLOB_PATHNAME, { access: "private" })
-    if (!result || !result.stream) return defaultPricingConfig
-
-    // Privater Blob: Inhalt direkt aus dem Stream lesen (URL ist nicht öffentlich).
-    const data = (await new Response(result.stream).json()) as Partial<PricingConfig>
-    return mergePricingConfig(data)
-  } catch (error) {
-    console.error("[v0] getPricingConfig error:", error)
-    return defaultPricingConfig
+    return JSON.parse(await readFile(devPricingFilePath(), "utf8")) as Partial<PricingConfig>
+  } catch {
+    return null
   }
 }
 
 /**
- * Speichert eine neue Preisdynamik in Vercel Blob.
- * Überschreibt die bestehende Datei (fester Pfad, kein Zufallssuffix).
+ * Lädt die aktuelle Preisdynamik.
+ * Fällt auf die Default-Werte zurück, wenn noch nichts gespeichert wurde
+ * oder der Speicher nicht erreichbar ist.
  */
+export async function getPricingConfig(): Promise<PricingConfig> {
+  try {
+    const stored = isDbConfigured() ? await readFromDb() : await readFromDevFile()
+    return stored ? mergePricingConfig(stored) : defaultPricingConfig
+  } catch (error) {
+    console.error("[v0] getPricingConfig error:", error instanceof Error ? error.message : error)
+    return defaultPricingConfig
+  }
+}
+
+/** Speichert eine neue Preisdynamik und überschreibt die bestehende Einstellung. */
 export async function savePricingConfig(config: PricingConfig): Promise<void> {
-  const merged = mergePricingConfig(config)
-  await put(BLOB_PATHNAME, JSON.stringify(merged, null, 2), {
-    access: "private",
-    contentType: "application/json",
-    allowOverwrite: true,
-    addRandomSuffix: false,
-  })
+  const json = JSON.stringify(mergePricingConfig(config))
+
+  if (isDbConfigured()) {
+    const pool = await getDb()
+    await pool.query(
+      `INSERT INTO app_settings (setting_key, setting_value) VALUES (?, ?)
+       ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)`,
+      [SETTING_KEY, json],
+    )
+    return
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Datenbank nicht konfiguriert – Preisdynamik kann nicht gespeichert werden.")
+  }
+  const file = devPricingFilePath()
+  await mkdir(path.dirname(file), { recursive: true })
+  await writeFile(file, json, "utf8")
 }

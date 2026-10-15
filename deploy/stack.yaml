@@ -1,0 +1,28 @@
+services:
+  web:
+    image: "{{ .Env.IMAGE_REF }}"
+    description: "Blitzeblank Website"
+    ports:
+      - "3000/tcp"
+    envs:
+      NODE_ENV: "production"
+      UPLOAD_DIR: "/data/uploads"
+      NEXT_PUBLIC_SITE_URL: "{{ .Env.NEXT_PUBLIC_SITE_URL }}"
+      BREVO_API_KEY: "{{ .Env.BREVO_API_KEY }}"
+      BREVO_FROM_EMAIL: "{{ .Env.BREVO_FROM_EMAIL }}"
+      BREVO_FROM_NAME: "{{ .Env.BREVO_FROM_NAME }}"
+      LEAD_PROOF_SECRET: "{{ .Env.LEAD_PROOF_SECRET }}"
+      ADMIN_PASSWORD: "{{ .Env.ADMIN_PASSWORD }}"
+      GOOGLE_MAPS_API_KEY: "{{ .Env.GOOGLE_MAPS_API_KEY }}"
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: "{{ .Env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}"
+      DB_HOST: "{{ .Env.DB_HOST }}"
+      DB_PORT: "{{ .Env.DB_PORT }}"
+      DB_NAME: "{{ .Env.DB_NAME }}"
+      DB_USER: "{{ .Env.DB_USER }}"
+      DB_PASSWORD: "{{ .Env.DB_PASSWORD }}"
+    volumes:
+      - "uploads:/data/uploads"
+
+volumes:
+  uploads:
+    name: blitzeblank-uploads

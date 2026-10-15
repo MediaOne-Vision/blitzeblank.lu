@@ -79,7 +79,7 @@ const sections: Section[] = [
         type: "p",
         text: "Unser(e) Hoster wird bzw. werden Ihre Daten nur insoweit verarbeiten, wie dies zur Erfüllung seiner Leistungspflichten erforderlich ist und unsere Weisungen in Bezug auf diese Daten befolgen. Wir setzen folgende(n) Hoster ein:",
       },
-      { type: "list", items: ["Vercel Inc.", "440 N Barranca Ave #4133", "Covina, CA 91723, USA"] },
+      { type: "list", items: ["Mittwald CM Service GmbH & Co. KG", "Königsberger Straße 4-6", "32339 Espelkamp, Deutschland"] },
     ],
   },
   {

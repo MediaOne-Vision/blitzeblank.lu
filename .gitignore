@@ -8,7 +8,11 @@ __v0_jsx-dev-runtime.ts
 next.user-config.*
 
 # Environment variables
+.env
 .env*.local
+
+# Lokale Uploads
+uploads/
 
 # Common ignores
 node_modules

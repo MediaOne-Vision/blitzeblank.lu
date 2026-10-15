@@ -79,7 +79,7 @@ const sections: Section[] = [
         type: "p",
         text: "Our hosting provider(s) will only process your data to the extent necessary to fulfill their contractual obligations and will follow our instructions with regard to this data. We use the following hosting provider(s):",
       },
-      { type: "list", items: ["Vercel Inc.", "440 N Barranca Ave #4133", "Covina, CA 91723, USA"] },
+      { type: "list", items: ["Mittwald CM Service GmbH & Co. KG", "Königsberger Straße 4-6", "32339 Espelkamp, Germany"] },
     ],
   },
   {

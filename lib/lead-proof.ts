@@ -6,12 +6,12 @@ export const PROOF_TTL_MS = 15 * 60 * 1000
 
 /**
  * Signierschlüssel. Bevorzugt `LEAD_PROOF_SECRET`; ohne diese Variable wird ein
- * Schlüssel aus dem Resend-Key abgeleitet. Ohne beides gibt es keinen Nachweis.
+ * Schlüssel aus dem Brevo-Key abgeleitet. Ohne beides gibt es keinen Nachweis.
  */
 function getSecret(): string | null {
   const explicit = process.env.LEAD_PROOF_SECRET
   if (explicit && explicit.length >= 16) return explicit
-  const apiKey = process.env.RESEND_API_KEY
+  const apiKey = process.env.BREVO_API_KEY
   if (apiKey) return createHash("sha256").update(`bb-lead-proof:${apiKey}`).digest("hex")
   return null
 }

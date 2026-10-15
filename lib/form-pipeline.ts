@@ -2,7 +2,7 @@ import { createHash } from "node:crypto"
 import { isRateLimited } from "@/lib/simple-rate-limit"
 import { detectSpam, isSubmissionId } from "@/lib/form-security"
 import { signLeadProof } from "@/lib/lead-proof"
-import { resendMailer, type MailMessage, type Mailer } from "@/lib/mailer"
+import { brevoMailer, type MailMessage, type Mailer } from "@/lib/mailer"
 import type { FormErrorCode, LeadClaims, SubmitResult } from "@/lib/form-types"
 
 export interface MailPair {
@@ -52,7 +52,7 @@ function idempotencyBase(kind: string, submissionId: string, fingerprint: unknow
  */
 export async function runFormPipeline(options: PipelineOptions): Promise<SubmitResult> {
   const now = options.now?.() ?? Date.now()
-  const mailer = options.mailer ?? resendMailer
+  const mailer = options.mailer ?? brevoMailer
 
   const spam = detectSpam({ honeypot: options.honeypot, renderedAt: options.renderedAt, now })
   if (spam) {
