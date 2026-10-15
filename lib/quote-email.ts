@@ -401,7 +401,6 @@ export function buildInternalEmail(s: QuoteSubmission, baseUrl: string, logoSrc 
     { label: "Name", value: s.name },
     { label: "E-Mail", value: s.email },
     { label: "Telefon", value: s.phone || "—" },
-    ...(s.leadId ? [{ label: "Anfrage-ID", value: s.leadId }] : []),
   ]
 
   const photos = s.photos ?? []

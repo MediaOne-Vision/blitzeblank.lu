@@ -197,7 +197,6 @@ export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, logoSrc = 
     { label: "E-Mail", value: s.email },
     { label: "Telefon", value: s.phone || "—" },
     { label: "Adresse", value: s.address || "—" },
-    { label: "Anfrage-ID", value: s.leadId },
   ]
 
   const messageBlock = s.message.trim()
@@ -213,7 +212,7 @@ export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, logoSrc = 
     logoSrc,
     badge: "Neue Anfrage: Steinpflege-Rechner",
     headline: s.jointChoice ? s.jointChoice.materialLabel : "Steinpflege-Anfrage",
-    intro: `<span style="display:inline-block;color:#ffffff;font-weight:700;">Anfrage-ID: ${escapeHtml(s.leadId)}</span>`,
+    intro: escapeHtml(s.name),
     bodyHtml:
       `<div style="border:1px solid ${COLORS.border};border-radius:14px;padding:20px 22px;margin-bottom:22px;">
          ${sectionTitle("Kontaktdaten")}
@@ -227,7 +226,7 @@ export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, logoSrc = 
   })
 
   const text = [
-    `Neue Anfrage: Steinpflege-Rechner (${s.leadId})`,
+    "Neue Anfrage: Steinpflege-Rechner",
     "",
     "Kontaktdaten:",
     rowsToText(contactRows),
@@ -237,7 +236,7 @@ export function buildStoneOfferInternalEmail(s: StoneOfferSubmission, logoSrc = 
     s.message.trim() ? `\nNachricht:\n${s.message.trim()}` : "",
   ].join("\n")
 
-  return { html, text, subject: `Neue Anfrage: Steinpflege-Rechner (${s.leadId})` }
+  return { html, text, subject: "Neue Anfrage: Steinpflege-Rechner" }
 }
 
 export { logoAttachment }

@@ -76,7 +76,6 @@ export function buildContactInternalEmail(s: ContactSubmission, logoSrc = "cid:b
     { label: "E-Mail", value: s.email },
     { label: "Telefon", value: s.phone || "—" },
     { label: "Leistung", value: s.serviceLabel || "—" },
-    { label: "Anfrage-ID", value: s.leadId },
   ]
   const html = emailShell({
     logoSrc,
