@@ -201,7 +201,7 @@ function emailShell(opts: { badge: string; headline: string; intro: string; body
       <div style="background-color:${COLORS.mint};padding:22px 32px;border-top:1px solid ${COLORS.border};">
         <p style="margin:0;color:${COLORS.slateLight};font-size:12px;line-height:1.6;">
           <strong style="color:${COLORS.navy};">Blitzeblank</strong> &middot; 6A Rue Michel Rodange, 7681 Waldbillig, Luxemburg<br/>
-          Diese E-Mail wurde automatisch versendet &middot; noreply@mail.blitzeblank.lu
+          Diese E-Mail wurde automatisch versendet &middot; info@blitzeblank.lu
         </p>
       </div>
     </div>
@@ -355,7 +355,7 @@ export function buildCustomerEmail(s: QuoteSubmission, logoSrc = "cid:blitzeblan
       ct.summaryLabel,
       rowsToText(rows),
       "",
-      "Blitzeblank · noreply@mail.blitzeblank.lu",
+      "Blitzeblank · info@blitzeblank.lu",
     ].join("\n")
 
     return { html, text, subject: ct.declinedSubject }
@@ -386,7 +386,7 @@ export function buildCustomerEmail(s: QuoteSubmission, logoSrc = "cid:blitzeblan
     `${ct.priceTextLabel} ${priceText(s, locale)}`,
     s.photos && s.photos.length > 0 ? `\n${ct.photosLabel} ${s.photos.length}` : "",
     "",
-    "Blitzeblank · noreply@mail.blitzeblank.lu",
+    "Blitzeblank · info@blitzeblank.lu",
   ].join("\n")
 
   return { html, text, subject: ct.acceptedSubject(s.serviceLabel) }
