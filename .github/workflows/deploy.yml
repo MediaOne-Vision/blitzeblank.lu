@@ -17,7 +17,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_REF: ghcr.io/${{ github.repository }}:${{ github.sha }}
       NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
       BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
       BREVO_FROM_EMAIL: ${{ vars.BREVO_FROM_EMAIL }}
@@ -32,6 +31,9 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Image-Referenz setzen (GHCR verlangt Kleinbuchstaben)
+        run: echo "IMAGE_REF=ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}" >> "$GITHUB_ENV"
 
       - uses: docker/setup-buildx-action@v3
 
