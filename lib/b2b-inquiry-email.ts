@@ -148,7 +148,6 @@ function buildRows(s: B2BInquirySubmission): { label: string; value: string }[] 
     { label: "E-Mail", value: s.email || "—" },
     { label: "Telefon", value: s.phone || "—" },
   ]
-  if (s.leadId) rows.push({ label: "Anfrage-ID", value: s.leadId })
   return rows
 }
 
