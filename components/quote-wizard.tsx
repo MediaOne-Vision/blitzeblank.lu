@@ -27,6 +27,7 @@ import {
 } from "@/lib/pricing-config"
 import { computeTravel, type AddressSuggestion, type TravelInfo } from "@/lib/travel"
 import { searchAddresses } from "@/app/actions/travel"
+import { compressImage } from "@/lib/compress-image"
 import { submitQuote } from "@/app/actions/submit-quote"
 import type { QuoteSubmission } from "@/lib/quote-email"
 import { storeLeadHandoff, type QuoteType } from "@/lib/tracking"
@@ -491,10 +492,12 @@ export function QuoteWizard({
       }
       setPhotos((prev) => [...prev, photo])
 
-      const formData = new FormData()
-      formData.append("file", file)
-
-      fetch("/api/quote-photo/upload", { method: "POST", body: formData })
+      compressImage(file)
+        .then((compressed) => {
+          const formData = new FormData()
+          formData.append("file", compressed)
+          return fetch("/api/quote-photo/upload", { method: "POST", body: formData })
+        })
         .then(async (res) => {
           if (!res.ok) throw new Error("upload failed")
           return res.json() as Promise<{ pathname: string; name: string }>
