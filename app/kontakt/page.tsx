@@ -1,7 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { submitContact } from "@/app/actions/submit-contact"
+import { FormHoneypot } from "@/components/form-honeypot"
+import { formErrorMessage } from "@/lib/form-errors"
+import { useSubmissionId } from "@/lib/submission-id"
+import { storeLeadHandoff } from "@/lib/tracking"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -53,16 +59,45 @@ export default function KontaktPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const router = useRouter()
+  const honeypotRef = useRef<HTMLInputElement>(null)
+  const renderedAt = useRef(Date.now())
+  const submission = useSubmissionId()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (isSubmitting) return
+    setSubmitError(null)
     setIsSubmitting(true)
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const result = await submitContact({
+        ...formState,
+        locale: "de",
+        honeypot: honeypotRef.current?.value ?? "",
+        renderedAt: renderedAt.current,
+        submissionId: submission.get(),
+      })
 
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+      if (result.status === "error") {
+        setSubmitError(formErrorMessage(result.code, "de"))
+        setIsSubmitting(false)
+        return
+      }
+
+      submission.renew()
+      if (result.status === "confirmed" && result.proof) {
+        storeLeadHandoff(result.proof)
+        router.push("/kontakt/danke")
+        return
+      }
+      setIsSubmitting(false)
+      setIsSubmitted(true)
+    } catch {
+      setSubmitError(formErrorMessage("network", "de"))
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -163,6 +198,7 @@ export default function KontaktPage() {
                       </div>
 
                       <form onSubmit={handleSubmit} className="space-y-6">
+                        <FormHoneypot inputRef={honeypotRef} />
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div className="space-y-2">
                             <Label htmlFor="name" className="font-normal text-neutral-600">Name *</Label>
@@ -275,6 +311,12 @@ export default function KontaktPage() {
                             .
                           </Label>
                         </div>
+
+                        {submitError && (
+                          <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+                            {submitError}
+                          </p>
+                        )}
 
                         <Button
                           type="submit"

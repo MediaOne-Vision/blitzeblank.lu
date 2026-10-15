@@ -25,6 +25,9 @@ import {
 import { submitStoneOffer } from "@/app/actions/submit-stone-offer"
 import type { StoneOfferSubmission } from "@/lib/stone-offer-email"
 import { storeLeadHandoff } from "@/lib/tracking"
+import { FormHoneypot } from "@/components/form-honeypot"
+import { formErrorMessage } from "@/lib/form-errors"
+import { useSubmissionId } from "@/lib/submission-id"
 import {
   ArrowLeft,
   ArrowRight,
@@ -41,14 +44,6 @@ const STEPS = ["Fläche", "Material", "Nutzung", "Fuge", "Farbe", "Fugenwahl", "
 
 /** Einfache, aber robuste E-Mail-Prüfung für die clientseitige Validierung */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function generateStoneLeadId(): string {
-  const year = new Date().getFullYear()
-  const rand = Math.floor(Math.random() * 100000)
-    .toString()
-    .padStart(5, "0")
-  return `BB-STEIN-${year}-${rand}`
-}
 
 function ColorDot({ name, className = "" }: { name: string; className?: string }) {
   return (
@@ -101,9 +96,11 @@ export function StoneOfferWizard() {
   const [address, setAddress] = useState("")
   const [message, setMessage] = useState("")
   const [privacyConsent, setPrivacyConsent] = useState(false)
-  const [honeypot, setHoneypot] = useState("")
+  const honeypotRef = useRef<HTMLInputElement>(null)
+  const submissionId = useSubmissionId()
 
   const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const emailValid = EMAIL_REGEX.test(email.trim())
 
@@ -174,7 +171,7 @@ export function StoneOfferWizard() {
     scrollToTop()
   }
 
-  const buildSubmission = (leadId: string): StoneOfferSubmission => {
+  const buildSubmission = (): Omit<StoneOfferSubmission, "leadId"> => {
     const areaTypeLabel = stoneAreaTypes.find((a) => a.value === areaType)?.label ?? areaType
     const usageLabel = usageClasses.find((u) => u.value === usage)?.label ?? "Keine Angabe"
     const jointPropertyLabels = properties.map(
@@ -215,37 +212,36 @@ export function StoneOfferWizard() {
       phone,
       address,
       message,
-      leadId,
     }
   }
 
   const handleSubmit = async () => {
+    if (submitting) return
     setSubmitting(true)
-
-    // Dieselbe ID für die interne Mail und das Conversion-Tracking verwenden,
-    // damit GTM die Conversion pro Anfrage eindeutig deduplizieren kann.
-    const leadId = generateStoneLeadId()
-
-    // Tracking-Nutzlast für die Danke-Seite ablegen (Handoff via sessionStorage).
-    // service/lead_status sind für diese Seite fixe Kleinschreib-Werte.
-    // quote_value wird bewusst weggelassen: der Steinpflege-Konfigurator
-    // berechnet derzeit keine Angebotssumme (siehe Hinweis im Response).
-    storeLeadHandoff({
-      lead_status: "accepted",
-      service: "steinreinigung",
-      quote_type: "onetime",
-      lead_id: leadId,
-      email,
-      phone,
-    })
+    setSubmitError(null)
 
     try {
-      await submitStoneOffer({ submission: buildSubmission(leadId), honeypot, renderedAt })
+      const result = await submitStoneOffer({
+        submission: buildSubmission(),
+        honeypot: honeypotRef.current?.value ?? "",
+        renderedAt,
+        submissionId: submissionId.get(),
+      })
+
+      if (result.status === "error") {
+        setSubmitError(formErrorMessage(result.code, "de"))
+        setSubmitting(false)
+        return
+      }
+
+      // Erfolgsnachweis nur bei vom Versanddienst bestätigter Annahme.
+      if (result.status === "confirmed" && result.proof) storeLeadHandoff(result.proof)
+      submissionId.renew()
+      router.push("/stein-angebot/danke")
     } catch {
-      // Auch bei einem Übertragungsfehler leiten wir weiter – die Anfrage ist in
-      // aller Regel dennoch bei uns eingegangen, und der Nutzer erhält Feedback.
+      setSubmitError(formErrorMessage("network", "de"))
+      setSubmitting(false)
     }
-    router.push("/stein-angebot/danke")
   }
 
   /* ----------------------- Live-Konfigurationsübersicht ----------------------- */
@@ -837,18 +833,7 @@ export function StoneOfferWizard() {
                 </div>
 
                 <div className="grid gap-5 sm:grid-cols-2">
-                  {/* Honeypot - für Menschen unsichtbar, Bots füllen dieses Feld häufig aus */}
-                  <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
-                    <Label htmlFor="company">Firma</Label>
-                    <Input
-                      id="company"
-                      name="company"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      value={honeypot}
-                      onChange={(e) => setHoneypot(e.target.value)}
-                    />
-                  </div>
+                  <FormHoneypot inputRef={honeypotRef} />
 
                   <div className="space-y-2">
                     <Label htmlFor="name" className="font-normal text-neutral-600">
@@ -941,6 +926,15 @@ export function StoneOfferWizard() {
                     </Label>
                   </div>
                 </div>
+
+                {submitError && (
+                  <p
+                    role="alert"
+                    className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700"
+                  >
+                    {submitError}
+                  </p>
+                )}
 
                 <Button
                   disabled={!canProceed() || submitting}

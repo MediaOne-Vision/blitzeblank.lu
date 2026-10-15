@@ -11,7 +11,7 @@ import {
 
 /**
  * Vollständige, editierbare Preisdynamik des kostenlosen Angebotsrechners.
- * Diese Struktur wird im Admin-Panel bearbeitet und in Vercel Blob gespeichert.
+ * Diese Struktur wird im Admin-Panel bearbeitet und in der Datenbank (Tabelle app_settings) gespeichert.
  * Sie enthält ausschließlich Zahlenwerte – die Struktur (Labels, Icons, Optionen)
  * bleibt fest im Code.
  */

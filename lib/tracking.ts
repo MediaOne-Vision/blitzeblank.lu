@@ -1,68 +1,131 @@
-// Lead-Tracking für Google Ads & Meta über den GTM-dataLayer.
+// Lead-Tracking über den GTM-dataLayer.
 //
-// Das Event `lead_submitted` und alle Feldnamen sind mit dem GTM-Container
-// abgestimmt und dürfen NICHT umbenannt werden. `lead_status` ist
-// groß-/kleinschreibungssensitiv und muss exakt "accepted" bzw. "price_rejected"
-// lauten.
+// Event- und Feldnamen von `lead_submitted` sind mit dem GTM-Container abgestimmt
+// und werden NICHT umbenannt. `lead_status` ist groß-/kleinschreibungssensitiv
+// ("accepted" bzw. "price_rejected").
 //
-// Der GTM verarbeitet das Event nur, wenn er geladen ist – und GTM lädt
-// ausschließlich nach Cookie-Zustimmung (siehe lib/cookie-consent.ts). Ohne
-// Zustimmung liegt das Event wirkungslos im dataLayer-Array; E-Mail/Telefon
-// verlassen den Browser dann nicht.
+// Grundsätze:
+// - Events entstehen erst nach serverseitig bestätigter Verarbeitung (siehe TrackLead).
+// - Events enthalten keine personenbezogenen Daten (keine E-Mail, kein Telefon, kein Name).
+// - Ohne Statistik- oder Marketing-Einwilligung wird NICHTS in den dataLayer geschrieben,
+//   auch nicht für eine spätere Einwilligung. Die Einwilligungsflags stehen im Event,
+//   damit GTM-Trigger/Tags darauf prüfen können.
 
-export type LeadStatus = "accepted" | "price_rejected"
-export type QuoteType = "recurring" | "onetime"
+import { loadConsent } from "@/lib/cookie-consent"
+import type { ContactEventPayload, LeadEventPayload } from "@/lib/form-types"
 
-/**
- * Nutzlast, die beim Absenden im Formular erzeugt und per sessionStorage an die
- * Danke-Seite übergeben wird. Dort wird daraus das dataLayer-Event gebaut.
- */
-export interface LeadTrackingPayload {
-  lead_status: LeadStatus
-  /** Slug der Leistung, z. B. "fensterreinigung" */
-  service: string
-  /** Netto-Angebotssumme als Zahl (bei Turnus der Jahreswert). Weglassen, wenn unbekannt. */
-  quote_value?: number
-  quote_type: QuoteType
-  /** Eindeutige ID der Anfrage, z. B. BB-2026-00417 */
-  lead_id: string
-  /** Klartext aus dem Formular – GTM hasht die Werte vor dem Versand. */
-  email: string
-  phone: string
-}
+export type { LeadStatus, QuoteType, FormType, LeadEventPayload, ContactEventPayload } from "@/lib/form-types"
 
-/** sessionStorage-Schlüssel für die Übergabe Formular → Danke-Seite */
+/** sessionStorage-Schlüssel für die Übergabe Formular → Danke-Seite (enthält nur den opaken Nachweis) */
 const HANDOFF_KEY = "bb_lead_handoff"
-/** Merker, dass in dieser Session bereits eine Danke-Seite gezeigt wurde (erlaubt Reload) */
+/** Merker, dass in dieser Session bereits eine Danke-Seite gezeigt wurde (erlaubt Reload ohne Event) */
 const SEEN_KEY = "bb_lead_seen"
 
-/** Erzeugt eine eindeutige Anfrage-ID im Format BB-<Jahr>-<5 Ziffern>. */
-export function generateLeadId(): string {
-  const year = new Date().getFullYear()
-  const rand = Math.floor(Math.random() * 100000)
-    .toString()
-    .padStart(5, "0")
-  return `BB-${year}-${rand}`
+/** Schlüssel, die niemals im dataLayer landen dürfen. */
+const FORBIDDEN_KEYS = new Set([
+  "email",
+  "e_mail",
+  "phone",
+  "telefon",
+  "name",
+  "first_name",
+  "last_name",
+  "contact_person",
+  "company",
+  "address",
+  "message",
+  "location",
+])
+
+/** Entfernt personenbezogene Felder aus einer Event-Nutzlast. */
+export function stripPersonalData(data: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(data).filter(([key]) => !FORBIDDEN_KEYS.has(key.toLowerCase())))
 }
 
-/** Legt die Tracking-Nutzlast für die anschließende Danke-Seite ab. */
-export function storeLeadHandoff(payload: LeadTrackingPayload) {
+/** True, wenn Statistik oder Marketing eingewilligt wurde. */
+export function trackingAllowed(): boolean {
+  const consent = loadConsent()
+  return Boolean(consent && (consent.statistics || consent.marketing))
+}
+
+function consentFlags() {
+  const consent = loadConsent()
+  return {
+    consent_statistics: consent?.statistics ? "granted" : "denied",
+    consent_marketing: consent?.marketing ? "granted" : "denied",
+  }
+}
+
+/** Baut die lead_submitted-Nutzlast. quote_value nur bei angenommenem Richtpreis. */
+export function buildLeadEvent(payload: LeadEventPayload): Record<string, unknown> {
+  const event: Record<string, unknown> = {
+    event: "lead_submitted",
+    lead_status: payload.lead_status,
+    service: payload.service,
+    quote_type: payload.quote_type,
+    currency: "EUR",
+    lead_id: payload.lead_id,
+    form_type: payload.form_type,
+  }
+  if (payload.lead_status === "accepted" && typeof payload.quote_value === "number" && payload.quote_value > 0) {
+    event.quote_value = payload.quote_value
+    // Richtpreis aus dem Rechner, kein nachgewiesener Umsatz.
+    event.value_type = "estimated_quote"
+  }
+  return event
+}
+
+/** Baut die contact_submitted-Nutzlast. */
+export function buildContactEvent(payload: ContactEventPayload): Record<string, unknown> {
+  return {
+    event: "contact_submitted",
+    lead_id: payload.lead_id,
+    form_type: payload.form_type,
+    ...(payload.service ? { service: payload.service } : {}),
+  }
+}
+
+function pushToDataLayer(event: Record<string, unknown>): boolean {
+  if (typeof window === "undefined") return false
+  if (!trackingAllowed()) return false
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({ ...stripPersonalData(event), ...consentFlags() })
+  return true
+}
+
+/** Schreibt lead_submitted in den dataLayer. Gibt zurück, ob gepusht wurde (Einwilligung vorhanden). */
+export function pushLeadEvent(payload: LeadEventPayload): boolean {
+  return pushToDataLayer(buildLeadEvent(payload))
+}
+
+/** Schreibt contact_submitted in den dataLayer. */
+export function pushContactEvent(payload: ContactEventPayload): boolean {
+  return pushToDataLayer(buildContactEvent(payload))
+}
+
+/** Generisches Event (z. B. b2b_form_start) – ebenfalls einwilligungsgebunden und ohne PII. */
+export function pushDataLayerEvent(eventName: string, data: Record<string, unknown> = {}): boolean {
+  return pushToDataLayer({ event: eventName, ...data })
+}
+
+/** Legt den signierten Nachweis für die Danke-Seite ab. */
+export function storeLeadHandoff(proof: string) {
   if (typeof window === "undefined") return
   try {
-    sessionStorage.setItem(HANDOFF_KEY, JSON.stringify(payload))
+    sessionStorage.setItem(HANDOFF_KEY, proof)
   } catch {
     // sessionStorage nicht verfügbar – Tracking entfällt, Seite funktioniert trotzdem.
   }
 }
 
-/** Liest die Nutzlast einmalig aus und entfernt sie sofort (verhindert Doppel-Conversions). */
-export function consumeLeadHandoff(): LeadTrackingPayload | null {
+/** Liest den Nachweis einmalig aus und entfernt ihn sofort (verhindert Doppel-Conversions). */
+export function consumeLeadHandoff(): string | null {
   if (typeof window === "undefined") return null
   try {
     const raw = sessionStorage.getItem(HANDOFF_KEY)
     if (!raw) return null
     sessionStorage.removeItem(HANDOFF_KEY)
-    return JSON.parse(raw) as LeadTrackingPayload
+    return raw
   } catch {
     return null
   }
@@ -86,42 +149,4 @@ export function hasLeadSeen(): boolean {
   } catch {
     return false
   }
-}
-
-/**
- * Generisches Event in den dataLayer schieben (z. B. B2B-Formular-Events).
- * Wirkt nur, wenn GTM nach Cookie-Zustimmung geladen wurde – sonst liegt das
- * Event wirkungslos im Array. Feldnamen sind mit dem GTM-Container abgestimmt.
- */
-export function pushDataLayerEvent(event: string, data: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return
-  window.dataLayer = window.dataLayer || []
-  window.dataLayer.push({ event, ...data })
-}
-
-/**
- * Schiebt das `lead_submitted`-Event in den dataLayer.
- * In GTM triggert dieses Event die Google-Ads- bzw. Meta-Conversion.
- */
-export function pushLeadEvent(payload: LeadTrackingPayload) {
-  if (typeof window === "undefined") return
-  window.dataLayer = window.dataLayer || []
-
-  const event: Record<string, unknown> = {
-    event: "lead_submitted",
-    lead_status: payload.lead_status,
-    service: payload.service,
-    quote_type: payload.quote_type,
-    currency: "EUR",
-    lead_id: payload.lead_id,
-    email: payload.email,
-    phone: payload.phone,
-  }
-
-  // quote_value nur mitgeben, wenn ein sinnvoller Wert vorliegt (sonst Feld weglassen).
-  if (typeof payload.quote_value === "number" && payload.quote_value > 0) {
-    event.quote_value = payload.quote_value
-  }
-
-  window.dataLayer.push(event)
 }

@@ -11,7 +11,10 @@ import { cn } from "@/lib/utils"
 import { CheckCircle2, Loader2, Phone, ShieldCheck } from "lucide-react"
 import { submitB2BInquiry } from "@/app/actions/submit-b2b-inquiry"
 import type { B2BCleaningNeed, B2BObjectType } from "@/lib/b2b-inquiry-email"
-import { generateLeadId, pushDataLayerEvent } from "@/lib/tracking"
+import { pushDataLayerEvent } from "@/lib/tracking"
+import { FormHoneypot } from "@/components/form-honeypot"
+import { formErrorMessage } from "@/lib/form-errors"
+import { useSubmissionId } from "@/lib/submission-id"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/
@@ -126,7 +129,8 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
   const [message, setMessage] = useState("")
   const [privacy, setPrivacy] = useState(false)
 
-  const [honeypot, setHoneypot] = useState("")
+  const honeypotRef = useRef<HTMLInputElement>(null)
+  const submission = useSubmissionId()
   const renderedAt = useRef(Date.now())
   const startFired = useRef(false)
 
@@ -168,7 +172,6 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
     }
 
     setSubmitting(true)
-    const leadId = generateLeadId()
 
     try {
       const result = await submitB2BInquiry({
@@ -184,30 +187,31 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
           service: "window_cleaning",
           formType: "b2b_site_visit",
           locale,
-          leadId,
         },
-        honeypot,
+        honeypot: honeypotRef.current?.value ?? "",
         renderedAt: renderedAt.current,
+        submissionId: submission.get(),
       })
 
-      if (!result.success) {
-        setError(result.error === "invalid_email" ? t.emailInvalid : t.contactRequired)
+      if (result.status === "error") {
+        setError(formErrorMessage(result.code, locale))
         setSubmitting(false)
         return
       }
 
-      // Conversion-Event erst nach bestätigter Server-Annahme.
-      pushDataLayerEvent("b2b_lead_success", {
-        service: "window_cleaning",
-        form_type: "b2b_site_visit",
-        lead_id: leadId,
-        email: emailTrim,
-        phone: phoneTrim,
-      })
+      // Conversion-Event nur nach vom Versanddienst bestätigter Annahme.
+      if (result.status === "confirmed") {
+        pushDataLayerEvent("b2b_lead_success", {
+          service: "window_cleaning",
+          form_type: "b2b_site_visit",
+          lead_id: result.leadId,
+        })
+      }
 
+      submission.renew()
       setSubmitted(true)
     } catch {
-      setError(t.contactRequired)
+      setError(formErrorMessage("network", locale))
       setSubmitting(false)
     }
   }
@@ -251,18 +255,7 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
       </div>
 
       <form onSubmit={handleSubmit} onFocus={fireStart} className="space-y-5" noValidate>
-        {/* Honeypot – für Menschen unsichtbar */}
-        <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
-          <label htmlFor="company-website">Website</label>
-          <input
-            id="company-website"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            value={honeypot}
-            onChange={(e) => setHoneypot(e.target.value)}
-          />
-        </div>
+        <FormHoneypot inputRef={honeypotRef} />
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>

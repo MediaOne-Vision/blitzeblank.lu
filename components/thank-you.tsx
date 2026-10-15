@@ -74,8 +74,8 @@ export function ThankYou({ variant, locale = "de" }: { variant: "accepted" | "de
 
   return (
     <div className="mx-auto w-full max-w-2xl text-center">
-      {/* Feuert das lead_submitted-Event (nur nach Formular-Submit & Cookie-Zustimmung) */}
-      <TrackLead expectedStatus={accepted ? "accepted" : "price_rejected"} />
+      {/* Feuert lead_submitted nur mit gültigem serverseitigem Erfolgsnachweis */}
+      <TrackLead expected={accepted ? "accepted" : "price_rejected"} homeHref={localizeHref("/", locale)} />
 
       <div
         className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${

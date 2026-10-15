@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.github
+.vercel
+.v0-trash
+.env*
+*.png
+!public/**/*.png
+user_read_only_context
+v0_plans
+v0_memories
+uploads
+Dockerfile
+.dockerignore

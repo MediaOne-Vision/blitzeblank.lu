@@ -2,27 +2,22 @@
 
 import { useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import {
-  consumeLeadHandoff,
-  hasLeadSeen,
-  markLeadSeen,
-  pushLeadEvent,
-  type LeadStatus,
-} from "@/lib/tracking"
+import { redeemLeadProof } from "@/app/actions/redeem-lead-proof"
+import { consumeLeadHandoff, hasLeadSeen, markLeadSeen, pushContactEvent, pushLeadEvent } from "@/lib/tracking"
+import type { ExpectedProof } from "@/lib/form-types"
 
 /**
- * Feuert beim Laden der Danke-Seite genau einmal das `lead_submitted`-Event.
+ * Feuert beim Laden der Danke-Seite genau einmal das passende Tracking-Event.
  *
- * Die Tracking-Daten stammen aus dem sessionStorage-Handoff, den das Formular
- * beim Absenden gesetzt hat. Wird die Seite ohne vorherigen Formular-Submit
- * aufgerufen (geteilter Link, Crawler, Direktaufruf), gibt es keinen Handoff:
- * dann wird kein Event gefeuert und – sofern in dieser Session noch keine
- * Danke-Seite gezeigt wurde – auf die Startseite umgeleitet. So werden
- * Conversions nicht durch fremde Aufrufe verfälscht.
+ * Grundlage ist ein serverseitig signierter Erfolgsnachweis, den das Formular erst
+ * nach bestätigter Verarbeitung im sessionStorage ablegt. Ohne gültigen Nachweis
+ * (Direktaufruf, geteilter Link, Crawler, abgelaufen, falscher Status) entsteht kein
+ * Event. Die Seite leitet dann auf die Startseite um, sofern in dieser Session noch
+ * keine Danke-Seite gezeigt wurde; ein Reload bleibt ohne zweites Event möglich.
  *
  * Rendert nichts.
  */
-export function TrackLead({ expectedStatus }: { expectedStatus: LeadStatus }) {
+export function TrackLead({ expected, homeHref = "/" }: { expected: ExpectedProof; homeHref?: string }) {
   const ran = useRef(false)
   const router = useRouter()
 
@@ -30,23 +25,24 @@ export function TrackLead({ expectedStatus }: { expectedStatus: LeadStatus }) {
     if (ran.current) return
     ran.current = true
 
-    const handoff = consumeLeadHandoff()
+    const proof = consumeLeadHandoff()
 
-    if (handoff) {
-      // Frischer Submit: Event nur feuern, wenn der Status zur Seite passt.
-      if (handoff.lead_status === expectedStatus) {
-        pushLeadEvent(handoff)
-      }
-      markLeadSeen()
+    if (!proof) {
+      if (!hasLeadSeen()) router.replace(homeHref)
       return
     }
 
-    // Kein Handoff: Reload nach Conversion (Seite darf bleiben) vs. echter
-    // Direktaufruf (umleiten, damit keine fremden Aufrufe die Seite sehen).
-    if (!hasLeadSeen()) {
-      router.replace("/")
-    }
-  }, [expectedStatus, router])
+    markLeadSeen()
+    redeemLeadProof(proof, expected)
+      .then((result) => {
+        if (!result) return
+        if (result.kind === "lead") pushLeadEvent(result.payload)
+        else pushContactEvent(result.payload)
+      })
+      .catch(() => {
+        // Tracking ist optional – die Danke-Seite bleibt unberührt.
+      })
+  }, [expected, homeHref, router])
 
   return null
 }

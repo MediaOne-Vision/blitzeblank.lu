@@ -1,0 +1,58 @@
+name: Deploy to Mittwald
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REF: ghcr.io/${{ github.repository }}:${{ github.sha }}
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+      BREVO_FROM_EMAIL: ${{ vars.BREVO_FROM_EMAIL }}
+      BREVO_FROM_NAME: ${{ vars.BREVO_FROM_NAME }}
+      LEAD_PROOF_SECRET: ${{ secrets.LEAD_PROOF_SECRET }}
+      EMAIL_LOGO_URL: ${{ vars.EMAIL_LOGO_URL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      DB_HOST: ${{ vars.DB_HOST }}
+      DB_PORT: ${{ vars.DB_PORT }}
+      DB_NAME: ${{ vars.DB_NAME }}
+      DB_USER: ${{ vars.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build und Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_REF }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy zu Mittwald
+        uses: mittwald/deploy-container-action@v1
+        with:
+          api_token: ${{ secrets.MITTWALD_API_TOKEN }}
+          stack_id: ${{ vars.MITTWALD_STACK_ID }}
+          stack_file: ${{ github.workspace }}/deploy/stack.yaml

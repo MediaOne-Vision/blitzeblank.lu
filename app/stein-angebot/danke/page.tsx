@@ -20,7 +20,7 @@ export default function SteinAngebotDankePage() {
         <div className="mx-auto w-full max-w-2xl text-center">
           {/* Feuert das lead_submitted-Event (service=steinreinigung, accepted).
               Nur nach echtem Formular-Submit; sonst Redirect auf die Startseite. */}
-          <TrackLead expectedStatus="accepted" />
+          <TrackLead expected="accepted" />
 
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-brand-blue/10">
             <CheckCircle2 className="h-10 w-10 text-brand-blue" />

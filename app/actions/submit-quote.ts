@@ -1,7 +1,8 @@
 "use server"
 
 import { headers } from "next/headers"
-import { Resend } from "resend"
+import { runFormPipeline } from "@/lib/form-pipeline"
+import { clientIpFrom, isValidEmail } from "@/lib/form-security"
 import {
   buildCustomerEmail,
   buildInternalEmail,
@@ -9,10 +10,10 @@ import {
   photoUrl,
   type QuoteSubmission,
 } from "@/lib/quote-email"
+import type { LeadStatus, QuoteType, SubmitResult } from "@/lib/form-types"
 
-/** Absender- und Empfängeradressen für den E-Mail-Versand */
 const FROM_ADDRESS = "Blitzeblank <noreply@mail.blitzeblank.lu>"
-  const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
+const INTERNAL_RECIPIENT = "info@blitzeblank.lu"
 
 /** Baut die aktuelle Origin-URL, um absolute Links (z. B. zu Fotos) zu erzeugen */
 async function getBaseUrl(): Promise<string> {
@@ -27,69 +28,75 @@ async function getBaseUrl(): Promise<string> {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "https://blitzeblank.lu"
 }
 
-export async function submitQuote(submission: QuoteSubmission) {
-  const apiKey = process.env.RESEND_API_KEY
+export interface SubmitQuoteInput {
+  submission: Omit<QuoteSubmission, "leadId">
+  /** Tracking-Werte aus dem Rechner (Richtpreis, kein Umsatz). */
+  tracking: { quoteType: QuoteType; quoteValue?: number }
+  honeypot: string
+  renderedAt: number
+  submissionId: string
+}
 
-  // Ohne konfigurierten API-Key wird die Anfrage nur protokolliert, damit das
-  // Formular in der Vorschau/Entwicklung weiterhin funktioniert.
-  if (!apiKey) {
-    console.log("[v0] RESEND_API_KEY fehlt – Anfrage wird nur protokolliert:", JSON.stringify(submission, null, 2))
-    return { success: true as const, emailed: false as const }
-  }
-
-  const resend = new Resend(apiKey)
+export async function submitQuote(input: SubmitQuoteInput): Promise<SubmitResult> {
+  const { submission } = input
+  const h = await headers()
   const baseUrl = await getBaseUrl()
 
-  const customerEmail = buildCustomerEmail(submission)
-  const internalEmail = buildInternalEmail(submission, baseUrl)
+  const decision = submission.decision === "accepted" ? "accepted" : "declined"
+  const leadStatus: LeadStatus = decision === "accepted" ? "accepted" : "price_rejected"
+  const qv = input.tracking.quoteValue
+  const quoteValue = typeof qv === "number" && Number.isFinite(qv) && qv > 0 && qv < 10_000_000 ? Math.round(qv) : undefined
 
-  // Fotos als Remote-Anhänge (Resend lädt sie beim Versand über die Auslieferungs-Route)
-  const photoAttachments = (submission.photos ?? []).map((p, i) => {
-    const ext = p.name.split(".").pop()?.toLowerCase()
-    const safeExt = ext && /^[a-z0-9]+$/.test(ext) ? ext : "jpg"
-    return {
-      filename: `Foto-${i + 1}.${safeExt}`,
-      path: photoUrl(baseUrl, p.pathname),
-    }
+  return runFormPipeline({
+    kind: "quote",
+    submissionId: input.submissionId,
+    honeypot: input.honeypot,
+    renderedAt: input.renderedAt,
+    ip: clientIpFrom(h),
+    fingerprint: { ...submission, photos: submission.photos?.map((p) => p.pathname), leadId: undefined },
+    validate: () => {
+      if (!submission.name?.trim() || !submission.service || !submission.address?.trim()) return "missing_fields"
+      if (!isValidEmail(submission.email)) return "invalid_email"
+      return null
+    },
+    buildMails: (leadId) => {
+      const full: QuoteSubmission = { ...submission, decision, leadId }
+      const customerEmail = buildCustomerEmail(full)
+      const internalEmail = buildInternalEmail(full, baseUrl)
+
+      const photoAttachments = (full.photos ?? []).map((p, i) => {
+        const ext = p.name.split(".").pop()?.toLowerCase()
+        const safeExt = ext && /^[a-z0-9]+$/.test(ext) ? ext : "jpg"
+        return { filename: `Foto-${i + 1}.${safeExt}`, path: photoUrl(baseUrl, p.pathname) }
+      })
+
+      return {
+        internal: {
+          from: FROM_ADDRESS,
+          to: INTERNAL_RECIPIENT,
+          replyTo: full.email,
+          subject: internalEmail.subject,
+          html: internalEmail.html,
+          text: internalEmail.text,
+          attachments: [logoAttachment, ...photoAttachments],
+        },
+        customer: {
+          from: FROM_ADDRESS,
+          to: full.email,
+          subject: customerEmail.subject,
+          html: customerEmail.html,
+          text: customerEmail.text,
+          attachments: [logoAttachment],
+        },
+      }
+    },
+    claims: {
+      ft: "quote_calculator",
+      st: leadStatus,
+      svc: submission.service,
+      qt: input.tracking.quoteType === "onetime" ? "onetime" : "recurring",
+      // Bei abgelehntem Richtpreis wird kein Wert mitgeführt.
+      qv: leadStatus === "accepted" ? quoteValue : undefined,
+    },
   })
-
-  try {
-    // Interne Benachrichtigung an das Team – mit Reply-To auf den Kunden,
-    // damit direkt geantwortet werden kann. Fotos als Anhang + Links.
-    const internalResult = await resend.emails.send({
-      from: FROM_ADDRESS,
-      to: INTERNAL_RECIPIENT,
-      replyTo: submission.email,
-      subject: internalEmail.subject,
-      html: internalEmail.html,
-      text: internalEmail.text,
-      attachments: [logoAttachment, ...photoAttachments],
-    })
-
-    if (internalResult.error) {
-      console.log("[v0] Fehler beim Versand der internen Mail:", internalResult.error)
-    }
-
-    // Bestätigung an den Anfragenden
-    const customerResult = await resend.emails.send({
-      from: FROM_ADDRESS,
-      to: submission.email,
-      subject: customerEmail.subject,
-      html: customerEmail.html,
-      text: customerEmail.text,
-      attachments: [logoAttachment],
-    })
-
-    if (customerResult.error) {
-      console.log("[v0] Fehler beim Versand der Kundenbestätigung:", customerResult.error)
-    }
-
-    const emailed = !internalResult.error && !customerResult.error
-    return { success: true as const, emailed }
-  } catch (error) {
-    console.log("[v0] Unerwarteter Fehler beim E-Mail-Versand:", error)
-    // Die Anfrage gilt trotzdem als übermittelt, damit der Nutzer eine
-    // Erfolgsmeldung erhält – der Fehler wird protokolliert.
-    return { success: true as const, emailed: false as const }
-  }
 }
