@@ -52,7 +52,11 @@ export async function savePricingAction(config: PricingConfig): Promise<SaveStat
     revalidatePath("/admin")
     return { ok: true }
   } catch (error) {
-    console.error("[v0] savePricingAction error:", error)
-    return { error: "Speichern fehlgeschlagen. Bitte erneut versuchen." }
+    const code = (error as { code?: string } | null)?.code
+    const detail = error instanceof Error ? error.message.slice(0, 160) : String(error)
+    console.error("[admin] savePricingAction error:", code ?? "", detail)
+    return {
+      error: `Speichern fehlgeschlagen${code ? ` (${code})` : ""}: ${detail}`,
+    }
   }
 }
