@@ -10,8 +10,8 @@ Bei jedem Push auf `main` baut GitHub Actions ein Docker-Image (`ghcr.io/<repo>:
 
 | Typ | Name |
 |---|---|
-| Secret | `MITTWALD_API_TOKEN`, `BREVO_API_KEY`, `LEAD_PROOF_SECRET`, `ADMIN_PASSWORD`, `GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` |
-| Variable | `MITTWALD_STACK_ID`, `NEXT_PUBLIC_SITE_URL`, `BREVO_FROM_EMAIL`, `BREVO_FROM_NAME`, `DB_PORT` |
+| Secret | `MITTWALD_API_TOKEN`, `BREVO_API_KEY`, `LEAD_PROOF_SECRET`, `ADMIN_PASSWORD`, `DB_PASSWORD` |
+| Variable | `MITTWALD_PROJECT_ID`, `MITTWALD_STACK_ID`, `NEXT_PUBLIC_SITE_URL`, `BREVO_FROM_EMAIL`, `BREVO_FROM_NAME`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, optional `EMAIL_LOGO_URL` |
 
 `BREVO_FROM_EMAIL` muss in Brevo als Absender verifiziert sein, sonst werden Mails abgelehnt.
 
