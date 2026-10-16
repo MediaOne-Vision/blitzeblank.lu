@@ -107,6 +107,7 @@ const sections: Section[] = [
       {
         type: "list",
         items: [
+          "BLITZEBLANK S.à r.l.",
           "Mustapha El-Ali",
           "6A, Rue Michel Rodange",
           "7681 Waldbillig",
