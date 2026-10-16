@@ -106,9 +106,10 @@ const sections: Section[] = [
       },
       {
         type: "list",
-        items: [
-          "Mustapha El-Ali",
-          "6A, Rue Michel Rodange",
+  items: [
+  "BLITZEBLANK S.à r.l.",
+  "Mustapha El-Ali",
+  "6A, Rue Michel Rodange",
           "7681 Waldbillig",
           "Phone: +352 661 830 493",
           "Email: info@blitzeblank.lu",
