@@ -21,6 +21,7 @@ interface ServiceFeature {
 interface ServicePageTemplateProps {
   slug: string
   title: string
+  heading?: string
   subtitle: string
   description: string
   icon: LucideIcon
@@ -79,6 +80,7 @@ const TEXT = {
 export function ServicePageTemplate({
   slug,
   title,
+  heading,
   subtitle,
   image,
   features,
@@ -126,7 +128,7 @@ export function ServicePageTemplate({
                 </nav>
 
                 <h1 className="mb-4 text-balance font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-                  {title}
+                  {heading ?? title}
                 </h1>
                 <p className="mb-4 text-lg text-white/75 text-pretty">{subtitle}</p>
                 <div className="mb-8 flex items-center gap-2 text-base font-semibold text-brand-sky">

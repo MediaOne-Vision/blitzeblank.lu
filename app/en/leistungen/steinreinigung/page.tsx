@@ -64,6 +64,7 @@ export default function SteinreinigungEnPage() {
     <ServicePageTemplate
       slug="steinreinigung"
       title="Stone Cleaning"
+      heading="Stone Cleaning in Luxembourg – for terraces, paving and natural stone"
       subtitle="We gently free natural stone, paving and terraces from moss, algae and weathering - restoring their natural shine."
       description="Over time, stone surfaces become unsightly due to weathering, moss, algae and dirt. Our professional stone cleaning brings your outdoor surfaces back to life. With techniques tailored to each stone type, we ensure a gentle and thorough clean that preserves the natural character of your stone surfaces."
       icon={Mountain}

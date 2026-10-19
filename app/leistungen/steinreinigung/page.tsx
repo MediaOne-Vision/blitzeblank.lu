@@ -63,6 +63,7 @@ export default function SteinreinigungPage() {
     <ServicePageTemplate
       slug="steinreinigung"
       title="Steinreinigung"
+      heading="Steinreinigung in Luxemburg – für Terrasse, Pflaster und Naturstein"
       subtitle="Wir befreien Naturstein, Pflaster und Terrassen materialschonend von Moos, Algen und Witterungsspuren - für neuen, natürlichen Glanz."
       description="Steinoberflächen werden im Laufe der Zeit durch Witterung, Moos, Algen und Verschmutzungen unansehnlich. Unsere professionelle Steinreinigung bringt Ihre Außenflächen wieder zum Strahlen. Mit angepassten Techniken für jede Steinart sorgen wir für eine schonende und gründliche Reinigung, die den natürlichen Charakter Ihrer Steinoberflächen bewahrt."
       icon={Mountain}

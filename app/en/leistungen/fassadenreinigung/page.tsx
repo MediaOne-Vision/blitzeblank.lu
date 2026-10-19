@@ -64,6 +64,7 @@ export default function FassadenreinigungEnPage() {
     <ServicePageTemplate
       slug="fassadenreinigung"
       title="Facade Cleaning"
+      heading="Facade Cleaning in Luxembourg – gentle and material-appropriate"
       subtitle="We gently and material-appropriately remove algae, dirt and discoloration - for a radiant facade that stays beautiful for longer."
       description="The facade is the face of your building. Over time, environmental factors, exhaust fumes and organic deposits leave their mark. Our professional facade cleaning gently and effectively removes even stubborn dirt. We work with a range of techniques, optimally matched to your facade material."
       icon={Building2}
