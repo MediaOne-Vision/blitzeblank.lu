@@ -104,7 +104,7 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
             </div>
             <Image
               src="/images/mascot.png"
-              alt=""
+              alt="Blitzeblank Maskottchen"
               width={80}
               height={80}
               className="h-16 w-auto opacity-50"
