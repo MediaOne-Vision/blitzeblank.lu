@@ -102,7 +102,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
           <Image
             key={service.title}
             src={service.image || "/placeholder.svg"}
-            alt=""
+            alt={service.title}
             width={1}
             height={1}
             priority={i > 0}

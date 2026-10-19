@@ -63,6 +63,7 @@ export default function FassadenreinigungPage() {
     <ServicePageTemplate
       slug="fassadenreinigung"
       title="Fassadenreinigung"
+      heading="Fassadenreinigung in Luxemburg – schonend und materialgerecht"
       subtitle="Wir entfernen Algen, Schmutz und Verfärbungen schonend und materialgerecht - für eine strahlende Fassade, die lange schön bleibt."
       description="Die Fassade ist das Gesicht Ihres Gebäudes. Umwelteinflüsse, Abgase und organische Ablagerungen hinterlassen im Laufe der Zeit ihre Spuren. Unsere professionelle Fassadenreinigung entfernt selbst hartnäckige Verschmutzungen schonend und effektiv. Wir arbeiten mit verschiedenen Techniken, die optimal auf Ihr Fassadenmaterial abgestimmt sind."
       icon={Building2}

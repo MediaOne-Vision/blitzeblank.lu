@@ -63,6 +63,7 @@ export default function IndustriereinigungPage() {
     <ServicePageTemplate
       slug="industriereinigung"
       title="Industriereinigung"
+      heading="Industriereinigung in Luxemburg – für Hallen, Lager und Werkstätten"
       subtitle="Wir reinigen Produktionshallen, Lager und Werkstätten nach höchsten Standards - effizient und mit minimalem Einfluss auf Ihren Betrieb."
       description="Die Industriereinigung erfordert spezielles Know-how und Erfahrung. Unsere geschulten Mitarbeiter kennen die Anforderungen verschiedener Branchen und sorgen für hygienische Arbeitsbedingungen in Ihren Produktionshallen, Lagern und Werkstätten. Wir arbeiten effizient und mit minimalem Einfluss auf Ihren Betriebsablauf."
       icon={Factory}

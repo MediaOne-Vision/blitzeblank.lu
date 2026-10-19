@@ -64,6 +64,7 @@ export default function IndustriereinigungEnPage() {
     <ServicePageTemplate
       slug="industriereinigung"
       title="Industrial Cleaning"
+      heading="Industrial Cleaning in Luxembourg – for halls, warehouses and workshops"
       subtitle="We clean production halls, warehouses and workshops to the highest standards - efficiently and with minimal impact on your operations."
       description="Industrial cleaning requires specialized know-how and experience. Our trained staff understand the requirements of different industries and ensure hygienic working conditions in your production halls, warehouses and workshops. We work efficiently and with minimal impact on your daily operations."
       icon={Factory}
