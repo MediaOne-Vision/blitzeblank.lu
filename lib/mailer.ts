@@ -1,3 +1,4 @@
+import { guardedBrevoFetch } from './brevo-spam-guard'
 /** Maximale Wartezeit auf den Versanddienst. Danach gilt der Versand als ungeklärt, nicht als Erfolg. */
 export const MAIL_TIMEOUT_MS = 15_000
 
@@ -106,7 +107,7 @@ interface BrevoResponse {
 }
 
 async function postToBrevo(payload: BrevoPayload, apiKey: string): Promise<BrevoResponse> {
-  const response = await fetch(BREVO_ENDPOINT, {
+  const response = await guardedBrevoFetch(BREVO_ENDPOINT, {
     method: "POST",
     headers: { "api-key": apiKey, "content-type": "application/json", accept: "application/json" },
     body: JSON.stringify(payload),
