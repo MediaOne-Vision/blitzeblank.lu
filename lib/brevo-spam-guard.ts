@@ -1,11 +1,13 @@
-// deployment-center:brevo-spam-guard v3
+// deployment-center:brevo-spam-guard v5
+export const MEDIAONE_SPAM_PROTECTION_VERSION = '2.0.0'
 // Schutzschicht vor dem Brevo-Versand. Erkannter Spam wird still verworfen (Antwort wie bei Erfolg),
 // damit Bots nichts über den Filter lernen. Wird vom Deployment Center verwaltet und bei Updates überschrieben.
 // Feineinstellung per Umgebungsvariable: BREVO_GUARD_MAX_PER_HOUR (Standard 30 Mails), BREVO_GUARD_MAX_PER_DAY (Standard 150 Mails),
 // BREVO_GUARD_MAX_PER_IP (Standard 10), BREVO_GUARD_ALLOW_NON_LATIN=1 (Nachrichten in kyrillischer, chinesischer,
 // arabischer Schrift usw. zulassen).
+// Gesperrte Anfragen werden anonym (nur Grund, Host, Version) ans Deployment Center gemeldet, damit dort die Statistik stimmt.
 
-type Address = { email?: string }
+type Address = { email?: string; name?: string }
 type Payload = { to?: Address[]; replyTo?: Address; subject?: string; textContent?: string; htmlContent?: string }
 type Check = { reason: string | null; commit: () => void }
 
@@ -31,6 +33,14 @@ const SPAM_WORDS = [
   'geld verdienen', 'passive income', 'passives einkommen', 'investment opportunity', 'you have won',
   'sie haben gewonnen', 'lottery', 'porn', 'escort', 'dating', 'click here', 'jetzt klicken', 'telegram',
 ]
+
+const SHORT_LINK_HOSTS = [
+  'search.app', 'goo.gl', 'bit.ly', 't.co', 'tinyurl.com', 'cutt.ly', 'rb.gy', 'is.gd', 'ow.ly', 's.id',
+  'shorturl.at', 'lnkd.in', 'linktr.ee', 'forms.gle', 'tiny.cc', 'v.gd', 'buff.ly', 'rebrand.ly', 'l.ead.me',
+  'qr.ae', 'urlz.fr', 'clck.ru', 'vk.cc', 't.me', 'wa.me',
+]
+const TRUSTED_HOSTS = ['mediaone.vision', 'mediaone-vision.de']
+const NAME_LABELS = ['vorname', 'nachname', 'name', 'firma', 'unternehmen', 'betreff', 'telefon', 'stadt', 'ort', 'strasse', 'straße']
 
 function limit(name: string, fallback: number): number {
   const value = Number(process.env[name])
@@ -82,9 +92,38 @@ function visibleText(payload: Payload): string {
     .slice(0, 20000)
 }
 
+const TO_KEYS = ['CONTACT_TO_MAIL', 'CONTACT_TO_EMAIL', 'CONTACT_EMAIL', 'CONTACT_MAIL', 'MAIL_TO', 'EMAIL_TO', 'TO_EMAIL', 'TO_MAIL', 'RECIPIENT_EMAIL', 'NOTIFICATION_EMAIL', 'ADMIN_EMAIL']
+const FROM_KEYS = ['BREVO_FROM_MAIL', 'BREVO_FROM_EMAIL', 'MAIL_FROM', 'EMAIL_FROM', 'FROM_EMAIL', 'FROM_MAIL', 'SMTP_FROM', 'SENDER_EMAIL', 'SENDER_MAIL']
+
+// Liest Adressen aus bekannten Variablennamen und aus allen Variablen, deren Name zum Muster passt.
+// So funktioniert der Schutz auch, wenn ein Projekt andere Namen als CONTACT_TO_MAIL / BREVO_FROM_MAIL nutzt.
+function mailsFromEnv(exact: string[], matches: (key: string) => boolean): string[] {
+  const keys = Object.keys(process.env).filter((key) => /MAIL/.test(key) && matches(key))
+  const out: string[] = []
+  for (const key of exact.concat(keys)) {
+    const value = process.env[key]
+    if (!value) continue
+    for (const part of value.split(/[;,]/)) {
+      const angle = part.match(/<([^>]+)>/)
+      const mail = (angle ? angle[1] : part).trim().toLowerCase()
+      if (mail.indexOf('@') > 0 && out.indexOf(mail) === -1) out.push(mail)
+    }
+  }
+  return out
+}
+
+function internalAddresses(): string[] {
+  return mailsFromEnv(TO_KEYS, (key) => /(^|_)(TO|CC|BCC|RECIPIENT|RECIPIENTS|RECEIVER|NOTIFY|NOTIFICATION|INBOX)(_|$)/.test(key) && !/FROM|SENDER/.test(key))
+}
+
 function ownDomains(): string[] {
-  const domain = String(process.env.BREVO_FROM_MAIL ?? '').split('@')[1]
-  return domain ? [domain.toLowerCase().replace(/^www\./, '')] : []
+  const domains: string[] = []
+  const senders = mailsFromEnv(FROM_KEYS, (key) => /(FROM|SENDER)/.test(key))
+  for (const mail of senders) {
+    const domain = (mail.split('@')[1] ?? '').replace(/^www\./, '')
+    if (domain && domains.indexOf(domain) === -1) domains.push(domain)
+  }
+  return domains
 }
 
 function externalHosts(text: string): string[] {
@@ -94,6 +133,7 @@ function externalHosts(text: string): string[] {
   for (const link of found) {
     const host = (link.replace(/^https?:\/\//i, '').split(/[\/?#:]/)[0] ?? '').toLowerCase().replace(/^www\./, '')
     if (!host || host.endsWith('.vercel.app') || host.endsWith('.project.space')) continue
+    if (TRUSTED_HOSTS.some((d) => host === d || host.endsWith('.' + d))) continue
     if (own.some((d) => host === d || host.endsWith('.' + d))) continue
     if (hosts.indexOf(host) === -1) hosts.push(host)
   }
@@ -123,10 +163,65 @@ function nonLatinShare(text: string): { letters: number; share: number } {
   return { letters, share: letters > 0 ? foreign / letters : 0 }
 }
 
+function hasLink(value: string): boolean {
+  return /(https?:\/\/|www\.|[a-z0-9-]+\.(?:com|net|org|info|biz|ru|xyz|top|click|site|online|shop|app|link|page)\/)/i.test(value)
+}
+
+function hostOf(link: string): string {
+  return (link.replace(/^https?:\/\//i, '').split(/[\/?#:]/)[0] ?? '').toLowerCase().replace(/^www\./, '')
+}
+
+function looksLikeGibberish(name: string): boolean {
+  const value = name.trim()
+  if (value.length < 8 || /[\s'-]/.test(value)) return false
+  const switches = value.match(/[a-z][A-Z]/g)
+  return (switches ? switches.length : 0) >= 2
+}
+
+/** Namen, Firma, Betreff und Telefon sind Kurzfelder: Links oder Adressen haben dort nichts zu suchen. */
+function nameVerdict(name: string): string | null {
+  const value = name.trim()
+  if (!value) return null
+  if (hasLink(value)) return 'link-im-namen'
+  if (value.indexOf('@') !== -1) return 'adresse-im-namen'
+  if (looksLikeGibberish(value)) return 'zufallsname'
+  return null
+}
+
+function fieldValues(html: string): string[] {
+  const out: string[] = []
+  const pattern = /<t[dh][^>]*>\s*([^<]{2,30}?)\s*:?\s*<\/t[dh]>\s*<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi
+  let match: RegExpExecArray | null
+  while ((match = pattern.exec(html)) !== null) {
+    const label = (match[1] ?? '').toLowerCase().trim()
+    if (NAME_LABELS.indexOf(label) !== -1) out.push((match[2] ?? '').replace(/<[^>]*>/g, ' ').trim())
+  }
+  return out
+}
+
+function linkVerdict(text: string): string | null {
+  const found = text.match(/(?:https?:\/\/|www\.)[^\s<>"')\]]+/gi) ?? []
+  const external = externalHosts(text)
+  for (const host of external) {
+    if (SHORT_LINK_HOSTS.some((d) => host === d || host.endsWith('.' + d))) return 'kurzlink'
+  }
+  if (external.length === 0) return null
+  const seen: Record<string, number> = {}
+  for (const link of found) {
+    const host = hostOf(link)
+    if (external.indexOf(host) === -1) continue
+    seen[host] = (seen[host] ?? 0) + 1
+    if (seen[host] >= 2) return 'link-wiederholt'
+  }
+  return null
+}
+
 function contentVerdict(text: string): string | null {
   const lower = text.toLowerCase()
   const words = SPAM_WORDS.filter((word) => lower.indexOf(word) !== -1)
   const hosts = externalHosts(text)
+  const linked = linkVerdict(text)
+  if (linked) return linked
   if (hosts.length >= 3) return 'zu-viele-links'
   if (words.length >= 2) return 'spam-woerter'
   if (words.length >= 1 && hosts.length >= 1) return 'spam-wort-mit-link'
@@ -174,13 +269,12 @@ async function inspect(init?: RequestInit): Promise<Check> {
   const recipients = (payload.to ?? []).map((a) => String(a.email ?? '').toLowerCase()).filter(Boolean)
   if (recipients.length === 0) return pass
 
-  const internalTargets = String(process.env.CONTACT_TO_MAIL ?? '')
-    .split(/[;,]/)
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean)
+  const internalTargets = internalAddresses()
   const internal = internalTargets.length > 0 && recipients.every((r) => internalTargets.indexOf(r) !== -1)
   const replyTo = String(payload.replyTo?.email ?? '').toLowerCase()
-  const text = internal ? visibleText(payload) : ''
+  const text = visibleText(payload)
+  const names = (payload.to ?? []).map((a) => String(a.name ?? '')).concat(String(payload.replyTo?.name ?? ''))
+  const fields = fieldValues(payload.htmlContent ?? '')
   const bodyKey = internal ? hash(replyTo + '|' + text) : ''
   const ip = await clientIp()
 
@@ -190,14 +284,23 @@ async function inspect(init?: RequestInit): Promise<Check> {
   else if (count('day', 24 * HOUR) >= limit('BREVO_GUARD_MAX_PER_DAY', 150)) reason = 'tages-flut'
   else if (ip && count('ip:' + ip, HOUR) >= limit('BREVO_GUARD_MAX_PER_IP', 10)) reason = 'ip-limit'
   else if (internal) {
-    if (replyTo && isDisposable(replyTo)) reason = 'wegwerf-adresse'
-    else if (/(https?:\/\/|www\.)/i.test(String(payload.subject ?? ''))) reason = 'link-im-betreff'
-    else if (replyTo && count('from:' + replyTo, 24 * HOUR) >= 3) reason = 'absender-limit'
-    else reason = contentVerdict(text)
+    for (const value of names.concat(fields)) {
+      reason = reason ?? nameVerdict(value)
+    }
+    if (!reason && replyTo && isDisposable(replyTo)) reason = 'wegwerf-adresse'
+    if (!reason && /(https?:\/\/|www\.)/i.test(String(payload.subject ?? ''))) reason = 'link-im-betreff'
+    if (!reason && replyTo && count('from:' + replyTo, 24 * HOUR) >= 3) reason = 'absender-limit'
+    if (!reason) reason = contentVerdict(text)
     if (!reason && isActive(sentBodies, bodyKey)) reason = 'duplikat'
-  } else if (recipients.some((r) => isActive(blockedSenders, r))) reason = 'gesperrter-absender'
-  else if (recipients.some((r) => isDisposable(r))) reason = 'wegwerf-adresse'
-  else if (recipients.some((r) => count('rcpt:' + r, HOUR) >= 2)) reason = 'empfaenger-limit'
+  } else {
+    for (const value of names.concat(fields)) {
+      reason = reason ?? nameVerdict(value)
+    }
+    if (!reason && recipients.some((r) => isActive(blockedSenders, r))) reason = 'gesperrter-absender'
+    if (!reason && recipients.some((r) => isDisposable(r))) reason = 'wegwerf-adresse'
+    if (!reason && recipients.some((r) => count('rcpt:' + r, HOUR) >= 2)) reason = 'empfaenger-limit'
+    if (!reason) reason = linkVerdict(text)
+  }
 
   if (reason) {
     if (ip && reason !== 'duplikat') record('strike:' + ip)
@@ -218,6 +321,26 @@ async function inspect(init?: RequestInit): Promise<Check> {
   }
 }
 
+async function report(reason: string): Promise<void> {
+  try {
+    const mod = await import('next/headers')
+    const h = await mod.headers()
+    const host = (h.get('x-forwarded-host') ?? h.get('host') ?? '').split(',')[0]?.trim().toLowerCase().replace(/^www\./, '') ?? ''
+    if (!host || host.indexOf('localhost') !== -1) return
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 2500)
+    await fetch('https://deployment-center-entwickeln.vercel.app/api/spam-events', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ host, reason, version: '2.0.0' }),
+      signal: controller.signal,
+    })
+    clearTimeout(timer)
+  } catch {
+    return
+  }
+}
+
 /** Ersatz für fetch() beim Aufruf der Brevo-API. Gleiche Signatur, gleiche Antwort. */
 export async function guardedBrevoFetch(input: Parameters<typeof fetch>[0], init?: RequestInit): Promise<Response> {
   let check: Check = { reason: null, commit: () => undefined }
@@ -228,6 +351,7 @@ export async function guardedBrevoFetch(input: Parameters<typeof fetch>[0], init
   }
   if (check.reason) {
     console.warn('[brevo-guard] Mail verworfen: ' + check.reason)
+    await report(check.reason)
     return new Response(JSON.stringify({ messageId: '<verworfen-' + check.reason + '>' }), {
       status: 201,
       headers: { 'content-type': 'application/json' },
