@@ -3,7 +3,7 @@ import { Factory } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
 
 export const metadata: Metadata = {
-  title: "Industriereinigung | Blitzeblank - Professionelle Reinigung in Luxemburg",
+  title: "Industriereinigung in Luxemburg | Blitzeblank",
   description: "Professionelle Industriereinigung in Luxemburg. Wir reinigen Produktionshallen, Lager, Werkstätten und Industrieanlagen nach höchsten Standards.",
   alternates: {
     canonical: "https://blitzeblank.lu/leistungen/industriereinigung",

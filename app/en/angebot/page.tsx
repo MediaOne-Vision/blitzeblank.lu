@@ -8,7 +8,7 @@ import { Sparkles } from "lucide-react"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "Free Quote | Blitzeblank - Professional Cleaning",
+  title: "Free Quote | Blitzeblank",
   description:
     "Calculate your no-obligation price estimate in just a few steps and request a free quote for your cleaning.",
   alternates: {

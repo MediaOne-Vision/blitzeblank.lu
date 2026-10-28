@@ -3,7 +3,7 @@ import { Mountain } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
 
 export const metadata: Metadata = {
-  title: "Stone Cleaning | Blitzeblank - Professional Cleaning in Luxembourg",
+  title: "Stone Cleaning in Luxembourg | Blitzeblank",
   description:
     "Professional stone cleaning in Luxembourg. Expert care and cleaning of natural stone, paving, terraces and outdoor areas.",
   alternates: {

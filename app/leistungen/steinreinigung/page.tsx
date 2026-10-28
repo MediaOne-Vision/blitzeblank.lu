@@ -3,7 +3,7 @@ import { Mountain } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
 
 export const metadata: Metadata = {
-  title: "Steinreinigung | Blitzeblank - Professionelle Reinigung in Luxemburg",
+  title: "Steinreinigung in Luxemburg | Blitzeblank",
   description: "Professionelle Steinreinigung in Luxemburg. Fachgerechte Pflege und Reinigung von Naturstein, Pflaster, Terrassen und Außenanlagen.",
   alternates: {
     canonical: "https://blitzeblank.lu/leistungen/steinreinigung",

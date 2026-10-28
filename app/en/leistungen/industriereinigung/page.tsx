@@ -3,7 +3,7 @@ import { Factory } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
 
 export const metadata: Metadata = {
-  title: "Industrial Cleaning | Blitzeblank - Professional Cleaning in Luxembourg",
+  title: "Industrial Cleaning in Luxembourg | Blitzeblank",
   description:
     "Professional industrial cleaning in Luxembourg. We clean production halls, warehouses, workshops and industrial facilities to the highest standards.",
   alternates: {

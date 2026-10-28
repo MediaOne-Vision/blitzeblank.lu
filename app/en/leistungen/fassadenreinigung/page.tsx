@@ -3,7 +3,7 @@ import { Building2 } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
 
 export const metadata: Metadata = {
-  title: "Facade Cleaning | Blitzeblank - Professional Cleaning in Luxembourg",
+  title: "Facade Cleaning in Luxembourg | Blitzeblank",
   description:
     "Professional facade cleaning in Luxembourg. Exterior cleaning for building facades of all kinds - from office buildings to industrial sites.",
   alternates: {

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { HomeContent } from "@/components/home-content"
 
 export const metadata: Metadata = {
-  title: "Blitzeblank | Professional Cleaning Services in Luxembourg, Trier & Bitburg",
+  title: "Blitzeblank | Cleaning Services Luxembourg, Trier & Bitburg",
   description:
     "Blitzeblank offers professional industrial, window, stone and facade cleaning in Luxembourg, Trier, Bitburg and the surrounding region. Fast response times, free on-site assessment and transparent communication.",
   keywords: [

@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import { FileText, MapPin, Phone, Mail, Shield, User, Scale } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Legal Notice | Blitzeblank - Professional Cleaning in Luxembourg",
+  title: "Legal Notice | Blitzeblank",
   description: "Legal notice and legal information for BLITZEBLANK S.à r.l., Mustapha El-Ali, Waldbillig.",
   alternates: {
     canonical: "https://blitzeblank.lu/en/impressum",

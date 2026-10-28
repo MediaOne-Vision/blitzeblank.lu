@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Calculator, Quote, Shield, Heart, Target, Handshake, Compass, Sparkles } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Über uns | Blitzeblank - Professionelle Reinigung in Luxemburg",
+  title: "Über uns | Blitzeblank Luxemburg",
   description: "Lernen Sie Blitzeblank kennen. Erfahren Sie mehr über unseren Gründer Mustapha El-Ali und unsere Werte für professionelle Reinigungsdienstleistungen.",
   alternates: {
     canonical: "https://blitzeblank.lu/ueber-uns",

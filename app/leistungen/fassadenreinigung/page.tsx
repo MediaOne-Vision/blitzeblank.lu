@@ -3,7 +3,7 @@ import { Building2 } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
 
 export const metadata: Metadata = {
-  title: "Fassadenreinigung | Blitzeblank - Professionelle Reinigung in Luxemburg",
+  title: "Fassadenreinigung in Luxemburg | Blitzeblank",
   description: "Professionelle Fassadenreinigung in Luxemburg. Außenreinigung für Gebäudefassaden aller Art - vom Bürogebäude bis zur Industrieanlage.",
   alternates: {
     canonical: "https://blitzeblank.lu/leistungen/fassadenreinigung",

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Quote, Shield, Heart, Target, Handshake, Compass, Sparkles } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "About Us | Blitzeblank - Professional Cleaning in Luxembourg",
+  title: "About Us | Blitzeblank Luxembourg",
   description:
     "Get to know Blitzeblank. Learn more about our founder Mustapha El-Ali and our values for professional cleaning services.",
   alternates: {

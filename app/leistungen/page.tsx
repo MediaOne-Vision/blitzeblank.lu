@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { LeistungenContent } from "@/components/leistungen-content"
 
 export const metadata: Metadata = {
-  title: "Leistungen | Blitzeblank - Professionelle Reinigung in Luxemburg",
+  title: "Leistungen | Blitzeblank Luxemburg",
   description:
     "Entdecken Sie unsere professionellen Reinigungsdienstleistungen: Industriereinigung, Fensterreinigung, Steinreinigung und Fassadenreinigung.",
   alternates: {

@@ -8,7 +8,7 @@ import { Sparkles } from "lucide-react"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "Kostenloses Angebot | Blitzeblank - Professionelle Reinigung",
+  title: "Kostenloses Angebot | Blitzeblank",
   description:
     "Berechnen Sie in wenigen Schritten Ihren unverbindlichen Richtpreis und fordern Sie ein kostenloses Angebot für Ihre Reinigung an.",
   alternates: {
