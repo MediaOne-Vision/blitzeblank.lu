@@ -41,6 +41,19 @@ const TEXT = {
     cta: "Calculate Price Now",
     ctaSecondary: "Book a Consultation",
   },
+  fr: {
+    free: "Gratuit et sans engagement",
+    freeShort: "Sans engagement et gratuit",
+    eyebrow: "2 minutes, gratuit et sans engagement",
+    headingFor: "Devis gratuit pour",
+    heading: "Calculez votre devis gratuit",
+    body: "En quelques étapes seulement, obtenez votre estimation sans engagement - remises de volume incluses pour un nettoyage régulier.",
+    fast: "Terminé en 2 minutes",
+    instant: "Estimation de prix immédiate",
+    calculator: "Calculateur de prix",
+    cta: "Calculer le prix maintenant",
+    ctaSecondary: "Prendre rendez-vous pour un conseil",
+  },
 }
 
 export function QuoteBanner({ slug, serviceTitle, ctaHref, locale = "de" }: QuoteBannerProps) {

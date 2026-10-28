@@ -25,6 +25,16 @@ const TEXT = {
     quote: "Create an offer online",
     trustValues: ["We reply within 24 hours", "Free on-site visit", "Transparent, fair pricing", "Quality guarantee included"],
   },
+  fr: {
+    badge: "Nettoyage professionnel pour entreprises",
+    heading: "Propreté éclatante.",
+    headingAccent: "Garantie.",
+    bodyBefore: "Du nettoyage industriel à l'entretien des façades : des solutions de nettoyage sur mesure pour les entreprises à",
+    regions: "Luxembourg, Trèves, Bitburg et dans la région.",
+    consult: "Conseil gratuit",
+    quote: "Créer un devis en ligne",
+    trustValues: ["Réponse sous 24 heures", "Visite sur place gratuite", "Tarifs transparents et équitables", "Garantie de qualité incluse"],
+  },
 }
 
 export function HeroSection({ locale = "de" }: { locale?: Locale }) {

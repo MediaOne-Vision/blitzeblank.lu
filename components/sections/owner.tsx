@@ -34,6 +34,20 @@ const TEXT = {
     cta: "Get to Know Me",
     badges: ["Personal Advice", "High Quality Standards", "Long-Term Partnership"],
   },
+  fr: {
+    eyebrow: "Votre interlocuteur",
+    nameLine1: "Mustapha El-Ali",
+    nameLine2: "Un fondateur exigeant.",
+    portraitAlt:
+      "Mustapha El-Ali, fondateur et gérant de Blitzeblank, en t-shirt d'entreprise noir, la main tendue pour saluer",
+    quote: "La propreté n'est pas seulement un métier pour moi, c'est une passion.",
+    paragraph1:
+      "Je m'appelle Mustapha El-Ali, fondateur et propriétaire de Blitzeblank. Fort de plusieurs années d'expérience dans le nettoyage professionnel, je m'occupe de clients professionnels et particuliers avec une exigence claire : un travail minutieux, des processus établis et une fiabilité absolue.",
+    paragraph2:
+      "Chaque site est planifié personnellement et contrôlé régulièrement, avec le soutien d'une équipe expérimentée qui travaille selon des normes de qualité claires. C'est ainsi que naît une propreté sur laquelle vous pouvez compter.",
+    cta: "Faire connaissance",
+    badges: ["Conseil personnalisé", "Haut niveau d'exigence", "Collaboration à long terme"],
+  },
 }
 
 export function OwnerSection({ locale = "de" }: { locale?: Locale }) {

@@ -75,6 +75,26 @@ const TEXT = {
     quoteBody:
       "Fill out the form right here - non-binding, free, and without being redirected. You'll get an instant price estimate.",
   },
+  fr: {
+    services: "Prestations",
+    activeIn: "Actif à Luxembourg, Trèves, Bitburg et dans la région",
+    freeConsult: "Conseil gratuit",
+    freeQuote: "Devis gratuit",
+    detailEyebrow: "En détail",
+    detailHeading: "Nos prestations en détail",
+    benefitsEyebrow: "Vos avantages",
+    benefitsHeading: "Ce sur quoi vous pouvez compter",
+    processHeading: "Notre déroulement",
+    resultsEyebrow: "Résultats",
+    resultsHeading: "Voyez la différence",
+    resultsBody: "Faites glisser le curseur pour comparer le résultat avant et après.",
+    moreImpressions: "Plus d'aperçus",
+    quoteEyebrow: "Devis gratuit",
+    quoteHeadingPrefix: "Votre estimation pour",
+    quoteHeadingSuffix: "- en 2 minutes",
+    quoteBody:
+      "Remplissez le formulaire directement ici - sans engagement, gratuit et sans redirection. Vous recevez immédiatement une estimation de prix.",
+  },
 }
 
 export function ServicePageTemplate({

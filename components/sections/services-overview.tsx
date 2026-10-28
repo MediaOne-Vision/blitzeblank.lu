@@ -68,6 +68,36 @@ const SERVICES = {
       bullets: ["Natural stone", "Paving", "Terraces", "Steps", "Masonry"],
     },
   ],
+  fr: [
+    {
+      title: "Nettoyage industriel",
+      href: "/leistungen/industriereinigung",
+      image: "/images/leistungen/industriereinigung-reinraum-industriesauger-skyvac.avif",
+      imageAlt: "Employé en combinaison de protection nettoyant un faux plancher industriel avec un aspirateur industriel",
+      bullets: ["Sols de halls", "Plafonds et murs", "Machines", "Entrepôts", "Ventilation"],
+    },
+    {
+      title: "Nettoyage de vitres",
+      href: "/leistungen/fensterreinigung",
+      image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
+      imageAlt: "Véranda en verre nettoyée avec des surfaces vitrées claires",
+      bullets: ["Fenêtres de bureaux", "Vitrines", "Façades vitrées", "Vérandas", "Panneaux solaires"],
+    },
+    {
+      title: "Nettoyage de façades",
+      href: "/leistungen/fassadenreinigung",
+      image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
+      imageAlt: "Façade propre et claire d'un immeuble collectif après le nettoyage de façade",
+      bullets: ["Façades crépies", "Façades en brique", "Façades métalliques", "Façades vitrées", "Façades en béton"],
+    },
+    {
+      title: "Nettoyage de pierre",
+      href: "/leistungen/steinreinigung",
+      image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
+      imageAlt: "Terrasse en pierre naturelle nettoyée avec des dalles polygonales",
+      bullets: ["Pierre naturelle", "Pavés", "Terrasses", "Escaliers", "Maçonnerie"],
+    },
+  ],
 }
 
 const TEXT = {
@@ -84,6 +114,13 @@ const TEXT = {
     headingLine2: "every need.",
     viewAll: "View all services",
     ctaText: "Discover our full range of services",
+  },
+  fr: {
+    eyebrow: "Prestations",
+    headingLine1: "Un nettoyage pour",
+    headingLine2: "chaque exigence.",
+    viewAll: "Voir toutes les prestations",
+    ctaText: "Découvrez toute notre gamme de prestations",
   },
 }
 
@@ -258,6 +295,12 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
                   Entdecken Sie unser
                   <br />
                   komplettes Leistungsspektrum
+                </>
+              ) : locale === "fr" ? (
+                <>
+                  Découvrez toute notre
+                  <br />
+                  gamme de prestations
                 </>
               ) : (
                 <>

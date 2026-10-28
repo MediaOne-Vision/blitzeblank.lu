@@ -5,8 +5,10 @@ export interface ServiceItem {
   slug: string
   title: string
   titleEn: string
+  titleFr: string
   shortDescription: string
   shortDescriptionEn: string
+  shortDescriptionFr: string
   href: string
   icon: LucideIcon
   imageQuery: string
@@ -24,6 +26,9 @@ export const services: ServiceItem[] = [
       "Streifenfreie Glasreinigung für Bürogebäude, Geschäfte und Industrieanlagen jeder Größe.",
     shortDescriptionEn:
       "Streak-free glass cleaning for office buildings, shops and industrial sites of any size.",
+    titleFr: "Nettoyage de vitres",
+    shortDescriptionFr:
+      "Nettoyage de vitres sans traces pour bureaux, commerces et sites industriels de toute taille.",
     href: "/leistungen/fensterreinigung",
     icon: Grid3X3,
     imageQuery: "clean+modern+glass+office+windows+reflection+blue+sky",
@@ -36,6 +41,9 @@ export const services: ServiceItem[] = [
       "Professionelle Außenreinigung für Gebäudefassaden aller Art - vom Bürogebäude bis zur Industrieanlage.",
     shortDescriptionEn:
       "Professional exterior cleaning for building facades of all kinds - from office buildings to industrial sites.",
+    titleFr: "Nettoyage de façades",
+    shortDescriptionFr:
+      "Nettoyage extérieur professionnel pour tous types de façades - des immeubles de bureaux aux sites industriels.",
     href: "/leistungen/fassadenreinigung",
     icon: Building2,
     imageQuery: "modern+building+facade+exterior+cleaning+architecture",
@@ -48,6 +56,9 @@ export const services: ServiceItem[] = [
       "Fachgerechte Pflege und Reinigung von Naturstein, Pflaster, Terrassen und Außenanlagen.",
     shortDescriptionEn:
       "Expert care and cleaning of natural stone, paving, terraces and outdoor areas.",
+    titleFr: "Nettoyage de pierre",
+    shortDescriptionFr:
+      "Entretien et nettoyage professionnels de la pierre naturelle, des pavés, des terrasses et des aménagements extérieurs.",
     href: "/leistungen/steinreinigung",
     icon: Mountain,
     imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
@@ -60,6 +71,9 @@ export const services: ServiceItem[] = [
       "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen nach höchsten Standards.",
     shortDescriptionEn:
       "Professional cleaning of production halls, warehouses and industrial facilities to the highest standards.",
+    titleFr: "Nettoyage industriel",
+    shortDescriptionFr:
+      "Nettoyage professionnel de halls de production, d'entrepôts et d'installations industrielles selon les normes les plus strictes.",
     href: "/leistungen/industriereinigung",
     icon: Factory,
     imageQuery: "industrial+factory+production+hall+clean+polished+floor",
@@ -70,8 +84,9 @@ export const services: ServiceItem[] = [
 export function getLocalizedServices(locale: Locale) {
   return services.map((s) => ({
     ...s,
-    title: locale === "en" ? s.titleEn : s.title,
-    shortDescription: locale === "en" ? s.shortDescriptionEn : s.shortDescription,
+    title: locale === "en" ? s.titleEn : locale === "fr" ? s.titleFr : s.title,
+    shortDescription:
+      locale === "en" ? s.shortDescriptionEn : locale === "fr" ? s.shortDescriptionFr : s.shortDescription,
     href: localizeHref(s.href, locale),
   }))
 }

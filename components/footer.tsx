@@ -17,6 +17,12 @@ const SERVICES = {
     { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
     { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
   ],
+  fr: [
+    { href: "/leistungen/industriereinigung", label: "Nettoyage industriel" },
+    { href: "/leistungen/fensterreinigung", label: "Nettoyage de vitres" },
+    { href: "/leistungen/steinreinigung", label: "Nettoyage de pierre" },
+    { href: "/leistungen/fassadenreinigung", label: "Nettoyage de façades" },
+  ],
 }
 
 const NAVIGATION = {
@@ -33,6 +39,13 @@ const NAVIGATION = {
     { href: "/leistungen", label: "Services" },
     { href: "/angebot", label: "Free Quote" },
     { href: "/ueber-uns", label: "About Us" },
+    { href: "/kontakt", label: "Contact" },
+  ],
+  fr: [
+    { href: "/", label: "Accueil" },
+    { href: "/leistungen", label: "Prestations" },
+    { href: "/angebot", label: "Devis gratuit" },
+    { href: "/ueber-uns", label: "À propos" },
     { href: "/kontakt", label: "Contact" },
   ],
 }
@@ -57,6 +70,16 @@ const TEXT = {
     rights: "All rights reserved.",
     impressum: "Legal Notice",
     datenschutz: "Privacy Policy",
+  },
+  fr: {
+    tagline:
+      "Votre partenaire pour des services de nettoyage professionnels à Luxembourg, Trèves, Bitburg et dans la région. Fiable, minutieux et transparent.",
+    navHeading: "Navigation",
+    servicesHeading: "Prestations",
+    contactHeading: "Contact",
+    rights: "Tous droits réservés.",
+    impressum: "Mentions légales",
+    datenschutz: "Politique de confidentialité",
   },
 }
 

@@ -36,7 +36,7 @@ export interface QuoteSubmission {
   /** Eindeutige Anfrage-ID (z. B. BB-2026-00417) zur Korrelation mit dem Conversion-Tracking */
   leadId?: string
   /** Sprache des Kunden – steuert nur die Kunden-Bestätigungsmail, die interne Mail bleibt Deutsch */
-  locale?: "de" | "en"
+  locale?: "de" | "en" | "fr"
 }
 
 /** Blitzeblank Markenfarben (CI) */
@@ -102,10 +102,26 @@ const SUMMARY_LABELS = {
     date: "Preferred Date",
     onRequest: "On Request",
   },
+  fr: {
+    service: "Prestation",
+    customerType: "Type de client",
+    commercial: "Professionnel",
+    private: "Particulier",
+    details: "Détails",
+    windowCount: "Nombre de fenêtres",
+    breakdown: "Détail",
+    area: "Surface",
+    frequency: "Fréquence",
+    address: "Adresse",
+    distance: "Distance",
+    distancePrefix: "env.",
+    date: "Date souhaitée",
+    onRequest: "Sur demande",
+  },
 }
 
 /** Baut die gemeinsamen Eckdaten der Anfrage als Liste von Label/Wert-Paaren */
-function buildSummaryRows(s: QuoteSubmission, locale: "de" | "en" = "de"): { label: string; value: string }[] {
+function buildSummaryRows(s: QuoteSubmission, locale: "de" | "en" | "fr" = "de"): { label: string; value: string }[] {
   const l = SUMMARY_LABELS[locale]
   const rows: { label: string; value: string }[] = [{ label: l.service, value: s.serviceLabel }]
 
@@ -138,7 +154,7 @@ function buildSummaryRows(s: QuoteSubmission, locale: "de" | "en" = "de"): { lab
 }
 
 /** Preis-Text für die Anzeige (Richtpreis oder "auf Anfrage") */
-function priceText(s: QuoteSubmission, locale: "de" | "en" = "de"): string {
+function priceText(s: QuoteSubmission, locale: "de" | "en" | "fr" = "de"): string {
   if (s.estimatedMin === 0 && s.estimatedMax === 0) return SUMMARY_LABELS[locale].onRequest
   if (s.estimatedMin === s.estimatedMax) return euro(s.estimatedMin)
   return `${euro(s.estimatedMin)} – ${euro(s.estimatedMax)}`
@@ -216,7 +232,7 @@ const CONTACT = {
 }
 
 /** Kontakt-CTA-Block (Telefon + E-Mail) im Blitzeblank-Look */
-function contactCta(locale: "de" | "en" = "de"): string {
+function contactCta(locale: "de" | "en" | "fr" = "de"): string {
   const ct = CUSTOMER_TEXT[locale]
   return `
     <div style="border:1px dashed ${COLORS.blue};border-radius:14px;padding:20px 22px;margin-bottom:22px;background-color:${COLORS.mint};">
@@ -292,6 +308,38 @@ const CUSTOMER_TEXT = {
     contactCtaTitle: "You can reach us directly",
     contactPhoneLabel: "Phone:",
     contactEmailLabel: "Email:",
+  },
+  fr: {
+    summaryTitle: "Récapitulatif de votre demande",
+    priceLabel: "Prix indicatif sans engagement",
+    photoNote: (n: number) => `Nous avons bien reçu vos ${n} photo${n === 1 ? "" : "s"} téléversée${n === 1 ? "" : "s"}.`,
+    declinedBadge: "Dommage que cela n'ait pas convenu cette fois",
+    declinedHeadline: (name: string) => `Restons en contact, ${name} ?`,
+    declinedIntro:
+      "Nous avons vu que notre prix indicatif ne vous convenait pas encore – ce n'est absolument pas un problème.",
+    declinedBody1: `Notre estimation en ligne est volontairement prudente et ne tient pas encore compte des particularités de votre site. Sur place, nous trouvons souvent une <strong>offre plus juste et mieux adaptée</strong> – surtout pour des missions récurrentes ou plusieurs prestations combinées.`,
+    declinedBody2:
+      "Appelez-nous simplement ou écrivez-nous – nous verrons ensemble comment nous pouvons tout de même vous aider. Sans aucun engagement.",
+    declinedClosing: "Nous serions ravis de vous accueillir tout de même comme client !",
+    declinedTextBody: [
+      "Dommage que notre estimation en ligne ne vous ait pas convaincu - ce n'est pas un problème.",
+      "",
+      "Notre estimation est volontairement prudente. Sur place, nous trouvons souvent une offre",
+      "plus juste et mieux adaptée. Appelez-nous ou écrivez-nous - sans aucun engagement.",
+    ],
+    declinedSubject: "Restons en contact ? – Votre demande chez Blitzeblank",
+    acceptedBadge: "Votre demande chez Blitzeblank",
+    acceptedHeadline: (name: string) => `Merci, ${name} !`,
+    acceptedIntro: "Nous avons bien reçu votre demande et vous contacterons très prochainement.",
+    acceptedClosing: "Pour toute question, vous pouvez nous joindre à tout moment. Nous nous réjouissons de travailler pour vous !",
+    acceptedTextIntro: "Nous avons bien reçu votre demande et vous contacterons très prochainement.",
+    acceptedSubject: (serviceLabel: string) => `Votre demande chez Blitzeblank – ${serviceLabel}`,
+    summaryLabel: "Récapitulatif :",
+    priceTextLabel: "Prix indicatif sans engagement :",
+    photosLabel: "Photos téléversées :",
+    contactCtaTitle: "Vous pouvez nous joindre directement",
+    contactPhoneLabel: "Téléphone :",
+    contactEmailLabel: "E-mail :",
   },
 }
 

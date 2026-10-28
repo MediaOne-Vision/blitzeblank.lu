@@ -21,6 +21,14 @@ const FEATURES = {
     { icon: GitFork, title: "Flexibility", text: "Short-notice scheduling and fast response times." },
     { icon: UserCircle, title: "Personal Contact", text: "One dedicated point of contact for all your needs." },
   ],
+  fr: [
+    { icon: Clock, title: "Réactivité", text: "Réponse à votre demande sous 24 heures." },
+    { icon: ShieldCheck, title: "Garantie de qualité", text: "Surface test disponible sur demande." },
+    { icon: MapPin, title: "Visite gratuite", text: "Rendez-vous sur place pour un devis précis - gratuit." },
+    { icon: CircleDollarSign, title: "Tarifs transparents", text: "Des conditions équitables, sans frais cachés." },
+    { icon: GitFork, title: "Flexibilité", text: "Prise de rendez-vous à court terme et délais de réaction rapides." },
+    { icon: UserCircle, title: "Contact personnel", text: "Un interlocuteur attitré pour toutes vos demandes." },
+  ],
 }
 
 const TEXT = {
@@ -37,6 +45,13 @@ const TEXT = {
     body: "Since our founding, Blitzeblank has stood for professional cleaning with heart. We understand that cleanliness is more than just hygiene - it creates a pleasant working environment and leaves a lasting impression on your customers.",
     ctaText: "See for yourself - we're happy to advise you, no obligation.",
     ctaButton: "Request a Free Consultation",
+  },
+  fr: {
+    eyebrow: "À propos",
+    heading: "La confiance des entreprises",
+    body: "Depuis sa création, Blitzeblank incarne un nettoyage professionnel fait avec cœur. Nous savons que la propreté est bien plus que de l'hygiène : elle crée un environnement de travail agréable et laisse une impression durable à vos clients.",
+    ctaText: "Convainquez-vous par vous-même - nous vous conseillons volontiers, sans engagement.",
+    ctaButton: "Demander un conseil sans engagement",
   },
 }
 

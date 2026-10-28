@@ -17,6 +17,12 @@ const SERVICE_LINKS = {
     { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
     { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
   ],
+  fr: [
+    { href: "/leistungen/industriereinigung", label: "Nettoyage industriel" },
+    { href: "/leistungen/fensterreinigung", label: "Nettoyage de vitres" },
+    { href: "/leistungen/steinreinigung", label: "Nettoyage de pierre" },
+    { href: "/leistungen/fassadenreinigung", label: "Nettoyage de façades" },
+  ],
 }
 
 const TEXT = {
@@ -60,6 +66,27 @@ const TEXT = {
     home: "Back to Home",
     moreServices: "Request Another Service",
     ourServices: "Our Services",
+  },
+  fr: {
+    titleAccepted: "Merci pour votre confiance !",
+    titleDeclined: "Dommage – restons en contact ?",
+    bodyAccepted: (
+      <>
+        Nous avons bien reçu votre demande. Nous vous avons envoyé par e-mail une confirmation avec
+        le récapitulatif. Nous vous contacterons très prochainement pour convenir d&apos;un rendez-vous
+        pour la visite gratuite sur place.
+      </>
+    ),
+    bodyDeclined: (
+      <>
+        Nous avons bien reçu votre demande. Notre estimation en ligne est volontairement calculée
+        avec prudence &ndash; sur place, nous pouvons souvent proposer une offre plus juste et mieux
+        adaptée. Appelez-nous simplement, nous chercherons une solution ensemble.
+      </>
+    ),
+    home: "Retour à l'accueil",
+    moreServices: "Demander une autre prestation",
+    ourServices: "Nos prestations",
   },
 }
 

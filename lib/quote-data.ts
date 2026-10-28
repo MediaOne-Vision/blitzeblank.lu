@@ -28,17 +28,77 @@ export interface QuoteService {
   detail: QuoteServiceOption
 }
 
-/** Liefert Services / Detail-Optionen mit englischem Label, falls locale === "en". */
-export function getLocalizedQuoteServices(locale: "de" | "en") {
-  return quoteServices.map((s) => ({
-    ...s,
-    label: locale === "en" ? s.labelEn : s.label,
-    detail: {
-      ...s.detail,
-      optionLabel: locale === "en" ? s.detail.optionLabelEn : s.detail.optionLabel,
-      options: locale === "en" ? s.detail.optionsEn : s.detail.options,
-    },
-  }))
+type QuoteLocale = "de" | "en" | "fr"
+
+const FR_SERVICES: Record<string, { label: string; optionLabel: string; options: string[] }> = {
+  fenster: {
+    label: "Nettoyage de vitres",
+    optionLabel: "Quel type de fenêtres ?",
+    options: [
+      "Fenêtres de bureau",
+      "Vitrines",
+      "Façades vitrées",
+      "Vitrage industriel",
+      "Vitrage spécial",
+      "Fenêtres de toit",
+    ],
+  },
+  stein: {
+    label: "Nettoyage de pierre",
+    optionLabel: "Quel type de pierre ?",
+    options: ["Pierre naturelle", "Surfaces pavées", "Terrasse", "Escalier extérieur", "Maçonnerie", "Béton"],
+  },
+  fassade: {
+    label: "Nettoyage de façades",
+    optionLabel: "Quel matériau de façade ?",
+    options: [
+      "Façade crépie",
+      "Façade en brique",
+      "Façade métallique",
+      "Façade vitrée",
+      "Façade en béton",
+      "Suppression de graffitis",
+    ],
+  },
+}
+
+const FR_FREQUENCIES: Record<string, string> = {
+  einmalig: "Ponctuel",
+  monatlich: "Mensuel",
+  quartalsweise: "Trimestriel",
+  halbjaehrlich: "Semestriel",
+}
+
+const FR_WINDOW_TYPES: Record<string, { label: string; dimension: string }> = {
+  xs: { label: "Fenêtre XS", dimension: "jusqu'à env. 40 × 40 cm" },
+  s: { label: "Fenêtre S", dimension: "env. 60 × 60 cm" },
+  m: { label: "Fenêtre M", dimension: "env. 100 × 100 cm" },
+  l: { label: "Fenêtre L", dimension: "env. 120 × 120 cm" },
+  xl: { label: "Fenêtre XL", dimension: "env. 120 × 150 cm" },
+  xxl: { label: "Fenêtre XXL", dimension: "env. 120 × 170 cm" },
+  front: { label: "Baie vitrée", dimension: "grande surface vitrée continue" },
+  terrasse: { label: "Fenêtre de terrasse", dimension: "vitrage jusqu'au sol" },
+  "glastuer-m": { label: "Porte vitrée M", dimension: "porte vitrée standard" },
+  "glastuer-l": { label: "Porte vitrée L", dimension: "grande porte vitrée" },
+  "glastuer-xl": { label: "Porte vitrée XL", dimension: "très grande porte vitrée" },
+  rollladen: { label: "Volet roulant", dimension: "facturé au m²" },
+}
+
+/** Liefert Services / Detail-Optionen in der gewünschten Sprache. */
+export function getLocalizedQuoteServices(locale: QuoteLocale) {
+  return quoteServices.map((s) => {
+    const fr = FR_SERVICES[s.value]
+    return {
+      ...s,
+      label: locale === "fr" && fr ? fr.label : locale === "en" ? s.labelEn : s.label,
+      detail: {
+        ...s.detail,
+        optionLabel:
+          locale === "fr" && fr ? fr.optionLabel : locale === "en" ? s.detail.optionLabelEn : s.detail.optionLabel,
+        options: locale === "fr" && fr ? fr.options : locale === "en" ? s.detail.optionsEn : s.detail.options,
+      },
+    }
+  })
 }
 
 /** Anfahrtskosten: 2,00 € pro gefahrenem Kilometer */
@@ -164,8 +224,11 @@ export const quoteFrequencies: QuoteFrequency[] = [
   { value: "halbjaehrlich", label: "Halbjährlich", labelEn: "Semi-annually", multiplier: 0.98, discount: 2 },
 ]
 
-export function getLocalizedQuoteFrequencies(locale: "de" | "en") {
-  return quoteFrequencies.map((f) => ({ ...f, label: locale === "en" ? f.labelEn : f.label }))
+export function getLocalizedQuoteFrequencies(locale: QuoteLocale) {
+  return quoteFrequencies.map((f) => ({
+    ...f,
+    label: locale === "fr" ? (FR_FREQUENCIES[f.value] ?? f.label) : locale === "en" ? f.labelEn : f.label,
+  }))
 }
 
 export function getQuoteServiceBySlug(slug: string): QuoteService | undefined {
@@ -214,12 +277,15 @@ export function getWindowType(value: string): WindowType | undefined {
   return windowTypes.find((t) => t.value === value)
 }
 
-export function getLocalizedWindowTypes(locale: "de" | "en") {
-  return windowTypes.map((t) => ({
-    ...t,
-    label: locale === "en" ? t.labelEn : t.label,
-    dimension: locale === "en" ? t.dimensionEn : t.dimension,
-  }))
+export function getLocalizedWindowTypes(locale: QuoteLocale) {
+  return windowTypes.map((t) => {
+    const fr = FR_WINDOW_TYPES[t.value]
+    return {
+      ...t,
+      label: locale === "fr" && fr ? fr.label : locale === "en" ? t.labelEn : t.label,
+      dimension: locale === "fr" && fr ? fr.dimension : locale === "en" ? t.dimensionEn : t.dimension,
+    }
+  })
 }
 
 /** Eine Zeile pro ausgewählter Fensterart: Fensterart + Menge (Stück bzw. m²) */

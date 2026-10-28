@@ -14,6 +14,12 @@ const STEPS = {
     { number: "03", icon: Sparkles, title: "Professional Cleaning", description: "Our trained team carries out the cleaning to the highest standards - on time and thoroughly." },
     { number: "04", icon: ThumbsUp, title: "Your Satisfaction", description: "Once finished, we review the result together. Your satisfaction is our benchmark." },
   ],
+  fr: [
+    { number: "01", icon: Phone, title: "Prendre contact", description: "Appelez-nous ou utilisez notre formulaire de contact. Nous vous répondons sous 24 heures." },
+    { number: "02", icon: ClipboardCheck, title: "Visite gratuite", description: "Nous visitons vos locaux sur place et établissons un devis sur mesure." },
+    { number: "03", icon: Sparkles, title: "Nettoyage professionnel", description: "Notre équipe formée réalise le nettoyage selon les normes les plus strictes - dans les délais et avec rigueur." },
+    { number: "04", icon: ThumbsUp, title: "Votre satisfaction", description: "Une fois le travail terminé, nous contrôlons ensemble le résultat. Votre satisfaction est notre référence." },
+  ],
 }
 
 const TEXT = {
@@ -26,6 +32,11 @@ const TEXT = {
     eyebrow: "Process",
     heading: "Four Steps to Spotless",
     body: "From first contact to sparkling result: simple, transparent and straightforward.",
+  },
+  fr: {
+    eyebrow: "Déroulement",
+    heading: "La propreté en quatre étapes",
+    body: "Du premier contact au résultat éclatant : simple, transparent et sans détour.",
   },
 }
 
