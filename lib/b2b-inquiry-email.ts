@@ -24,7 +24,7 @@ export interface B2BInquirySubmission {
   service: "window_cleaning"
   formType: "b2b_site_visit"
   /** Sprache des Kunden – steuert nur die Kundenbestätigung */
-  locale: "de" | "en"
+  locale: "de" | "en" | "fr"
   /** Eindeutige Anfrage-ID zur Korrelation mit dem Tracking */
   leadId?: string
 }
@@ -190,6 +190,25 @@ const CUSTOMER_TEXT = {
       cleaningNeed: "Cleaning needs",
     },
   },
+  fr: {
+    badge: "Votre demande chez Blitzeblank",
+    headline: (name: string) => `Merci, ${name} !`,
+    intro:
+      "Nous avons bien reçu votre demande de visite gratuite du site et vous contacterons pour convenir des prochaines étapes.",
+    summaryTitle: "Vos informations",
+    note: "Cette demande ne constitue pas encore une commande de nettoyage. Nous convenons d'abord ensemble d'une visite du site et de vos besoins.",
+    contactTitle: "Vous pouvez nous joindre directement",
+    phoneLabel: "Téléphone :",
+    emailLabel: "E-mail :",
+    subject: "Votre demande chez Blitzeblank – Nettoyage de vitres",
+    labels: {
+      company: "Entreprise",
+      contact: "Interlocuteur",
+      location: "Code postal / ville",
+      objectType: "Type de site",
+      cleaningNeed: "Besoin de nettoyage",
+    },
+  },
 }
 
 const OBJECT_TYPE_LABELS_EN: Record<B2BObjectType, string> = {
@@ -199,10 +218,23 @@ const OBJECT_TYPE_LABELS_EN: Record<B2BObjectType, string> = {
   sonstiges: "Other",
 }
 
+const OBJECT_TYPE_LABELS_FR: Record<B2BObjectType, string> = {
+  buero: "Bureau",
+  geschaeft: "Commerce / vitrine",
+  gewerbe: "Bâtiment commercial",
+  sonstiges: "Autre",
+}
+
 const CLEANING_NEED_LABELS_EN: Record<Exclude<B2BCleaningNeed, "">, string> = {
   einmalig: "One-time",
   regelmaessig: "Recurring",
   offen: "Still open",
+}
+
+const CLEANING_NEED_LABELS_FR: Record<Exclude<B2BCleaningNeed, "">, string> = {
+  einmalig: "Ponctuel",
+  regelmaessig: "Régulier",
+  offen: "Pas encore décidé",
 }
 
 /** Bestätigungs-E-Mail an den Anfragenden. */
@@ -211,11 +243,18 @@ export function buildB2BCustomerEmail(s: B2BInquirySubmission, logoSrc = "cid:bl
   const ct = CUSTOMER_TEXT[locale]
   const firstName = s.contactPerson.split(" ")[0] || s.contactPerson
 
-  const objectLabel = locale === "en" ? OBJECT_TYPE_LABELS_EN[s.objectType] : objectTypeLabel(s.objectType)
+  const objectLabel =
+    locale === "fr"
+      ? OBJECT_TYPE_LABELS_FR[s.objectType]
+      : locale === "en"
+        ? OBJECT_TYPE_LABELS_EN[s.objectType]
+        : objectTypeLabel(s.objectType)
   const needLabel = s.cleaningNeed
-    ? locale === "en"
-      ? CLEANING_NEED_LABELS_EN[s.cleaningNeed]
-      : cleaningNeedLabel(s.cleaningNeed)
+    ? locale === "fr"
+      ? CLEANING_NEED_LABELS_FR[s.cleaningNeed]
+      : locale === "en"
+        ? CLEANING_NEED_LABELS_EN[s.cleaningNeed]
+        : cleaningNeedLabel(s.cleaningNeed)
     : "—"
 
   const rows: { label: string; value: string }[] = [

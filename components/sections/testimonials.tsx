@@ -43,6 +43,26 @@ const TESTIMONIALS = {
       accent: "text-brand-blue",
     },
   ],
+  fr: [
+    {
+      quote:
+        "Super service ! Après une visite sur place, un rendez-vous à court terme a été fixé. Le travail a été réalisé dans les délais et très proprement. La cour (environ 250 m²) était méconnaissable après coup. Et tout cela en moins de 2 jours et à un prix excellent ! Je recommande vivement !",
+      author: "Stefan Klein",
+      accent: "text-brand-blue",
+    },
+    {
+      quote:
+        "Après un nettoyage test gratuit, nous avons choisi ce service et nous sommes plus qu'enthousiastes. Avec notre nettoyeur haute pression habituel, nous n'aurions jamais obtenu un aussi beau résultat. Bon rapport qualité-prix et date d'intervention rapide.",
+      author: "Anika Schwarz",
+      accent: "text-brand-teal",
+    },
+    {
+      quote:
+        "Nous avons été très satisfaits du service. Des plafonds en bois ont été nettoyés et le résultat est superbe. Suite à ma demande, nous avons obtenu rapidement un rendez-vous sur place avec une offre tout aussi intéressante. Nous confierons à coup sûr d'autres projets à cette entreprise.",
+      author: "Bernd Goeblet",
+      accent: "text-brand-blue",
+    },
+  ],
 }
 
 const TEXT = {
@@ -55,6 +75,11 @@ const TEXT = {
     eyebrow: "References",
     heading: "What Our Customers Say",
     badge: "Real Google Reviews",
+  },
+  fr: {
+    eyebrow: "Références",
+    heading: "Ce que disent nos clients",
+    badge: "De vrais avis Google",
   },
 }
 

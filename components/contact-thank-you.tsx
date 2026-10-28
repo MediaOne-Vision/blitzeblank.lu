@@ -17,6 +17,12 @@ const TEXT = {
     home: "Back to Home",
     call: "Urgent? Give us a call",
   },
+  fr: {
+    title: "Merci pour votre message !",
+    body: "Nous avons bien reçu votre demande et vous avons envoyé une confirmation par e-mail. Nous vous répondrons dans un délai de 24 heures.",
+    home: "Retour à l'accueil",
+    call: "Urgent ? Appelez-nous",
+  },
 } as const
 
 export function ContactThankYou({ locale = "de" }: { locale?: Locale }) {

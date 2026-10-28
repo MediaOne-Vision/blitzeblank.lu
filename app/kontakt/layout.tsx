@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Kontakt | Blitzeblank - Reinigungsfirma in Luxemburg, Trier & Bitburg",
+  title: "Kontakt | Blitzeblank Reinigung Luxemburg",
   description:
     "Nehmen Sie Kontakt mit Blitzeblank auf: Fragen zu Industrie-, Fenster-, Stein- oder Fassadenreinigung? Wir melden uns schnell und vereinbaren einen kostenlosen Besichtigungstermin.",
   alternates: {

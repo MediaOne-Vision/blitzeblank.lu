@@ -21,6 +21,12 @@ const SERVICE_LINKS = {
     { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
     { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
   ],
+  fr: [
+    { href: "/leistungen/industriereinigung", label: "Nettoyage industriel" },
+    { href: "/leistungen/fensterreinigung", label: "Nettoyage de vitres" },
+    { href: "/leistungen/steinreinigung", label: "Nettoyage de pierre" },
+    { href: "/leistungen/fassadenreinigung", label: "Nettoyage de façades" },
+  ],
 }
 
 const TEXT = {
@@ -41,6 +47,15 @@ const TEXT = {
     ourServices: "Our Services",
     question: "Have a question?",
     contactUs: "Contact us",
+  },
+  fr: {
+    heading: "Nous n'avons pas trouvé cette page",
+    body: "La page que vous recherchez n'existe pas ou a été déplacée. Pas de souci – voici le chemin vers nos prestations.",
+    home: "Retour à l'accueil",
+    calculate: "Calculer le prix",
+    ourServices: "Nos prestations",
+    question: "Une question ?",
+    contactUs: "Contactez-nous",
   },
 }
 

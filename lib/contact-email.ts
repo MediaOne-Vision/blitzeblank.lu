@@ -9,7 +9,7 @@ export interface ContactSubmission {
   service: string
   serviceLabel: string
   message: string
-  locale: "de" | "en"
+  locale: "de" | "en" | "fr"
   leadId: string
 }
 
@@ -42,6 +42,15 @@ const CUSTOMER_TEXT = {
     summary: "Your details",
     labels: { service: "Service", message: "Message" },
     note: "Urgent? Feel free to call us directly: +352 661 830 493.",
+  },
+  fr: {
+    subject: "Nous avons bien reçu votre demande – Blitzeblank",
+    badge: "Accusé de réception",
+    headline: (n: string) => `Merci, ${n} !`,
+    intro: "Nous avons bien reçu votre message et vous répondrons très prochainement.",
+    summary: "Vos informations",
+    labels: { service: "Prestation", message: "Message" },
+    note: "Urgent ? N'hésitez pas à nous appeler directement : +352 661 830 493.",
   },
 } as const
 

@@ -88,6 +88,48 @@ const SERVICES = {
       imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
     },
   ],
+  fr: [
+    {
+      icon: Factory,
+      title: "Nettoyage industriel",
+      description:
+        "Nettoyage professionnel de halls de production, d'entrepôts et d'installations industrielles selon les normes les plus strictes.",
+      features: ["Halls de production", "Entrepôts", "Ateliers", "Machines et équipements"],
+      href: "/leistungen/industriereinigung",
+      slug: "industriereinigung",
+      imageQuery: "industrial+factory+production+hall+clean+polished+floor",
+    },
+    {
+      icon: Grid3X3,
+      title: "Nettoyage de vitres",
+      description:
+        "Nettoyage de vitres sans traces pour bureaux, commerces et sites industriels de toute taille.",
+      features: ["Immeubles de bureaux", "Vitrines", "Façades vitrées", "Vitrages industriels"],
+      href: "/leistungen/fensterreinigung",
+      slug: "fensterreinigung",
+      imageQuery: "clean+modern+glass+office+windows+reflection+blue+sky",
+    },
+    {
+      icon: Building2,
+      title: "Nettoyage de façades",
+      description:
+        "Nettoyage extérieur professionnel pour tous types de façades - des immeubles de bureaux aux sites industriels.",
+      features: ["Façades crépies", "Façades en brique", "Façades métalliques", "Façades vitrées"],
+      href: "/leistungen/fassadenreinigung",
+      slug: "fassadenreinigung",
+      imageQuery: "modern+building+facade+exterior+cleaning+architecture",
+    },
+    {
+      icon: Mountain,
+      title: "Nettoyage de pierre",
+      description:
+        "Entretien et nettoyage professionnels de la pierre naturelle, des pavés, des terrasses et des aménagements extérieurs.",
+      features: ["Pierre naturelle", "Surfaces pavées", "Terrasses", "Escaliers extérieurs"],
+      href: "/leistungen/steinreinigung",
+      slug: "steinreinigung",
+      imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
+    },
+  ],
 }
 
 const TEXT = {
@@ -122,6 +164,22 @@ const TEXT = {
     ctaCalcBody: "Use our online calculator and get a non-binding price estimate in 2 minutes.",
     ctaCalcButton: "Create an Offer Online",
     ctaStoneButton: "Stone Care Calculator",
+  },
+  fr: {
+    eyebrow: "Prestations",
+    heading: "Un nettoyage pour chaque exigence",
+    intro:
+      "Du nettoyage industriel à l'entretien de façades - nous proposons des solutions de nettoyage professionnelles pour tous les besoins. Découvrez notre offre complète.",
+    learnMore: "En savoir plus",
+    priceCalc: "Calculer le prix",
+    ctaHeading: "Vous ne savez pas quelle prestation choisir ?",
+    ctaBody:
+      "Contactez-nous pour un conseil gratuit. Nous analysons vos besoins et vous recommandons la solution optimale.",
+    ctaButton: "Demander un conseil gratuit",
+    ctaCalcHeading: "Vous préférez voir un prix tout de suite ?",
+    ctaCalcBody: "Utilisez notre calculateur en ligne et obtenez en 2 minutes une estimation de prix sans engagement.",
+    ctaCalcButton: "Créer un devis en ligne",
+    ctaStoneButton: "Calculateur d'entretien de pierre",
   },
 }
 

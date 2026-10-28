@@ -23,6 +23,15 @@ const TEXT = {
     facebookAria: "Blitzeblank on Facebook",
     instagramAria: "Blitzeblank on Instagram",
   },
+  fr: {
+    heading: "Parlons de votre projet",
+    body: "Contactez-nous pour un conseil gratuit et sans engagement à Luxembourg, Trèves, Bitburg et dans la région. Nous établissons pour vous un devis sur mesure.",
+    cta: "Nous contacter",
+    calcCta: "Créer un devis en ligne",
+    followLabel: "Suivez-nous",
+    facebookAria: "Blitzeblank sur Facebook",
+    instagramAria: "Blitzeblank sur Instagram",
+  },
 }
 
 export function CtaSection({ locale = "de" }: { locale?: Locale }) {

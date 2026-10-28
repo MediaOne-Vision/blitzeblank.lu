@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { getLocaleFromPathname, getCounterpartPath } from "@/lib/i18n"
+import { getLocaleFromPathname, getPathForLocale, type Locale } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 function FlagDE({ className }: { className?: string }) {
@@ -27,36 +27,45 @@ function FlagGB({ className }: { className?: string }) {
   )
 }
 
-/** Sprachumschalter mit zwei Flaggen. Verlinkt zur Entsprechung der aktuellen Seite in der anderen Sprache. */
+function FlagFR({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 30 20" className={className} aria-hidden="true">
+      <rect width="10" height="20" fill="#0055a4" />
+      <rect x="10" width="10" height="20" fill="#ffffff" />
+      <rect x="20" width="10" height="20" fill="#ef4135" />
+    </svg>
+  )
+}
+
+const OPTIONS: { locale: Locale; label: string; Flag: typeof FlagDE }[] = [
+  { locale: "de", label: "Deutsch", Flag: FlagDE },
+  { locale: "en", label: "English", Flag: FlagGB },
+  { locale: "fr", label: "Français", Flag: FlagFR },
+]
+
+/** Sprachumschalter mit Flaggen. Verlinkt zur Entsprechung der aktuellen Seite in der jeweiligen Sprache. */
 export function LanguageSwitcher({ className }: { className?: string }) {
-  const pathname = usePathname()
-  const locale = getLocaleFromPathname(pathname)
-  const counterpart = getCounterpartPath(pathname ?? "/")
+  const pathname = usePathname() ?? "/"
+  const current = getLocaleFromPathname(pathname)
 
   return (
     <div className={cn("flex items-center gap-1 rounded-full border border-brand-blue/15 bg-white/60 p-1", className)}>
-      <Link
-        href={locale === "de" ? pathname ?? "/" : counterpart}
-        aria-label="Deutsch"
-        aria-current={locale === "de" ? "true" : undefined}
-        className={cn(
-          "flex h-6 w-8 items-center justify-center overflow-hidden rounded-full transition-opacity cursor-pointer",
-          locale === "de" ? "ring-2 ring-brand-blue" : "opacity-40 hover:opacity-80",
-        )}
-      >
-        <FlagDE className="h-full w-full object-cover" />
-      </Link>
-      <Link
-        href={locale === "en" ? pathname ?? "/en" : counterpart}
-        aria-label="English"
-        aria-current={locale === "en" ? "true" : undefined}
-        className={cn(
-          "flex h-6 w-8 items-center justify-center overflow-hidden rounded-full transition-opacity cursor-pointer",
-          locale === "en" ? "ring-2 ring-brand-blue" : "opacity-40 hover:opacity-80",
-        )}
-      >
-        <FlagGB className="h-full w-full object-cover" />
-      </Link>
+      {OPTIONS.map(({ locale, label, Flag }) => (
+        <Link
+          key={locale}
+          href={getPathForLocale(pathname, locale)}
+          hrefLang={locale}
+          lang={locale}
+          aria-label={label}
+          aria-current={current === locale ? "true" : undefined}
+          className={cn(
+            "flex h-6 w-8 items-center justify-center overflow-hidden rounded-full transition-opacity cursor-pointer",
+            current === locale ? "ring-2 ring-brand-blue" : "opacity-40 hover:opacity-80",
+          )}
+        >
+          <Flag className="h-full w-full object-cover" />
+        </Link>
+      ))}
     </div>
   )
 }

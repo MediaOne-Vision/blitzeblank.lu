@@ -60,6 +60,30 @@ const TEXT = {
     privacy: "Privacy Policy",
     back: "Back",
   },
+  fr: {
+    titleSettings: "Paramètres des cookies",
+    titleLead: "Nous utilisons des cookies pour une ",
+    titleAccent: "meilleure expérience.",
+    bodySettings:
+      "Choisissez les cookies que vous souhaitez autoriser. Les cookies nécessaires sont indispensables au fonctionnement du site.",
+    body: "Avec votre consentement, vous nous aidez à améliorer notre site et à vous proposer des contenus pertinents. Les outils de marketing et de statistiques (Google Tag Manager) ne sont chargés qu'après votre consentement.",
+    necessary: "Nécessaires",
+    necessaryDesc: "Indispensables aux fonctions de base du site. Toujours actifs.",
+    necessaryAria: "Cookies nécessaires (toujours actifs)",
+    statistics: "Statistiques",
+    statisticsDesc: "Nous aide à comprendre comment les visiteurs utilisent le site (p. ex. Google Analytics via GTM).",
+    statisticsAria: "Autoriser les cookies statistiques",
+    marketing: "Marketing",
+    marketingDesc: "Utilisés pour rendre la publicité plus pertinente et mesurer son efficacité.",
+    marketingAria: "Autoriser les cookies marketing",
+    save: "Enregistrer la sélection",
+    acceptAll: "Accepter",
+    reject: "Refuser",
+    settings: "Paramètres",
+    more: "Plus d'informations dans notre",
+    privacy: "politique de confidentialité",
+    back: "Retour",
+  },
 }
 
 export function CookieConsentBanner() {

@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import { Lock } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Blitzeblank - Professional Cleaning in Luxembourg",
+  title: "Privacy Policy | Blitzeblank",
   description:
     "Privacy policy of Blitzeblank building cleaning. Information on the processing of your personal data in accordance with the GDPR.",
   alternates: {

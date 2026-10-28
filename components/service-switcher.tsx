@@ -17,6 +17,12 @@ const TEXT = {
     current: "Current Page",
     view: "View",
   },
+  fr: {
+    eyebrow: "Autres prestations",
+    heading: "Découvrez toute notre offre",
+    current: "Page actuelle",
+    view: "Voir",
+  },
 }
 
 export function ServiceSwitcher({ currentSlug, locale = "de" }: { currentSlug?: string; locale?: Locale }) {

@@ -5,7 +5,7 @@ import { StoneOfferWizard } from "@/components/stone-offer-wizard"
 import { Mountain } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Steinpflege-Rechner | Blitzeblank - Professionelle Reinigung",
+  title: "Steinpflege-Rechner | Blitzeblank",
   description:
     "Konfigurieren Sie Schritt für Schritt Ihre Pflasterflächen- und Steinpflege: Fläche, Fuge, Steinfarbe, Schutz und thermische Unkrautentfernung - kostenlos und unverbindlich.",
   alternates: {

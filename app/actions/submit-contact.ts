@@ -26,7 +26,7 @@ export interface SubmitContactInput {
   service: string
   message: string
   consent: boolean
-  locale: "de" | "en"
+  locale: "de" | "en" | "fr"
   honeypot: string
   renderedAt: number
   submissionId: string
@@ -40,7 +40,7 @@ export async function submitContact(input: SubmitContactInput): Promise<SubmitRe
   const phone = clip(input.phone, 40)
   const message = clip(input.message, 5000)
   const service = SERVICE_LABELS[input.service] ? input.service : ""
-  const locale: "de" | "en" = input.locale === "en" ? "en" : "de"
+  const locale: "de" | "en" | "fr" = input.locale === "en" || input.locale === "fr" ? input.locale : "de"
 
   return runFormPipeline({
     kind: "contact",

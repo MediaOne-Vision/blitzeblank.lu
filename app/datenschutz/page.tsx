@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 import { Lock } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Datenschutzerklärung | Blitzeblank - Professionelle Reinigung in Luxemburg",
+  title: "Datenschutzerklärung | Blitzeblank",
   description:
     "Datenschutzerklärung von Blitzeblank Gebäudereinigung. Informationen zur Verarbeitung Ihrer personenbezogenen Daten gemäß DSGVO.",
   alternates: {

@@ -37,6 +37,23 @@ const PHOTOS = {
       caption: "Our team at work every day",
     },
   ],
+  fr: [
+    {
+      src: "/images/einsatz/blitzeblank-mitarbeiter-pergola-hochdruckreinigung.avif",
+      alt: "Employé de Blitzeblank nettoyant un toit de pergola avec une lance télescopique haute pression",
+      caption: "Nettoyage haute pression d'une couverture de terrasse",
+    },
+    {
+      src: "/images/einsatz/blitzeblank-terrassenreinigung-flaechenreiniger-einsatz.avif",
+      alt: "Employé de Blitzeblank nettoyant des dalles de terrasse avec un nettoyeur de surface",
+      caption: "Nettoyage de surface d'une terrasse",
+    },
+    {
+      src: "/images/einsatz/blitzeblank-team-firmenshirt-reinigungseinsatz.avif",
+      alt: "Membre de l'équipe Blitzeblank en t-shirt d'entreprise avec logo de raton laveur lors d'une intervention de nettoyage",
+      caption: "Notre équipe au travail au quotidien",
+    },
+  ],
 }
 
 const TEXT = {
@@ -49,6 +66,11 @@ const TEXT = {
     eyebrow: "On the Job",
     heading: "Real Work, Real Team",
     body: "No staged photos: this is what our team looks like at work every day - with professional equipment and an eye for detail.",
+  },
+  fr: {
+    eyebrow: "En action",
+    heading: "Du vrai travail, une vraie équipe",
+    body: "Pas de photos mises en scène : voici à quoi ressemble notre équipe au travail au quotidien - avec un équipement professionnel et le sens du détail.",
   },
 }
 

@@ -37,6 +37,22 @@ const SHOWCASES = {
       caption: "Stone Cleaning",
     },
   ],
+  fr: [
+    {
+      beforeSrc: "/images/leistungen/fensterreinigung-terrassenueberdachung-glasdach-verschmutzt-vorher.avif",
+      afterSrc: "/images/leistungen/fensterreinigung-terrassenueberdachung-glasdach-gereinigt-nachher.avif",
+      beforeAlt: "Toit vitré sale d'une couverture de terrasse avec des taches d'eau avant le nettoyage",
+      afterAlt: "Toit vitré propre et sans traces d'une couverture de terrasse après le nettoyage des vitres",
+      caption: "Nettoyage de vitres",
+    },
+    {
+      beforeSrc: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-veralgt-vorher.avif",
+      afterSrc: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
+      beforeAlt: "Terrasse en pierre naturelle à dalles polygonales couverte d'algues et de mousse avant le nettoyage",
+      afterAlt: "Terrasse en pierre naturelle à dalles polygonales propre après le nettoyage de la pierre",
+      caption: "Nettoyage de pierre",
+    },
+  ],
 }
 
 const TEXT = {
@@ -51,6 +67,12 @@ const TEXT = {
     heading: "Results That Speak for Themselves",
     body: "Drag the slider and see for yourself what a difference our professional cleaning makes.",
     cta: "Discover All Services",
+  },
+  fr: {
+    eyebrow: "Avant / Après",
+    heading: "Des résultats qui parlent d'eux-mêmes",
+    body: "Faites glisser le curseur et constatez par vous-même la différence que fait notre nettoyage professionnel.",
+    cta: "Découvrir toutes nos prestations",
   },
 }
 

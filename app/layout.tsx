@@ -16,7 +16,7 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Blitzeblank | Professionelle Reinigungsdienstleistungen in Luxemburg, Trier & Bitburg',
+  title: 'Blitzeblank | Reinigungsfirma in Luxemburg, Trier & Bitburg',
   description: 'Blitzeblank bietet professionelle Industrie-, Fenster-, Stein- und Fassadenreinigung in Luxemburg, Trier, Bitburg und der Region. Schnelle Reaktionszeit, kostenloser Besichtigungstermin und transparente Kommunikation.',
   keywords: ['Reinigungsfirma Luxemburg', 'Reinigungsfirma Trier', 'Reinigungsfirma Bitburg', 'Industriereinigung', 'Fensterreinigung', 'Steinreinigung', 'Fassadenreinigung', 'Gewerbereinigung'],
   authors: [{ name: 'Blitzeblank' }],

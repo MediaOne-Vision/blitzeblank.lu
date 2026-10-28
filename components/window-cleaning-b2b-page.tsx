@@ -143,6 +143,63 @@ const TEXT = {
     asideCallBody: "We're available by phone and happy to advise you without obligation.",
     stickyCta: "Request site visit",
   },
+  fr: {
+    eyebrow: "Nettoyage de vitres pour entreprises",
+    h1: "Des vitres sans traces – sans effort pour votre équipe",
+    sub: "Nettoyage de vitres professionnel pour bureaux, commerces et locaux professionnels au Luxembourg et dans la région. Visite gratuite, offre ferme claire, rendez-vous fiables.",
+    heroPoints: ["Visite gratuite du site", "Pour bureaux, commerces et entreprises", "Réponse généralement sous 24 h"],
+    ctaPrimary: "Demander une visite gratuite",
+    ctaCall: "Appeler directement",
+    region: "Actif à Luxembourg, Trèves, Bitburg et dans la région",
+    heroImageAlt: "Surfaces vitrées d'un local professionnel nettoyées sans traces après le nettoyage de vitres",
+    benefitsEyebrow: "Pourquoi Blitzeblank",
+    benefitsHeading: "Un nettoyage de vitres sur lequel vous pouvez compter",
+    benefits: [
+      {
+        icon: Droplets,
+        title: "Technique moderne à l'eau pure",
+        text: "Des résultats sans traces – même en hauteur et sur les surfaces vitrées difficiles d'accès grâce à la technique télescopique.",
+      },
+      {
+        icon: UserCheck,
+        title: "Un interlocuteur attitré",
+        text: "Une équipe qui connaît votre site, avec des processus clairs et des rendez-vous respectés.",
+      },
+      {
+        icon: ShieldCheck,
+        title: "Assuré et discret",
+        text: "Sur demande en dehors de vos heures d'ouverture – sans perturber votre activité.",
+      },
+      {
+        icon: CalendarClock,
+        title: "Intervalles flexibles",
+        text: "Ponctuel ou régulier – de la vitrine à la façade vitrée complète.",
+      },
+      {
+        icon: Sparkles,
+        title: "Qualité documentée",
+        text: "Un contrôle après chaque intervention pour un résultat durable.",
+      },
+      {
+        icon: Building2,
+        title: "Pour chaque site",
+        text: "Bureau, commerce, cabinet ou vitrage industriel – nous calculons selon vos besoins.",
+      },
+    ],
+    resultsEyebrow: "Résultats",
+    resultsHeading: "Voyez la différence",
+    resultsBody: "Faites glisser le curseur pour comparer le résultat avant et après.",
+    moreImpressions: "Plus d'aperçus",
+    asideHeading: "Un site propre en 3 étapes",
+    asideSteps: [
+      "Envoyez votre demande – gratuite et sans engagement",
+      "Nous convenons de la visite du site",
+      "Vous recevez votre offre ferme transparente",
+    ],
+    asideCallTitle: "Vous préférez parler directement ?",
+    asideCallBody: "Nous sommes joignables par téléphone et vous conseillons sans engagement.",
+    stickyCta: "Demander une visite",
+  },
 }
 
 export function WindowCleaningB2BPage({ locale = "de" }: { locale?: Locale }) {

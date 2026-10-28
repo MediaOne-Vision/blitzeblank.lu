@@ -21,6 +21,10 @@ const NAV_LINKS = {
     { href: "/leistungen", label: "Services" },
     { href: "/ueber-uns", label: "About Us" },
   ],
+  fr: [
+    { href: "/leistungen", label: "Prestations" },
+    { href: "/ueber-uns", label: "À propos" },
+  ],
 }
 
 const SERVICE_LINKS = {
@@ -36,11 +40,18 @@ const SERVICE_LINKS = {
     { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
     { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
   ],
+  fr: [
+    { href: "/leistungen/industriereinigung", label: "Nettoyage industriel" },
+    { href: "/leistungen/fensterreinigung", label: "Nettoyage de vitres" },
+    { href: "/leistungen/steinreinigung", label: "Nettoyage de pierre" },
+    { href: "/leistungen/fassadenreinigung", label: "Nettoyage de façades" },
+  ],
 }
 
 const TEXT = {
   de: { quote: "Preis sofort berechnen", contact: "Kontakt", contactFull: "Kontakt aufnehmen", menu: "Menü" },
   en: { quote: "Calculate Price Instantly", contact: "Contact", contactFull: "Get in Touch", menu: "Menu" },
+  fr: { quote: "Calculer le prix", contact: "Contact", contactFull: "Nous contacter", menu: "Menu" },
 }
 
 export function Navigation() {
@@ -62,7 +73,7 @@ export function Navigation() {
   const kontaktHref = localizeHref("/kontakt", locale)
 
   const isActive = (href: string) => {
-    if (href === "/" || href === "/en") return pathname === href
+    if (href === "/" || href === "/en" || href === "/fr") return pathname === href
     if (href.startsWith("/#")) return false
     return pathname === href || pathname.startsWith(href + "/")
   }

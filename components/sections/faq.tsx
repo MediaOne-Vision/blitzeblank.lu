@@ -83,6 +83,43 @@ const FAQS = {
         "Yes. We offer attractive terms for regular cleaning. Depending on frequency, you benefit from reduced prices - the details are set out in your individual quote.",
     },
   ],
+  fr: [
+    {
+      question: "Que se passe-t-il si je ne suis pas satisfait de la prestation ?",
+      answer:
+        "Votre satisfaction est notre priorité absolue. Si un résultat ne correspond pas à vos attentes, nous retouchons gratuitement. Notre travail n'est considéré comme terminé que lorsque vous êtes entièrement satisfait.",
+    },
+    {
+      question: "Comment se déroule l'établissement d'un devis ?",
+      answer:
+        "Après votre demande, nous convenons d'une visite gratuite sur place. Nous évaluons l'ampleur des travaux et vos souhaits, puis nous vous remettons un devis transparent et sans engagement, sans frais cachés.",
+    },
+    {
+      question: "Dois-je fournir les produits de nettoyage ou le matériel ?",
+      answer:
+        "Non. Nous apportons nous-mêmes tous les produits de nettoyage professionnels et l'équipement nécessaire. Vous n'avez à vous occuper de rien.",
+    },
+    {
+      question: "En combien de temps le nettoyage peut-il être réalisé ?",
+      answer:
+        "Nous répondons à votre demande sous 24 heures et proposons des rendez-vous à court terme. Si nécessaire, nous pouvons souvent réaliser le nettoyage en quelques jours seulement.",
+    },
+    {
+      question: "Quels produits de nettoyage utilisez-vous ?",
+      answer:
+        "Nous utilisons des produits de nettoyage professionnels de haute qualité, choisis en fonction de chaque surface, efficaces et respectueux des matériaux.",
+    },
+    {
+      question: "Proposez-vous également un service d'urgence ?",
+      answer:
+        "Oui, pour les demandes urgentes, nous sommes flexibles et nous adaptons à votre planning. Contactez-nous simplement et nous trouverons ensemble une solution rapide.",
+    },
+    {
+      question: "Y a-t-il des remises, par exemple pour des réservations régulières ?",
+      answer:
+        "Oui. Pour les nettoyages réguliers, nous proposons des conditions avantageuses. Selon la fréquence, vous bénéficiez de tarifs réduits - les détails figurent dans votre devis personnalisé.",
+    },
+  ],
 }
 
 const TEXT = {
@@ -101,6 +138,14 @@ const TEXT = {
     ctaHeading: "Didn't find your question?",
     ctaBody: "We're happy to answer all your questions - personally and without obligation.",
     ctaButton: "Get in Touch Now",
+  },
+  fr: {
+    eyebrow: "FAQ",
+    heading: "Questions fréquentes",
+    body: "Retrouvez ici les réponses aux questions les plus fréquentes sur nos prestations de nettoyage.",
+    ctaHeading: "Votre question n'y figure pas ?",
+    ctaBody: "Nous répondons volontiers à toutes vos demandes - personnellement et sans engagement.",
+    ctaButton: "Nous contacter maintenant",
   },
 }
 

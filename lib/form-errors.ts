@@ -15,10 +15,16 @@ const MESSAGES = {
     delivery:
       "Your request could not be sent right now. Your entries are kept – please try again or call us: +352 661 830 493.",
   },
+  fr: {
+    input: "Veuillez vérifier vos informations, en particulier l'adresse e-mail ou le numéro de téléphone.",
+    rate: "Trop de demandes en peu de temps. Veuillez réessayer dans quelques minutes ou nous appeler : +352 661 830 493.",
+    delivery:
+      "Votre demande n'a pas pu être envoyée pour le moment. Vos saisies sont conservées – veuillez réessayer ou nous appeler : +352 661 830 493.",
+  },
 } as const
 
 /** Verständliche, mehrsprachige Fehlermeldung ohne technische Details. */
-export function formErrorMessage(code: ClientFormError, locale: "de" | "en" = "de"): string {
+export function formErrorMessage(code: ClientFormError, locale: "de" | "en" | "fr" = "de"): string {
   const m = MESSAGES[locale]
   switch (code) {
     case "validation":
