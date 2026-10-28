@@ -3,27 +3,7 @@ import Image from "next/image"
 import { Facebook, Instagram } from "lucide-react"
 import { CookieSettingsLink } from "@/components/cookie-settings-link"
 import { localizeHref, type Locale } from "@/lib/i18n"
-
-const SERVICES = {
-  de: [
-    { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
-    { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
-    { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
-    { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
-  ],
-  en: [
-    { href: "/leistungen/industriereinigung", label: "Industrial Cleaning" },
-    { href: "/leistungen/fensterreinigung", label: "Window Cleaning" },
-    { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
-    { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
-  ],
-  fr: [
-    { href: "/leistungen/industriereinigung", label: "Nettoyage industriel" },
-    { href: "/leistungen/fensterreinigung", label: "Nettoyage de vitres" },
-    { href: "/leistungen/steinreinigung", label: "Nettoyage de pierre" },
-    { href: "/leistungen/fassadenreinigung", label: "Nettoyage de façades" },
-  ],
-}
+import { getLocalizedServices } from "@/lib/services"
 
 const NAVIGATION = {
   de: [
@@ -84,7 +64,7 @@ const TEXT = {
 }
 
 export function Footer({ locale = "de" }: { locale?: Locale }) {
-  const services = SERVICES[locale].map((s) => ({ ...s, href: localizeHref(s.href, locale) }))
+  const services = getLocalizedServices(locale).map((s) => ({ href: s.href, label: s.title }))
   const navigation = NAVIGATION[locale].map((n) => ({ ...n, href: localizeHref(n.href, locale) }))
   const t = TEXT[locale]
 

@@ -4,132 +4,41 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { getServiceMedia } from "@/lib/service-media"
-import { ArrowRight, ArrowUpRight, Calculator, Factory, Grid3X3, Mountain, Building2, CheckCircle2 } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Calculator, CheckCircle2, Home, Building2 } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
+import { getLocalizedServices } from "@/lib/services"
+import { extraServiceContent, type ExtraServiceSlug } from "@/lib/extra-service-content"
+import { getAudienceLabel, getLocationCountry, type Audience } from "@/lib/locations"
+import { LocationsGrid } from "@/components/locations-grid"
 
-const SERVICES = {
-  de: [
-    {
-      icon: Factory,
-      title: "Industriereinigung",
-      description:
-        "Professionelle Reinigung von Produktionshallen, Lagern und Industrieanlagen nach höchsten Standards.",
-      features: ["Produktionshallen", "Lagerräume", "Werkstätten", "Maschinen & Anlagen"],
-      href: "/leistungen/industriereinigung",
-      slug: "industriereinigung",
-      imageQuery: "industrial+factory+production+hall+clean+polished+floor",
-    },
-    {
-      icon: Grid3X3,
-      title: "Fensterreinigung",
-      description: "Streifenfreie Glasreinigung für Bürogebäude, Geschäfte und Industrieanlagen jeder Größe.",
-      features: ["Bürogebäude", "Schaufenster", "Glasfassaden", "Industrieverglasung"],
-      href: "/leistungen/fensterreinigung",
-      slug: "fensterreinigung",
-      imageQuery: "clean+modern+glass+office+windows+reflection+blue+sky",
-    },
-    {
-      icon: Building2,
-      title: "Fassadenreinigung",
-      description:
-        "Professionelle Außenreinigung für Gebäudefassaden aller Art - vom Bürogebäude bis zur Industrieanlage.",
-      features: ["Putzfassaden", "Klinkerfassaden", "Metallfassaden", "Glasfassaden"],
-      href: "/leistungen/fassadenreinigung",
-      slug: "fassadenreinigung",
-      imageQuery: "modern+building+facade+exterior+cleaning+architecture",
-    },
-    {
-      icon: Mountain,
-      title: "Steinreinigung",
-      description: "Fachgerechte Pflege und Reinigung von Naturstein, Pflaster, Terrassen und Außenanlagen.",
-      features: ["Naturstein", "Pflasterflächen", "Terrassen", "Außentreppen"],
-      href: "/leistungen/steinreinigung",
-      slug: "steinreinigung",
-      imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
-    },
-  ],
-  en: [
-    {
-      icon: Factory,
-      title: "Industrial Cleaning",
-      description:
-        "Professional cleaning of production halls, warehouses and industrial facilities to the highest standards.",
-      features: ["Production Halls", "Warehouses", "Workshops", "Machines & Equipment"],
-      href: "/leistungen/industriereinigung",
-      slug: "industriereinigung",
-      imageQuery: "industrial+factory+production+hall+clean+polished+floor",
-    },
-    {
-      icon: Grid3X3,
-      title: "Window Cleaning",
-      description: "Streak-free glass cleaning for office buildings, shops and industrial sites of any size.",
-      features: ["Office Buildings", "Shop Windows", "Glass Facades", "Industrial Glazing"],
-      href: "/leistungen/fensterreinigung",
-      slug: "fensterreinigung",
-      imageQuery: "clean+modern+glass+office+windows+reflection+blue+sky",
-    },
-    {
-      icon: Building2,
-      title: "Facade Cleaning",
-      description:
-        "Professional exterior cleaning for building facades of all kinds - from office buildings to industrial sites.",
-      features: ["Plaster Facades", "Brick Facades", "Metal Facades", "Glass Facades"],
-      href: "/leistungen/fassadenreinigung",
-      slug: "fassadenreinigung",
-      imageQuery: "modern+building+facade+exterior+cleaning+architecture",
-    },
-    {
-      icon: Mountain,
-      title: "Stone Cleaning",
-      description: "Expert care and cleaning of natural stone, paving, terraces and outdoor areas.",
-      features: ["Natural Stone", "Paving", "Terraces", "Outdoor Stairs"],
-      href: "/leistungen/steinreinigung",
-      slug: "steinreinigung",
-      imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
-    },
-  ],
-  fr: [
-    {
-      icon: Factory,
-      title: "Nettoyage industriel",
-      description:
-        "Nettoyage professionnel de halls de production, d'entrepôts et d'installations industrielles selon les normes les plus strictes.",
-      features: ["Halls de production", "Entrepôts", "Ateliers", "Machines et équipements"],
-      href: "/leistungen/industriereinigung",
-      slug: "industriereinigung",
-      imageQuery: "industrial+factory+production+hall+clean+polished+floor",
-    },
-    {
-      icon: Grid3X3,
-      title: "Nettoyage de vitres",
-      description:
-        "Nettoyage de vitres sans traces pour bureaux, commerces et sites industriels de toute taille.",
-      features: ["Immeubles de bureaux", "Vitrines", "Façades vitrées", "Vitrages industriels"],
-      href: "/leistungen/fensterreinigung",
-      slug: "fensterreinigung",
-      imageQuery: "clean+modern+glass+office+windows+reflection+blue+sky",
-    },
-    {
-      icon: Building2,
-      title: "Nettoyage de façades",
-      description:
-        "Nettoyage extérieur professionnel pour tous types de façades - des immeubles de bureaux aux sites industriels.",
-      features: ["Façades crépies", "Façades en brique", "Façades métalliques", "Façades vitrées"],
-      href: "/leistungen/fassadenreinigung",
-      slug: "fassadenreinigung",
-      imageQuery: "modern+building+facade+exterior+cleaning+architecture",
-    },
-    {
-      icon: Mountain,
-      title: "Nettoyage de pierre",
-      description:
-        "Entretien et nettoyage professionnels de la pierre naturelle, des pavés, des terrasses et des aménagements extérieurs.",
-      features: ["Pierre naturelle", "Surfaces pavées", "Terrasses", "Escaliers extérieurs"],
-      href: "/leistungen/steinreinigung",
-      slug: "steinreinigung",
-      imageQuery: "clean+natural+stone+pavement+terrace+outdoor+pressure+washing",
-    },
-  ],
+const FEATURES: Record<string, Record<Locale, string[]>> = {
+  industriereinigung: {
+    de: ["Produktionshallen", "Lagerräume", "Werkstätten", "Maschinen & Anlagen"],
+    en: ["Production Halls", "Warehouses", "Workshops", "Machines & Equipment"],
+    fr: ["Halls de production", "Entrepôts", "Ateliers", "Machines et équipements"],
+  },
+  fensterreinigung: {
+    de: ["Wohnhäuser & Wintergärten", "Büros & Schaufenster", "Glasfassaden", "Solaranlagen"],
+    en: ["Homes & Conservatories", "Offices & Shop Windows", "Glass Facades", "Solar Panels"],
+    fr: ["Maisons et vérandas", "Bureaux et vitrines", "Façades vitrées", "Panneaux solaires"],
+  },
+  fassadenreinigung: {
+    de: ["Putzfassaden", "Klinkerfassaden", "Metallfassaden", "Glasfassaden"],
+    en: ["Plaster Facades", "Brick Facades", "Metal Facades", "Glass Facades"],
+    fr: ["Façades crépies", "Façades en brique", "Façades métalliques", "Façades vitrées"],
+  },
+  steinreinigung: {
+    de: ["Naturstein", "Pflasterflächen", "Terrassen", "Außentreppen"],
+    en: ["Natural Stone", "Paving", "Terraces", "Outdoor Stairs"],
+    fr: ["Pierre naturelle", "Surfaces pavées", "Terrasses", "Escaliers extérieurs"],
+  },
+}
+
+function getFeatures(slug: string, locale: Locale): string[] {
+  const fixed = FEATURES[slug]?.[locale]
+  if (fixed) return fixed
+  const extra = extraServiceContent[slug as ExtraServiceSlug]
+  return extra ? extra[locale].features.slice(0, 4).map((f) => f.title) : []
 }
 
 const TEXT = {
@@ -137,7 +46,9 @@ const TEXT = {
     eyebrow: "Leistungen",
     heading: "Reinigung für jeden Anspruch",
     intro:
-      "Von der Industriereinigung bis zur Fassadenpflege - wir bieten professionelle Reinigungslösungen für jeden Bedarf. Entdecken Sie unser umfassendes Angebot.",
+      "Von der Fensterreinigung bis zur Fassadenpflege - für Privat- und Gewerbekunden in Luxemburg und Deutschland. Unterhalts- und Industriereinigung gibt es für Gewerbekunden.",
+    onlyIn: "nur in",
+    locHeading: "Wo wir arbeiten",
     learnMore: "Mehr erfahren",
     priceCalc: "Preis berechnen",
     ctaHeading: "Nicht sicher, welche Leistung Sie benötigen?",
@@ -153,7 +64,9 @@ const TEXT = {
     eyebrow: "Services",
     heading: "Cleaning for Every Need",
     intro:
-      "From industrial cleaning to facade care - we offer professional cleaning solutions for every need. Discover our full range of services.",
+      "From window cleaning to facade care - for private and business customers in Luxembourg and Germany. Maintenance and industrial cleaning are available for business customers.",
+    onlyIn: "only in",
+    locHeading: "Where we work",
     learnMore: "Learn More",
     priceCalc: "Calculate Price",
     ctaHeading: "Not sure which service you need?",
@@ -169,7 +82,9 @@ const TEXT = {
     eyebrow: "Prestations",
     heading: "Un nettoyage pour chaque exigence",
     intro:
-      "Du nettoyage industriel à l'entretien de façades - nous proposons des solutions de nettoyage professionnelles pour tous les besoins. Découvrez notre offre complète.",
+      "Du nettoyage de vitres à l'entretien de façades - pour particuliers et entreprises au Luxembourg et en Allemagne. Le nettoyage d'entretien et industriel est réservé aux entreprises.",
+    onlyIn: "uniquement en",
+    locHeading: "Où nous intervenons",
     learnMore: "En savoir plus",
     priceCalc: "Calculer le prix",
     ctaHeading: "Vous ne savez pas quelle prestation choisir ?",
@@ -184,8 +99,12 @@ const TEXT = {
 }
 
 export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
-  const services = SERVICES[locale]
+  const services = getLocalizedServices(locale)
   const t = TEXT[locale]
+  const groups: { id: Audience; anchor: string; icon: typeof Home }[] = [
+    { id: "privat", anchor: "privatkunden", icon: Home },
+    { id: "gewerbe", anchor: "gewerbekunden", icon: Building2 },
+  ]
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -200,6 +119,39 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
               {t.heading}
             </h1>
             <p className="text-lg text-white/75 text-pretty">{t.intro}</p>
+          </div>
+        </section>
+
+        {/* Overview by audience */}
+        <section className="bg-brand-mint py-12 lg:py-16">
+          <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-2">
+            {groups.map(({ id, anchor, icon: Icon }) => (
+              <div key={id} id={anchor} className="scroll-mt-24 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brand-navy/5">
+                <div className="mb-5 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-blue">
+                    <Icon className="h-5 w-5 text-white" />
+                  </div>
+                  <h2 className="font-display text-xl font-extrabold text-brand-navy">{getAudienceLabel(id, locale)}</h2>
+                </div>
+                <ul className="space-y-2.5">
+                  {services
+                    .filter((s) => s.audiences.includes(id))
+                    .map((s) => (
+                      <li key={s.slug}>
+                        <Link href={s.href} className="flex flex-wrap items-center gap-x-2 text-sm font-semibold text-brand-navy hover:text-brand-blue">
+                          <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-blue" />
+                          {s.title}
+                          {s.locations.length === 1 && (
+                            <span className="text-xs font-medium text-neutral-500">
+                              ({t.onlyIn} {getLocationCountry(s.locations[0], locale)})
+                            </span>
+                          )}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -236,9 +188,21 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                       <h2 className="mb-3 font-display text-2xl font-extrabold text-brand-navy lg:text-3xl">
                         {service.title}
                       </h2>
-                      <p className="mb-5 leading-relaxed text-neutral-600 text-pretty">{service.description}</p>
+                      <ul className="mb-4 flex flex-wrap gap-2">
+                        {service.audiences.map((a) => (
+                          <li key={a} className="rounded-full bg-brand-mint px-3 py-1 text-xs font-semibold text-brand-navy">
+                            {getAudienceLabel(a, locale)}
+                          </li>
+                        ))}
+                        {service.locations.map((l) => (
+                          <li key={l} className="rounded-full bg-brand-blue/10 px-3 py-1 text-xs font-semibold text-brand-blue">
+                            {getLocationCountry(l, locale)}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="mb-5 leading-relaxed text-neutral-600 text-pretty">{service.shortDescription}</p>
                       <ul className="mb-6 grid grid-cols-2 gap-2">
-                        {service.features.map((feature, i) => (
+                        {getFeatures(service.slug, locale).map((feature, i) => (
                           <li key={i} className="flex items-center gap-2 text-sm text-neutral-600">
                             <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-blue" />
                             {feature}
@@ -250,7 +214,7 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                           asChild
                           className="group/btn w-fit bg-brand-blue text-white hover:bg-brand-teal rounded-full px-6 shadow-lg shadow-brand-blue/30"
                         >
-                          <Link href={localizeHref(service.href, locale)} className="cursor-pointer">
+                          <Link href={service.href} className="cursor-pointer">
                             {t.learnMore}
                             <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                           </Link>
@@ -264,7 +228,9 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                             href={
                               service.slug === "steinreinigung"
                                 ? "/stein-angebot"
-                                : `${localizeHref("/angebot", locale)}?leistung=${service.slug}`
+                                : service.slug in extraServiceContent
+                                  ? localizeHref("/kontakt", locale)
+                                  : `${localizeHref("/angebot", locale)}?leistung=${service.slug}`
                             }
                             className="cursor-pointer"
                           >
@@ -278,6 +244,16 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                 )
               })}
             </div>
+          </div>
+        </section>
+
+        {/* Locations */}
+        <section className="bg-brand-mint py-16 lg:py-24">
+          <div className="mx-auto max-w-6xl px-6">
+            <h2 className="mb-10 text-balance text-center font-display text-3xl font-extrabold tracking-tight text-brand-navy lg:text-4xl">
+              {t.locHeading}
+            </h2>
+            <LocationsGrid locale={locale} />
           </div>
         </section>
 

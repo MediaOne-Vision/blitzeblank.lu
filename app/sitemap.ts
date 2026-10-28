@@ -13,6 +13,8 @@ const routes: RouteEntry[] = [
   { path: "", priority: 1, changeFrequency: "weekly", translated: true },
   { path: "/leistungen", priority: 0.9, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/industriereinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
+  { path: "/leistungen/unterhaltsreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
+  { path: "/leistungen/treppenhausreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/fensterreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/steinreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/fassadenreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },

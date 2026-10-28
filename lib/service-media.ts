@@ -23,6 +23,22 @@ export interface ServiceMedia {
 }
 
 export const serviceMedia: Record<string, ServiceMedia> = {
+  unterhaltsreinigung: {
+    hero: {
+      src: `${BASE}/unterhaltsreinigung-buero-sauber-gepflegt.png`,
+      alt: "Sauberes, gepflegtes Büro nach der Unterhaltsreinigung",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
+  treppenhausreinigung: {
+    hero: {
+      src: `${BASE}/treppenhausreinigung-mehrfamilienhaus-treppenhaus-sauber.png`,
+      alt: "Sauberes Treppenhaus eines Mehrfamilienhauses nach der Treppenhausreinigung",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
   fensterreinigung: {
     hero: {
       src: `${BASE}/fensterreinigung-terrassenueberdachung-glasdach-gereinigt-nachher.avif`,
