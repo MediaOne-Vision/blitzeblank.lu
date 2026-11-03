@@ -6,98 +6,20 @@ import Image from "next/image"
 import { Reveal } from "@/components/reveal"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
+import { getLocalizedServices } from "@/lib/services"
+import { getServiceMedia } from "@/lib/service-media"
 
-const SERVICES = {
-  de: [
-    {
-      title: "Industriereinigung",
-      href: "/leistungen/industriereinigung",
-      image: "/images/leistungen/industriereinigung-reinraum-industriesauger-skyvac.avif",
-      imageAlt: "Mitarbeiter im Schutzanzug reinigt einen industriellen Doppelboden mit Industriesauger",
-      bullets: ["Hallenboden", "Decken & Wände", "Maschinen", "Lagerräume", "Lüftungen"],
-    },
-    {
-      title: "Fensterreinigung",
-      href: "/leistungen/fensterreinigung",
-      image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
-      imageAlt: "Gereinigter Glas-Wintergarten mit klaren Glasflächen",
-      bullets: ["Bürofenster", "Schaufenster", "Glasfassaden", "Wintergärten", "Solaranlagen"],
-    },
-    {
-      title: "Fassadenreinigung",
-      href: "/leistungen/fassadenreinigung",
-      image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
-      imageAlt: "Saubere, helle Mehrfamilienhaus-Fassade nach der Fassadenreinigung",
-      bullets: ["Putzfassaden", "Klinkerfassaden", "Metallfassaden", "Glasfassaden", "Betonfassaden"],
-    },
-    {
-      title: "Steinreinigung",
-      href: "/leistungen/steinreinigung",
-      image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
-      imageAlt: "Gereinigte Naturstein-Terrasse mit Polygonalplatten",
-      bullets: ["Naturstein", "Pflaster", "Terrassen", "Treppen", "Mauerwerk"],
-    },
-  ],
-  en: [
-    {
-      title: "Industrial Cleaning",
-      href: "/leistungen/industriereinigung",
-      image: "/images/leistungen/industriereinigung-reinraum-industriesauger-skyvac.avif",
-      imageAlt: "Employee in protective suit cleaning an industrial raised floor with an industrial vacuum",
-      bullets: ["Hall floors", "Ceilings & walls", "Machinery", "Storage areas", "Ventilation"],
-    },
-    {
-      title: "Window Cleaning",
-      href: "/leistungen/fensterreinigung",
-      image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
-      imageAlt: "Cleaned glass conservatory with clear glass surfaces",
-      bullets: ["Office windows", "Shop windows", "Glass facades", "Conservatories", "Solar panels"],
-    },
-    {
-      title: "Facade Cleaning",
-      href: "/leistungen/fassadenreinigung",
-      image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
-      imageAlt: "Clean, bright multi-family house facade after facade cleaning",
-      bullets: ["Rendered facades", "Brick facades", "Metal facades", "Glass facades", "Concrete facades"],
-    },
-    {
-      title: "Stone Cleaning",
-      href: "/leistungen/steinreinigung",
-      image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
-      imageAlt: "Cleaned natural stone terrace with polygonal slabs",
-      bullets: ["Natural stone", "Paving", "Terraces", "Steps", "Masonry"],
-    },
-  ],
-  fr: [
-    {
-      title: "Nettoyage industriel",
-      href: "/leistungen/industriereinigung",
-      image: "/images/leistungen/industriereinigung-reinraum-industriesauger-skyvac.avif",
-      imageAlt: "Employé en combinaison de protection nettoyant un faux plancher industriel avec un aspirateur industriel",
-      bullets: ["Sols de halls", "Plafonds et murs", "Machines", "Entrepôts", "Ventilation"],
-    },
-    {
-      title: "Nettoyage de vitres",
-      href: "/leistungen/fensterreinigung",
-      image: "/images/leistungen/fensterreinigung-wintergarten-glasanbau-gereinigt.avif",
-      imageAlt: "Véranda en verre nettoyée avec des surfaces vitrées claires",
-      bullets: ["Fenêtres de bureaux", "Vitrines", "Façades vitrées", "Vérandas", "Panneaux solaires"],
-    },
-    {
-      title: "Nettoyage de façades",
-      href: "/leistungen/fassadenreinigung",
-      image: "/images/leistungen/fassadenreinigung-mehrfamilienhaus-sauber-nachher.avif",
-      imageAlt: "Façade propre et claire d'un immeuble collectif après le nettoyage de façade",
-      bullets: ["Façades crépies", "Façades en brique", "Façades métalliques", "Façades vitrées", "Façades en béton"],
-    },
-    {
-      title: "Nettoyage de pierre",
-      href: "/leistungen/steinreinigung",
-      image: "/images/leistungen/steinreinigung-natursteinterrasse-polygonalplatten-sauber-nachher.avif",
-      imageAlt: "Terrasse en pierre naturelle nettoyée avec des dalles polygonales",
-      bullets: ["Pierre naturelle", "Pavés", "Terrasses", "Escaliers", "Maçonnerie"],
-    },
-  ],
+function getOverviewServices(locale: Locale) {
+  return getLocalizedServices(locale).map((service) => {
+    const hero = getServiceMedia(service.slug)?.hero
+    return {
+      title: service.title,
+      href: service.href,
+      image: hero?.src ?? `/placeholder.svg?height=800&width=640&query=${service.imageQuery}`,
+      imageAlt: hero?.alt ?? service.title,
+      bullets: service.items.slice(0, 5).map((item) => item.label),
+    }
+  })
 }
 
 const TEXT = {
@@ -125,7 +47,7 @@ const TEXT = {
 }
 
 export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
-  const services = SERVICES[locale]
+  const services = getOverviewServices(locale)
   const t = TEXT[locale]
   const [activeIndex, setActiveIndex] = useState(0)
   const active = services[activeIndex]
@@ -209,7 +131,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
                     >
                       <div className="overflow-hidden">
                         <Link
-                          href={localizeHref(service.href, locale)}
+                          href={service.href}
                           className="group relative mb-5 block aspect-[4/5] overflow-hidden rounded-3xl cursor-pointer"
                         >
                           <Image
@@ -321,7 +243,7 @@ export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
           {/* Active service image panel */}
           <Reveal direction="scale" key={active.title}>
             <Link
-              href={localizeHref(active.href, locale)}
+              href={active.href}
               className="group relative block aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5] overflow-hidden rounded-3xl cursor-pointer"
             >
               <Image

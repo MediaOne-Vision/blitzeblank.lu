@@ -7,46 +7,16 @@ import { getServiceMedia } from "@/lib/service-media"
 import { ArrowRight, ArrowUpRight, Calculator, CheckCircle2, Home, Building2 } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 import { getLocalizedServices } from "@/lib/services"
-import { extraServiceContent, type ExtraServiceSlug } from "@/lib/extra-service-content"
+import { extraServiceContent } from "@/lib/extra-service-content"
 import { getAudienceLabel, getLocationCountry, type Audience } from "@/lib/locations"
 import { LocationsGrid } from "@/components/locations-grid"
-
-const FEATURES: Record<string, Record<Locale, string[]>> = {
-  industriereinigung: {
-    de: ["Produktionshallen", "Lagerräume", "Werkstätten", "Maschinen & Anlagen"],
-    en: ["Production Halls", "Warehouses", "Workshops", "Machines & Equipment"],
-    fr: ["Halls de production", "Entrepôts", "Ateliers", "Machines et équipements"],
-  },
-  fensterreinigung: {
-    de: ["Wohnhäuser & Wintergärten", "Büros & Schaufenster", "Glasfassaden", "Solaranlagen"],
-    en: ["Homes & Conservatories", "Offices & Shop Windows", "Glass Facades", "Solar Panels"],
-    fr: ["Maisons et vérandas", "Bureaux et vitrines", "Façades vitrées", "Panneaux solaires"],
-  },
-  fassadenreinigung: {
-    de: ["Putzfassaden", "Klinkerfassaden", "Metallfassaden", "Glasfassaden"],
-    en: ["Plaster Facades", "Brick Facades", "Metal Facades", "Glass Facades"],
-    fr: ["Façades crépies", "Façades en brique", "Façades métalliques", "Façades vitrées"],
-  },
-  steinreinigung: {
-    de: ["Naturstein", "Pflasterflächen", "Terrassen", "Außentreppen"],
-    en: ["Natural Stone", "Paving", "Terraces", "Outdoor Stairs"],
-    fr: ["Pierre naturelle", "Surfaces pavées", "Terrasses", "Escaliers extérieurs"],
-  },
-}
-
-function getFeatures(slug: string, locale: Locale): string[] {
-  const fixed = FEATURES[slug]?.[locale]
-  if (fixed) return fixed
-  const extra = extraServiceContent[slug as ExtraServiceSlug]
-  return extra ? extra[locale].features.slice(0, 4).map((f) => f.title) : []
-}
 
 const TEXT = {
   de: {
     eyebrow: "Leistungen",
     heading: "Reinigung für jeden Anspruch",
     intro:
-      "Von der Fensterreinigung bis zur Fassadenpflege - für Privat- und Gewerbekunden in Luxemburg und Deutschland. Unterhalts- und Industriereinigung gibt es für Gewerbekunden.",
+      "Acht Leistungsbereiche für Privat- und Gewerbekunden in Luxemburg und Deutschland. Nur die Industriereinigung richtet sich ausschließlich an Gewerbekunden, die Treppenhausreinigung gibt es derzeit nur in Deutschland.",
     onlyIn: "nur in",
     locHeading: "Wo wir arbeiten",
     learnMore: "Mehr erfahren",
@@ -64,7 +34,7 @@ const TEXT = {
     eyebrow: "Services",
     heading: "Cleaning for Every Need",
     intro:
-      "From window cleaning to facade care - for private and business customers in Luxembourg and Germany. Maintenance and industrial cleaning are available for business customers.",
+      "Eight service areas for private and business customers in Luxembourg and Germany. Only industrial cleaning is exclusively for business customers, and stairwell cleaning is currently available in Germany only.",
     onlyIn: "only in",
     locHeading: "Where we work",
     learnMore: "Learn More",
@@ -82,7 +52,7 @@ const TEXT = {
     eyebrow: "Prestations",
     heading: "Un nettoyage pour chaque exigence",
     intro:
-      "Du nettoyage de vitres à l'entretien de façades - pour particuliers et entreprises au Luxembourg et en Allemagne. Le nettoyage d'entretien et industriel est réservé aux entreprises.",
+      "Huit domaines de prestations pour particuliers et entreprises au Luxembourg et en Allemagne. Seul le nettoyage industriel est réservé aux entreprises, et le nettoyage de cages d'escalier n'est actuellement proposé qu'en Allemagne.",
     onlyIn: "uniquement en",
     locHeading: "Où nous intervenons",
     learnMore: "En savoir plus",
@@ -201,11 +171,24 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                         ))}
                       </ul>
                       <p className="mb-5 leading-relaxed text-neutral-600 text-pretty">{service.shortDescription}</p>
-                      <ul className="mb-6 grid grid-cols-2 gap-2">
-                        {getFeatures(service.slug, locale).map((feature, i) => (
-                          <li key={i} className="flex items-center gap-2 text-sm text-neutral-600">
-                            <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-blue" />
-                            {feature}
+                      <ul className="mb-6 grid gap-2">
+                        {service.items.map((item) => (
+                          <li key={item.label} className="flex items-start gap-2 text-sm text-neutral-600">
+                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
+                            <span>
+                              {item.href ? (
+                                <Link href={item.href} className="font-semibold text-brand-navy hover:text-brand-blue">
+                                  {item.label}
+                                </Link>
+                              ) : (
+                                item.label
+                              )}
+                              {item.locations && item.locations.length === 1 && (
+                                <span className="ml-1.5 text-xs font-medium text-neutral-500">
+                                  ({t.onlyIn} {getLocationCountry(item.locations[0], locale)})
+                                </span>
+                              )}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -228,7 +211,7 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                             href={
                               service.slug === "steinreinigung"
                                 ? "/stein-angebot"
-                                : service.slug in extraServiceContent
+                                : service.slug in extraServiceContent || service.slug === "solarreinigung"
                                   ? localizeHref("/kontakt", locale)
                                   : `${localizeHref("/angebot", locale)}?leistung=${service.slug}`
                             }

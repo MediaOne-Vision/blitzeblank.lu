@@ -1,6 +1,11 @@
 import type { Locale } from "@/lib/i18n"
 
-export type ExtraServiceSlug = "unterhaltsreinigung" | "treppenhausreinigung"
+export type ExtraServiceSlug =
+  | "unterhaltsreinigung"
+  | "treppenhausreinigung"
+  | "spezialreinigung"
+  | "solarreinigung"
+  | "reinigungsnotdienst"
 
 interface ExtraServiceContent {
   title: string
@@ -17,19 +22,20 @@ export const extraServiceContent: Record<ExtraServiceSlug, Record<Locale, ExtraS
   unterhaltsreinigung: {
     de: {
       title: "Unterhaltsreinigung",
-      heading: "Unterhaltsreinigung für Büros, Praxen und Gewerbeflächen",
+      heading: "Unterhaltsreinigung für Gewerbe, Einrichtungen und Privathaushalte",
       subtitle:
-        "Regelmäßig saubere Räume zu festen Terminen - zuverlässig, diskret und genau auf Ihren Betrieb abgestimmt. Für Gewerbekunden in Luxemburg und Deutschland.",
-      metaTitle: "Unterhaltsreinigung für Gewerbe in Luxemburg & Deutschland | Blitzeblank",
+        "Regelmäßig saubere Räume zu festen Terminen - zuverlässig, diskret und genau auf Ihren Bedarf abgestimmt. Für Gewerbe- und Privatkunden in Luxemburg und Deutschland.",
+      metaTitle: "Unterhaltsreinigung für Gewerbe & Privathaushalte in Luxemburg & Deutschland | Blitzeblank",
       metaDescription:
-        "Regelmäßige Unterhaltsreinigung für Büros, Praxen, Geschäfte und Gewerbeflächen in Luxemburg sowie in Trier, Bitburg und Region. Feste Termine, klares Festangebot.",
+        "Regelmäßige Unterhaltsreinigung für Büros, Gastronomie, Geschäfte, Schulen, Gesundheitseinrichtungen und Privathaushalte in Luxemburg sowie in Trier, Bitburg und Region. Individuelle Intervalle, klares Festangebot.",
       features: [
-        { title: "Büroreinigung", description: "Schreibtische, Böden, Küchen und Besprechungsräume - täglich, wöchentlich oder nach Bedarf." },
-        { title: "Praxen und Kanzleien", description: "Hygienisch und diskret, abgestimmt auf Ihre Öffnungszeiten und Anforderungen." },
+        { title: "Bürogebäude", description: "Schreibtische, Böden, Küchen und Besprechungsräume - täglich, wöchentlich oder nach Bedarf." },
+        { title: "Bildungs- und Gesundheitseinrichtungen", description: "Hygienisch und diskret, abgestimmt auf Betriebsabläufe und Anforderungen Ihrer Einrichtung." },
+        { title: "Gastronomiebetriebe", description: "Gepflegte Gasträume, Küchenbereiche und Sanitäranlagen - angepasst an Ihre Öffnungszeiten." },
         { title: "Geschäfte und Verkaufsflächen", description: "Gepflegte Verkaufsräume, Eingangsbereiche und Schaufenster für einen guten ersten Eindruck." },
-        { title: "Sanitär- und Sozialräume", description: "Gründliche Reinigung und Desinfektion von Toiletten, Küchen und Aufenthaltsräumen." },
-        { title: "Bodenpflege", description: "Pflege von Hartböden, Teppichen und Treppen - von der Unterhaltsreinigung bis zur Grundreinigung." },
-        { title: "Feste Ansprechperson", description: "Ein eingespieltes Team und ein direkter Kontakt für alle Fragen und Sonderwünsche." },
+        { title: "Kindergärten und Schulen", description: "Gründliche Reinigung von Klassen-, Gruppen- und Sanitärräumen für ein sauberes Umfeld." },
+        { title: "Privathaushalte", description: "Regelmäßige Reinigung Ihres Zuhauses - zuverlässig, vertrauensvoll und zu Ihrem Rhythmus." },
+        { title: "Individuelle Reinigungsintervalle", description: "Täglich, wöchentlich, 14-tägig oder monatlich - Sie bestimmen, wie oft wir kommen." },
       ],
       benefits: [
         "Feste Reinigungsintervalle nach Ihrem Bedarf",
@@ -49,19 +55,20 @@ export const extraServiceContent: Record<ExtraServiceSlug, Record<Locale, ExtraS
     },
     en: {
       title: "Maintenance Cleaning",
-      heading: "Maintenance Cleaning for Offices, Practices and Commercial Spaces",
+      heading: "Maintenance Cleaning for Businesses, Institutions and Private Households",
       subtitle:
-        "Consistently clean premises on fixed schedules - reliable, discreet and tailored to your business. For business customers in Luxembourg and Germany.",
-      metaTitle: "Maintenance Cleaning for Businesses in Luxembourg & Germany | Blitzeblank",
+        "Consistently clean premises on fixed schedules - reliable, discreet and tailored to your needs. For business and private customers in Luxembourg and Germany.",
+      metaTitle: "Maintenance Cleaning for Businesses & Households in Luxembourg & Germany | Blitzeblank",
       metaDescription:
-        "Regular maintenance cleaning for offices, practices, shops and commercial spaces in Luxembourg and in Trier, Bitburg and the region. Fixed schedules, clear fixed-price quote.",
+        "Regular maintenance cleaning for offices, restaurants, shops, schools, healthcare facilities and private households in Luxembourg and in Trier, Bitburg and the region. Individual intervals, clear fixed-price quote.",
       features: [
-        { title: "Office Cleaning", description: "Desks, floors, kitchens and meeting rooms - daily, weekly or as needed." },
-        { title: "Practices and Law Firms", description: "Hygienic and discreet, aligned with your opening hours and requirements." },
-        { title: "Shops and Retail Space", description: "Well-kept sales areas, entrances and shop windows for a great first impression." },
-        { title: "Sanitary and Staff Areas", description: "Thorough cleaning and disinfection of restrooms, kitchens and break rooms." },
-        { title: "Floor Care", description: "Care for hard floors, carpets and stairs - from regular upkeep to deep cleaning." },
-        { title: "Dedicated Contact", description: "A well-rehearsed team and a direct contact for all questions and special requests." },
+        { title: "Office Buildings", description: "Desks, floors, kitchens and meeting rooms - daily, weekly or as needed." },
+        { title: "Educational and Healthcare Facilities", description: "Hygienic and discreet, aligned with the operations and requirements of your facility." },
+        { title: "Restaurants and Catering", description: "Well-kept dining areas, kitchens and restrooms - adapted to your opening hours." },
+        { title: "Shops and Retail Spaces", description: "Well-kept sales areas, entrances and shop windows for a great first impression." },
+        { title: "Kindergartens and Schools", description: "Thorough cleaning of classrooms, group rooms and restrooms for a clean environment." },
+        { title: "Private Households", description: "Regular cleaning of your home - reliable, trustworthy and to your rhythm." },
+        { title: "Individual Cleaning Intervals", description: "Daily, weekly, every two weeks or monthly - you decide how often we come." },
       ],
       benefits: [
         "Fixed cleaning intervals based on your needs",
@@ -81,19 +88,20 @@ export const extraServiceContent: Record<ExtraServiceSlug, Record<Locale, ExtraS
     },
     fr: {
       title: "Nettoyage d'entretien",
-      heading: "Nettoyage d'entretien pour bureaux, cabinets et locaux professionnels",
+      heading: "Nettoyage d'entretien pour entreprises, établissements et ménages privés",
       subtitle:
-        "Des locaux propres en continu, à dates fixes - fiable, discret et adapté à votre activité. Pour les entreprises au Luxembourg et en Allemagne.",
-      metaTitle: "Nettoyage d'entretien pour entreprises au Luxembourg et en Allemagne | Blitzeblank",
+        "Des locaux propres en continu, à dates fixes - fiable, discret et adapté à vos besoins. Pour entreprises et particuliers au Luxembourg et en Allemagne.",
+      metaTitle: "Nettoyage d'entretien pour entreprises et particuliers au Luxembourg et en Allemagne | Blitzeblank",
       metaDescription:
-        "Nettoyage d'entretien régulier pour bureaux, cabinets, commerces et locaux professionnels au Luxembourg ainsi qu'à Trèves, Bitburg et dans la région. Dates fixes, devis à prix fixe.",
+        "Nettoyage d'entretien régulier pour bureaux, restaurants, commerces, écoles, établissements de santé et ménages privés au Luxembourg ainsi qu'à Trèves, Bitburg et dans la région. Intervalles individuels, devis à prix fixe.",
       features: [
-        { title: "Nettoyage de bureaux", description: "Bureaux, sols, cuisines et salles de réunion - tous les jours, chaque semaine ou selon vos besoins." },
-        { title: "Cabinets et études", description: "Hygiénique et discret, adapté à vos horaires d'ouverture et à vos exigences." },
+        { title: "Bâtiments de bureaux", description: "Bureaux, sols, cuisines et salles de réunion - tous les jours, chaque semaine ou selon vos besoins." },
+        { title: "Établissements d'enseignement et de santé", description: "Hygiénique et discret, adapté au fonctionnement et aux exigences de votre établissement." },
+        { title: "Établissements de restauration", description: "Salles, cuisines et sanitaires soignés - adaptés à vos horaires d'ouverture." },
         { title: "Commerces et surfaces de vente", description: "Espaces de vente, entrées et vitrines soignés pour une excellente première impression." },
-        { title: "Sanitaires et espaces du personnel", description: "Nettoyage minutieux et désinfection des toilettes, cuisines et salles de pause." },
-        { title: "Entretien des sols", description: "Entretien des sols durs, moquettes et escaliers - du nettoyage régulier au nettoyage en profondeur." },
-        { title: "Interlocuteur dédié", description: "Une équipe rodée et un contact direct pour toutes vos questions et demandes spéciales." },
+        { title: "Crèches et écoles", description: "Nettoyage minutieux des salles de classe, de groupe et des sanitaires pour un environnement propre." },
+        { title: "Ménages privés", description: "Nettoyage régulier de votre domicile - fiable, de confiance et à votre rythme." },
+        { title: "Intervalles individuels", description: "Tous les jours, chaque semaine, tous les 14 jours ou chaque mois - vous décidez de la fréquence." },
       ],
       benefits: [
         "Intervalles de nettoyage fixes selon vos besoins",
@@ -204,6 +212,255 @@ export const extraServiceContent: Record<ExtraServiceSlug, Record<Locale, ExtraS
         { step: "Visite", description: "Visite gratuite de la cage d'escalier" },
         { step: "Devis", description: "Prix fixe par nettoyage ou par mois" },
         { step: "Nettoyage", description: "Exécution régulière à dates fixes" },
+      ],
+    },
+  },
+  spezialreinigung: {
+    de: {
+      title: "Spezialreinigung & ergänzende Dienstleistungen",
+      heading: "Spezialreinigung und ergänzende Dienstleistungen",
+      subtitle:
+        "Für besondere Anlässe und einmalige Einsätze: von der Grundreinigung bis zur Entrümpelung. Für Privat- und Gewerbekunden in Luxemburg und Deutschland.",
+      metaTitle: "Spezialreinigung, Grundreinigung & Bauendreinigung | Blitzeblank",
+      metaDescription:
+        "Treppenhausreinigung, Grundreinigung, Bauendreinigung, Polsterreinigung, Entrümpelung und Reinigung nach Veranstaltungen in Luxemburg sowie in Trier, Bitburg und Region.",
+      features: [
+        { title: "Treppenhausreinigung", description: "Regelmäßig saubere Treppenhäuser, Flure und Eingänge. Aktuell in Deutschland." },
+        { title: "Grundreinigung", description: "Gründliche Reinigung von Räumen und Flächen - beim Einzug, Auszug oder als Neustart." },
+        { title: "Bauendreinigung", description: "Feinreinigung nach Neubau, Umbau oder Renovierung - bezugsfertig übergeben." },
+        { title: "Polsterreinigung", description: "Schonende Reinigung von Sofas, Sesseln, Stühlen und weiteren Polstermöbeln." },
+        { title: "Entrümpelung", description: "Räumung von Wohnungen, Kellern, Dachböden und Gewerbeflächen." },
+        { title: "Reinigung nach Veranstaltungen und Feiern", description: "Wir bringen Räume und Außenflächen nach Ihrem Event wieder in Ordnung." },
+      ],
+      benefits: [
+        "Eine Ansprechperson für alle Zusatzleistungen",
+        "Einmalige Einsätze oder kombinierbar mit regelmäßiger Reinigung",
+        "Kostenlose Besichtigung und klares Angebot",
+        "Für Privat- und Gewerbekunden",
+        "Kombinierbar mit Fenster-, Fassaden- und Unterhaltsreinigung",
+      ],
+      process: [
+        { step: "Anfrage", description: "Sie beschreiben Objekt, Umfang und Wunschtermin" },
+        { step: "Besichtigung", description: "Bei Bedarf kostenlose Begehung vor Ort" },
+        { step: "Angebot", description: "Transparentes Angebot mit klarem Preis" },
+        { step: "Durchführung", description: "Zuverlässige Umsetzung zum vereinbarten Termin" },
+      ],
+    },
+    en: {
+      title: "Special Cleaning & Additional Services",
+      heading: "Special Cleaning and Additional Services",
+      subtitle:
+        "For special occasions and one-off jobs: from deep cleaning to clearance. For private and business customers in Luxembourg and Germany.",
+      metaTitle: "Special Cleaning, Deep Cleaning & Post-Construction Cleaning | Blitzeblank",
+      metaDescription:
+        "Stairwell cleaning, deep cleaning, post-construction cleaning, upholstery cleaning, clearance and cleaning after events in Luxembourg and in Trier, Bitburg and the region.",
+      features: [
+        { title: "Stairwell Cleaning", description: "Regularly clean stairwells, corridors and entrances. Currently in Germany." },
+        { title: "Deep Cleaning", description: "Thorough cleaning of rooms and surfaces - for moving in, moving out or a fresh start." },
+        { title: "Post-Construction Cleaning", description: "Fine cleaning after new builds, conversions or renovations - handed over ready to move in." },
+        { title: "Upholstery Cleaning", description: "Gentle cleaning of sofas, armchairs, chairs and other upholstered furniture." },
+        { title: "Clearance", description: "Clearing of apartments, basements, attics and commercial spaces." },
+        { title: "Cleaning After Events and Celebrations", description: "We put rooms and outdoor areas back in order after your event." },
+      ],
+      benefits: [
+        "One contact for all additional services",
+        "One-off jobs or combinable with regular cleaning",
+        "Free inspection and a clear quote",
+        "For private and business customers",
+        "Combinable with window, facade and maintenance cleaning",
+      ],
+      process: [
+        { step: "Inquiry", description: "You describe the property, scope and preferred date" },
+        { step: "Inspection", description: "Free on-site walkthrough if needed" },
+        { step: "Quote", description: "Transparent quote with a clear price" },
+        { step: "Execution", description: "Reliable service on the agreed date" },
+      ],
+    },
+    fr: {
+      title: "Nettoyage spécial et prestations complémentaires",
+      heading: "Nettoyage spécial et prestations complémentaires",
+      subtitle:
+        "Pour les occasions spéciales et les interventions ponctuelles : du nettoyage en profondeur au débarras. Pour particuliers et entreprises au Luxembourg et en Allemagne.",
+      metaTitle: "Nettoyage spécial, en profondeur et de fin de chantier | Blitzeblank",
+      metaDescription:
+        "Nettoyage de cages d'escalier, nettoyage en profondeur, de fin de chantier, de rembourrés, débarras et nettoyage après événements au Luxembourg ainsi qu'à Trèves, Bitburg et dans la région.",
+      features: [
+        { title: "Nettoyage de cages d'escalier", description: "Cages d'escalier, couloirs et entrées propres en continu. Actuellement en Allemagne." },
+        { title: "Nettoyage en profondeur", description: "Nettoyage minutieux des pièces et surfaces - à l'emménagement, au déménagement ou pour un nouveau départ." },
+        { title: "Nettoyage de fin de chantier", description: "Nettoyage fin après construction, transformation ou rénovation - livré prêt à l'emploi." },
+        { title: "Nettoyage de rembourrés", description: "Nettoyage en douceur de canapés, fauteuils, chaises et autres meubles rembourrés." },
+        { title: "Débarras", description: "Débarras d'appartements, de caves, de greniers et de locaux professionnels." },
+        { title: "Nettoyage après événements et fêtes", description: "Nous remettons salles et espaces extérieurs en ordre après votre événement." },
+      ],
+      benefits: [
+        "Un seul interlocuteur pour toutes les prestations complémentaires",
+        "Interventions ponctuelles ou combinables avec un nettoyage régulier",
+        "Visite gratuite et devis clair",
+        "Pour particuliers et entreprises",
+        "Combinable avec le nettoyage de vitres, de façades et d'entretien",
+      ],
+      process: [
+        { step: "Demande", description: "Vous décrivez le site, l'étendue et la date souhaitée" },
+        { step: "Visite", description: "Visite gratuite sur place si nécessaire" },
+        { step: "Devis", description: "Devis transparent avec un prix clair" },
+        { step: "Exécution", description: "Réalisation fiable à la date convenue" },
+      ],
+    },
+  },
+  solarreinigung: {
+    de: {
+      title: "Solar- & Photovoltaikreinigung",
+      heading: "Reinigung von Solar- und Photovoltaikanlagen",
+      subtitle:
+        "Schonende Reinigung Ihrer Anlage auf Dach oder Freifläche - für Privat- und Gewerbekunden in Luxemburg und Deutschland.",
+      metaTitle: "Solar- & Photovoltaikreinigung in Luxemburg & Deutschland | Blitzeblank",
+      metaDescription:
+        "Professionelle Reinigung von Solaranlagen und Photovoltaikanlagen für Privat- und Gewerbekunden in Luxemburg sowie in Trier, Bitburg und Region.",
+      features: [
+        { title: "Reinigung von Solaranlagen", description: "Schonende Reinigung von Solarmodulen auf Dächern und Freiflächen." },
+        { title: "Reinigung von Photovoltaikanlagen", description: "Entfernung von Staub, Pollen, Vogelkot und Verschmutzungen von Photovoltaikmodulen." },
+        { title: "Schonende Verfahren", description: "Arbeiten mit geeignetem Wasser und weichen Bürsten, abgestimmt auf Ihre Module." },
+        { title: "Einfamilienhaus bis Gewerbedach", description: "Für kleine Dachanlagen ebenso wie für große Gewerbeflächen." },
+      ],
+      benefits: [
+        "Schonend für Module und Montagesystem",
+        "Für Privat- und Gewerbekunden",
+        "Kombinierbar mit Fenster- und Fassadenreinigung",
+        "Klares Angebot nach Rücksprache",
+      ],
+      process: [
+        { step: "Anfrage", description: "Anlage, Standort und Zugang beschreiben" },
+        { step: "Angebot", description: "Transparentes Angebot für Ihre Anlage" },
+        { step: "Reinigung", description: "Fachgerechte Reinigung zum vereinbarten Termin" },
+      ],
+    },
+    en: {
+      title: "Solar & Photovoltaic Cleaning",
+      heading: "Cleaning of Solar and Photovoltaic Systems",
+      subtitle:
+        "Gentle cleaning of your system on the roof or open site - for private and business customers in Luxembourg and Germany.",
+      metaTitle: "Solar & Photovoltaic Cleaning in Luxembourg & Germany | Blitzeblank",
+      metaDescription:
+        "Professional cleaning of solar and photovoltaic systems for private and business customers in Luxembourg and in Trier, Bitburg and the region.",
+      features: [
+        { title: "Cleaning of Solar Systems", description: "Gentle cleaning of solar modules on roofs and open sites." },
+        { title: "Cleaning of Photovoltaic Systems", description: "Removal of dust, pollen, bird droppings and soiling from photovoltaic modules." },
+        { title: "Gentle Methods", description: "Working with suitable water and soft brushes, matched to your modules." },
+        { title: "Family Homes to Commercial Roofs", description: "For small rooftop systems as well as large commercial areas." },
+      ],
+      benefits: [
+        "Gentle on modules and mounting system",
+        "For private and business customers",
+        "Combinable with window and facade cleaning",
+        "Clear quote after consultation",
+      ],
+      process: [
+        { step: "Inquiry", description: "Describe the system, location and access" },
+        { step: "Quote", description: "Transparent quote for your system" },
+        { step: "Cleaning", description: "Professional cleaning on the agreed date" },
+      ],
+    },
+    fr: {
+      title: "Nettoyage solaire et photovoltaïque",
+      heading: "Nettoyage d'installations solaires et photovoltaïques",
+      subtitle:
+        "Nettoyage en douceur de votre installation sur toiture ou terrain - pour particuliers et entreprises au Luxembourg et en Allemagne.",
+      metaTitle: "Nettoyage solaire et photovoltaïque au Luxembourg et en Allemagne | Blitzeblank",
+      metaDescription:
+        "Nettoyage professionnel d'installations solaires et photovoltaïques pour particuliers et entreprises au Luxembourg ainsi qu'à Trèves, Bitburg et dans la région.",
+      features: [
+        { title: "Nettoyage d'installations solaires", description: "Nettoyage en douceur des modules solaires sur toitures et terrains." },
+        { title: "Nettoyage d'installations photovoltaïques", description: "Élimination de la poussière, du pollen, des fientes et des salissures sur les modules photovoltaïques." },
+        { title: "Méthodes douces", description: "Travail avec une eau adaptée et des brosses douces, selon vos modules." },
+        { title: "De la maison au toit professionnel", description: "Pour les petites installations en toiture comme pour les grandes surfaces professionnelles." },
+      ],
+      benefits: [
+        "Doux pour les modules et le système de fixation",
+        "Pour particuliers et entreprises",
+        "Combinable avec le nettoyage de vitres et de façades",
+        "Devis clair après concertation",
+      ],
+      process: [
+        { step: "Demande", description: "Décrivez l'installation, le lieu et l'accès" },
+        { step: "Devis", description: "Devis transparent pour votre installation" },
+        { step: "Nettoyage", description: "Nettoyage professionnel à la date convenue" },
+      ],
+    },
+  },
+  reinigungsnotdienst: {
+    de: {
+      title: "Reinigungsnotdienst",
+      heading: "Reinigungsnotdienst bei dringendem Bedarf",
+      subtitle:
+        "Wenn es schnell gehen muss: Wir helfen bei dringendem Reinigungsbedarf und übernehmen kurzfristige Einsätze nach Verfügbarkeit. Für Privat- und Gewerbekunden.",
+      metaTitle: "Reinigungsnotdienst in Luxemburg & Deutschland | Blitzeblank",
+      metaDescription:
+        "Kurzfristige Reinigungseinsätze bei dringendem Bedarf in Luxemburg sowie in Trier, Bitburg und Region. Einsätze nach Verfügbarkeit - jetzt anfragen.",
+      features: [
+        { title: "Hilfe bei dringendem Reinigungsbedarf", description: "Wir unterstützen Sie, wenn Räume oder Flächen schnellstmöglich gereinigt werden müssen." },
+        { title: "Kurzfristige Einsätze", description: "Einsätze nach Verfügbarkeit - Sie schildern uns den Bedarf, wir melden uns zeitnah." },
+        { title: "Für Privat- und Gewerbekunden", description: "Ob Wohnung, Büro, Geschäft oder Betrieb." },
+      ],
+      benefits: [
+        "Schnelle Rückmeldung auf Ihre Anfrage",
+        "Einsätze nach Verfügbarkeit",
+        "Klare Absprache zu Umfang und Preis",
+        "Bei Bedarf Übergang in regelmäßige Reinigung",
+      ],
+      process: [
+        { step: "Anfrage", description: "Dringlichkeit, Ort und Umfang schildern" },
+        { step: "Rückmeldung", description: "Wir prüfen die Verfügbarkeit und melden uns" },
+        { step: "Einsatz", description: "Schnelle Durchführung nach Absprache" },
+      ],
+    },
+    en: {
+      title: "Emergency Cleaning Service",
+      heading: "Emergency Cleaning for Urgent Needs",
+      subtitle:
+        "When it has to be quick: we help with urgent cleaning needs and take short-notice jobs subject to availability. For private and business customers.",
+      metaTitle: "Emergency Cleaning Service in Luxembourg & Germany | Blitzeblank",
+      metaDescription:
+        "Short-notice cleaning jobs for urgent needs in Luxembourg and in Trier, Bitburg and the region. Jobs subject to availability - request now.",
+      features: [
+        { title: "Help with Urgent Cleaning Needs", description: "We support you when rooms or surfaces need to be cleaned as soon as possible." },
+        { title: "Short-Notice Jobs", description: "Jobs subject to availability - tell us what you need and we will get back to you promptly." },
+        { title: "For Private and Business Customers", description: "Whether apartment, office, shop or business." },
+      ],
+      benefits: [
+        "Quick response to your inquiry",
+        "Jobs subject to availability",
+        "Clear agreement on scope and price",
+        "Transition into regular cleaning if needed",
+      ],
+      process: [
+        { step: "Inquiry", description: "Describe urgency, location and scope" },
+        { step: "Response", description: "We check availability and get back to you" },
+        { step: "Job", description: "Prompt execution as agreed" },
+      ],
+    },
+    fr: {
+      title: "Service de nettoyage d'urgence",
+      heading: "Nettoyage d'urgence en cas de besoin pressant",
+      subtitle:
+        "Quand il faut aller vite : nous aidons en cas de besoin urgent de nettoyage et assurons des interventions à court terme selon disponibilité. Pour particuliers et entreprises.",
+      metaTitle: "Service de nettoyage d'urgence au Luxembourg et en Allemagne | Blitzeblank",
+      metaDescription:
+        "Interventions de nettoyage à court terme en cas de besoin urgent au Luxembourg ainsi qu'à Trèves, Bitburg et dans la région. Selon disponibilité - demandez maintenant.",
+      features: [
+        { title: "Aide en cas de besoin urgent", description: "Nous vous aidons lorsque des locaux ou surfaces doivent être nettoyés au plus vite." },
+        { title: "Interventions à court terme", description: "Selon disponibilité - décrivez votre besoin, nous revenons vers vous rapidement." },
+        { title: "Pour particuliers et entreprises", description: "Appartement, bureau, commerce ou entreprise." },
+      ],
+      benefits: [
+        "Réponse rapide à votre demande",
+        "Interventions selon disponibilité",
+        "Accord clair sur l'étendue et le prix",
+        "Passage à un nettoyage régulier si nécessaire",
+      ],
+      process: [
+        { step: "Demande", description: "Décrivez l'urgence, le lieu et l'étendue" },
+        { step: "Réponse", description: "Nous vérifions la disponibilité et revenons vers vous" },
+        { step: "Intervention", description: "Réalisation rapide selon accord" },
       ],
     },
   },

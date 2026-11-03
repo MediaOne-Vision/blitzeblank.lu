@@ -31,6 +31,30 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     beforeAfter: [],
     gallery: [],
   },
+  spezialreinigung: {
+    hero: {
+      src: `${BASE}/spezialreinigung-grundreinigung-wohnraum-sauber.png`,
+      alt: "Frisch grundgereinigter Wohnraum mit sauberem Sofa und glänzendem Parkettboden",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
+  solarreinigung: {
+    hero: {
+      src: `${BASE}/solarreinigung-photovoltaikanlage-dach-sauber.png`,
+      alt: "Gereinigte Photovoltaikanlage auf einem Hausdach unter blauem Himmel",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
+  reinigungsnotdienst: {
+    hero: {
+      src: `${BASE}/reinigungsnotdienst-kurzfristiger-einsatz-reinigungsteam.png`,
+      alt: "Reinigungsteam im Einsatz am Eingang eines Gewerbegebäudes beim Reinigungsnotdienst",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
   treppenhausreinigung: {
     hero: {
       src: `${BASE}/treppenhausreinigung-mehrfamilienhaus-treppenhaus-sauber.png`,

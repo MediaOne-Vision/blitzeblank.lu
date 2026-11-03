@@ -13,11 +13,11 @@ const TEXT = {
     audiences: {
       privat: {
         title: "Privatkunden",
-        body: "Für Haus, Garten und Wohnanlage: Fenster, Fassade, Stein und Treppenhaus.",
+        body: "Für Haus, Garten und Wohnanlage: Fenster, Fassade, Stein, Spezial- und Solarreinigung sowie Treppenhaus.",
       },
       gewerbe: {
         title: "Gewerbekunden",
-        body: "Für Büros, Praxen, Geschäfte und Betriebe: alle Leistungen inklusive Unterhalts- und Industriereinigung.",
+        body: "Für Büros, Praxen, Geschäfte und Betriebe: alle acht Leistungsbereiche, inklusive Unterhalts-, Industriereinigung und Reinigungsnotdienst.",
       },
     },
     onlyIn: "nur in",
@@ -34,11 +34,11 @@ const TEXT = {
     audiences: {
       privat: {
         title: "Private customers",
-        body: "For your home, garden and residential property: windows, facade, stone and stairwells.",
+        body: "For your home, garden and residential property: windows, facade, stone, specialist and solar cleaning, and stairwells.",
       },
       gewerbe: {
         title: "Business customers",
-        body: "For offices, practices, shops and companies: all services including maintenance and industrial cleaning.",
+        body: "For offices, practices, shops and companies: all eight service areas, including maintenance, industrial cleaning and emergency cleaning.",
       },
     },
     onlyIn: "only in",
@@ -55,11 +55,11 @@ const TEXT = {
     audiences: {
       privat: {
         title: "Particuliers",
-        body: "Pour votre maison, votre jardin et votre résidence : vitres, façade, pierre et cages d'escalier.",
+        body: "Pour votre maison, votre jardin et votre résidence : vitres, façade, pierre, nettoyage spécial et solaire, et cages d'escalier.",
       },
       gewerbe: {
         title: "Entreprises",
-        body: "Pour bureaux, cabinets, commerces et sociétés : toutes les prestations, y compris le nettoyage d'entretien et industriel.",
+        body: "Pour bureaux, cabinets, commerces et sociétés : les huit domaines de prestations, y compris le nettoyage d'entretien, industriel et le service de nettoyage d'urgence.",
       },
     },
     onlyIn: "uniquement en",
