@@ -3,6 +3,7 @@ import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ServiceSwitcher } from "@/components/service-switcher"
+import { LocalAreasSection } from "@/components/local-areas-section"
 import { QuoteBanner } from "@/components/quote-banner"
 import { StoneOfferCta } from "@/components/stone-offer-cta"
 import { QuoteWizard } from "@/components/quote-wizard"
@@ -12,6 +13,8 @@ import { getServiceMedia } from "@/lib/service-media"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle2, MapPin, type LucideIcon } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
+import { getService } from "@/lib/services"
+import { getAudienceLabel, getAvailabilityText, getLocationCountry } from "@/lib/locations"
 
 interface ServiceFeature {
   title: string
@@ -112,6 +115,8 @@ export function ServicePageTemplate({
 }: ServicePageTemplateProps) {
   const media = getServiceMedia(slug)
   const t = TEXT[locale]
+  const service = getService(slug)
+  const activeIn = service ? getAvailabilityText(service.locations, locale) : t.activeIn
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -151,9 +156,29 @@ export function ServicePageTemplate({
                   {heading ?? title}
                 </h1>
                 <p className="mb-4 text-lg text-white/75 text-pretty">{subtitle}</p>
+                {service && (
+                  <ul className="mb-5 flex flex-wrap gap-2">
+                    {service.audiences.map((audience) => (
+                      <li
+                        key={audience}
+                        className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20"
+                      >
+                        {getAudienceLabel(audience, locale)}
+                      </li>
+                    ))}
+                    {service.locations.map((id) => (
+                      <li
+                        key={id}
+                        className="rounded-full bg-brand-sky/15 px-3 py-1 text-xs font-semibold text-brand-sky ring-1 ring-brand-sky/30"
+                      >
+                        {getLocationCountry(id, locale)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <div className="mb-8 flex items-center gap-2 text-base font-semibold text-brand-sky">
                   <MapPin className="h-5 w-5 shrink-0" />
-                  <span>{t.activeIn}</span>
+                  <span>{activeIn}</span>
                 </div>
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <Button
@@ -260,6 +285,8 @@ export function ServicePageTemplate({
             </div>
           </div>
         </section>
+
+        {locale === "de" && <LocalAreasSection slug={slug} />}
 
         {/* Ergebnisse: Zwei große Vorher-Nachher-Vergleiche + Karussell */}
         {showResults && media && (media.beforeAfter.length > 0 || media.gallery.length > 0) && (

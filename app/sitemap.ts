@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { getLocalLandingParams, getLocalLandingPath } from "@/lib/local-landing"
 
 const SITE_URL = "https://blitzeblank.lu"
 
@@ -13,6 +14,11 @@ const routes: RouteEntry[] = [
   { path: "", priority: 1, changeFrequency: "weekly", translated: true },
   { path: "/leistungen", priority: 0.9, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/industriereinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
+  { path: "/leistungen/unterhaltsreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
+  { path: "/leistungen/treppenhausreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
+  { path: "/leistungen/spezialreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
+  { path: "/leistungen/solarreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
+  { path: "/leistungen/reinigungsnotdienst", priority: 0.8, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/fensterreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/steinreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
   { path: "/leistungen/fassadenreinigung", priority: 0.8, changeFrequency: "monthly", translated: true },
@@ -27,7 +33,14 @@ const routes: RouteEntry[] = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date()
 
-  return routes.flatMap(({ path, priority, changeFrequency, translated }) => {
+  const localLandingEntries: MetadataRoute.Sitemap = getLocalLandingParams().map(({ slug, ort }) => ({
+    url: `${SITE_URL}${getLocalLandingPath(slug, ort)}`,
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }))
+
+  const pageEntries = routes.flatMap(({ path, priority, changeFrequency, translated }) => {
     const germanUrl = `${SITE_URL}${path || "/"}`
     const englishUrl = `${SITE_URL}/en${path}`
     const frenchUrl = `${SITE_URL}/fr${path}`
@@ -57,4 +70,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return entries
   })
+
+  return [...pageEntries, ...localLandingEntries]
 }

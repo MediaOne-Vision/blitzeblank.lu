@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { OwnerSection } from "@/components/sections/owner"
+import { LocalAreasSection } from "@/components/local-areas-section"
 import { TestimonialsSection } from "@/components/sections/testimonials"
 import { FaqSection } from "@/components/sections/faq"
 import { BeforeAfterSlider } from "@/components/before-after-slider"
@@ -31,8 +32,8 @@ const FORM_ANCHOR = "anfrage"
 const TEXT = {
   de: {
     eyebrow: "Fensterreinigung für Unternehmen",
-    h1: "Streifenfreie Fenster – ohne Aufwand für Ihr Team",
-    sub: "Professionelle Fensterreinigung für Büros, Geschäfte und Gewerbeobjekte in Luxemburg und der Region. Kostenlose Besichtigung, klares Festangebot, zuverlässige Termine.",
+    h1: "Fensterreinigung in Trier, Bitburg und Luxemburg – streifenfrei, ohne Aufwand",
+    sub: "Professionelle Fensterreinigung für Büros, Geschäfte und Gewerbeobjekte in Trier, Bitburg und Luxemburg. Kostenlose Besichtigung, klares Festangebot, zuverlässige Termine.",
     heroPoints: ["Kostenlose Objektbesichtigung", "Für Büros, Geschäfte & Gewerbe", "Antwort i. d. R. in 24 Std."],
     ctaPrimary: "Kostenlose Besichtigung anfragen",
     ctaCall: "Direkt anrufen",
@@ -408,6 +409,7 @@ export function WindowCleaningB2BPage({ locale = "de" }: { locale?: Locale }) {
           </div>
         </section>
 
+        {locale === "de" && <LocalAreasSection slug="fensterreinigung" />}
         <OwnerSection locale={locale} />
         <TestimonialsSection locale={locale} />
         <FaqSection locale={locale} />

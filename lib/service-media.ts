@@ -23,6 +23,46 @@ export interface ServiceMedia {
 }
 
 export const serviceMedia: Record<string, ServiceMedia> = {
+  unterhaltsreinigung: {
+    hero: {
+      src: `${BASE}/unterhaltsreinigung-buero-sauber-gepflegt.png`,
+      alt: "Sauberes, gepflegtes Büro nach der Unterhaltsreinigung",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
+  spezialreinigung: {
+    hero: {
+      src: `${BASE}/spezialreinigung-grundreinigung-wohnraum-sauber.png`,
+      alt: "Frisch grundgereinigter Wohnraum mit sauberem Sofa und glänzendem Parkettboden",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
+  solarreinigung: {
+    hero: {
+      src: `${BASE}/solarreinigung-photovoltaikanlage-dach-sauber.png`,
+      alt: "Gereinigte Photovoltaikanlage auf einem Hausdach unter blauem Himmel",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
+  reinigungsnotdienst: {
+    hero: {
+      src: `${BASE}/reinigungsnotdienst-kurzfristiger-einsatz-reinigungsteam.png`,
+      alt: "Reinigungsteam im Einsatz am Eingang eines Gewerbegebäudes beim Reinigungsnotdienst",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
+  treppenhausreinigung: {
+    hero: {
+      src: `${BASE}/treppenhausreinigung-mehrfamilienhaus-treppenhaus-sauber.png`,
+      alt: "Sauberes Treppenhaus eines Mehrfamilienhauses nach der Treppenhausreinigung",
+    },
+    beforeAfter: [],
+    gallery: [],
+  },
   fensterreinigung: {
     hero: {
       src: `${BASE}/fensterreinigung-terrassenueberdachung-glasdach-gereinigt-nachher.avif`,

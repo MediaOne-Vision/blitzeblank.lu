@@ -2,6 +2,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Reveal } from "@/components/reveal"
 import { HeroSection } from "@/components/sections/hero"
+import { AudienceLocationsSection } from "@/components/sections/audience-locations"
 import { ServicesOverview } from "@/components/sections/services-overview"
 import { ResultsShowcase } from "@/components/sections/results-showcase"
 import { WhyUsSection } from "@/components/sections/why-us"
@@ -20,6 +21,7 @@ export function HomeContent({ locale = "de" }: { locale?: Locale }) {
       <Navigation />
       <main className="flex-1">
         <HeroSection locale={locale} />
+        <AudienceLocationsSection locale={locale} />
         <ServicesOverview locale={locale} />
         <WhyUsSection locale={locale} />
         <Reveal>
