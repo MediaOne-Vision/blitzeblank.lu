@@ -25,6 +25,7 @@ import {
 import { submitStoneOffer } from "@/app/actions/submit-stone-offer"
 import type { StoneOfferSubmission } from "@/lib/stone-offer-email"
 import { storeLeadHandoff } from "@/lib/tracking"
+import { trackContactFormSubmitted } from "@/lib/contact-form-tracking"
 import { FormHoneypot } from "@/components/form-honeypot"
 import { formErrorMessage } from "@/lib/form-errors"
 import { useSubmissionId } from "@/lib/submission-id"
@@ -236,6 +237,9 @@ export function StoneOfferWizard() {
 
       // Erfolgsnachweis nur bei vom Versanddienst bestätigter Annahme.
       if (result.status === "confirmed" && result.proof) storeLeadHandoff(result.proof)
+      if (result.status === "confirmed") {
+        trackContactFormSubmitted({ formId: "stone_calculator", submissionId: result.leadId })
+      }
       submissionId.renew()
       router.push("/stein-angebot/danke")
     } catch {

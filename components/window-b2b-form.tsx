@@ -12,6 +12,7 @@ import { CheckCircle2, Loader2, Phone, ShieldCheck } from "lucide-react"
 import { submitB2BInquiry } from "@/app/actions/submit-b2b-inquiry"
 import type { B2BCleaningNeed, B2BObjectType } from "@/lib/b2b-inquiry-email"
 import { pushDataLayerEvent } from "@/lib/tracking"
+import { trackContactFormSubmitted } from "@/lib/contact-form-tracking"
 import { FormHoneypot } from "@/components/form-honeypot"
 import { formErrorMessage } from "@/lib/form-errors"
 import { useSubmissionId } from "@/lib/submission-id"
@@ -247,6 +248,7 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
 
       // Conversion-Event nur nach vom Versanddienst bestätigter Annahme.
       if (result.status === "confirmed") {
+        trackContactFormSubmitted({ formId: "window_b2b", submissionId: result.leadId })
         pushDataLayerEvent("b2b_lead_success", {
           service: "window_cleaning",
           form_type: "b2b_site_visit",

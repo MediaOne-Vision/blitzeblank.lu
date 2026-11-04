@@ -81,6 +81,12 @@ export async function runFormPipeline(options: PipelineOptions): Promise<SubmitR
     return { status: "error", code: internal.reason === "not_configured" ? "not_configured" : "delivery_failed" }
   }
 
+  // Vom Spamguard still verworfen: nach außen wie Erfolg, aber ohne Lead, Nachweis und Tracking.
+  if (internal.discarded) {
+    console.log(`[v0] ${options.kind}: Mail vom Spamschutz verworfen – neutrale Antwort, kein Lead`)
+    return { status: "neutral" }
+  }
+
   if (mails.customer) {
     const customer = await mailer(mails.customer, { idempotencyKey: `${base}-cus` })
     if (!customer.ok) console.log(`[v0] ${options.kind}: Kundenbestätigung nicht angenommen (${customer.reason})`)

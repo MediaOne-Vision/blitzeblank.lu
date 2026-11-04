@@ -31,6 +31,7 @@ import { compressImage } from "@/lib/compress-image"
 import { submitQuote } from "@/app/actions/submit-quote"
 import type { QuoteSubmission } from "@/lib/quote-email"
 import { storeLeadHandoff, type QuoteType } from "@/lib/tracking"
+import { trackContactFormSubmitted } from "@/lib/contact-form-tracking"
 import { FormHoneypot } from "@/components/form-honeypot"
 import { formErrorMessage } from "@/lib/form-errors"
 import { useSubmissionId } from "@/lib/submission-id"
@@ -710,6 +711,9 @@ export function QuoteWizard({
 
       // Nur bei bestätigter Annahme durch den Versanddienst entsteht ein Erfolgsnachweis.
       if (result.status === "confirmed" && result.proof) storeLeadHandoff(result.proof)
+      if (result.status === "confirmed") {
+        trackContactFormSubmitted({ formId: "quote_calculator", submissionId: result.leadId })
+      }
       submissionId.renew()
       router.push(localizeHref(choice === "accepted" ? "/danke" : "/preisabsage-danke", locale))
     } catch {
