@@ -31,7 +31,13 @@ export type MailFailure = "not_configured" | "provider_error" | "timeout"
  * `ok: true` bedeutet ausschließlich: Der Versanddienst hat die Nachricht
  * angenommen und eine ID vergeben. Das ist kein Beleg für die Zustellung im Postfach.
  */
-export type MailResult = { ok: true; id: string } | { ok: false; reason: MailFailure }
+export type MailResult = { ok: true; id: string; discarded?: boolean } | { ok: false; reason: MailFailure }
+
+/**
+ * Die Spam-Schutzschicht verwirft Mails still und antwortet wie bei Erfolg mit einer
+ * messageId, die mit diesem Präfix beginnt. Solche Anfragen dürfen nicht als angenommen gelten.
+ */
+const GUARD_DISCARDED_PREFIX = "<verworfen-"
 
 export type Mailer = (message: MailMessage, options: { idempotencyKey: string }) => Promise<MailResult>
 
@@ -162,6 +168,10 @@ export const brevoMailer: Mailer = async (message, { idempotencyKey }) => {
     const hasRemoteAttachments = message.attachments?.some((a) => a.path && !a.contentId) ?? false
     if (result.status >= 400 && result.status < 500 && result.status !== 401 && hasRemoteAttachments) {
       result = await postToBrevo(buildBrevoPayload(message, { includeRemoteAttachments: false }), apiKey)
+    }
+
+    if (result.status >= 200 && result.status < 300 && result.body.messageId?.startsWith(GUARD_DISCARDED_PREFIX)) {
+      return { ok: true, id: result.body.messageId, discarded: true }
     }
 
     if (result.status >= 200 && result.status < 300 && result.body.messageId) {

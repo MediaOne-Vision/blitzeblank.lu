@@ -8,6 +8,7 @@ import { FormHoneypot } from "@/components/form-honeypot"
 import { formErrorMessage } from "@/lib/form-errors"
 import { useSubmissionId } from "@/lib/submission-id"
 import { storeLeadHandoff } from "@/lib/tracking"
+import { trackContactFormSubmitted } from "@/lib/contact-form-tracking"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -86,6 +87,9 @@ export default function KontaktEnPage() {
         return
       }
 
+      if (result.status === "confirmed") {
+        trackContactFormSubmitted({ formId: "contact", submissionId: result.leadId })
+      }
       submission.renew()
       if (result.status === "confirmed" && result.proof) {
         storeLeadHandoff(result.proof)
