@@ -5,7 +5,8 @@ import { resolveBlogDestination } from "./lib/legacy-redirects.mjs"
 const INDEXABLE_HOST = "blitzeblank.lu"
 
 // Reste der alten WordPress-Installation ohne Gegenstück auf der neuen Seite
-const GONE_PATHS = /^\/(wp-admin|wp-includes|wp-content|wp-json|log-in|product)(\/|$)|(^|\/)feed\/?$/
+const GONE_PATHS =
+  /^\/(wp-admin|wp-includes|wp-content|wp-json|log-in|product|zahlung-stornieren|zahlung-erfolgreich|terminstornierung|appointment-cancellation-confirmation|meine-termine)(\/|$)|(^|\/)feed\/?$/
 
 export function proxy(request: NextRequest) {
   const host = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim() || request.headers.get("host") || ""
