@@ -2,9 +2,9 @@ import { Metadata } from "next"
 import { WindowCleaningB2BPage } from "@/components/window-cleaning-b2b-page"
 
 export const metadata: Metadata = {
-  title: "Fensterreinigung für Unternehmen | Blitzeblank Luxemburg",
+  title: "Fensterreinigung Trier, Bitburg & Luxemburg | Blitzeblank",
   description:
-    "Professionelle Fensterreinigung für Büros, Geschäfte & Gewerbe in Luxemburg und Region. Kostenlose Objektbesichtigung, klares Festangebot, zuverlässige Termine.",
+    "Professionelle Fensterreinigung in Trier, Bitburg und Luxemburg für Privat- und Gewerbekunden. Kostenlose Besichtigung, klares Festangebot, zuverlässige Termine.",
   alternates: {
     canonical: "https://blitzeblank.lu/leistungen/fensterreinigung",
     languages: {

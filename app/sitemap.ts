@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { getLocalLandingParams, getLocalLandingPath } from "@/lib/local-landing"
 
 const SITE_URL = "https://blitzeblank.lu"
 
@@ -32,7 +33,14 @@ const routes: RouteEntry[] = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date()
 
-  return routes.flatMap(({ path, priority, changeFrequency, translated }) => {
+  const localLandingEntries: MetadataRoute.Sitemap = getLocalLandingParams().map(({ slug, ort }) => ({
+    url: `${SITE_URL}${getLocalLandingPath(slug, ort)}`,
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }))
+
+  const pageEntries = routes.flatMap(({ path, priority, changeFrequency, translated }) => {
     const germanUrl = `${SITE_URL}${path || "/"}`
     const englishUrl = `${SITE_URL}/en${path}`
     const frenchUrl = `${SITE_URL}/fr${path}`
@@ -62,4 +70,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return entries
   })
+
+  return [...pageEntries, ...localLandingEntries]
 }

@@ -45,7 +45,11 @@ export function localizeHref(href: string, locale: Locale): string {
 
 /** Liefert die URL derselben Seite in der gewünschten Sprache (für den Sprachumschalter). */
 export function getPathForLocale(pathname: string, locale: Locale): string {
-  return localizeHref(stripLocalePrefix(pathname), locale)
+  const canonical = stripLocalePrefix(pathname)
+  // Lokale Landingpages (/leistungen/<leistung>/<ort>) gibt es nur auf Deutsch.
+  const localLanding = canonical.match(/^(\/leistungen\/[^/]+)\/(?:trier|bitburg|luxemburg)\/?$/)
+  if (localLanding && locale !== "de") return localizeHref(localLanding[1], locale)
+  return localizeHref(canonical, locale)
 }
 
 /** Sprachen-Map (für `alternates.languages`) einer kanonischen Route inkl. x-default. */

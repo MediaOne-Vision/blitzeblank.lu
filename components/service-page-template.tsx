@@ -3,6 +3,7 @@ import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ServiceSwitcher } from "@/components/service-switcher"
+import { LocalAreasSection } from "@/components/local-areas-section"
 import { QuoteBanner } from "@/components/quote-banner"
 import { StoneOfferCta } from "@/components/stone-offer-cta"
 import { QuoteWizard } from "@/components/quote-wizard"
@@ -284,6 +285,8 @@ export function ServicePageTemplate({
             </div>
           </div>
         </section>
+
+        {locale === "de" && <LocalAreasSection slug={slug} />}
 
         {/* Ergebnisse: Zwei große Vorher-Nachher-Vergleiche + Karussell */}
         {showResults && media && (media.beforeAfter.length > 0 || media.gallery.length > 0) && (

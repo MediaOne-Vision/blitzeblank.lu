@@ -3,8 +3,8 @@ import { Building2 } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
 
 export const metadata: Metadata = {
-  title: "Fassadenreinigung in Luxemburg | Blitzeblank",
-  description: "Professionelle Fassadenreinigung in Luxemburg. Außenreinigung für Gebäudefassaden aller Art - vom Bürogebäude bis zur Industrieanlage.",
+  title: "Fassadenreinigung Trier, Bitburg & Luxemburg | Blitzeblank",
+  description: "Professionelle Fassadenreinigung in Trier, Bitburg und Luxemburg. Außenreinigung für Fassaden aller Art und Dachrinnenreinigung für Privat- und Gewerbekunden.",
   alternates: {
     canonical: "https://blitzeblank.lu/leistungen/fassadenreinigung",
     languages: {
@@ -63,7 +63,7 @@ export default function FassadenreinigungPage() {
     <ServicePageTemplate
       slug="fassadenreinigung"
       title="Fassadenreinigung"
-      heading="Fassadenreinigung in Luxemburg – schonend und materialgerecht"
+      heading="Fassadenreinigung in Trier, Bitburg und Luxemburg – schonend und materialgerecht"
       subtitle="Wir entfernen Algen, Schmutz und Verfärbungen schonend und materialgerecht - für eine strahlende Fassade, die lange schön bleibt."
       description="Die Fassade ist das Gesicht Ihres Gebäudes. Umwelteinflüsse, Abgase und organische Ablagerungen hinterlassen im Laufe der Zeit ihre Spuren. Unsere professionelle Fassadenreinigung entfernt selbst hartnäckige Verschmutzungen schonend und effektiv. Wir arbeiten mit verschiedenen Techniken, die optimal auf Ihr Fassadenmaterial abgestimmt sind."
       icon={Building2}
