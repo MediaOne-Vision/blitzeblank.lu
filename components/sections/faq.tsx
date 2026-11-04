@@ -153,7 +153,7 @@ export function FaqSection({ locale = "de" }: { locale?: Locale }) {
   const faqs = FAQS[locale]
   const t = TEXT[locale]
   return (
-    <section className="bg-white py-20 lg:py-28">
+    <section id="faq" className="bg-white py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
           {/* Left column: heading + contact */}
