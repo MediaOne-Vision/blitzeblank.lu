@@ -7,8 +7,10 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
-import { Menu, ChevronDown, Phone, Calculator, Mountain } from "lucide-react"
+import { Menu, ChevronDown, Phone, Calculator, Mountain, House, Building2, ArrowRight, type LucideIcon } from "lucide-react"
 import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
+import { getLocalizedServices } from "@/lib/services"
+import { getAudienceLabel, type Audience } from "@/lib/locations"
 import { LanguageSwitcher } from "@/components/language-switcher"
 
 const NAV_LINKS = {
@@ -27,31 +29,38 @@ const NAV_LINKS = {
   ],
 }
 
-const SERVICE_LINKS = {
-  de: [
-    { href: "/leistungen/industriereinigung", label: "Industriereinigung" },
-    { href: "/leistungen/fensterreinigung", label: "Fensterreinigung" },
-    { href: "/leistungen/steinreinigung", label: "Steinreinigung" },
-    { href: "/leistungen/fassadenreinigung", label: "Fassadenreinigung" },
-  ],
-  en: [
-    { href: "/leistungen/industriereinigung", label: "Industrial Cleaning" },
-    { href: "/leistungen/fensterreinigung", label: "Window Cleaning" },
-    { href: "/leistungen/steinreinigung", label: "Stone Cleaning" },
-    { href: "/leistungen/fassadenreinigung", label: "Facade Cleaning" },
-  ],
-  fr: [
-    { href: "/leistungen/industriereinigung", label: "Nettoyage industriel" },
-    { href: "/leistungen/fensterreinigung", label: "Nettoyage de vitres" },
-    { href: "/leistungen/steinreinigung", label: "Nettoyage de pierre" },
-    { href: "/leistungen/fassadenreinigung", label: "Nettoyage de façades" },
-  ],
+const AUDIENCE_ORDER: Audience[] = ["privat", "gewerbe"]
+
+const AUDIENCE_ICONS: Record<Audience, LucideIcon> = {
+  privat: House,
+  gewerbe: Building2,
 }
 
 const TEXT = {
-  de: { quote: "Preis sofort berechnen", contact: "Kontakt", contactFull: "Kontakt aufnehmen", menu: "Menü" },
-  en: { quote: "Calculate Price Instantly", contact: "Contact", contactFull: "Get in Touch", menu: "Menu" },
-  fr: { quote: "Calculer le prix", contact: "Contact", contactFull: "Nous contacter", menu: "Menu" },
+  de: {
+    quote: "Preis sofort berechnen",
+    contact: "Kontakt",
+    contactFull: "Kontakt aufnehmen",
+    menu: "Menü",
+    allServices: "Alle Leistungen ansehen",
+    onlyGermany: "nur Deutschland",
+  },
+  en: {
+    quote: "Calculate Price Instantly",
+    contact: "Contact",
+    contactFull: "Get in Touch",
+    menu: "Menu",
+    allServices: "View all services",
+    onlyGermany: "Germany only",
+  },
+  fr: {
+    quote: "Calculer le prix",
+    contact: "Contact",
+    contactFull: "Nous contacter",
+    menu: "Menu",
+    allServices: "Voir toutes les prestations",
+    onlyGermany: "Allemagne uniquement",
+  },
 }
 
 export function Navigation() {
@@ -67,7 +76,13 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
   const navLinks = NAV_LINKS[locale].map((l) => ({ ...l, href: localizeHref(l.href, locale) }))
-  const serviceLinks = SERVICE_LINKS[locale].map((l) => ({ ...l, href: localizeHref(l.href, locale) }))
+  const localizedServices = getLocalizedServices(locale)
+  const serviceGroups = AUDIENCE_ORDER.map((audience) => ({
+    audience,
+    label: getAudienceLabel(audience, locale),
+    icon: AUDIENCE_ICONS[audience],
+    services: localizedServices.filter((service) => service.audiences.includes(audience)),
+  }))
   const t = TEXT[locale]
   const angebotHref = localizeHref("/angebot", locale)
   const kontaktHref = localizeHref("/kontakt", locale)
@@ -124,17 +139,45 @@ export function Navigation() {
                   {link.label}
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
                 </Link>
-                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
-                  <div className="bg-white border border-brand-blue/10 rounded-xl shadow-xl shadow-brand-navy/5 p-2 min-w-[210px]">
-                    {serviceLinks.map((service) => (
-                      <Link
-                        key={service.href}
-                        href={service.href}
-                        className="block rounded-lg px-3 py-2 text-sm text-neutral-600 hover:text-brand-blue hover:bg-brand-mint transition-colors cursor-pointer"
-                      >
-                        {service.label}
-                      </Link>
-                    ))}
+                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 transition-all duration-200">
+                  <div className="w-[540px] overflow-hidden rounded-xl border border-brand-blue/10 bg-white shadow-xl shadow-brand-navy/5">
+                    <div className="grid grid-cols-2 divide-x divide-brand-blue/10">
+                      {serviceGroups.map((group) => {
+                        const GroupIcon = group.icon
+                        return (
+                          <div key={group.audience} className="p-3">
+                            <div className="mb-2 flex items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-blue">
+                              <GroupIcon className="h-4 w-4" aria-hidden="true" />
+                              {group.label}
+                            </div>
+                            <ul className="flex flex-col">
+                              {group.services.map((service) => (
+                                <li key={service.slug}>
+                                  <Link
+                                    href={service.href}
+                                    className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-neutral-700 transition-colors hover:bg-brand-mint hover:text-brand-blue cursor-pointer"
+                                  >
+                                    <span>{service.title}</span>
+                                    {service.locations.length === 1 && service.locations[0] === "de" && (
+                                      <span className="shrink-0 rounded-full bg-brand-mint px-2 py-0.5 text-[11px] font-medium text-brand-blue">
+                                        DE
+                                      </span>
+                                    )}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )
+                      })}
+                    </div>
+                    <Link
+                      href={link.href}
+                      className="flex items-center justify-between border-t border-brand-blue/10 bg-brand-mint/60 px-6 py-3 text-sm font-medium text-brand-blue transition-colors hover:bg-brand-mint cursor-pointer"
+                    >
+                      {t.allServices}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -237,17 +280,33 @@ export function Navigation() {
                       >
                         {link.label}
                       </Link>
-                      <div className="ml-3 mt-1 flex flex-col gap-0.5 border-l-2 border-brand-blue/15 pl-3">
-                        {serviceLinks.map((service) => (
-                          <Link
-                            key={service.href}
-                            href={service.href}
-                            className="rounded-lg px-3 py-2 text-sm text-neutral-500 hover:bg-brand-mint hover:text-brand-blue transition-colors cursor-pointer"
-                            onClick={() => setOpen(false)}
-                          >
-                            {service.label}
-                          </Link>
-                        ))}
+                      <div className="ml-3 mt-2 flex flex-col gap-4 border-l-2 border-brand-blue/15 pl-3">
+                        {serviceGroups.map((group) => {
+                          const GroupIcon = group.icon
+                          return (
+                            <div key={group.audience} className="flex flex-col gap-0.5">
+                              <div className="flex items-center gap-2 px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-brand-blue">
+                                <GroupIcon className="h-4 w-4" aria-hidden="true" />
+                                {group.label}
+                              </div>
+                              {group.services.map((service) => (
+                                <Link
+                                  key={service.slug}
+                                  href={service.href}
+                                  className="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm text-neutral-600 hover:bg-brand-mint hover:text-brand-blue transition-colors cursor-pointer"
+                                  onClick={() => setOpen(false)}
+                                >
+                                  <span>{service.title}</span>
+                                  {service.locations.length === 1 && service.locations[0] === "de" && (
+                                    <span className="shrink-0 rounded-full bg-brand-mint px-2 py-0.5 text-[11px] font-medium text-brand-blue">
+                                      DE
+                                    </span>
+                                  )}
+                                </Link>
+                              ))}
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   ) : (
