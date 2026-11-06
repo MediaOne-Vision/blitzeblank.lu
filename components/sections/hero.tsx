@@ -142,7 +142,7 @@ export function HeroSection({ locale = "de", audience = null }: { locale?: Local
             {copy.badge}
           </span>
 
-          <h1 className="mb-4 text-balance font-display text-[2.25rem] font-extrabold leading-[1.08] tracking-tight text-white sm:mb-6 sm:text-5xl lg:text-[3.5rem]">
+          <h1 className="mb-4 text-balance font-display text-[1.75rem] font-extrabold leading-[1.12] tracking-tight text-white sm:mb-6 sm:text-4xl lg:text-[2.75rem]">
             <span className="font-extrabold">{copy.heading}</span>
             <br />
             <span className="font-medium">{copy.headingAccent}</span>

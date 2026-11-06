@@ -3,7 +3,6 @@ import { Footer } from "@/components/footer"
 import { Reveal } from "@/components/reveal"
 import { HeroSection } from "@/components/sections/hero"
 import { AudienceChoiceCards } from "@/components/audience-choice-cards"
-import { LocationsGrid } from "@/components/locations-grid"
 import { ServicesOverview } from "@/components/sections/services-overview"
 import { ResultsShowcase } from "@/components/sections/results-showcase"
 import { WhyUsSection } from "@/components/sections/why-us"
@@ -59,11 +58,6 @@ export function HomeContent({ locale = "de", audience = null }: { locale?: Local
         ) : (
           <>
             <AudienceChoiceCards locale={locale} />
-            <section className="bg-brand-mint py-16 lg:py-20">
-              <div className="mx-auto max-w-6xl px-6">
-                <LocationsGrid locale={locale} />
-              </div>
-            </section>
             <Reveal>
               <TestimonialsSection locale={locale} />
             </Reveal>

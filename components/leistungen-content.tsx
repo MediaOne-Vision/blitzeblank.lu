@@ -11,7 +11,6 @@ import { localizeHref, type Locale } from "@/lib/i18n"
 import { getLocalizedServices } from "@/lib/services"
 import { extraServiceContent } from "@/lib/extra-service-content"
 import { getAudienceLabel, getLocationCountry, type Audience } from "@/lib/locations"
-import { LocationsGrid } from "@/components/locations-grid"
 import { useAudience } from "@/components/audience-provider"
 
 const TEXT = {
@@ -236,16 +235,6 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                 )
               })}
             </div>
-          </div>
-        </section>
-
-        {/* Locations */}
-        <section className="bg-brand-mint py-16 lg:py-24">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="mb-10 text-balance text-center font-display text-3xl font-extrabold tracking-tight text-brand-navy lg:text-4xl">
-              {t.locHeading}
-            </h2>
-            <LocationsGrid locale={locale} />
           </div>
         </section>
 
