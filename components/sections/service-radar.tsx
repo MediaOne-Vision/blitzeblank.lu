@@ -2,6 +2,7 @@ import Link from "@/components/audience-link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { localizeHref, type Locale } from "@/lib/i18n"
+import { radarFont } from "@/lib/radar-font"
 
 /** Standort: Waldbillig (Luxemburg). Alle Entfernungen werden aus echten Koordinaten berechnet. */
 const ORIGIN = { lat: 49.7936, lon: 6.3342 }
@@ -195,7 +196,7 @@ export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
         <div
           role="img"
           aria-label={t.aria}
-          className="relative mx-auto aspect-square w-full max-w-[640px]"
+          className={`${radarFont.className} relative mx-auto aspect-square w-full max-w-[640px]`}
           style={{ "--radar-period": `${SWEEP_SECONDS}s` } as React.CSSProperties}
         >
           <svg viewBox={`0 0 ${VIEW} ${VIEW}`} className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -259,19 +260,22 @@ export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
                 >
                   <span
                     aria-hidden="true"
-                    className="radar-ping absolute left-0 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-sky"
+                    className={`radar-ping absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-sky ${
+                      city.major ? "h-3 w-3 sm:h-3.5 sm:w-3.5" : "h-2.5 w-2.5"
+                    }`}
                     style={{ animationDelay: delay }}
                   />
                   <span
                     aria-hidden="true"
-                    className={`absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white ${
-                      city.major ? "h-2 w-2 sm:h-2.5 sm:w-2.5" : "h-1.5 w-1.5"
+                    className={`radar-blip absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full ${
+                      city.major ? "h-2.5 w-2.5 sm:h-3 sm:w-3" : "h-2 w-2"
                     }`}
+                    style={{ animationDelay: delay }}
                   />
                   <span
                     className={`radar-label absolute top-0 -translate-y-1/2 whitespace-nowrap ${
-                      city.side === "right" ? "left-0 ml-2.5" : "right-0 mr-2.5"
-                    } ${city.major ? "text-xs font-semibold sm:text-base" : "text-[13px] font-medium"}`}
+                      city.side === "right" ? "left-0 ml-3.5" : "right-0 mr-3.5"
+                    } ${city.major ? "text-xs font-semibold tracking-wide sm:text-base" : "text-[13px] font-medium tracking-wide"}`}
                     style={{ animationDelay: delay }}
                   >
                     {city.name}
@@ -283,17 +287,14 @@ export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
             <div className="absolute" style={{ left: "50%", top: "50%" }}>
               <span
                 aria-hidden="true"
-                className="radar-home-pulse absolute left-0 top-0 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-brand-blue"
+                className="radar-home-pulse absolute left-0 top-0 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-brand-sky sm:h-10 sm:w-10"
               />
               <span
                 aria-hidden="true"
-                className="absolute left-0 top-0 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-blue ring-4 ring-brand-blue/30"
+                className="absolute left-0 top-0 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-sky shadow-[0_0_24px_6px_rgba(74,173,228,0.7)] ring-[6px] ring-brand-sky/30 sm:h-6 sm:w-6"
               />
-              <span className="absolute left-0 top-0 mt-5 -translate-x-1/2 whitespace-nowrap text-center leading-tight">
-                <span className="block font-display text-sm font-extrabold text-brand-sky sm:text-lg">Blitzeblank</span>
-                <span className="block text-[11px] uppercase tracking-[0.16em] text-white/60 sm:text-xs">
-                  Waldbillig
-                </span>
+              <span className="absolute left-0 top-0 mt-5 -translate-x-1/2 whitespace-nowrap text-sm font-bold uppercase tracking-[0.2em] text-white sm:mt-6 sm:text-lg">
+                Waldbillig
               </span>
               <span className="sr-only">{t.home}</span>
             </div>
