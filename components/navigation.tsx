@@ -12,6 +12,9 @@ import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 import { getLocalizedServices } from "@/lib/services"
 import { getAudienceLabel, type Audience } from "@/lib/locations"
 import { LanguageSwitcher } from "@/components/language-switcher"
+import { AudienceSwitcher } from "@/components/audience-switcher"
+import { useAudience } from "@/components/audience-provider"
+import { withAudienceQuery } from "@/lib/audience"
 
 const NAV_LINKS = {
   de: [
@@ -38,7 +41,7 @@ const AUDIENCE_ICONS: Record<Audience, LucideIcon> = {
 
 const TEXT = {
   de: {
-    quote: "Preis sofort berechnen",
+    quote: "Preis berechnen",
     contact: "Kontakt",
     contactFull: "Kontakt aufnehmen",
     menu: "Menü",
@@ -84,8 +87,9 @@ export function Navigation() {
     services: localizedServices.filter((service) => service.audiences.includes(audience)),
   }))
   const t = TEXT[locale]
-  const angebotHref = localizeHref("/angebot", locale)
-  const kontaktHref = localizeHref("/kontakt", locale)
+  const { audience } = useAudience()
+  const angebotHref = withAudienceQuery(localizeHref("/angebot", locale), audience)
+  const kontaktHref = withAudienceQuery(localizeHref("/kontakt", locale), audience)
 
   const isActive = (href: string) => {
     if (href === "/" || href === "/en" || href === "/fr") return pathname === href
@@ -203,7 +207,8 @@ export function Navigation() {
         </nav>
 
         {/* CTA */}
-        <div className="hidden lg:flex items-center gap-3 shrink-0">
+        <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
+          <AudienceSwitcher transparent={transparent} className="mr-1" />
           <Button
             asChild
             size="sm"
@@ -234,6 +239,7 @@ export function Navigation() {
         </div>
 
         {/* Mobile */}
+        <AudienceSwitcher transparent={transparent} className="ml-auto lg:hidden [&_button]:px-2.5 [&_button]:py-1 [&_button]:text-xs" />
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="lg:hidden">
             <Button

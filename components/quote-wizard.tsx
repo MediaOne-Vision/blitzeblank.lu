@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import { useAudience } from "@/components/audience-provider"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -30,7 +31,7 @@ import { searchAddresses } from "@/app/actions/travel"
 import { compressImage } from "@/lib/compress-image"
 import { submitQuote } from "@/app/actions/submit-quote"
 import type { QuoteSubmission } from "@/lib/quote-email"
-import { storeLeadHandoff, type QuoteType } from "@/lib/tracking"
+import { pushQuoteCalculatorStarted, storeLeadHandoff, type QuoteType } from "@/lib/tracking"
 import { FormHoneypot } from "@/components/form-honeypot"
 import { formErrorMessage } from "@/lib/form-errors"
 import { useSubmissionId } from "@/lib/submission-id"
@@ -447,6 +448,14 @@ export function QuoteWizard({
   const submissionId = useSubmissionId()
   const router = useRouter()
   const [privacyConsent, setPrivacyConsent] = useState(false)
+  const { audience } = useAudience()
+  const startTracked = useRef(false)
+
+  useEffect(() => {
+    if (step === 0 || startTracked.current) return
+    startTracked.current = true
+    pushQuoteCalculatorStarted({ customer_type: audience, service: serviceValue || undefined, calculator: "quote_wizard" })
+  }, [step, audience, serviceValue])
 
   const selectedService = quoteServicesL.find((s) => s.value === serviceValue)
   const isWindow = serviceValue === "fenster"

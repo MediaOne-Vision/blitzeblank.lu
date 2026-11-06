@@ -8,6 +8,10 @@ export interface ContactSubmission {
   /** Wert aus der Leistungsauswahl (z. B. "fenster") */
   service: string
   serviceLabel: string
+  audienceLabel?: string
+  location?: string
+  objectType?: string
+  intervalLabel?: string
   message: string
   locale: "de" | "en" | "fr"
   leadId: string
@@ -84,7 +88,11 @@ export function buildContactInternalEmail(s: ContactSubmission, logoSrc = "cid:b
     { label: "Unternehmen", value: s.company || "—" },
     { label: "E-Mail", value: s.email },
     { label: "Telefon", value: s.phone || "—" },
+    { label: "Kundengruppe", value: s.audienceLabel || "—" },
     { label: "Leistung", value: s.serviceLabel || "—" },
+    { label: "Objektart", value: s.objectType || "—" },
+    { label: "Standort", value: s.location || "—" },
+    { label: "Rhythmus", value: s.intervalLabel || "—" },
   ]
   const html = emailShell({
     logoSrc,
