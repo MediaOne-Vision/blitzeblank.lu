@@ -1,7 +1,7 @@
 import Link from "@/components/audience-link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowDown, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import type { Locale } from "@/lib/i18n"
 import type { Audience } from "@/lib/locations"
 
@@ -9,6 +9,12 @@ const TRUST = {
   de: ["Antwort innerhalb von 24 Stunden", "Kostenlose Besichtigung vor Ort", "Festpreis nach Besichtigung", "Qualitätsgarantie inklusive"],
   en: ["We reply within 24 hours", "Free on-site visit", "Fixed price after the visit", "Quality guarantee included"],
   fr: ["Réponse sous 24 heures", "Visite sur place gratuite", "Prix fixe après la visite", "Garantie de qualité incluse"],
+}
+
+const CHOICE = {
+  de: { privat: "Privatkunden", gewerbe: "Gewerbekunden" },
+  en: { privat: "Private customers", gewerbe: "Business customers" },
+  fr: { privat: "Particuliers", gewerbe: "Entreprises" },
 }
 
 const TEXT = {
@@ -175,12 +181,20 @@ export function HeroSection({ locale = "de", audience = null }: { locale?: Local
               </p>
             </>
           ) : (
-            <Button asChild size="lg" className="group w-full rounded-full bg-brand-blue px-7 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-lg shadow-brand-blue/40 hover:bg-brand-teal sm:w-auto">
-              <a href="#kundengruppen" className="cursor-pointer">
-                {TEXT[locale].neutral.primary}
-                <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-1" />
-              </a>
-            </Button>
+            <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
+              <Button asChild size="lg" className="group w-full rounded-full bg-brand-blue px-7 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-lg shadow-brand-blue/40 hover:bg-brand-teal sm:w-auto">
+                <Link href="/privatkunden" className="cursor-pointer">
+                  {CHOICE[locale].privat}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="group w-full rounded-full border-2 border-white bg-transparent px-7 text-sm font-semibold uppercase tracking-[0.08em] text-white hover:bg-white/10 hover:text-white sm:w-auto">
+                <Link href="/gewerbekunden" className="cursor-pointer">
+                  {CHOICE[locale].gewerbe}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            </div>
           )}
         </div>
 
