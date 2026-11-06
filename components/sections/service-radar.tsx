@@ -2,7 +2,6 @@ import Link from "@/components/audience-link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { localizeHref, type Locale } from "@/lib/i18n"
-import { radarFont } from "@/lib/radar-font"
 
 /** Standort: Waldbillig (Luxemburg). Alle Entfernungen werden aus echten Koordinaten berechnet. */
 const ORIGIN = { lat: 49.7936, lon: 6.3342 }
@@ -36,18 +35,9 @@ const CITIES: City[] = [
   { names: same("Bitburg"), lat: 49.9741, lon: 6.5226, major: true },
   { names: same("Echternach"), lat: 49.8119, lon: 6.4204, side: "right" },
   { names: same("Diekirch"), lat: 49.8683, lon: 6.1594, side: "left" },
-  { names: same("Mersch"), lat: 49.7489, lon: 6.1058, side: "left" },
   { names: same("Saarburg"), lat: 49.6089, lon: 6.5492, side: "right" },
-  { names: same("Wiltz"), lat: 49.9656, lon: 5.9331, side: "left" },
   { names: same("Wittlich"), lat: 49.9855, lon: 6.8916, side: "right" },
-  { names: same("Arlon"), lat: 49.6833, lon: 5.8167, side: "left" },
-  { names: same("Esch-sur-Alzette"), lat: 49.4958, lon: 5.9806, side: "left" },
-  { names: same("Merzig"), lat: 49.4428, lon: 6.6372, side: "right" },
-  { names: same("Prüm"), lat: 50.2085, lon: 6.4248, side: "right" },
-  { names: same("Thionville"), lat: 49.358, lon: 6.168, side: "left" },
-  { names: same("Bernkastel-Kues"), lat: 49.9167, lon: 7.0667, side: "right" },
   { names: same("Metz"), lat: 49.1193, lon: 6.1757, side: "left", major: true },
-  { names: { de: "Saarbrücken", en: "Saarbrücken", fr: "Sarrebruck" }, lat: 49.2402, lon: 6.9969, side: "right", major: true },
 ]
 
 interface Placed {
@@ -88,7 +78,7 @@ const pct = (value: number) => `${(value / VIEW) * 100}%`
 const TEXT = {
   de: {
     eyebrow: "Einsatzgebiet",
-    heading: "Von Waldbillig aus für Sie unterwegs",
+    heading: "Für Sie unterwegs in der ganzen Region",
     body: "Wir reinigen in Luxemburg, rund um Trier und Bitburg und in der gesamten Grenzregion. Auch kleinere Orte dazwischen fahren wir regelmäßig an.",
     home: "Unser Standort",
     rings: [
@@ -102,7 +92,7 @@ const TEXT = {
   },
   en: {
     eyebrow: "Service area",
-    heading: "On the road for you from Waldbillig",
+    heading: "On the road for you across the region",
     body: "We clean across Luxembourg, around Trier and Bitburg and throughout the border region. We also visit the smaller towns in between on a regular basis.",
     home: "Our base",
     rings: [
@@ -116,7 +106,7 @@ const TEXT = {
   },
   fr: {
     eyebrow: "Zone d'intervention",
-    heading: "Au départ de Waldbillig, à votre service",
+    heading: "À votre service dans toute la région",
     body: "Nous intervenons au Luxembourg, autour de Trèves et de Bitburg et dans toute la région frontalière. Nous desservons aussi régulièrement les petites localités entre ces villes.",
     home: "Notre siège",
     rings: [
@@ -130,21 +120,9 @@ const TEXT = {
   },
 }
 
-const RING_STYLES = ["solid", "dashed", "dotted"] as const
-
 export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
   const placed = CITIES.map((city) => place(city, locale))
-
-  const groups = RING_KM.map((limit, index) => {
-    const lower = index === 0 ? 0 : RING_KM[index - 1]
-    return {
-      limit,
-      label: t.rings[index].label,
-      style: RING_STYLES[index],
-      cities: placed.filter((c) => c.km > lower && c.km <= limit).sort((a, b) => a.km - b.km),
-    }
-  })
 
   return (
     <section className="relative overflow-hidden bg-brand-navy py-20 text-white lg:py-28">
@@ -156,30 +134,6 @@ export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
           </h2>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70 text-pretty">{t.body}</p>
 
-          <dl className="mt-10 max-w-xl divide-y divide-white/10 border-y border-white/10">
-            {groups.map((group) => (
-              <div key={group.limit} className="flex gap-4 py-4">
-                <span
-                  aria-hidden="true"
-                  className="mt-1 h-4 w-4 shrink-0 rounded-full border-2 border-brand-blue"
-                  style={{ borderStyle: group.style }}
-                />
-                <div>
-                  <dt className="font-display text-base font-bold">
-                    {group.label}
-                    <span className="ml-2 font-sans text-sm font-normal text-white/50">
-                      {t.upTo} {group.limit} km
-                    </span>
-                  </dt>
-                  {group.cities.length > 0 && (
-                    <dd className="mt-1 text-sm leading-relaxed text-white/65">
-                      {group.cities.map((c) => c.name).join(", ")}
-                    </dd>
-                  )}
-                </div>
-              </div>
-            ))}
-          </dl>
 
           <Button
             asChild
@@ -196,7 +150,7 @@ export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
         <div
           role="img"
           aria-label={t.aria}
-          className={`${radarFont.className} relative mx-auto aspect-square w-full max-w-[640px]`}
+          className={`font-display relative mx-auto aspect-square w-full max-w-[640px]`}
           style={{ "--radar-period": `${SWEEP_SECONDS}s` } as React.CSSProperties}
         >
           <svg viewBox={`0 0 ${VIEW} ${VIEW}`} className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -240,16 +194,6 @@ export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
           </div>
 
           <div className="absolute inset-0">
-            {RING_KM.map((km) => (
-              <span
-                key={km}
-                className="absolute -translate-x-full -translate-y-1/2 bg-brand-navy px-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-white/55 sm:text-xs"
-                style={{ left: pct(CENTER - 6), top: pct(CENTER - ringRadius(km)) }}
-              >
-                {km} km
-              </span>
-            ))}
-
             {placed.map((city) => {
               const delay = `${((city.bearing / 360) * SWEEP_SECONDS - SWEEP_SECONDS).toFixed(2)}s`
               return (
