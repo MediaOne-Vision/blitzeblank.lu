@@ -208,3 +208,122 @@
     scroll-behavior: auto;
   }
 }
+
+/* Einsatzgebiet-Radar */
+@keyframes radar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes radar-ping {
+  0% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  16% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4);
+  }
+}
+
+@keyframes radar-blip {
+  0% {
+    background-color: #ffffff;
+    transform: translate(-50%, -50%) scale(1.9);
+    box-shadow:
+      0 0 0 3px rgba(127, 205, 238, 0.45),
+      0 0 14px 5px rgba(127, 205, 238, 0.95),
+      0 0 34px 12px rgba(74, 173, 228, 0.55);
+  }
+  12% {
+    background-color: #ffffff;
+    transform: translate(-50%, -50%) scale(1.6);
+    box-shadow:
+      0 0 0 3px rgba(127, 205, 238, 0.3),
+      0 0 12px 4px rgba(127, 205, 238, 0.7),
+      0 0 28px 10px rgba(74, 173, 228, 0.35);
+  }
+  45% {
+    background-color: #9fdcf4;
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 0 8px 2px rgba(127, 205, 238, 0.35);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(127, 205, 238, 0);
+  }
+}
+
+@keyframes radar-label {
+  0% {
+    opacity: 1;
+    text-shadow: 0 0 14px rgba(127, 205, 238, 0.9);
+  }
+  14% {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(127, 205, 238, 0.5);
+  }
+  55%,
+  100% {
+    opacity: 0.55;
+    text-shadow: none;
+  }
+}
+
+@keyframes radar-home-pulse {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3);
+  }
+}
+
+.radar-sweep {
+  animation: radar-spin var(--radar-period, 10s) linear infinite;
+}
+
+.radar-ping {
+  opacity: 0;
+  animation: radar-ping var(--radar-period, 10s) linear infinite;
+}
+
+.radar-blip {
+  background-color: rgba(255, 255, 255, 0.5);
+  animation: radar-blip var(--radar-period, 10s) linear infinite;
+}
+
+.radar-label {
+  opacity: 0.55;
+  animation: radar-label var(--radar-period, 10s) linear infinite;
+}
+
+.radar-home-pulse {
+  animation: radar-home-pulse 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep,
+  .radar-ping,
+  .radar-blip,
+  .radar-label,
+  .radar-home-pulse {
+    animation: none;
+  }
+
+  .radar-blip {
+    background-color: #ffffff;
+  }
+
+  .radar-label {
+    opacity: 0.9;
+  }
+}

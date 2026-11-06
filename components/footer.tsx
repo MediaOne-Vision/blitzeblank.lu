@@ -1,9 +1,9 @@
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import Image from "next/image"
 import { Facebook, Instagram } from "lucide-react"
 import { CookieSettingsLink } from "@/components/cookie-settings-link"
 import { localizeHref, type Locale } from "@/lib/i18n"
-import { getLocalizedServices } from "@/lib/services"
+import { FooterServiceLinks } from "@/components/footer-service-links"
 
 const NAVIGATION = {
   de: [
@@ -64,7 +64,6 @@ const TEXT = {
 }
 
 export function Footer({ locale = "de" }: { locale?: Locale }) {
-  const services = getLocalizedServices(locale).map((s) => ({ href: s.href, label: s.title }))
   const navigation = NAVIGATION[locale].map((n) => ({ ...n, href: localizeHref(n.href, locale) }))
   const t = TEXT[locale]
 
@@ -134,18 +133,7 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
           {/* Services */}
           <div>
             <h3 className="font-display text-sm font-bold text-brand-sky mb-4">{t.servicesHeading}</h3>
-            <ul className="space-y-3">
-              {services.map((service) => (
-                <li key={service.href}>
-                  <Link
-                    href={service.href}
-                    className="text-sm text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                  >
-                    {service.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <FooterServiceLinks locale={locale} />
           </div>
 
           {/* Contact */}

@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import { ArrowRight } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 

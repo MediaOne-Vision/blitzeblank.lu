@@ -15,7 +15,21 @@ const SERVICE_LABELS: Record<string, string> = {
   fenster: "Fensterreinigung",
   stein: "Steinreinigung",
   fassade: "Fassadenreinigung",
+  fensterreinigung: "Fenster- & Glasreinigung",
+  fassadenreinigung: "Fassaden- & Dachrinnenreinigung",
+  industriereinigung: "Industriereinigung",
+  unterhaltsreinigung: "Unterhaltsreinigung",
+  spezialreinigung: "Spezialreinigung & ergänzende Dienstleistungen",
+  steinreinigung: "Stein- & Terrassenreinigung",
+  solarreinigung: "Solar- & Photovoltaikreinigung",
+  reinigungsnotdienst: "Reinigungsnotdienst",
+  treppenhausreinigung: "Treppenhausreinigung",
   sonstiges: "Sonstiges",
+}
+
+const AUDIENCE_LABELS: Record<string, string> = {
+  privat: "Privatkunde",
+  gewerbe: "Gewerbekunde",
 }
 
 export interface SubmitContactInput {
@@ -24,6 +38,14 @@ export interface SubmitContactInput {
   email: string
   phone: string
   service: string
+  /** Kundengruppe ("privat" | "gewerbe"); leer, wenn nicht bekannt. */
+  audience?: string
+  /** Ort bzw. Objektstandort (optional). */
+  location?: string
+  /** Objektart, z. B. Wohnhaus, Büro, Halle (optional). */
+  objectType?: string
+  /** Gewünschter Rhythmus: einmalig / regelmäßig (optional). */
+  interval?: string
   message: string
   consent: boolean
   locale: "de" | "en" | "fr"
@@ -40,6 +62,10 @@ export async function submitContact(input: SubmitContactInput): Promise<SubmitRe
   const phone = clip(input.phone, 40)
   const message = clip(input.message, 5000)
   const service = SERVICE_LABELS[input.service] ? input.service : ""
+  const audience = AUDIENCE_LABELS[input.audience ?? ""] ? (input.audience as string) : ""
+  const location = clip(input.location ?? "", 120)
+  const objectType = clip(input.objectType ?? "", 120)
+  const interval = input.interval === "einmalig" || input.interval === "regelmaessig" ? input.interval : ""
   const locale: "de" | "en" | "fr" = input.locale === "en" || input.locale === "fr" ? input.locale : "de"
 
   return runFormPipeline({
@@ -48,7 +74,7 @@ export async function submitContact(input: SubmitContactInput): Promise<SubmitRe
     honeypot: input.honeypot,
     renderedAt: input.renderedAt,
     ip: clientIpFrom(h),
-    fingerprint: { name, company, email, phone, service, message },
+    fingerprint: { name, company, email, phone, service, audience, location, objectType, interval, message },
     validate: () => {
       if (!name || !message || input.consent !== true) return "missing_fields"
       if (!isValidEmail(email)) return "invalid_email"
@@ -63,6 +89,10 @@ export async function submitContact(input: SubmitContactInput): Promise<SubmitRe
         phone,
         service,
         serviceLabel: SERVICE_LABELS[service] ?? "",
+        audienceLabel: AUDIENCE_LABELS[audience] ?? "",
+        location,
+        objectType,
+        intervalLabel: interval === "einmalig" ? "Einmalig" : interval === "regelmaessig" ? "Regelmäßig" : "",
         message,
         locale,
         leadId,

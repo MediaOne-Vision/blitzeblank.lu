@@ -1,16 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import Image from "next/image"
 import { Reveal } from "@/components/reveal"
 import { ArrowUpRight, ChevronDown } from "lucide-react"
 import { localizeHref, type Locale } from "@/lib/i18n"
 import { getLocalizedServices } from "@/lib/services"
 import { getServiceMedia } from "@/lib/service-media"
+import { useAudience } from "@/components/audience-provider"
+import type { Audience } from "@/lib/locations"
 
-function getOverviewServices(locale: Locale) {
-  return getLocalizedServices(locale).map((service) => {
+function getOverviewServices(locale: Locale, audience: Audience | null) {
+  return getLocalizedServices(locale)
+    .filter((service) => !audience || service.audiences.includes(audience))
+    .map((service) => {
     const hero = getServiceMedia(service.slug)?.hero
     return {
       title: service.title,
@@ -47,7 +51,8 @@ const TEXT = {
 }
 
 export function ServicesOverview({ locale = "de" }: { locale?: Locale }) {
-  const services = getOverviewServices(locale)
+  const { audience } = useAudience()
+  const services = getOverviewServices(locale, audience)
   const t = TEXT[locale]
   const [activeIndex, setActiveIndex] = useState(0)
   const active = services[activeIndex]

@@ -1,7 +1,10 @@
 "use client"
 
-import { useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { Suspense, useEffect, useRef, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useAudience } from "@/components/audience-provider"
+import { isAudience } from "@/lib/audience"
+import type { Audience } from "@/lib/locations"
 import Link from "next/link"
 import { submitContact } from "@/app/actions/submit-contact"
 import { FormHoneypot } from "@/components/form-honeypot"
@@ -18,13 +21,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Phone, Mail, MapPin, Clock, CheckCircle, Send, Sparkles, ArrowRight } from "lucide-react"
 
-const services = [
-  { value: "industrie", label: "Industriereinigung" },
-  { value: "fenster", label: "Fensterreinigung" },
-  { value: "stein", label: "Steinreinigung" },
-  { value: "fassade", label: "Fassadenreinigung" },
-  { value: "sonstiges", label: "Sonstiges" },
+const services: { value: string; label: string; audiences: Audience[] }[] = [
+  { value: "fensterreinigung", label: "Fenster- & Glasreinigung", audiences: ["privat", "gewerbe"] },
+  { value: "fassadenreinigung", label: "Fassaden- & Dachrinnenreinigung", audiences: ["privat", "gewerbe"] },
+  { value: "industriereinigung", label: "Industriereinigung", audiences: ["gewerbe"] },
+  { value: "unterhaltsreinigung", label: "Unterhaltsreinigung", audiences: ["gewerbe"] },
+  { value: "spezialreinigung", label: "Spezialreinigung & ergänzende Dienstleistungen", audiences: ["privat", "gewerbe"] },
+  { value: "steinreinigung", label: "Stein- & Terrassenreinigung", audiences: ["privat", "gewerbe"] },
+  { value: "solarreinigung", label: "Solar- & Photovoltaikreinigung", audiences: ["privat", "gewerbe"] },
+  { value: "reinigungsnotdienst", label: "Reinigungsnotdienst", audiences: ["privat", "gewerbe"] },
+  { value: "sonstiges", label: "Sonstiges", audiences: ["privat", "gewerbe"] },
 ]
+
+const objectTypes: Record<Audience, string[]> = {
+  privat: ["Einfamilienhaus", "Mehrfamilienhaus / Wohnung", "Terrasse / Hof / Einfahrt", "Sonstiges"],
+  gewerbe: ["Büro / Verwaltung", "Produktion / Halle", "Handel / Gastronomie", "Hausverwaltung / Wohnanlage", "Sonstiges"],
+}
 
 const contactInfo = [
   {
@@ -48,15 +60,40 @@ const contactInfo = [
 ]
 
 export default function KontaktPage() {
+  return (
+    <Suspense fallback={null}>
+      <KontaktContent />
+    </Suspense>
+  )
+}
+
+function KontaktContent() {
+  const searchParams = useSearchParams()
+  const { audience: contextAudience } = useAudience()
+  const kundeParam = searchParams.get("kunde")
+  const leistungParam = searchParams.get("leistung") ?? ""
+  const [audienceChoice, setAudienceChoice] = useState<Audience | null>(null)
+  // Reihenfolge: URL-Parameter, dann Auswahl im Formular, dann gespeicherte/Routen-Kundengruppe.
+  const audience: Audience | null = isAudience(kundeParam) ? kundeParam : (audienceChoice ?? contextAudience)
+
   const [formState, setFormState] = useState({
     name: "",
     company: "",
     email: "",
     phone: "",
-    service: "",
+    service: services.some((s) => s.value === leistungParam) ? leistungParam : "",
+    location: "",
+    objectType: "",
+    interval: "",
     message: "",
     consent: false,
   })
+
+  useEffect(() => {
+    if (services.some((s) => s.value === leistungParam)) {
+      setFormState((prev) => (prev.service ? prev : { ...prev, service: leistungParam }))
+    }
+  }, [leistungParam])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -74,6 +111,7 @@ export default function KontaktPage() {
     try {
       const result = await submitContact({
         ...formState,
+        audience: audience ?? "",
         locale: "de",
         honeypot: honeypotRef.current?.value ?? "",
         renderedAt: renderedAt.current,
@@ -199,6 +237,29 @@ export default function KontaktPage() {
 
                       <form onSubmit={handleSubmit} className="space-y-6">
                         <FormHoneypot inputRef={honeypotRef} />
+                        {!isAudience(kundeParam) && (
+                          <fieldset className="space-y-2">
+                            <legend className="text-sm font-normal text-neutral-600">Ich frage an als</legend>
+                            <div className="grid grid-cols-2 gap-2" role="radiogroup">
+                              {(["privat", "gewerbe"] as const).map((value) => (
+                                <button
+                                  key={value}
+                                  type="button"
+                                  role="radio"
+                                  aria-checked={audience === value}
+                                  onClick={() => setAudienceChoice(value)}
+                                  className={`cursor-pointer rounded-xl px-4 py-3 text-sm font-medium ring-1 transition-colors ${
+                                    audience === value
+                                      ? "bg-brand-blue text-white ring-brand-blue"
+                                      : "bg-white text-brand-navy ring-brand-navy/15 hover:ring-brand-blue"
+                                  }`}
+                                >
+                                  {value === "privat" ? "Privatkunde" : "Gewerbekunde"}
+                                </button>
+                              ))}
+                            </div>
+                          </fieldset>
+                        )}
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div className="space-y-2">
                             <Label htmlFor="name" className="font-normal text-neutral-600">Name *</Label>
@@ -213,18 +274,31 @@ export default function KontaktPage() {
                               }
                             />
                           </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="company" className="font-normal text-neutral-600">Unternehmen</Label>
-                            <Input
-                              id="company"
-                              placeholder="Ihr Unternehmen"
-                              className="font-light text-neutral-500 placeholder:text-neutral-400/70"
-                              value={formState.company}
-                              onChange={(e) =>
-                                setFormState({ ...formState, company: e.target.value })
-                              }
-                            />
-                          </div>
+                          {audience !== "privat" ? (
+                            <div className="space-y-2">
+                              <Label htmlFor="company" className="font-normal text-neutral-600">Unternehmen</Label>
+                              <Input
+                                id="company"
+                                placeholder="Ihr Unternehmen"
+                                className="font-light text-neutral-500 placeholder:text-neutral-400/70"
+                                value={formState.company}
+                                onChange={(e) =>
+                                  setFormState({ ...formState, company: e.target.value })
+                                }
+                              />
+                            </div>
+                          ) : (
+                            <div className="space-y-2">
+                              <Label htmlFor="location" className="font-normal text-neutral-600">Ort</Label>
+                              <Input
+                                id="location"
+                                placeholder="z. B. Echternach"
+                                className="font-light text-neutral-500 placeholder:text-neutral-400/70"
+                                value={formState.location}
+                                onChange={(e) => setFormState({ ...formState, location: e.target.value })}
+                              />
+                            </div>
+                          )}
                         </div>
 
                         <div className="grid gap-4 sm:grid-cols-2">
@@ -269,14 +343,65 @@ export default function KontaktPage() {
                               <SelectValue placeholder="Leistung auswählen" />
                             </SelectTrigger>
                             <SelectContent>
-                              {services.map((service) => (
-                                <SelectItem key={service.value} value={service.value}>
-                                  {service.label}
-                                </SelectItem>
-                              ))}
+                              {services
+                                .filter((service) => !audience || service.audiences.includes(audience) || service.value === formState.service)
+                                .map((service) => (
+                                  <SelectItem key={service.value} value={service.value}>
+                                    {service.label}
+                                  </SelectItem>
+                                ))}
                             </SelectContent>
                           </Select>
                         </div>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="objectType" className="font-normal text-neutral-600">Objektart</Label>
+                            <Select
+                              value={formState.objectType}
+                              onValueChange={(value) => setFormState({ ...formState, objectType: value })}
+                            >
+                              <SelectTrigger id="objectType" className="font-light text-neutral-500">
+                                <SelectValue placeholder="Objektart auswählen" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {objectTypes[audience ?? "gewerbe"].map((type) => (
+                                  <SelectItem key={type} value={type}>
+                                    {type}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="interval" className="font-normal text-neutral-600">Rhythmus</Label>
+                            <Select
+                              value={formState.interval}
+                              onValueChange={(value) => setFormState({ ...formState, interval: value })}
+                            >
+                              <SelectTrigger id="interval" className="font-light text-neutral-500">
+                                <SelectValue placeholder="Einmalig oder regelmäßig?" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="einmalig">Einmalig</SelectItem>
+                                <SelectItem value="regelmaessig">Regelmäßig</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+
+                        {audience !== "privat" && (
+                          <div className="space-y-2">
+                            <Label htmlFor="location-b2b" className="font-normal text-neutral-600">Standort des Objekts</Label>
+                            <Input
+                              id="location-b2b"
+                              placeholder="Ort oder Adresse"
+                              className="font-light text-neutral-500 placeholder:text-neutral-400/70"
+                              value={formState.location}
+                              onChange={(e) => setFormState({ ...formState, location: e.target.value })}
+                            />
+                          </div>
+                        )}
 
                         <div className="space-y-2">
                           <Label htmlFor="message" className="font-normal text-neutral-600">Ihre Nachricht *</Label>

@@ -1,4 +1,6 @@
-import Link from "next/link"
+"use client"
+
+import Link from "@/components/audience-link"
 import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
@@ -9,7 +11,7 @@ import { localizeHref, type Locale } from "@/lib/i18n"
 import { getLocalizedServices } from "@/lib/services"
 import { extraServiceContent } from "@/lib/extra-service-content"
 import { getAudienceLabel, getLocationCountry, type Audience } from "@/lib/locations"
-import { LocationsGrid } from "@/components/locations-grid"
+import { useAudience } from "@/components/audience-provider"
 
 const TEXT = {
   de: {
@@ -69,12 +71,14 @@ const TEXT = {
 }
 
 export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
-  const services = getLocalizedServices(locale)
+  const { audience } = useAudience()
+  const allServices = getLocalizedServices(locale)
+  const services = audience ? allServices.filter((s) => s.audiences.includes(audience)) : allServices
   const t = TEXT[locale]
   const groups: { id: Audience; anchor: string; icon: typeof Home }[] = [
-    { id: "privat", anchor: "privatkunden", icon: Home },
-    { id: "gewerbe", anchor: "gewerbekunden", icon: Building2 },
-  ]
+    { id: "privat" as const, anchor: "privatkunden", icon: Home },
+    { id: "gewerbe" as const, anchor: "gewerbekunden", icon: Building2 },
+  ].filter((g) => !audience || g.id === audience)
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -94,7 +98,7 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
 
         {/* Overview by audience */}
         <section className="bg-brand-mint py-12 lg:py-16">
-          <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-2">
+          <div className={`mx-auto grid max-w-6xl gap-6 px-6 ${groups.length > 1 ? "md:grid-cols-2" : "max-w-3xl"}`}>
             {groups.map(({ id, anchor, icon: Icon }) => (
               <div key={id} id={anchor} className="scroll-mt-24 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brand-navy/5">
                 <div className="mb-5 flex items-center gap-3">
@@ -158,18 +162,22 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                       <h2 className="mb-3 font-display text-2xl font-extrabold text-brand-navy lg:text-3xl">
                         {service.title}
                       </h2>
-                      <ul className="mb-4 flex flex-wrap gap-2">
-                        {service.audiences.map((a) => (
-                          <li key={a} className="rounded-full bg-brand-mint px-3 py-1 text-xs font-semibold text-brand-navy">
-                            {getAudienceLabel(a, locale)}
-                          </li>
-                        ))}
-                        {service.locations.map((l) => (
-                          <li key={l} className="rounded-full bg-brand-blue/10 px-3 py-1 text-xs font-semibold text-brand-blue">
-                            {getLocationCountry(l, locale)}
-                          </li>
-                        ))}
-                      </ul>
+                      {(!audience || service.locations.length === 1) && (
+                        <ul className="mb-4 flex flex-wrap gap-2">
+                          {!audience &&
+                            service.audiences.map((a) => (
+                              <li key={a} className="rounded-full bg-brand-mint px-3 py-1 text-xs font-semibold text-brand-navy">
+                                {getAudienceLabel(a, locale)}
+                              </li>
+                            ))}
+                          {service.locations.length === 1 &&
+                            service.locations.map((l) => (
+                              <li key={l} className="rounded-full bg-brand-blue/10 px-3 py-1 text-xs font-semibold text-brand-blue">
+                                {t.onlyIn} {getLocationCountry(l, locale)}
+                              </li>
+                            ))}
+                        </ul>
+                      )}
                       <p className="mb-5 leading-relaxed text-neutral-600 text-pretty">{service.shortDescription}</p>
                       <ul className="mb-6 grid gap-2">
                         {service.items.map((item) => (
@@ -227,16 +235,6 @@ export function LeistungenContent({ locale = "de" }: { locale?: Locale }) {
                 )
               })}
             </div>
-          </div>
-        </section>
-
-        {/* Locations */}
-        <section className="bg-brand-mint py-16 lg:py-24">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="mb-10 text-balance text-center font-display text-3xl font-extrabold tracking-tight text-brand-navy lg:text-4xl">
-              {t.locHeading}
-            </h2>
-            <LocationsGrid locale={locale} />
           </div>
         </section>
 

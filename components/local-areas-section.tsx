@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import { MapPin } from "lucide-react"
 import { cities, getLocalLandingPath, localCombos, localServices, type LocalServiceSlug } from "@/lib/local-landing"
 

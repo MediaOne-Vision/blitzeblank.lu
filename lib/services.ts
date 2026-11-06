@@ -128,11 +128,11 @@ export const services: ServiceItem[] = [
     titleEn: "Maintenance Cleaning",
     titleFr: "Nettoyage d'entretien",
     shortDescription:
-      "Regelmäßige Reinigung zu festen Terminen - für Büros, Geschäfte, Einrichtungen und Privathaushalte.",
+      "Regelmäßige Reinigung zu festen Terminen - für Büros, Geschäfte und Einrichtungen.",
     shortDescriptionEn:
-      "Regular cleaning on fixed schedules - for offices, shops, institutions and private households.",
+      "Regular cleaning on fixed schedules - for offices, shops and institutions.",
     shortDescriptionFr:
-      "Nettoyage régulier à dates fixes - pour bureaux, commerces, établissements et ménages privés.",
+      "Nettoyage régulier à dates fixes - pour bureaux, commerces et établissements.",
     href: "/leistungen/unterhaltsreinigung",
     icon: Sparkles,
     imageQuery: "clean+modern+office+interior+cleaning+maintenance",
@@ -146,10 +146,9 @@ export const services: ServiceItem[] = [
       s("Gastronomiebetriebe", "Restaurants and catering businesses", "Établissements de restauration"),
       s("Geschäfte und Verkaufsflächen", "Shops and retail spaces", "Commerces et surfaces de vente"),
       s("Kindergärten und Schulen", "Kindergartens and schools", "Crèches et écoles"),
-      s("Privathaushalte", "Private households", "Ménages privés"),
       s("Individuell vereinbarte Reinigungsintervalle", "Individually agreed cleaning intervals", "Intervalles de nettoyage convenus individuellement"),
     ],
-    audiences: ["privat", "gewerbe"],
+    audiences: ["gewerbe"],
     locations: ["lu", "de"],
   },
   {
@@ -268,7 +267,7 @@ export const services: ServiceItem[] = [
     icon: Layers,
     imageQuery: "clean+apartment+building+stairwell+staircase+entrance",
     items: [],
-    audiences: ["privat", "gewerbe"],
+    audiences: ["gewerbe"],
     locations: ["de"],
     listed: false,
   },

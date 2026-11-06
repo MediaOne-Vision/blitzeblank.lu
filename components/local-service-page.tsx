@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, CheckCircle2, MapPin, Phone } from "lucide-react"
+import { ArrowRight, CheckCircle2, MapPin } from "lucide-react"
+import { EmbeddedContactForm } from "@/components/embedded-contact-form"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -157,7 +158,7 @@ export function LocalServicePage({ service, city, combo }: { service: LocalServi
                   size="lg"
                   className="group rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-brand-blue/40 hover:bg-brand-teal"
                 >
-                  <Link href="/kontakt">
+                  <Link href="#kontakt">
                     Kostenlose Beratung
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
@@ -331,28 +332,7 @@ export function LocalServicePage({ service, city, combo }: { service: LocalServi
           </div>
         </section>
 
-        <section className="bg-brand-navy py-16 lg:py-20">
-          <div className="mx-auto max-w-3xl px-6 text-center">
-            <h2 className="mb-4 text-balance font-display text-3xl font-extrabold tracking-tight text-white lg:text-4xl">
-              {keywordCity}: jetzt unverbindlich anfragen
-            </h2>
-            <p className="mb-8 text-white/75 text-pretty">
-              Beschreiben Sie uns kurz Ihr Objekt. Wir melden uns zeitnah mit einem Terminvorschlag für die kostenlose
-              Besichtigung.
-            </p>
-            <Button
-              asChild
-              size="lg"
-              className="group rounded-full bg-brand-blue px-8 text-white shadow-lg shadow-brand-blue/40 hover:bg-brand-teal"
-            >
-              <Link href="/kontakt">
-                <Phone className="h-4 w-4" aria-hidden="true" />
-                Zur Kontaktseite
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
-        </section>
+        <EmbeddedContactForm locale="de" service={service.slug} />
       </main>
       <Footer locale="de" />
     </div>

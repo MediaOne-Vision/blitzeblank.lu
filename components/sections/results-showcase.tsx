@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import { BeforeAfterSlider } from "@/components/before-after-slider"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"

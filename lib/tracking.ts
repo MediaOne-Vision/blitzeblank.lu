@@ -108,6 +108,40 @@ export function pushDataLayerEvent(eventName: string, data: Record<string, unkno
   return pushToDataLayer({ event: eventName, ...data })
 }
 
+/** Auswahl Privat/Gewerbe (nur nach Einwilligung, ohne personenbezogene Daten). */
+export function pushCustomerTypeSelected(customerType: "privat" | "gewerbe", source: string): boolean {
+  return pushDataLayerEvent("customer_type_selected", { customer_type: customerType, selection_source: source })
+}
+
+/** Rechner gestartet – einmal pro Rechner-Sitzung vom Aufrufer auszulösen. */
+export function pushQuoteCalculatorStarted(data: { customer_type?: string | null; service?: string; calculator?: string }): boolean {
+  return pushDataLayerEvent("quote_calculator_started", {
+    ...(data.customer_type ? { customer_type: data.customer_type } : {}),
+    ...(data.service ? { service: data.service } : {}),
+    ...(data.calculator ? { calculator: data.calculator } : {}),
+  })
+}
+
+/** Rechner erfolgreich abgeschlossen – nur nach serverseitig bestätigter Übermittlung (Danke-Seite). */
+export function pushQuoteCalculatorCompleted(data: { customer_type?: string | null; service?: string; lead_id: string; form_type: string }): boolean {
+  return pushDataLayerEvent("quote_calculator_completed", {
+    ...(data.customer_type ? { customer_type: data.customer_type } : {}),
+    ...(data.service ? { service: data.service } : {}),
+    lead_id: data.lead_id,
+    form_type: data.form_type,
+  })
+}
+
+/** Kontaktformular erfolgreich abgeschickt – nur nach serverseitig bestätigter Übermittlung (Danke-Seite). */
+export function pushContactFormSubmitted(data: { customer_type?: string | null; service?: string; lead_id: string; form_type: string }): boolean {
+  return pushDataLayerEvent("contact_form_submitted", {
+    ...(data.customer_type ? { customer_type: data.customer_type } : {}),
+    ...(data.service ? { service: data.service } : {}),
+    lead_id: data.lead_id,
+    form_type: data.form_type,
+  })
+}
+
 /** Legt den signierten Nachweis für die Danke-Seite ab. */
 export function storeLeadHandoff(proof: string) {
   if (typeof window === "undefined") return

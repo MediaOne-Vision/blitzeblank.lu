@@ -1,7 +1,8 @@
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import Image from "next/image"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { EmbeddedContactForm } from "@/components/embedded-contact-form"
 import { ServiceSwitcher } from "@/components/service-switcher"
 import { LocalAreasSection } from "@/components/local-areas-section"
 import { QuoteBanner } from "@/components/quote-banner"
@@ -186,7 +187,7 @@ export function ServicePageTemplate({
                     size="lg"
                     className="group bg-brand-blue text-white hover:bg-brand-teal rounded-full px-8 shadow-lg shadow-brand-blue/40 transition-transform hover:scale-105"
                   >
-                    <Link href={localizeHref("/kontakt", locale)} className="cursor-pointer">
+                    <Link href="#kontakt" className="cursor-pointer">
                       {t.freeConsult}
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
@@ -357,6 +358,8 @@ export function ServicePageTemplate({
             </div>
           </section>
         )}
+
+        <EmbeddedContactForm locale={locale} service={slug} />
       </main>
       <Footer locale={locale} />
     </div>

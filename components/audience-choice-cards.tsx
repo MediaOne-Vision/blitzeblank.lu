@@ -1,0 +1,120 @@
+"use client"
+
+import Link from "next/link"
+import { ArrowRight, Building2, Check, Home } from "lucide-react"
+import { audiencePath } from "@/lib/audience"
+import { useAudience } from "@/components/audience-provider"
+import type { Locale } from "@/lib/i18n"
+import type { Audience } from "@/lib/locations"
+
+const ICONS: Record<Audience, typeof Home> = {
+  privat: Home,
+  gewerbe: Building2,
+}
+
+const TEXT = {
+  de: {
+    eyebrow: "Wer sind Sie?",
+    heading: "Wählen Sie Ihren Bereich",
+    intro: "Wir zeigen Ihnen nur die Leistungen, Preise und Abläufe, die für Sie relevant sind.",
+    privat: {
+      title: "Privatkunden",
+      text: "Für Ihr Haus, Ihre Wohnung und Ihren Garten.",
+      points: ["Fenster, Fassade und Dachrinnen", "Terrasse, Einfahrt und Solaranlage", "Einmalig oder bei Bedarf"],
+      cta: "Zu den Privatkunden",
+    },
+    gewerbe: {
+      title: "Gewerbekunden",
+      text: "Für Büros, Praxen, Handel, Hausverwaltungen und Industrie.",
+      points: ["Unterhalts- und Glasreinigung nach Plan", "Industrie-, Fassaden- und Spezialreinigung", "Fester Ansprechpartner, Einsatz außerhalb der Betriebszeiten"],
+      cta: "Zu den Gewerbekunden",
+    },
+  },
+  en: {
+    eyebrow: "Who are you?",
+    heading: "Choose your area",
+    intro: "We only show you the services, prices and processes that are relevant to you.",
+    privat: {
+      title: "Private customers",
+      text: "For your house, apartment and garden.",
+      points: ["Windows, facade and gutters", "Terrace, driveway and solar panels", "One-off or as needed"],
+      cta: "Go to private customers",
+    },
+    gewerbe: {
+      title: "Business customers",
+      text: "For offices, practices, retail, property managers and industry.",
+      points: ["Scheduled maintenance and glass cleaning", "Industrial, facade and special cleaning", "Fixed contact, jobs outside operating hours"],
+      cta: "Go to business customers",
+    },
+  },
+  fr: {
+    eyebrow: "Qui êtes-vous ?",
+    heading: "Choisissez votre espace",
+    intro: "Nous vous montrons uniquement les prestations, prix et déroulements qui vous concernent.",
+    privat: {
+      title: "Particuliers",
+      text: "Pour votre maison, votre appartement et votre jardin.",
+      points: ["Vitres, façade et gouttières", "Terrasse, allée et installation solaire", "Ponctuel ou selon vos besoins"],
+      cta: "Vers les particuliers",
+    },
+    gewerbe: {
+      title: "Entreprises",
+      text: "Pour bureaux, cabinets, commerces, syndics et industrie.",
+      points: ["Entretien et vitres selon planning", "Nettoyage industriel, de façades et spécial", "Interlocuteur fixe, interventions hors heures d'activité"],
+      cta: "Vers les entreprises",
+    },
+  },
+}
+
+export function AudienceChoiceCards({ locale = "de" }: { locale?: Locale }) {
+  const t = TEXT[locale]
+  const { selectAudience } = useAudience()
+  const audiences: Audience[] = ["privat", "gewerbe"]
+
+  return (
+    <section id="kundengruppen" className="scroll-mt-24 bg-background py-16 lg:py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">{t.eyebrow}</p>
+          <h2 className="mb-3 text-balance font-display text-3xl font-extrabold tracking-tight text-brand-navy lg:text-4xl">
+            {t.heading}
+          </h2>
+          <p className="text-pretty text-neutral-600">{t.intro}</p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
+          {audiences.map((audience) => {
+            const copy = t[audience]
+            const Icon = ICONS[audience]
+            return (
+              <Link
+                key={audience}
+                href={audiencePath(audience, locale)}
+                onClick={() => selectAudience(audience, "choice_section")}
+                className="group flex cursor-pointer flex-col rounded-2xl bg-white p-6 ring-1 ring-brand-navy/10 transition-all hover:-translate-y-1 hover:shadow-lg hover:ring-brand-blue/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue lg:p-8"
+              >
+                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue/10 text-brand-blue transition-colors group-hover:bg-brand-blue group-hover:text-white">
+                  <Icon className="h-7 w-7" aria-hidden="true" />
+                </span>
+                <h3 className="mb-1 font-display text-2xl font-extrabold text-brand-navy">{copy.title}</h3>
+                <p className="mb-5 text-neutral-600">{copy.text}</p>
+                <ul className="mb-8 space-y-2.5">
+                  {copy.points.map((point) => (
+                    <li key={point} className="flex items-start gap-3 text-sm text-neutral-700">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" aria-hidden="true" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+                <span className="mt-auto inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-brand-blue">
+                  {copy.cta}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </span>
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}

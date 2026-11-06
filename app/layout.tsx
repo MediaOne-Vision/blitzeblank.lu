@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import { CookieConsentBanner } from '@/components/cookie-consent-banner'
 import { HtmlLangSync } from '@/components/html-lang-sync'
+import { AudienceProvider } from '@/components/audience-provider'
 import './globals.css'
 
 const inter = Inter({ 
@@ -43,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="de" className="scroll-smooth" data-scroll-behavior="smooth">
       <body className={`${inter.variable} ${jakarta.variable} font-sans antialiased`}>
-        {children}
+        <AudienceProvider>{children}</AudienceProvider>
         <HtmlLangSync />
         <CookieConsentBanner />
       </body>

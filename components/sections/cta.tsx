@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Phone, ArrowRight, Calculator, Facebook, Instagram } from "lucide-react"
