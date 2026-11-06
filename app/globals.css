@@ -208,3 +208,78 @@
     scroll-behavior: auto;
   }
 }
+
+/* Einsatzgebiet-Radar */
+@keyframes radar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes radar-ping {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  14% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4.5);
+  }
+}
+
+@keyframes radar-label {
+  0%,
+  18% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes radar-home-pulse {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3);
+  }
+}
+
+.radar-sweep {
+  animation: radar-spin var(--radar-period, 10s) linear infinite;
+}
+
+.radar-ping {
+  opacity: 0;
+  animation: radar-ping var(--radar-period, 10s) linear infinite;
+}
+
+.radar-label {
+  opacity: 0.5;
+  animation: radar-label var(--radar-period, 10s) linear infinite;
+}
+
+.radar-home-pulse {
+  animation: radar-home-pulse 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep,
+  .radar-ping,
+  .radar-label,
+  .radar-home-pulse {
+    animation: none;
+  }
+
+  .radar-label {
+    opacity: 0.9;
+  }
+}

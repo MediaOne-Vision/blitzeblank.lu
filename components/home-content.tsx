@@ -9,6 +9,7 @@ import { WhyUsSection } from "@/components/sections/why-us"
 import { OwnerSection } from "@/components/sections/owner"
 import { InActionSection } from "@/components/sections/in-action"
 import { ProcessSection } from "@/components/sections/process"
+import { ServiceRadar } from "@/components/sections/service-radar"
 import { QuoteBanner } from "@/components/quote-banner"
 import { TestimonialsSection } from "@/components/sections/testimonials"
 import { FaqSection } from "@/components/sections/faq"
@@ -44,6 +45,7 @@ export function HomeContent({ locale = "de", audience = null }: { locale?: Local
             <Reveal>
               <InActionSection locale={locale} />
             </Reveal>
+            <ServiceRadar locale={locale} />
             <Reveal>
               <QuoteBanner locale={locale} />
             </Reveal>
@@ -58,6 +60,7 @@ export function HomeContent({ locale = "de", audience = null }: { locale?: Local
         ) : (
           <>
             <AudienceChoiceCards locale={locale} />
+            <ServiceRadar locale={locale} />
             <Reveal>
               <TestimonialsSection locale={locale} />
             </Reveal>
