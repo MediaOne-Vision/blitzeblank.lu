@@ -194,16 +194,6 @@ export function ServiceRadar({ locale = "de" }: { locale?: Locale }) {
           </div>
 
           <div className="absolute inset-0">
-            {RING_KM.map((km) => (
-              <span
-                key={km}
-                className="absolute -translate-x-full -translate-y-1/2 bg-brand-navy px-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-white/55 sm:text-xs"
-                style={{ left: pct(CENTER - 6), top: pct(CENTER - ringRadius(km)) }}
-              >
-                {km} km
-              </span>
-            ))}
-
             {placed.map((city) => {
               const delay = `${((city.bearing / 360) * SWEEP_SECONDS - SWEEP_SECONDS).toFixed(2)}s`
               return (
