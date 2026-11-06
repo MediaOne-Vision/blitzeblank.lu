@@ -219,22 +219,22 @@
 @keyframes radar-ping {
   0% {
     opacity: 0.95;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
   16% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(4);
+    transform: scale(4);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(4);
+    transform: scale(4);
   }
 }
 
 @keyframes radar-blip {
   0% {
     background-color: #ffffff;
-    transform: translate(-50%, -50%) scale(1.9);
+    transform: scale(1.9);
     box-shadow:
       0 0 0 3px rgba(127, 205, 238, 0.45),
       0 0 14px 5px rgba(127, 205, 238, 0.95),
@@ -242,7 +242,7 @@
   }
   12% {
     background-color: #ffffff;
-    transform: translate(-50%, -50%) scale(1.6);
+    transform: scale(1.6);
     box-shadow:
       0 0 0 3px rgba(127, 205, 238, 0.3),
       0 0 12px 4px rgba(127, 205, 238, 0.7),
@@ -250,12 +250,12 @@
   }
   45% {
     background-color: #9fdcf4;
-    transform: translate(-50%, -50%) scale(1.15);
+    transform: scale(1.15);
     box-shadow: 0 0 8px 2px rgba(127, 205, 238, 0.35);
   }
   100% {
     background-color: rgba(255, 255, 255, 0.5);
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
     box-shadow: 0 0 0 0 rgba(127, 205, 238, 0);
   }
 }
@@ -279,11 +279,11 @@
 @keyframes radar-home-pulse {
   0% {
     opacity: 0.8;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(3);
+    transform: scale(3);
   }
 }
 
