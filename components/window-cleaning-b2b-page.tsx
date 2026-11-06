@@ -244,7 +244,7 @@ export function WindowCleaningB2BPage({ locale = "de" }: { locale?: Locale }) {
                   <Sparkles className="h-4 w-4" />
                   {t.eyebrow}
                 </p>
-                <h1 className="mb-4 text-balance font-display text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+                <h1 className="mb-4 text-balance font-display text-3xl font-extrabold tracking-tight text-white md:text-4xl">
                   {t.h1}
                 </h1>
                 <p className="mb-6 max-w-lg text-lg text-white/75 text-pretty">{t.sub}</p>

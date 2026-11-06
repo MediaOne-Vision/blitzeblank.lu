@@ -1,5 +1,5 @@
 import Image from "next/image"
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/reveal"

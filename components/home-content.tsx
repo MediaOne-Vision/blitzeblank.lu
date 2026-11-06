@@ -2,8 +2,7 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Reveal } from "@/components/reveal"
 import { HeroSection } from "@/components/sections/hero"
-import { AudienceLocationsSection } from "@/components/sections/audience-locations"
-import { AudienceServicesSection } from "@/components/sections/audience-services"
+import { AudienceChoiceCards } from "@/components/audience-choice-cards"
 import { LocationsGrid } from "@/components/locations-grid"
 import { ServicesOverview } from "@/components/sections/services-overview"
 import { ResultsShowcase } from "@/components/sections/results-showcase"
@@ -15,12 +14,14 @@ import { QuoteBanner } from "@/components/quote-banner"
 import { TestimonialsSection } from "@/components/sections/testimonials"
 import { FaqSection } from "@/components/sections/faq"
 import { CtaSection } from "@/components/sections/cta"
+import { EmbeddedContactForm } from "@/components/embedded-contact-form"
 import type { Locale } from "@/lib/i18n"
 import type { Audience } from "@/lib/locations"
 
 /**
- * Startseite (neutral) und Zielgruppen-Seiten (/privatkunden, /gewerbekunden).
- * Die Zielgruppen-Seiten sind eigene, serverseitig gerenderte Seiten und damit indexierbar.
+ * Neutrale Startseite: Hero und direkt darunter die Auswahl Privat- oder Gewerbekunden.
+ * Zielgruppen-Startseiten (/privatkunden, /gewerbekunden) behalten den bisherigen Aufbau
+ * der Startseite, ohne die Auswahl.
  */
 export function HomeContent({ locale = "de", audience = null }: { locale?: Locale; audience?: Audience | null }) {
   return (
@@ -30,35 +31,6 @@ export function HomeContent({ locale = "de", audience = null }: { locale?: Local
         <HeroSection locale={locale} audience={audience} />
         {audience ? (
           <>
-            <AudienceServicesSection locale={locale} audience={audience} />
-            <Reveal>
-              <TestimonialsSection locale={locale} />
-            </Reveal>
-            <Reveal>
-              <ResultsShowcase locale={locale} />
-            </Reveal>
-            <section className="bg-brand-mint py-16 lg:py-20">
-              <div className="mx-auto max-w-6xl px-6">
-                <LocationsGrid locale={locale} />
-              </div>
-            </section>
-            <WhyUsSection locale={locale} />
-            <Reveal>
-              <ProcessSection locale={locale} />
-            </Reveal>
-            <Reveal>
-              <OwnerSection locale={locale} />
-            </Reveal>
-            <Reveal>
-              <FaqSection locale={locale} />
-            </Reveal>
-            <Reveal>
-              <CtaSection locale={locale} />
-            </Reveal>
-          </>
-        ) : (
-          <>
-            <AudienceLocationsSection locale={locale} />
             <ServicesOverview locale={locale} />
             <WhyUsSection locale={locale} />
             <Reveal>
@@ -81,6 +53,22 @@ export function HomeContent({ locale = "de", audience = null }: { locale?: Local
             </Reveal>
             <Reveal>
               <FaqSection locale={locale} />
+            </Reveal>
+            <EmbeddedContactForm locale={locale} />
+          </>
+        ) : (
+          <>
+            <AudienceChoiceCards locale={locale} />
+            <section className="bg-brand-mint py-16 lg:py-20">
+              <div className="mx-auto max-w-6xl px-6">
+                <LocationsGrid locale={locale} />
+              </div>
+            </section>
+            <Reveal>
+              <TestimonialsSection locale={locale} />
+            </Reveal>
+            <Reveal>
+              <OwnerSection locale={locale} />
             </Reveal>
             <Reveal>
               <CtaSection locale={locale} />

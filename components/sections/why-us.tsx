@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import { Clock, ShieldCheck, MapPin, CircleDollarSign, GitFork, UserCircle, ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/reveal"
 import { Button } from "@/components/ui/button"

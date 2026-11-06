@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import Image from "next/image"
 import { Facebook, Instagram } from "lucide-react"
 import { CookieSettingsLink } from "@/components/cookie-settings-link"

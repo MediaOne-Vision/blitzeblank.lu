@@ -36,18 +36,26 @@ export type AudienceRoute =
   | { kind: "home" }
   | { kind: "other" }
 
+/** Liefert die Zielgruppe, wenn der (kanonische) Pfad mit /privatkunden bzw. /gewerbekunden beginnt, plus den Rest. */
+export function splitAudiencePath(canonicalPath: string): { audience: Audience; rest: string } | null {
+  for (const audience of AUDIENCE_IDS) {
+    const base = AUDIENCE_PATHS[audience]
+    if (canonicalPath === base) return { audience, rest: "/" }
+    if (canonicalPath.startsWith(`${base}/`)) return { audience, rest: canonicalPath.slice(base.length) }
+  }
+  return null
+}
+
 /**
- * Ordnet einen Pfad einer Kundengruppe zu.
- * Die Zielgruppen-Seiten und Leistungen, die nur für eine Gruppe angeboten werden
- * (z. B. Unterhaltsreinigung), legen die Gruppe über die URL fest. Die URL hat damit
- * immer Vorrang vor einer gespeicherten Auswahl.
+ * Ordnet einen Pfad einer Kundengruppe zu. Alles unter /privatkunden bzw. /gewerbekunden gehört
+ * zur jeweiligen Gruppe. Die URL bestimmt die Gruppe, es gibt keine versteckte Auswahl.
  */
 export function getAudienceRoute(pathname: string | null | undefined): AudienceRoute {
   if (!pathname) return { kind: "other" }
   const path = stripLocalePrefix(pathname).replace(/\/+$/, "") || "/"
   if (path === "/") return { kind: "home" }
-  if (path === AUDIENCE_PATHS.privat) return { kind: "audience-page", audience: "privat" }
-  if (path === AUDIENCE_PATHS.gewerbe) return { kind: "audience-page", audience: "gewerbe" }
+  const split = splitAudiencePath(path)
+  if (split) return { kind: "audience-page", audience: split.audience }
 
   const match = path.match(/^\/leistungen\/([^/]+)/)
   if (match) {
@@ -57,6 +65,28 @@ export function getAudienceRoute(pathname: string | null | undefined): AudienceR
     }
   }
   return { kind: "other" }
+}
+
+/** Seiten, die es pro Zielgruppe gibt (kanonischer Pfad ohne Zielgruppen-Präfix). */
+export function hasAudienceVersion(canonicalPath: string): boolean {
+  const path = canonicalPath.replace(/\/+$/, "") || "/"
+  if (path === "/") return true
+  if (path === "/ueber-uns" || path === "/kontakt" || path === "/angebot" || path === "/leistungen") return true
+  // /leistungen/<slug> ja, lokale Landingpages /leistungen/<slug>/<ort> nein
+  return /^\/leistungen\/[^/]+$/.test(path)
+}
+
+/**
+ * Baut den Link innerhalb einer Zielgruppe. `href` ist ein kanonischer (deutscher) Pfad,
+ * optional mit Query/Hash. Ohne Zielgruppe oder bei Seiten ohne Zielgruppen-Version bleibt er neutral.
+ */
+export function audienceHref(href: string, audience: Audience | null | undefined, locale: Locale): string {
+  if (!audience || !href.startsWith("/")) return localizeHref(href, locale)
+  const [pathAndQuery, hash] = href.split("#")
+  const [path, query] = pathAndQuery.split("?")
+  if (!hasAudienceVersion(path)) return localizeHref(href, locale)
+  const prefixed = path === "/" ? AUDIENCE_PATHS[audience] : `${AUDIENCE_PATHS[audience]}${path}`
+  return localizeHref(`${prefixed}${query ? `?${query}` : ""}${hash ? `#${hash}` : ""}`, locale)
 }
 
 /** Hängt die Kundengruppe (und optional die Leistung) als Query an einen internen Pfad an. */

@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
@@ -79,14 +79,15 @@ export function Navigation() {
   }, [])
   const navLinks = NAV_LINKS[locale].map((l) => ({ ...l, href: localizeHref(l.href, locale) }))
   const localizedServices = getLocalizedServices(locale)
-  const serviceGroups = AUDIENCE_ORDER.map((audience) => ({
-    audience,
-    label: getAudienceLabel(audience, locale),
-    icon: AUDIENCE_ICONS[audience],
-    services: localizedServices.filter((service) => service.audiences.includes(audience)),
-  }))
   const t = TEXT[locale]
   const { audience } = useAudience()
+  const serviceGroups = AUDIENCE_ORDER.filter((id) => !audience || id === audience).map((id) => ({
+    audience: id,
+    label: getAudienceLabel(id, locale),
+    icon: AUDIENCE_ICONS[id],
+    services: localizedServices.filter((service) => service.audiences.includes(id)),
+  }))
+  const singleGroup = serviceGroups.length === 1
   const angebotHref = withAudienceQuery(localizeHref("/angebot", locale), audience)
   const kontaktHref = withAudienceQuery(localizeHref("/kontakt", locale), audience)
 
@@ -143,8 +144,13 @@ export function Navigation() {
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
                 </Link>
                 <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 transition-all duration-200">
-                  <div className="w-[540px] overflow-hidden rounded-xl border border-brand-blue/10 bg-white shadow-xl shadow-brand-navy/5">
-                    <div className="grid grid-cols-2 divide-x divide-brand-blue/10">
+                  <div
+                    className={cn(
+                      "overflow-hidden rounded-xl border border-brand-blue/10 bg-white shadow-xl shadow-brand-navy/5",
+                      singleGroup ? "w-[300px]" : "w-[540px]",
+                    )}
+                  >
+                    <div className={cn("grid divide-x divide-brand-blue/10", singleGroup ? "grid-cols-1" : "grid-cols-2")}>
                       {serviceGroups.map((group) => {
                         const GroupIcon = group.icon
                         return (
