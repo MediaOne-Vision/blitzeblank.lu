@@ -1,8 +1,7 @@
 import Link from "next/link"
-import { ArrowRight, Building2, CheckCircle2, Home } from "lucide-react"
+import { ArrowRight, Building2, Home } from "lucide-react"
 import { LocationsGrid } from "@/components/locations-grid"
-import { getLocalizedServices } from "@/lib/services"
-import { getLocationCountry, type Audience } from "@/lib/locations"
+import type { Audience } from "@/lib/locations"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const TEXT = {
@@ -78,7 +77,6 @@ const AUDIENCES: { id: Audience; icon: typeof Home }[] = [
 
 export function AudienceLocationsSection({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
-  const services = getLocalizedServices(locale)
 
   return (
     <section id="kundengruppen" className="scroll-mt-24 bg-white py-16 lg:py-24">
@@ -94,7 +92,6 @@ export function AudienceLocationsSection({ locale = "de" }: { locale?: Locale })
         <div className="grid gap-6 md:grid-cols-2">
           {AUDIENCES.map(({ id, icon: Icon }) => {
             const copy = t.audiences[id]
-            const list = services.filter((s) => s.audiences.includes(id))
             const dark = id === "gewerbe"
             return (
               <article
@@ -110,32 +107,7 @@ export function AudienceLocationsSection({ locale = "de" }: { locale?: Locale })
                   </div>
                   <h3 className="font-display text-2xl font-extrabold">{copy.title}</h3>
                 </div>
-                <p className={`mb-6 text-pretty ${dark ? "text-white/75" : "text-neutral-600"}`}>{copy.body}</p>
-                <ul className="mb-8 space-y-3">
-                  {list.map((service) => {
-                    const restricted = service.locations.length === 1 ? service.locations[0] : null
-                    return (
-                      <li key={service.slug}>
-                        <Link
-                          href={service.href}
-                          className={`group flex items-center gap-3 text-sm font-semibold transition-colors ${
-                            dark ? "text-white hover:text-brand-sky" : "text-brand-navy hover:text-brand-blue"
-                          }`}
-                        >
-                          <CheckCircle2 className="h-5 w-5 shrink-0 text-brand-blue" />
-                          <span>
-                            {service.title}
-                            {restricted && (
-                              <span className={`ml-2 text-xs font-medium ${dark ? "text-brand-sky" : "text-neutral-500"}`}>
-                                ({t.onlyIn} {getLocationCountry(restricted, locale)})
-                              </span>
-                            )}
-                          </span>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
+                <p className={`mb-8 text-pretty ${dark ? "text-white/75" : "text-neutral-600"}`}>{copy.body}</p>
                 <Link
                   href={`${localizeHref("/leistungen", locale)}#${id === "privat" ? "privatkunden" : "gewerbekunden"}`}
                   className={`group mt-auto inline-flex items-center gap-2 text-sm font-semibold ${

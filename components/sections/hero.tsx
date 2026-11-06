@@ -16,10 +16,10 @@ const TRUST = {
 const TEXT = {
   de: {
     neutral: {
-      badge: "Reinigungsfirma in Luxemburg, Trier & Bitburg",
-      heading: "Professionelle Reinigung",
-      headingAccent: "für Privat & Gewerbe.",
-      body: "Fenster, Fassade, Stein und mehr: Wählen Sie Ihre Kundengruppe und sehen Sie sofort, was wir für Sie tun.",
+      badge: "Reinigung vom Profi",
+      heading: "Strahlend sauber.",
+      headingAccent: "Garantiert.",
+      body: "Fenster, Fassade, Stein und mehr in Luxemburg, Trier, Bitburg und der Region.",
     },
     privat: {
       badge: "Für Privatkunden",
@@ -42,10 +42,10 @@ const TEXT = {
   },
   en: {
     neutral: {
-      badge: "Cleaning company in Luxembourg, Trier & Bitburg",
-      heading: "Professional cleaning",
-      headingAccent: "for homes & businesses.",
-      body: "Windows, facades, stone and more: choose your customer type and see right away what we can do for you.",
+      badge: "Professional cleaning",
+      heading: "Sparkling clean.",
+      headingAccent: "Guaranteed.",
+      body: "Windows, facades, stone and more in Luxembourg, Trier, Bitburg and the surrounding region.",
     },
     privat: {
       badge: "For private customers",
@@ -68,10 +68,10 @@ const TEXT = {
   },
   fr: {
     neutral: {
-      badge: "Entreprise de nettoyage à Luxembourg, Trèves & Bitburg",
-      heading: "Nettoyage professionnel",
-      headingAccent: "pour particuliers & entreprises.",
-      body: "Vitres, façades, pierre et plus encore : choisissez votre type de client et découvrez tout de suite ce que nous faisons pour vous.",
+      badge: "Nettoyage professionnel",
+      heading: "Propreté éclatante.",
+      headingAccent: "Garantie.",
+      body: "Vitres, façades, pierre et plus encore à Luxembourg, Trèves, Bitburg et dans la région.",
     },
     privat: {
       badge: "Pour les particuliers",

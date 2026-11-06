@@ -12,7 +12,6 @@ import { getLocaleFromPathname, localizeHref } from "@/lib/i18n"
 import { getLocalizedServices } from "@/lib/services"
 import { getAudienceLabel, type Audience } from "@/lib/locations"
 import { LanguageSwitcher } from "@/components/language-switcher"
-import { AudienceSwitcher } from "@/components/audience-switcher"
 import { useAudience } from "@/components/audience-provider"
 import { withAudienceQuery } from "@/lib/audience"
 
@@ -208,7 +207,6 @@ export function Navigation() {
 
         {/* CTA */}
         <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
-          <AudienceSwitcher transparent={transparent} className="mr-1" />
           <Button
             asChild
             size="sm"
@@ -239,7 +237,6 @@ export function Navigation() {
         </div>
 
         {/* Mobile */}
-        <AudienceSwitcher transparent={transparent} className="ml-auto lg:hidden [&_button]:px-2.5 [&_button]:py-1 [&_button]:text-xs" />
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="lg:hidden">
             <Button
