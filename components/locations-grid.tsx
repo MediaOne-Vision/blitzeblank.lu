@@ -1,22 +1,23 @@
 import Link from "next/link"
-import { MapPin, Phone } from "lucide-react"
-import { getLocalizedServices } from "@/lib/services"
 import { LOCATION_IDS, locations } from "@/lib/locations"
 import { localizeHref, type Locale } from "@/lib/i18n"
 
 const TEXT = {
   de: {
-    services: "Leistungen vor Ort",
+    eyebrow: "Wo wir arbeiten",
+    heading: "Luxemburg und Deutschland",
     region: "Einsatzgebiet",
     contact: "Anfrage für diesen Standort",
   },
   en: {
-    services: "Services on site",
+    eyebrow: "Where we work",
+    heading: "Luxembourg and Germany",
     region: "Service area",
     contact: "Request for this location",
   },
   fr: {
-    services: "Prestations sur place",
+    eyebrow: "Où nous intervenons",
+    heading: "Luxembourg et Allemagne",
     region: "Zone d'intervention",
     contact: "Demande pour ce site",
   },
@@ -24,67 +25,48 @@ const TEXT = {
 
 export function LocationsGrid({ locale = "de" }: { locale?: Locale }) {
   const t = TEXT[locale]
-  const services = getLocalizedServices(locale)
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      {LOCATION_IDS.map((id) => {
-        const location = locations[id]
-        const available = services.filter((s) => s.locations.includes(id))
-        return (
-          <article key={id} className="flex flex-col rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brand-navy/10">
-            <div className="mb-5 flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-blue">
-                <MapPin className="h-6 w-6 text-white" />
-              </div>
+    <div>
+      <div className="mb-10 text-center">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-blue">{t.eyebrow}</p>
+        <h2 className="text-balance font-display text-3xl font-extrabold tracking-tight text-brand-navy lg:text-4xl">
+          {t.heading}
+        </h2>
+      </div>
+
+      <div className="mx-auto grid max-w-4xl gap-10 md:grid-cols-2 md:gap-0 md:divide-x md:divide-brand-navy/10">
+        {LOCATION_IDS.map((id) => {
+          const location = locations[id]
+          return (
+            <article key={id} className="flex flex-col gap-3 md:px-10 md:first:pl-0 md:last:pr-0">
               <div>
                 <h3 className="font-display text-2xl font-extrabold text-brand-navy">{location.country[locale]}</h3>
-                {location.entity && <p className="text-sm font-medium text-neutral-500">{location.entity}</p>}
+                {location.entity && <p className="text-sm text-neutral-500">{location.entity}</p>}
               </div>
-            </div>
-
-            <dl className="mb-5 space-y-3 text-sm">
-              <div>
-                <dt className="font-semibold text-brand-navy">{t.region}</dt>
-                <dd className="text-neutral-600">{location.regions[locale]}</dd>
-              </div>
+              <p className="text-neutral-600">
+                <span className="font-medium text-brand-navy">{t.region}: </span>
+                {location.regions[locale]}
+              </p>
               {location.address && (
-                <div className="flex items-start gap-2 text-neutral-600">
-                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
-                  <address className="not-italic">
-                    {location.address.join(", ")}
-                    <br />
-                    <a href="tel:+352661830493" className="font-medium text-brand-blue hover:underline">
-                      +352 661 830 493
-                    </a>
-                  </address>
-                </div>
+                <address className="text-sm not-italic leading-relaxed text-neutral-600">
+                  {location.address.join(", ")}
+                  <br />
+                  <a href="tel:+352661830493" className="font-medium text-brand-blue hover:underline">
+                    +352 661 830 493
+                  </a>
+                </address>
               )}
-            </dl>
-
-            <p className="mb-2 text-sm font-semibold text-brand-navy">{t.services}</p>
-            <ul className="mb-6 flex flex-wrap gap-2">
-              {available.map((service) => (
-                <li key={service.slug}>
-                  <Link
-                    href={service.href}
-                    className="inline-flex rounded-full bg-brand-mint px-3 py-1.5 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-blue hover:text-white"
-                  >
-                    {service.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <Link
-              href={localizeHref("/kontakt", locale)}
-              className="mt-auto text-sm font-semibold text-brand-blue hover:underline"
-            >
-              {t.contact}
-            </Link>
-          </article>
-        )
-      })}
+              <Link
+                href={localizeHref("/kontakt", locale)}
+                className="mt-1 text-sm font-semibold text-brand-blue hover:underline"
+              >
+                {t.contact}
+              </Link>
+            </article>
+          )
+        })}
+      </div>
     </div>
   )
 }
