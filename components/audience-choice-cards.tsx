@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { ArrowRight, Building2, Check, Home } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { audiencePath } from "@/lib/audience"
 import { useAudience } from "@/components/audience-provider"
 import type { Locale } from "@/lib/i18n"
@@ -21,7 +20,7 @@ const TEXT = {
     privat: {
       title: "Privatkunden",
       text: "Für Ihr Haus, Ihre Wohnung und Ihren Garten.",
-      points: ["Fenster, Fassade und Dachrinnen", "Terrasse, Einfahrt und Solaranlage", "Einmalig oder regelmäßig"],
+      points: ["Fenster, Fassade und Dachrinnen", "Terrasse, Einfahrt und Solaranlage", "Einmalig oder bei Bedarf"],
       cta: "Zu den Privatkunden",
     },
     gewerbe: {
@@ -38,7 +37,7 @@ const TEXT = {
     privat: {
       title: "Private customers",
       text: "For your house, apartment and garden.",
-      points: ["Windows, facade and gutters", "Terrace, driveway and solar panels", "One-off or recurring"],
+      points: ["Windows, facade and gutters", "Terrace, driveway and solar panels", "One-off or as needed"],
       cta: "Go to private customers",
     },
     gewerbe: {
@@ -55,7 +54,7 @@ const TEXT = {
     privat: {
       title: "Particuliers",
       text: "Pour votre maison, votre appartement et votre jardin.",
-      points: ["Vitres, façade et gouttières", "Terrasse, allée et installation solaire", "Ponctuel ou régulier"],
+      points: ["Vitres, façade et gouttières", "Terrasse, allée et installation solaire", "Ponctuel ou selon vos besoins"],
       cta: "Vers les particuliers",
     },
     gewerbe: {
@@ -88,33 +87,30 @@ export function AudienceChoiceCards({ locale = "de" }: { locale?: Locale }) {
             const copy = t[audience]
             const Icon = ICONS[audience]
             return (
-              <article key={audience} className="flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-brand-navy/10">
-                <div className="flex flex-1 flex-col p-6 lg:p-8">
-                  <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue/10 text-brand-blue">
-                    <Icon className="h-7 w-7" aria-hidden="true" />
-                  </span>
-                  <h3 className="mb-1 font-display text-2xl font-extrabold text-brand-navy">{copy.title}</h3>
-                  <p className="mb-5 text-neutral-600">{copy.text}</p>
-                  <ul className="mb-8 space-y-2.5">
-                    {copy.points.map((point) => (
-                      <li key={point} className="flex items-start gap-3 text-sm text-neutral-700">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" aria-hidden="true" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button asChild size="lg" className="group mt-auto w-full rounded-full bg-brand-blue text-white hover:bg-brand-teal sm:w-auto sm:self-start">
-                    <Link
-                      href={audiencePath(audience, locale)}
-                      onClick={() => selectAudience(audience, "choice_section")}
-                      className="cursor-pointer"
-                    >
-                      {copy.cta}
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </Button>
-                </div>
-              </article>
+              <Link
+                key={audience}
+                href={audiencePath(audience, locale)}
+                onClick={() => selectAudience(audience, "choice_section")}
+                className="group flex cursor-pointer flex-col rounded-2xl bg-white p-6 ring-1 ring-brand-navy/10 transition-all hover:-translate-y-1 hover:shadow-lg hover:ring-brand-blue/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue lg:p-8"
+              >
+                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-blue/10 text-brand-blue transition-colors group-hover:bg-brand-blue group-hover:text-white">
+                  <Icon className="h-7 w-7" aria-hidden="true" />
+                </span>
+                <h3 className="mb-1 font-display text-2xl font-extrabold text-brand-navy">{copy.title}</h3>
+                <p className="mb-5 text-neutral-600">{copy.text}</p>
+                <ul className="mb-8 space-y-2.5">
+                  {copy.points.map((point) => (
+                    <li key={point} className="flex items-start gap-3 text-sm text-neutral-700">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" aria-hidden="true" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+                <span className="mt-auto inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-brand-blue">
+                  {copy.cta}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </span>
+              </Link>
             )
           })}
         </div>

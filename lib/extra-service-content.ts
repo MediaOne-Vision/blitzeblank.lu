@@ -22,19 +22,18 @@ export const extraServiceContent: Record<ExtraServiceSlug, Record<Locale, ExtraS
   unterhaltsreinigung: {
     de: {
       title: "Unterhaltsreinigung",
-      heading: "Unterhaltsreinigung für Gewerbe, Einrichtungen und Privathaushalte",
+      heading: "Unterhaltsreinigung für Gewerbe und Einrichtungen",
       subtitle:
-        "Regelmäßig saubere Räume zu festen Terminen - zuverlässig, diskret und genau auf Ihren Bedarf abgestimmt. Für Gewerbe- und Privatkunden in Luxemburg und Deutschland.",
-      metaTitle: "Unterhaltsreinigung für Gewerbe & Privathaushalte in Luxemburg & Deutschland | Blitzeblank",
+        "Regelmäßig saubere Räume zu festen Terminen - zuverlässig, diskret und genau auf Ihren Bedarf abgestimmt. Für Unternehmen in Luxemburg und Deutschland.",
+      metaTitle: "Unterhaltsreinigung für Gewerbe in Luxemburg & Deutschland | Blitzeblank",
       metaDescription:
-        "Regelmäßige Unterhaltsreinigung für Büros, Gastronomie, Geschäfte, Schulen, Gesundheitseinrichtungen und Privathaushalte in Luxemburg sowie in Trier, Bitburg und Region. Individuelle Intervalle, klares Festangebot.",
+        "Regelmäßige Unterhaltsreinigung für Büros, Gastronomie, Geschäfte, Schulen und Gesundheitseinrichtungen in Luxemburg sowie in Trier, Bitburg und Region. Individuelle Intervalle, klares Festangebot.",
       features: [
         { title: "Bürogebäude", description: "Schreibtische, Böden, Küchen und Besprechungsräume - täglich, wöchentlich oder nach Bedarf." },
         { title: "Bildungs- und Gesundheitseinrichtungen", description: "Hygienisch und diskret, abgestimmt auf Betriebsabläufe und Anforderungen Ihrer Einrichtung." },
         { title: "Gastronomiebetriebe", description: "Gepflegte Gasträume, Küchenbereiche und Sanitäranlagen - angepasst an Ihre Öffnungszeiten." },
         { title: "Geschäfte und Verkaufsflächen", description: "Gepflegte Verkaufsräume, Eingangsbereiche und Schaufenster für einen guten ersten Eindruck." },
         { title: "Kindergärten und Schulen", description: "Gründliche Reinigung von Klassen-, Gruppen- und Sanitärräumen für ein sauberes Umfeld." },
-        { title: "Privathaushalte", description: "Regelmäßige Reinigung Ihres Zuhauses - zuverlässig, vertrauensvoll und zu Ihrem Rhythmus." },
         { title: "Individuelle Reinigungsintervalle", description: "Täglich, wöchentlich, 14-tägig oder monatlich - Sie bestimmen, wie oft wir kommen." },
       ],
       benefits: [
@@ -55,19 +54,18 @@ export const extraServiceContent: Record<ExtraServiceSlug, Record<Locale, ExtraS
     },
     en: {
       title: "Maintenance Cleaning",
-      heading: "Maintenance Cleaning for Businesses, Institutions and Private Households",
+      heading: "Maintenance Cleaning for Businesses and Institutions",
       subtitle:
-        "Consistently clean premises on fixed schedules - reliable, discreet and tailored to your needs. For business and private customers in Luxembourg and Germany.",
-      metaTitle: "Maintenance Cleaning for Businesses & Households in Luxembourg & Germany | Blitzeblank",
+        "Consistently clean premises on fixed schedules - reliable, discreet and tailored to your needs. For businesses in Luxembourg and Germany.",
+      metaTitle: "Maintenance Cleaning for Businesses in Luxembourg & Germany | Blitzeblank",
       metaDescription:
-        "Regular maintenance cleaning for offices, restaurants, shops, schools, healthcare facilities and private households in Luxembourg and in Trier, Bitburg and the region. Individual intervals, clear fixed-price quote.",
+        "Regular maintenance cleaning for offices, restaurants, shops, schools and healthcare facilities in Luxembourg and in Trier, Bitburg and the region. Individual intervals, clear fixed-price quote.",
       features: [
         { title: "Office Buildings", description: "Desks, floors, kitchens and meeting rooms - daily, weekly or as needed." },
         { title: "Educational and Healthcare Facilities", description: "Hygienic and discreet, aligned with the operations and requirements of your facility." },
         { title: "Restaurants and Catering", description: "Well-kept dining areas, kitchens and restrooms - adapted to your opening hours." },
         { title: "Shops and Retail Spaces", description: "Well-kept sales areas, entrances and shop windows for a great first impression." },
         { title: "Kindergartens and Schools", description: "Thorough cleaning of classrooms, group rooms and restrooms for a clean environment." },
-        { title: "Private Households", description: "Regular cleaning of your home - reliable, trustworthy and to your rhythm." },
         { title: "Individual Cleaning Intervals", description: "Daily, weekly, every two weeks or monthly - you decide how often we come." },
       ],
       benefits: [
@@ -88,19 +86,18 @@ export const extraServiceContent: Record<ExtraServiceSlug, Record<Locale, ExtraS
     },
     fr: {
       title: "Nettoyage d'entretien",
-      heading: "Nettoyage d'entretien pour entreprises, établissements et ménages privés",
+      heading: "Nettoyage d'entretien pour entreprises et établissements",
       subtitle:
-        "Des locaux propres en continu, à dates fixes - fiable, discret et adapté à vos besoins. Pour entreprises et particuliers au Luxembourg et en Allemagne.",
-      metaTitle: "Nettoyage d'entretien pour entreprises et particuliers au Luxembourg et en Allemagne | Blitzeblank",
+        "Des locaux propres en continu, à dates fixes - fiable, discret et adapté à vos besoins. Pour entreprises au Luxembourg et en Allemagne.",
+      metaTitle: "Nettoyage d'entretien pour entreprises au Luxembourg et en Allemagne | Blitzeblank",
       metaDescription:
-        "Nettoyage d'entretien régulier pour bureaux, restaurants, commerces, écoles, établissements de santé et ménages privés au Luxembourg ainsi qu'à Trèves, Bitburg et dans la région. Intervalles individuels, devis à prix fixe.",
+        "Nettoyage d'entretien régulier pour bureaux, restaurants, commerces, écoles et établissements de santé au Luxembourg ainsi qu'à Trèves, Bitburg et dans la région. Intervalles individuels, devis à prix fixe.",
       features: [
         { title: "Bâtiments de bureaux", description: "Bureaux, sols, cuisines et salles de réunion - tous les jours, chaque semaine ou selon vos besoins." },
         { title: "Établissements d'enseignement et de santé", description: "Hygiénique et discret, adapté au fonctionnement et aux exigences de votre établissement." },
         { title: "Établissements de restauration", description: "Salles, cuisines et sanitaires soignés - adaptés à vos horaires d'ouverture." },
         { title: "Commerces et surfaces de vente", description: "Espaces de vente, entrées et vitrines soignés pour une excellente première impression." },
         { title: "Crèches et écoles", description: "Nettoyage minutieux des salles de classe, de groupe et des sanitaires pour un environnement propre." },
-        { title: "Ménages privés", description: "Nettoyage régulier de votre domicile - fiable, de confiance et à votre rythme." },
         { title: "Intervalles individuels", description: "Tous les jours, chaque semaine, tous les 14 jours ou chaque mois - vous décidez de la fréquence." },
       ],
       benefits: [

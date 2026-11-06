@@ -25,7 +25,7 @@ const services: { value: string; label: string; audiences: Audience[] }[] = [
   { value: "fensterreinigung", label: "Fenster- & Glasreinigung", audiences: ["privat", "gewerbe"] },
   { value: "fassadenreinigung", label: "Fassaden- & Dachrinnenreinigung", audiences: ["privat", "gewerbe"] },
   { value: "industriereinigung", label: "Industriereinigung", audiences: ["gewerbe"] },
-  { value: "unterhaltsreinigung", label: "Unterhaltsreinigung", audiences: ["privat", "gewerbe"] },
+  { value: "unterhaltsreinigung", label: "Unterhaltsreinigung", audiences: ["gewerbe"] },
   { value: "spezialreinigung", label: "Spezialreinigung & ergänzende Dienstleistungen", audiences: ["privat", "gewerbe"] },
   { value: "steinreinigung", label: "Stein- & Terrassenreinigung", audiences: ["privat", "gewerbe"] },
   { value: "solarreinigung", label: "Solar- & Photovoltaikreinigung", audiences: ["privat", "gewerbe"] },

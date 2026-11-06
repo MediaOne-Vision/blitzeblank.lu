@@ -152,7 +152,7 @@ export const localServices: Record<LocalServiceSlug, LocalService> = {
   unterhaltsreinigung: {
     slug: "unterhaltsreinigung",
     keyword: "Unterhaltsreinigung",
-    audiences: ["privat", "gewerbe"],
+    audiences: ["gewerbe"],
     cities: ["trier", "bitburg", "luxemburg"],
     topics: [
       "Bürogebäude",
@@ -160,7 +160,6 @@ export const localServices: Record<LocalServiceSlug, LocalService> = {
       "Gastronomiebetriebe",
       "Geschäfte und Verkaufsflächen",
       "Kindergärten und Schulen",
-      "Privathaushalte",
       "Individuell vereinbarte Reinigungsintervalle",
     ],
     block:
@@ -242,7 +241,7 @@ export const localServices: Record<LocalServiceSlug, LocalService> = {
   treppenhausreinigung: {
     slug: "treppenhausreinigung",
     keyword: "Treppenhausreinigung",
-    audiences: ["privat", "gewerbe"],
+    audiences: ["gewerbe"],
     cities: ["trier", "bitburg"],
     topics: [
       "Treppenstufen und Podeste",
@@ -314,19 +313,19 @@ export const localCombos: Record<LocalServiceSlug, Partial<Record<CityId, LocalC
   },
   unterhaltsreinigung: {
     trier: {
-      lead: "Unterhaltsreinigung in Trier: regelmäßige Reinigung von Büros, Praxen, Geschäften, Gastronomie, Schulen und Privathaushalten zu festen Terminen.",
+      lead: "Unterhaltsreinigung in Trier: regelmäßige Reinigung von Büros, Praxen, Geschäften, Gastronomie und Schulen zu festen Terminen.",
       local:
-        "Für Büros und Praxen in Trier zählt, dass morgens alles sauber ist, wenn der Betrieb startet. Wir reinigen deshalb außerhalb Ihrer Arbeitszeiten und legen den Rhythmus gemeinsam fest, vom täglichen Einsatz bis zur wöchentlichen Reinigung. Als Universitäts- und Touristenstadt hat Trier außerdem viele Gastronomiebetriebe, Geschäfte und Einrichtungen mit hohem Publikumsverkehr, bei denen regelmäßige Pflege den Unterschied macht. Auch Privathaushalte in Trier und Umgebung können Unterhaltsreinigung bei uns buchen.",
+        "Für Büros und Praxen in Trier zählt, dass morgens alles sauber ist, wenn der Betrieb startet. Wir reinigen deshalb außerhalb Ihrer Arbeitszeiten und legen den Rhythmus gemeinsam fest, vom täglichen Einsatz bis zur wöchentlichen Reinigung. Als Universitäts- und Touristenstadt hat Trier außerdem viele Gastronomiebetriebe, Geschäfte und Einrichtungen mit hohem Publikumsverkehr, bei denen regelmäßige Pflege den Unterschied macht.",
     },
     bitburg: {
       lead: "Unterhaltsreinigung in Bitburg und Umgebung: feste Reinigungstermine für Büros, Praxen, Schulen, Kindergärten, Geschäfte und Haushalte.",
       local:
-        "Als Kreisstadt hat Bitburg viele Verwaltungen, Arztpraxen, Schulen und Kindergärten sowie Geschäfte und Gastronomiebetriebe, die regelmäßig gereinigt werden wollen. Wir arbeiten nach einem festen Plan mit klar definiertem Leistungsumfang und festen Ansprechpartnern. Die Intervalle legen wir individuell mit Ihnen fest. Auch in den umliegenden Orten der Südeifel übernehmen wir Unterhaltsreinigung für Betriebe und Privathaushalte.",
+        "Als Kreisstadt hat Bitburg viele Verwaltungen, Arztpraxen, Schulen und Kindergärten sowie Geschäfte und Gastronomiebetriebe, die regelmäßig gereinigt werden wollen. Wir arbeiten nach einem festen Plan mit klar definiertem Leistungsumfang und festen Ansprechpartnern. Die Intervalle legen wir individuell mit Ihnen fest. Auch in den umliegenden Orten der Südeifel übernehmen wir Unterhaltsreinigung für Betriebe und Einrichtungen.",
     },
     luxemburg: {
-      lead: "Unterhaltsreinigung in Luxemburg für Büros, Kanzleien, Geschäfte, Restaurants und Privathaushalte: verlässlich, diskret und zu festen Terminen.",
+      lead: "Unterhaltsreinigung in Luxemburg für Büros, Kanzleien, Geschäfte und Restaurants: verlässlich, diskret und zu festen Terminen.",
       local:
-        "In Luxemburg arbeiten viele Unternehmen mit Büros, Kanzleien und Praxen, in denen ein gepflegtes Umfeld zum professionellen Auftritt gehört. Wir reinigen außerhalb der Arbeitszeiten, arbeiten diskret und vereinbaren feste Termine und Intervalle. Die Abstimmung läuft unkompliziert und mit einem festen Ansprechpartner, damit Sie sich auf das Tagesgeschäft konzentrieren können. Auch Privathaushalte in der Hauptstadt und Umgebung betreuen wir.",
+        "In Luxemburg arbeiten viele Unternehmen mit Büros, Kanzleien und Praxen, in denen ein gepflegtes Umfeld zum professionellen Auftritt gehört. Wir reinigen außerhalb der Arbeitszeiten, arbeiten diskret und vereinbaren feste Termine und Intervalle. Die Abstimmung läuft unkompliziert und mit einem festen Ansprechpartner, damit Sie sich auf das Tagesgeschäft konzentrieren können.",
     },
   },
   spezialreinigung: {
