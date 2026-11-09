@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { formErrorMessage } from "@/lib/form-errors"
 import { localizeHref, type Locale } from "@/lib/i18n"
+import type { Audience } from "@/lib/locations"
 import { useSubmissionId } from "@/lib/submission-id"
 import { storeLeadHandoff } from "@/lib/tracking"
 
@@ -21,6 +22,9 @@ const TEXT = {
     eyebrow: "Kontakt",
     heading: "Jetzt unverbindlich anfragen",
     body: "Schildern Sie uns kurz Ihr Anliegen. Wir melden uns innerhalb von 24 Stunden mit einem Terminvorschlag.",
+    requestAs: "Ich frage an als",
+    private: "Privatkunde",
+    business: "Gewerbekunde",
     name: "Name",
     company: "Unternehmen",
     email: "E-Mail",
@@ -38,6 +42,9 @@ const TEXT = {
     eyebrow: "Contact",
     heading: "Send us your request",
     body: "Briefly describe what you need. We will get back to you within 24 hours with a proposed appointment.",
+    requestAs: "I am enquiring as a",
+    private: "Private customer",
+    business: "Business customer",
     name: "Name",
     company: "Company",
     email: "Email",
@@ -55,6 +62,9 @@ const TEXT = {
     eyebrow: "Contact",
     heading: "Envoyez-nous votre demande",
     body: "Décrivez brièvement votre besoin. Nous vous répondons sous 24 heures avec une proposition de rendez-vous.",
+    requestAs: "Je demande en tant que",
+    private: "Particulier",
+    business: "Entreprise",
     name: "Nom",
     company: "Entreprise",
     email: "E-mail",
@@ -80,7 +90,9 @@ interface EmbeddedContactFormProps {
 export function EmbeddedContactForm({ locale = "de", service = "", id = "kontakt" }: EmbeddedContactFormProps) {
   const t = TEXT[locale]
   const router = useRouter()
-  const { audience } = useAudience()
+  const { audience: routeAudience } = useAudience()
+  const [audienceChoice, setAudienceChoice] = useState<Audience | null>(null)
+  const audience: Audience | null = audienceChoice ?? routeAudience
   const honeypotRef = useRef<HTMLInputElement>(null)
   const renderedAt = useRef(Date.now())
   const submission = useSubmissionId()
@@ -152,6 +164,27 @@ export function EmbeddedContactForm({ locale = "de", service = "", id = "kontakt
           className="space-y-5 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-brand-navy/5 lg:col-span-3 lg:p-8"
         >
           <FormHoneypot inputRef={honeypotRef} />
+          <fieldset className="space-y-2">
+            <legend className="text-sm font-normal text-neutral-600">{t.requestAs}</legend>
+            <div className="grid grid-cols-2 gap-2" role="radiogroup">
+              {(["privat", "gewerbe"] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={audience === value}
+                  onClick={() => setAudienceChoice(value)}
+                  className={`cursor-pointer rounded-xl px-4 py-3 text-sm font-medium ring-1 transition-colors ${
+                    audience === value
+                      ? "bg-brand-blue text-white ring-brand-blue"
+                      : "bg-white text-brand-navy ring-brand-navy/15 hover:ring-brand-blue"
+                  }`}
+                >
+                  {value === "privat" ? t.private : t.business}
+                </button>
+              ))}
+            </div>
+          </fieldset>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor={`${id}-name`} className="font-normal text-neutral-600">{t.name} *</Label>

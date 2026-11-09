@@ -3,6 +3,7 @@ import { Clock, ShieldCheck, MapPin, CircleDollarSign, GitFork, UserCircle, Arro
 import { Reveal } from "@/components/reveal"
 import { Button } from "@/components/ui/button"
 import { localizeHref, type Locale } from "@/lib/i18n"
+import type { Audience } from "@/lib/locations"
 
 const FEATURES = {
   de: [
@@ -55,9 +56,24 @@ const TEXT = {
   },
 }
 
-export function WhyUsSection({ locale = "de" }: { locale?: Locale }) {
+const PRIVATE_TEXT = {
+  de: {
+    heading: "Darum Blitzeblank für Ihr Zuhause",
+    body: "Seit unserer Gründung steht Blitzeblank für professionelle Reinigung mit Herz. Ihr Zuhause ist mehr als nur vier Wände - deshalb arbeiten wir sorgfältig, zuverlässig und mit Respekt vor Ihrem Eigentum.",
+  },
+  en: {
+    heading: "Why Blitzeblank for Your Home",
+    body: "Since our founding, Blitzeblank has stood for professional cleaning with heart. Your home is more than four walls - that's why we work carefully, reliably and with respect for your property.",
+  },
+  fr: {
+    heading: "Pourquoi Blitzeblank pour votre maison",
+    body: "Depuis sa création, Blitzeblank incarne un nettoyage professionnel fait avec cœur. Votre maison est bien plus que quatre murs : nous travaillons avec soin, fiabilité et dans le respect de vos biens.",
+  },
+}
+
+export function WhyUsSection({ locale = "de", audience = null }: { locale?: Locale; audience?: Audience | null }) {
   const features = FEATURES[locale]
-  const t = TEXT[locale]
+  const t = audience === "privat" ? { ...TEXT[locale], ...PRIVATE_TEXT[locale] } : TEXT[locale]
   return (
     <section className="bg-white py-16 lg:py-24">
       <div className="mx-auto max-w-5xl px-6">
