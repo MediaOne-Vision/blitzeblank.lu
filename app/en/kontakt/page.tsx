@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
+import Link from "@/components/audience-link"
 import { submitContact } from "@/app/actions/submit-contact"
 import { FormHoneypot } from "@/components/form-honeypot"
 import { formErrorMessage } from "@/lib/form-errors"
