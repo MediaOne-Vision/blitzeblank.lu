@@ -32,7 +32,7 @@ export function HomeContent({ locale = "de", audience = null }: { locale?: Local
         {audience ? (
           <>
             <ServicesOverview locale={locale} />
-            <WhyUsSection locale={locale} />
+            <WhyUsSection locale={locale} audience={audience} />
             <Reveal>
               <ResultsShowcase locale={locale} />
             </Reveal>
