@@ -13,6 +13,7 @@ import { WindowB2BForm } from "@/components/window-b2b-form"
 import { getServiceMedia } from "@/lib/service-media"
 import { pushDataLayerEvent } from "@/lib/tracking"
 import { type Locale } from "@/lib/i18n"
+import type { B2BCustomerType } from "@/lib/b2b-inquiry-email"
 import {
   ArrowRight,
   Phone,
@@ -203,8 +204,110 @@ const TEXT = {
   },
 }
 
-export function WindowCleaningB2BPage({ locale = "de" }: { locale?: Locale }) {
-  const t = TEXT[locale]
+type HeroOverride = {
+  eyebrow: string
+  h1: string
+  sub: string
+  heroPoints: string[]
+  ctaPrimary: string
+  stickyCta: string
+  insured: { title: string; text: string }
+  everyObject: { title: string; text: string }
+}
+
+const HERO_VARIANTS: Record<"privat" | "neutral", Record<Locale, HeroOverride>> = {
+  privat: {
+    de: {
+      eyebrow: "Fensterreinigung für Privatkunden",
+      h1: "Fensterreinigung für Ihr Zuhause – streifenfrei, ohne Aufwand",
+      sub: "Saubere Fenster, Wintergärten und Glasfronten für Haus und Wohnung in Trier, Bitburg und Luxemburg. Kostenlose Besichtigung, klares Festangebot, zuverlässige Termine.",
+      heroPoints: ["Kostenlose Besichtigung bei Ihnen vor Ort", "Für Haus, Wohnung & Wintergarten", "Antwort i. d. R. in 24 Std."],
+      ctaPrimary: "Kostenlose Besichtigung anfragen",
+      stickyCta: "Besichtigung anfragen",
+      insured: { title: "Versichert & zuverlässig", text: "Auf Wunsch zu Ihrem Wunschtermin – sorgfältig, sauber und ohne Aufwand für Sie." },
+      everyObject: { title: "Für jedes Zuhause", text: "Haus, Wohnung, Wintergarten oder große Glasfront – wir kalkulieren passend zu Ihrem Bedarf." },
+    },
+    en: {
+      eyebrow: "Window cleaning for private customers",
+      h1: "Window cleaning for your home – streak-free, with no effort",
+      sub: "Clean windows, conservatories and glass fronts for houses and apartments in Luxembourg and the region. Free site visit, clear fixed quote, reliable appointments.",
+      heroPoints: ["Free visit at your home", "For houses, apartments & conservatories", "Reply usually within 24 hrs"],
+      ctaPrimary: "Request free site visit",
+      stickyCta: "Request site visit",
+      insured: { title: "Insured & reliable", text: "At a time that suits you – careful, tidy and without any effort on your part." },
+      everyObject: { title: "For every home", text: "House, apartment, conservatory or large glass front – we calculate to suit your needs." },
+    },
+    fr: {
+      eyebrow: "Nettoyage de vitres pour particuliers",
+      h1: "Le nettoyage de vitres pour votre domicile – sans traces, sans effort",
+      sub: "Des fenêtres, vérandas et baies vitrées impeccables pour votre maison ou appartement au Luxembourg et dans la région. Visite gratuite, offre ferme claire, rendez-vous fiables.",
+      heroPoints: ["Visite gratuite chez vous", "Pour maisons, appartements et vérandas", "Réponse généralement sous 24 h"],
+      ctaPrimary: "Demander une visite gratuite",
+      stickyCta: "Demander une visite",
+      insured: { title: "Assuré et fiable", text: "À l'heure qui vous convient – soigné, propre et sans effort pour vous." },
+      everyObject: { title: "Pour chaque domicile", text: "Maison, appartement, véranda ou grande baie vitrée – nous calculons selon vos besoins." },
+    },
+  },
+  neutral: {
+    de: {
+      eyebrow: "Fensterreinigung für Privat- & Gewerbekunden",
+      h1: "Fensterreinigung in Trier, Bitburg und Luxemburg – streifenfrei, ohne Aufwand",
+      sub: "Professionelle Fensterreinigung für Zuhause, Büros, Geschäfte und Gewerbeobjekte in Trier, Bitburg und Luxemburg. Kostenlose Besichtigung, klares Festangebot, zuverlässige Termine.",
+      heroPoints: ["Kostenlose Besichtigung vor Ort", "Für Privat- & Gewerbekunden", "Antwort i. d. R. in 24 Std."],
+      ctaPrimary: "Kostenlose Besichtigung anfragen",
+      stickyCta: "Besichtigung anfragen",
+      insured: { title: "Versichert & diskret", text: "Auf Wunsch zu Ihrem Wunschtermin oder außerhalb der Öffnungszeiten – ohne Störung." },
+      everyObject: { title: "Für jedes Objekt", text: "Haus, Wohnung, Büro, Ladenlokal oder Glasfassade – wir kalkulieren passend zu Ihrem Bedarf." },
+    },
+    en: {
+      eyebrow: "Window cleaning for private & business customers",
+      h1: "Streak-free windows – with zero effort",
+      sub: "Professional window cleaning for homes, offices, shops and commercial properties in Luxembourg and the region. Free site visit, clear fixed quote, reliable appointments.",
+      heroPoints: ["Free on-site visit", "For private & business customers", "Reply usually within 24 hrs"],
+      ctaPrimary: "Request free site visit",
+      stickyCta: "Request site visit",
+      insured: { title: "Insured & discreet", text: "At a time that suits you or outside opening hours – without any disruption." },
+      everyObject: { title: "For every property", text: "House, apartment, office, shop or glass facade – we calculate to suit your needs." },
+    },
+    fr: {
+      eyebrow: "Nettoyage de vitres pour particuliers et entreprises",
+      h1: "Des vitres sans traces – sans effort",
+      sub: "Nettoyage de vitres professionnel pour domiciles, bureaux, commerces et locaux professionnels au Luxembourg et dans la région. Visite gratuite, offre ferme claire, rendez-vous fiables.",
+      heroPoints: ["Visite gratuite sur place", "Pour particuliers et entreprises", "Réponse généralement sous 24 h"],
+      ctaPrimary: "Demander une visite gratuite",
+      stickyCta: "Demander une visite",
+      insured: { title: "Assuré et discret", text: "À l'heure qui vous convient ou hors horaires d'ouverture – sans perturbation." },
+      everyObject: { title: "Pour chaque site", text: "Maison, appartement, bureau, commerce ou façade vitrée – nous calculons selon vos besoins." },
+    },
+  },
+}
+
+export function WindowCleaningB2BPage({
+  locale = "de",
+  audience = null,
+  initialCustomerType = null,
+}: {
+  locale?: Locale
+  /** Kundengruppe aus der URL (/privatkunden, /gewerbekunden); ohne Angabe neutrale Seite */
+  audience?: B2BCustomerType | null
+  initialCustomerType?: B2BCustomerType | null
+}) {
+  const base = TEXT[locale]
+  const variant = audience === "gewerbe" ? null : HERO_VARIANTS[audience === "privat" ? "privat" : "neutral"][locale]
+  const t = variant
+    ? {
+        ...base,
+        eyebrow: variant.eyebrow,
+        h1: variant.h1,
+        sub: variant.sub,
+        heroPoints: variant.heroPoints,
+        ctaPrimary: variant.ctaPrimary,
+        stickyCta: variant.stickyCta,
+        benefits: base.benefits.map((b, i) =>
+          i === 2 ? { ...b, ...variant.insured } : i === 5 ? { ...b, ...variant.everyObject } : b,
+        ),
+      }
+    : base
   const media = getServiceMedia("fensterreinigung")
 
   const scrollToForm = (source: string) => {
@@ -370,7 +473,7 @@ export function WindowCleaningB2BPage({ locale = "de" }: { locale?: Locale }) {
             <div className="grid gap-8 lg:grid-cols-5 lg:items-start">
               {/* Formular */}
               <div className="lg:col-span-3">
-                <WindowB2BForm locale={locale} />
+                <WindowB2BForm locale={locale} audience={audience} initialCustomerType={initialCustomerType} />
               </div>
 
               {/* Trust-Aside */}

@@ -7,10 +7,14 @@
  *   gültige E-Mail-Adresse vorliegt (Telefon-only-Anfragen erhalten keine Mail).
  */
 
-export type B2BObjectType = "buero" | "geschaeft" | "gewerbe" | "sonstiges"
+export type B2BObjectType = "buero" | "geschaeft" | "gewerbe" | "haus" | "wohnung" | "sonstiges"
 export type B2BCleaningNeed = "einmalig" | "regelmaessig" | "offen" | ""
+export type B2BCustomerType = "privat" | "gewerbe"
 
 export interface B2BInquirySubmission {
+  /** Privat- oder Gewerbekunde – steuert Pflichtfelder und die Beschriftung in den Mails */
+  customerType: B2BCustomerType
+  /** Pflicht nur bei Gewerbekunden */
   company: string
   contactPerson: string
   /** PLZ und Ort des Objekts (freie Eingabe, LU/DE erlaubt) */
@@ -61,6 +65,8 @@ const OBJECT_TYPE_LABELS: Record<B2BObjectType, string> = {
   buero: "Büro",
   geschaeft: "Geschäft / Schaufenster",
   gewerbe: "Gewerbegebäude",
+  haus: "Haus",
+  wohnung: "Wohnung",
   sonstiges: "Sonstiges",
 }
 
@@ -140,7 +146,8 @@ export function emailShell(opts: { badge: string; headline: string; intro: strin
 /** Baut die gemeinsamen Eckdaten der Anfrage (interne Mail, Deutsch) */
 function buildRows(s: B2BInquirySubmission): { label: string; value: string }[] {
   const rows: { label: string; value: string }[] = [
-    { label: "Unternehmen", value: s.company },
+    { label: "Kundengruppe", value: s.customerType === "privat" ? "Privatkunde" : "Gewerbekunde" },
+    ...(s.company ? [{ label: "Unternehmen", value: s.company }] : []),
     { label: "Ansprechpartner", value: s.contactPerson },
     { label: "PLZ / Ort", value: s.location },
     { label: "Objektart", value: objectTypeLabel(s.objectType) },
@@ -215,6 +222,8 @@ const OBJECT_TYPE_LABELS_EN: Record<B2BObjectType, string> = {
   buero: "Office",
   geschaeft: "Shop / shop window",
   gewerbe: "Commercial building",
+  haus: "House",
+  wohnung: "Apartment",
   sonstiges: "Other",
 }
 
@@ -222,6 +231,8 @@ const OBJECT_TYPE_LABELS_FR: Record<B2BObjectType, string> = {
   buero: "Bureau",
   geschaeft: "Commerce / vitrine",
   gewerbe: "Bâtiment commercial",
+  haus: "Maison",
+  wohnung: "Appartement",
   sonstiges: "Autre",
 }
 
@@ -258,7 +269,7 @@ export function buildB2BCustomerEmail(s: B2BInquirySubmission, logoSrc = "cid:bl
     : "—"
 
   const rows: { label: string; value: string }[] = [
-    { label: ct.labels.company, value: s.company },
+    ...(s.company ? [{ label: ct.labels.company, value: s.company }] : []),
     { label: ct.labels.contact, value: s.contactPerson },
     { label: ct.labels.location, value: s.location },
     { label: ct.labels.objectType, value: objectLabel },
@@ -329,7 +340,7 @@ export function buildB2BInternalEmail(s: B2BInquirySubmission, logoSrc = "cid:bl
   const html = emailShell({
     logoSrc,
     badge: "Neue Anfrage · Fensterreinigung",
-    headline: `${s.company}`,
+    headline: s.company || s.contactPerson,
     intro: `${sourceBadge} &nbsp; <span style="display:inline-block;color:#ffffff;font-weight:700;">${escapeHtml(
       s.contactPerson,
     )}</span>`,
@@ -341,7 +352,7 @@ export function buildB2BInternalEmail(s: B2BInquirySubmission, logoSrc = "cid:bl
   })
 
   const text = [
-    `Neue B2B-Anfrage: Fensterreinigung – ${s.company}`,
+    `Neue Anfrage (${s.customerType === "privat" ? "Privat" : "Gewerbe"}): Fensterreinigung – ${s.company || s.contactPerson}`,
     "",
     rowsToText(rows),
     "",
@@ -350,5 +361,9 @@ export function buildB2BInternalEmail(s: B2BInquirySubmission, logoSrc = "cid:bl
     "Quelle: window_cleaning / b2b_site_visit",
   ].join("\n")
 
-  return { html, text, subject: `Neue Anfrage: Fensterreinigung – ${s.company}` }
+  return {
+    html,
+    text,
+    subject: `Neue Anfrage (${s.customerType === "privat" ? "Privat" : "Gewerbe"}): Fensterreinigung – ${s.company || s.contactPerson}`,
+  }
 }

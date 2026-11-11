@@ -20,5 +20,5 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function Page({ params, searchParams }: Props) {
   const { rest } = await params
-  return renderAudienceSubpage("fr", rest, searchParams)
+  return renderAudienceSubpage("gewerbe", "fr", rest, searchParams)
 }
