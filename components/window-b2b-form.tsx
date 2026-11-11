@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
 import { CheckCircle2, Loader2, Phone, ShieldCheck } from "lucide-react"
 import { submitB2BInquiry } from "@/app/actions/submit-b2b-inquiry"
-import type { B2BCleaningNeed, B2BObjectType } from "@/lib/b2b-inquiry-email"
+import type { B2BCleaningNeed, B2BCustomerType, B2BObjectType } from "@/lib/b2b-inquiry-email"
 import { pushDataLayerEvent } from "@/lib/tracking"
 import { FormHoneypot } from "@/components/form-honeypot"
 import { formErrorMessage } from "@/lib/form-errors"
@@ -160,10 +160,90 @@ const TEXT = {
   },
 }
 
+const EXTRA = {
+  de: {
+    iAm: "Ich bin *",
+    privat: "Privatkunde",
+    gewerbe: "Gewerbekunde",
+    headingPrivat: "Fensterreinigung für Ihr Zuhause anfragen",
+    headingNeutral: "Fensterreinigung anfragen",
+    subPrivat:
+      "In unter einer Minute ausgefüllt. Wir melden uns für einen unverbindlichen Vor-Ort-Termin – Sie beauftragen erst danach.",
+    contactPrivat: "Ihr Name *",
+    emailPhPrivat: "name@beispiel.lu",
+    objectTypesPrivat: [
+      { value: "haus", label: "Haus" },
+      { value: "wohnung", label: "Wohnung" },
+      { value: "sonstiges", label: "Sonstiges" },
+    ] as { value: B2BObjectType; label: string }[],
+    messagePhPrivat: "Anzahl Fenster, Etagen, Zugang, gewünschter Zeitraum …",
+    typeRequired: "Bitte wählen Sie Privat- oder Gewerbekunde aus.",
+  },
+  en: {
+    iAm: "I am a *",
+    privat: "Private customer",
+    gewerbe: "Business customer",
+    headingPrivat: "Request window cleaning for your home",
+    headingNeutral: "Request window cleaning",
+    subPrivat:
+      "Filled in under a minute. We'll get in touch for a non-binding on-site visit – you only commission afterwards.",
+    contactPrivat: "Your name *",
+    emailPhPrivat: "name@example.lu",
+    objectTypesPrivat: [
+      { value: "haus", label: "House" },
+      { value: "wohnung", label: "Apartment" },
+      { value: "sonstiges", label: "Other" },
+    ] as { value: B2BObjectType; label: string }[],
+    messagePhPrivat: "Number of windows, floors, access, preferred timeframe …",
+    typeRequired: "Please choose private or business customer.",
+  },
+  fr: {
+    iAm: "Je suis *",
+    privat: "Particulier",
+    gewerbe: "Entreprise",
+    headingPrivat: "Demandez le nettoyage de vitres pour votre domicile",
+    headingNeutral: "Demander un nettoyage de vitres",
+    subPrivat:
+      "Rempli en moins d'une minute. Nous vous contactons pour une visite sans engagement – vous ne commandez qu'ensuite.",
+    contactPrivat: "Votre nom *",
+    emailPhPrivat: "nom@exemple.lu",
+    objectTypesPrivat: [
+      { value: "haus", label: "Maison" },
+      { value: "wohnung", label: "Appartement" },
+      { value: "sonstiges", label: "Autre" },
+    ] as { value: B2BObjectType; label: string }[],
+    messagePhPrivat: "Nombre de fenêtres, étages, accès, période souhaitée …",
+    typeRequired: "Veuillez choisir particulier ou entreprise.",
+  },
+}
+
 const CONTACT = { phone: "+352 661 830 493", phoneHref: "tel:+352661830493" }
 
-export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: string }) {
-  const t = TEXT[locale]
+export function WindowB2BForm({
+  locale = "de",
+  id,
+  audience = null,
+  initialCustomerType = null,
+}: {
+  locale?: Locale
+  id?: string
+  /** Feste Kundengruppe (aus der URL). Ohne Angabe wählt der Besucher selbst. */
+  audience?: B2BCustomerType | null
+  initialCustomerType?: B2BCustomerType | null
+}) {
+  const base = TEXT[locale]
+  const x = EXTRA[locale]
+  const [customerType, setCustomerType] = useState<B2BCustomerType | "">(audience ?? initialCustomerType ?? "")
+  const isPrivat = customerType === "privat"
+  const t = {
+    ...base,
+    heading: isPrivat ? x.headingPrivat : customerType === "gewerbe" ? base.heading : x.headingNeutral,
+    sub: isPrivat ? x.subPrivat : base.sub,
+    contact: isPrivat ? x.contactPrivat : base.contact,
+    emailPh: isPrivat ? x.emailPhPrivat : base.emailPh,
+    messagePh: isPrivat ? x.messagePhPrivat : base.messagePh,
+    objectTypes: isPrivat ? x.objectTypesPrivat : base.objectTypes,
+  }
 
   const [company, setCompany] = useState("")
   const [contactPerson, setContactPerson] = useState("")
@@ -200,7 +280,11 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
     e.preventDefault()
     setError(null)
 
-    if (!company.trim() || !contactPerson.trim() || !location.trim() || !objectType) {
+    if (!customerType) {
+      setError(x.typeRequired)
+      return
+    }
+    if ((customerType === "gewerbe" && !company.trim()) || !contactPerson.trim() || !location.trim() || !objectType) {
       setError(t.requiredMissing)
       return
     }
@@ -222,7 +306,8 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
     try {
       const result = await submitB2BInquiry({
         submission: {
-          company: company.trim(),
+          customerType,
+          company: customerType === "gewerbe" ? company.trim() : "",
           contactPerson: contactPerson.trim(),
           location: location.trim(),
           objectType: objectType as B2BObjectType,
@@ -303,21 +388,51 @@ export function WindowB2BForm({ locale = "de", id }: { locale?: Locale; id?: str
       <form onSubmit={handleSubmit} onFocus={fireStart} className="space-y-5" noValidate>
         <FormHoneypot inputRef={honeypotRef} />
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <Label htmlFor="b2b-company" className="text-sm font-semibold text-brand-navy">
-              {t.company}
-            </Label>
-            <Input
-              id="b2b-company"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder={t.companyPh}
-              className="mt-1.5 h-11 bg-white"
-              autoComplete="organization"
-              required
-            />
+        {!audience && (
+          <div role="radiogroup" aria-label={x.iAm}>
+            <span className="text-sm font-semibold text-brand-navy">{x.iAm}</span>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {(["privat", "gewerbe"] as const).map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  role="radio"
+                  aria-checked={customerType === type}
+                  onClick={() => {
+                    setCustomerType(type)
+                    setObjectType("")
+                  }}
+                  className={cn(
+                    "cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                    customerType === type
+                      ? "border-brand-blue bg-brand-blue text-white"
+                      : "border-brand-navy/15 bg-white text-neutral-600 hover:border-brand-blue/40 hover:bg-brand-mint",
+                  )}
+                >
+                  {x[type]}
+                </button>
+              ))}
+            </div>
           </div>
+        )}
+
+        <div className={cn("grid gap-5", customerType === "gewerbe" && "sm:grid-cols-2")}>
+          {customerType === "gewerbe" && (
+            <div>
+              <Label htmlFor="b2b-company" className="text-sm font-semibold text-brand-navy">
+                {t.company}
+              </Label>
+              <Input
+                id="b2b-company"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder={t.companyPh}
+                className="mt-1.5 h-11 bg-white"
+                autoComplete="organization"
+                required
+              />
+            </div>
+          )}
           <div>
             <Label htmlFor="b2b-contact" className="text-sm font-semibold text-brand-navy">
               {t.contact}

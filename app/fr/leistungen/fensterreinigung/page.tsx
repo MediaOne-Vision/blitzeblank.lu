@@ -1,10 +1,11 @@
 import { Metadata } from "next"
 import { WindowCleaningB2BPage } from "@/components/window-cleaning-b2b-page"
+import type { B2BCustomerType } from "@/lib/b2b-inquiry-email"
 
 export const metadata: Metadata = {
-  title: "Nettoyage de vitres pour entreprises | Blitzeblank Luxembourg",
+  title: "Nettoyage de vitres au Luxembourg, à Trèves et Bitburg | Blitzeblank",
   description:
-    "Nettoyage de vitres professionnel pour bureaux, commerces et sites professionnels au Luxembourg et dans la région. Visite gratuite, devis ferme clair, rendez-vous fiables.",
+    "Nettoyage de vitres professionnel pour domiciles, bureaux, commerces et locaux professionnels au Luxembourg et dans la région. Visite gratuite, offre ferme claire, rendez-vous fiables.",
   alternates: {
     canonical: "https://blitzeblank.lu/fr/leistungen/fensterreinigung",
     languages: {
@@ -15,6 +16,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default function FensterreinigungFrPage() {
-  return <WindowCleaningB2BPage locale="fr" />
+type Props = {
+  audience?: B2BCustomerType | null
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
+}
+
+export default async function FensterreinigungFrPage({ audience = null, searchParams }: Props) {
+  const query = searchParams ? await searchParams : {}
+  const kunde = Array.isArray(query.kunde) ? query.kunde[0] : query.kunde
+  const initialCustomerType: B2BCustomerType | null = kunde === "privat" || kunde === "gewerbe" ? kunde : null
+  return <WindowCleaningB2BPage locale="fr" audience={audience} initialCustomerType={initialCustomerType} />
 }

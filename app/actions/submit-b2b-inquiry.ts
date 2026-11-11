@@ -42,7 +42,9 @@ export async function submitB2BInquiry(input: SubmitB2BInput): Promise<SubmitRes
     ip: clientIpFrom(h),
     fingerprint: { ...clean, leadId: undefined },
     validate: () => {
-      if (!clean.company || !clean.contactPerson || !clean.location) return "missing_fields"
+      if (clean.customerType !== "privat" && clean.customerType !== "gewerbe") return "missing_fields"
+      if (clean.customerType === "gewerbe" && !clean.company) return "missing_fields"
+      if (!clean.contactPerson || !clean.location) return "missing_fields"
       if (!clean.email && !clean.phone) return "invalid_contact"
       if (clean.email && !isValidEmail(clean.email)) return "invalid_email"
       if (!clean.email && !isValidPhone(clean.phone)) return "invalid_contact"
