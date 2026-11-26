@@ -1,4 +1,4 @@
-// deployment-center:brevo-spam-guard v5
+// deployment-center:brevo-spam-guard v6
 export const MEDIAONE_SPAM_PROTECTION_VERSION = '2.0.0'
 // Schutzschicht vor dem Brevo-Versand. Erkannter Spam wird still verworfen (Antwort wie bei Erfolg),
 // damit Bots nichts über den Filter lernen. Wird vom Deployment Center verwaltet und bei Updates überschrieben.
@@ -38,6 +38,7 @@ const SHORT_LINK_HOSTS = [
   'search.app', 'goo.gl', 'bit.ly', 't.co', 'tinyurl.com', 'cutt.ly', 'rb.gy', 'is.gd', 'ow.ly', 's.id',
   'shorturl.at', 'lnkd.in', 'linktr.ee', 'forms.gle', 'tiny.cc', 'v.gd', 'buff.ly', 'rebrand.ly', 'l.ead.me',
   'qr.ae', 'urlz.fr', 'clck.ru', 'vk.cc', 't.me', 'wa.me',
+  'share.google', 'g.co', 'g.page', 'maps.app.goo.gl', 'goo.gle', 'page.link',
 ]
 const TRUSTED_HOSTS = ['mediaone.vision', 'mediaone-vision.de']
 const NAME_LABELS = ['vorname', 'nachname', 'name', 'firma', 'unternehmen', 'betreff', 'telefon', 'stadt', 'ort', 'strasse', 'straße']
@@ -164,7 +165,7 @@ function nonLatinShare(text: string): { letters: number; share: number } {
 }
 
 function hasLink(value: string): boolean {
-  return /(https?:\/\/|www\.|[a-z0-9-]+\.(?:com|net|org|info|biz|ru|xyz|top|click|site|online|shop|app|link|page)\/)/i.test(value)
+  return /(https?:\/\/|www\.|[a-z0-9-]+\.(?:com|net|org|info|biz|ru|xyz|top|click|site|online|shop|app|link|page|google|gle)\/)/i.test(value)
 }
 
 function hostOf(link: string): string {
