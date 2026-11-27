@@ -141,8 +141,10 @@ export function Footer({ locale = "de" }: { locale?: Locale }) {
             <h3 className="font-display text-sm font-bold text-brand-sky mb-4">{t.contactHeading}</h3>
             <ul className="space-y-3 text-sm text-neutral-400">
               <li>
-                6A, Rue Michel Rodange<br />
-                7681 Waldbillig, Luxemburg
+                <address className="not-italic">
+                  <span className="block">6A Rue Michel Rodange,</span>
+                  <span className="block">7681 Waldbillig, Luxemburg</span>
+                </address>
               </li>
               <li>
                 <a href="tel:+352661830493" className="hover:text-white transition-colors cursor-pointer">

@@ -5,19 +5,9 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Quote, Shield, Heart, Target, Handshake, Compass, Sparkles } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "About Us | Blitzeblank Luxembourg",
-  description:
-    "Get to know Blitzeblank. Learn more about our founder Mustapha El-Ali and our values for professional cleaning services.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/en/ueber-uns",
-    languages: {
-      de: "/ueber-uns",
-      en: "/en/ueber-uns",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/ueber-uns", "en")
 
 const values = [
   {

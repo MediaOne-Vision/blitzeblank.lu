@@ -1,17 +1,7 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Contact | Blitzeblank Cleaning Luxembourg",
-  description:
-    "Get in touch with Blitzeblank: questions about industrial, window, stone or facade cleaning? We reply quickly and arrange a free on-site inspection.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/en/kontakt",
-    languages: {
-      de: "/kontakt",
-      en: "/en/kontakt",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/kontakt", "en")
 
 export default function KontaktLayout({ children }: { children: React.ReactNode }) {
   return children

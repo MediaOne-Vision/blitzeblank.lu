@@ -4,21 +4,11 @@ import { Footer } from "@/components/footer"
 import { QuoteWizard } from "@/components/quote-wizard"
 import { getPricingConfig } from "@/lib/pricing-store"
 import { Sparkles } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
 
-export const metadata: Metadata = {
-  title: "Kostenloses Angebot | Blitzeblank",
-  description:
-    "Berechnen Sie in wenigen Schritten Ihren unverbindlichen Richtpreis und fordern Sie ein kostenloses Angebot für Ihre Reinigung an.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/angebot",
-    languages: {
-      de: "/angebot",
-      en: "/en/angebot",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/angebot", "de")
 
 export default async function AngebotPage({
   searchParams,

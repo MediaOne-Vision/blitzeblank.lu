@@ -1,18 +1,9 @@
 import { Metadata } from "next"
 import { Mountain } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Steinreinigung Trier, Bitburg & Luxemburg | Blitzeblank",
-  description: "Professionelle Steinreinigung in Trier, Bitburg und Luxemburg. Fachgerechte Reinigung von Naturstein, Pflaster, Terrassen und Außenanlagen.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/leistungen/steinreinigung",
-    languages: {
-      de: "/leistungen/steinreinigung",
-      en: "/en/leistungen/steinreinigung",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/leistungen/steinreinigung", "de")
 
 const features = [
   {

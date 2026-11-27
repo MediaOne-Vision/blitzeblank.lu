@@ -1,20 +1,9 @@
 import { Metadata } from "next"
 import { Factory } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Nettoyage industriel au Luxembourg | Blitzeblank",
-  description:
-    "Nettoyage industriel professionnel au Luxembourg. Nous nettoyons halls de production, entrepôts, ateliers et sites industriels selon les normes les plus exigeantes.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/fr/leistungen/industriereinigung",
-    languages: {
-      de: "/leistungen/industriereinigung",
-      en: "/en/leistungen/industriereinigung",
-      fr: "/fr/leistungen/industriereinigung",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/leistungen/industriereinigung", "fr")
 
 const features = [
   {

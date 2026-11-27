@@ -2,18 +2,9 @@ import { Metadata } from "next"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { FileText, MapPin, Phone, Mail, Shield, User, Scale } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Impressum | Blitzeblank",
-  description: "Impressum und rechtliche Angaben von BLITZEBLANK S.à r.l., Mustapha El-Ali, Waldbillig.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/impressum",
-    languages: {
-      de: "/impressum",
-      en: "/en/impressum",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/impressum", "de")
 
 const blocks = [
   {

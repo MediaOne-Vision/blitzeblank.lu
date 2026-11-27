@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/seo"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { LocalServicePage } from "@/components/local-service-page"
@@ -19,13 +20,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!landing) return {}
   const { service, city } = landing
   const keywordCity = `${service.keyword} ${city.name}`
-  return {
-    title: `${keywordCity} | Blitzeblank`,
-    description: `${keywordCity} für ${audienceText(service.audiences)}: ${service.topics.slice(0, 3).join(", ")}. Kostenlose Besichtigung, klares Angebot, feste Termine.`,
-    alternates: {
-      canonical: `${SITE_URL}${getLocalLandingPath(service.slug, city.id)}`,
+  const description = `${keywordCity} für ${audienceText(service.audiences)}: ${service.topics.slice(0, 3).join(", ")}. Kostenlose Besichtigung anfragen.`
+  return pageMetadata(getLocalLandingPath(service.slug, city.id), "de", {
+    copy: {
+      title: `${keywordCity} | Blitzeblank`,
+      description: description.length > 155 ? `${description.slice(0, 152).replace(/[\s,;:]+\S*$/, "")}...` : description,
     },
-  }
+  })
 }
 
 export default async function LocalLandingRoute({ params }: { params: Params }) {

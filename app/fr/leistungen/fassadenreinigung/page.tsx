@@ -1,20 +1,9 @@
 import { Metadata } from "next"
 import { Building2 } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Nettoyage de façades au Luxembourg | Blitzeblank",
-  description:
-    "Nettoyage de façades professionnel au Luxembourg. Nettoyage extérieur de façades en tous genres – des immeubles de bureaux aux sites industriels.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/fr/leistungen/fassadenreinigung",
-    languages: {
-      de: "/leistungen/fassadenreinigung",
-      en: "/en/leistungen/fassadenreinigung",
-      fr: "/fr/leistungen/fassadenreinigung",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/leistungen/fassadenreinigung", "fr")
 
 const features = [
   {

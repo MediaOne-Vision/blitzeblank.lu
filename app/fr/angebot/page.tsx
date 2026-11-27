@@ -4,22 +4,11 @@ import { Footer } from "@/components/footer"
 import { QuoteWizard } from "@/components/quote-wizard"
 import { getPricingConfig } from "@/lib/pricing-store"
 import { Sparkles } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
 
-export const metadata: Metadata = {
-  title: "Devis gratuit | Blitzeblank",
-  description:
-    "Calculez votre estimation sans engagement en quelques étapes et demandez un devis gratuit pour votre nettoyage.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/fr/angebot",
-    languages: {
-      de: "/angebot",
-      en: "/en/angebot",
-      fr: "/fr/angebot",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/angebot", "fr")
 
 export default async function AngebotFrPage({
   searchParams,

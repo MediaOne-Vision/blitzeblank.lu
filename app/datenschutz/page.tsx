@@ -2,19 +2,9 @@ import { Metadata } from "next"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Lock } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Datenschutzerklärung | Blitzeblank",
-  description:
-    "Datenschutzerklärung von Blitzeblank Gebäudereinigung. Informationen zur Verarbeitung Ihrer personenbezogenen Daten gemäß DSGVO.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/datenschutz",
-    languages: {
-      de: "/datenschutz",
-      en: "/en/datenschutz",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/datenschutz", "de")
 
 type Block =
   | { type: "p"; text: string }

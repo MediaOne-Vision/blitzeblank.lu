@@ -1,6 +1,7 @@
-import { ExtraServicePage, getExtraServiceMetadata } from "@/components/extra-service-page"
+import { ExtraServicePage } from "@/components/extra-service-page"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata = getExtraServiceMetadata("treppenhausreinigung", "fr")
+export const metadata = pageMetadata("/leistungen/treppenhausreinigung", "fr")
 
 export default function TreppenhausreinigungPage() {
   return <ExtraServicePage slug="treppenhausreinigung" locale="fr" />

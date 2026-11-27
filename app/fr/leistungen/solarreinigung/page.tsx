@@ -1,6 +1,7 @@
-import { ExtraServicePage, getExtraServiceMetadata } from "@/components/extra-service-page"
+import { ExtraServicePage } from "@/components/extra-service-page"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata = getExtraServiceMetadata("solarreinigung", "fr")
+export const metadata = pageMetadata("/leistungen/solarreinigung", "fr")
 
 export default function SolarreinigungPage() {
   return <ExtraServicePage slug="solarreinigung" locale="fr" />

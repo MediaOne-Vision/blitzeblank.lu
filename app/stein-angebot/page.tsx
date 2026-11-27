@@ -3,15 +3,9 @@ import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { StoneOfferWizard } from "@/components/stone-offer-wizard"
 import { Mountain } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Steinpflege-Rechner | Blitzeblank",
-  description:
-    "Konfigurieren Sie Schritt für Schritt Ihre Pflasterflächen- und Steinpflege: Fläche, Fuge, Steinfarbe, Schutz und thermische Unkrautentfernung - kostenlos und unverbindlich.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/stein-angebot",
-  },
-}
+export const metadata: Metadata = pageMetadata("/stein-angebot", "de")
 
 export default function SteinAngebotPage() {
   return (

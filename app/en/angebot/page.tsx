@@ -4,21 +4,11 @@ import { Footer } from "@/components/footer"
 import { QuoteWizard } from "@/components/quote-wizard"
 import { getPricingConfig } from "@/lib/pricing-store"
 import { Sparkles } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
 
-export const metadata: Metadata = {
-  title: "Free Quote | Blitzeblank",
-  description:
-    "Calculate your no-obligation price estimate in just a few steps and request a free quote for your cleaning.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/en/angebot",
-    languages: {
-      de: "/angebot",
-      en: "/en/angebot",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/angebot", "en")
 
 export default async function AngebotEnPage({
   searchParams,

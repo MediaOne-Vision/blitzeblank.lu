@@ -1,20 +1,9 @@
 import { Metadata } from "next"
 import { Mountain } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Nettoyage de pierre au Luxembourg | Blitzeblank",
-  description:
-    "Nettoyage de pierre professionnel au Luxembourg. Entretien et nettoyage experts de la pierre naturelle, des pavés, des terrasses et des espaces extérieurs.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/fr/leistungen/steinreinigung",
-    languages: {
-      de: "/leistungen/steinreinigung",
-      en: "/en/leistungen/steinreinigung",
-      fr: "/fr/leistungen/steinreinigung",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/leistungen/steinreinigung", "fr")
 
 const features = [
   {
