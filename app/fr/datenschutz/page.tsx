@@ -2,20 +2,9 @@ import { Metadata } from "next"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Lock } from "lucide-react"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Confidentialité | Blitzeblank",
-  description:
-    "Politique de confidentialité de Blitzeblank, nettoyage de bâtiments. Informations sur le traitement de vos données personnelles conformément au RGPD.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/fr/datenschutz",
-    languages: {
-      de: "/datenschutz",
-      en: "/en/datenschutz",
-      fr: "/fr/datenschutz",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/datenschutz", "fr")
 
 type Block =
   | { type: "p"; text: string }

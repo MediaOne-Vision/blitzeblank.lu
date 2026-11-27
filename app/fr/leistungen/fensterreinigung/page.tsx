@@ -1,20 +1,9 @@
 import { Metadata } from "next"
 import { WindowCleaningB2BPage } from "@/components/window-cleaning-b2b-page"
 import type { B2BCustomerType } from "@/lib/b2b-inquiry-email"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Nettoyage de vitres au Luxembourg, à Trèves et Bitburg | Blitzeblank",
-  description:
-    "Nettoyage de vitres professionnel pour domiciles, bureaux, commerces et locaux professionnels au Luxembourg et dans la région. Visite gratuite, offre ferme claire, rendez-vous fiables.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/fr/leistungen/fensterreinigung",
-    languages: {
-      de: "/leistungen/fensterreinigung",
-      en: "/en/leistungen/fensterreinigung",
-      fr: "/fr/leistungen/fensterreinigung",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/leistungen/fensterreinigung", "fr")
 
 type Props = {
   audience?: B2BCustomerType | null

@@ -61,36 +61,36 @@ const SPECIFIC_COPY: Record<string, Record<Locale, Record<Audience, SeoCopy>>> =
   "/leistungen/fensterreinigung": {
     de: {
       privat: {
-        title: "Fensterreinigung für Privatkunden in Trier, Bitburg & Luxemburg | Blitzeblank",
+        title: "Fensterreinigung für Privatkunden | Blitzeblank",
         description:
-          "Fensterreinigung für Haus und Wohnung in Trier, Bitburg und Luxemburg: Glas, Rahmen und Falze, auf Wunsch innen und außen. Kostenlose Besichtigung, klares Angebot.",
+          "Fensterreinigung für Haus und Wohnung in Trier, Bitburg und Luxemburg: Glas, Rahmen und Falze. Kostenlose Besichtigung, klares Angebot.",
       },
       gewerbe: {
-        title: "Fensterreinigung für Gewerbekunden in Trier, Bitburg & Luxemburg | Blitzeblank",
+        title: "Fensterreinigung für Gewerbekunden | Blitzeblank",
         description:
-          "Fensterreinigung für Büros, Geschäfte und Gewerbeobjekte in Trier, Bitburg und Luxemburg. Kostenlose Besichtigung, klares Festangebot, verlässliche Termine.",
+          "Fensterreinigung für Büros, Geschäfte und Gewerbeobjekte in Trier, Bitburg und Luxemburg. Kostenlose Besichtigung, klares Festangebot.",
       },
     },
     en: {
       privat: {
-        title: "Window Cleaning for Homeowners in Luxembourg, Trier & Bitburg | Blitzeblank",
+        title: "Window Cleaning for Homeowners | Blitzeblank",
         description:
-          "Window cleaning for houses and apartments in Luxembourg, Trier and Bitburg: glass, frames and rebates, inside and outside on request. Free site visit, clear quote.",
+          "Window cleaning for houses and apartments in Luxembourg, Trier and Bitburg: glass, frames and rebates. Free site visit, clear quote.",
       },
       gewerbe: {
-        title: "Window Cleaning for Businesses in Luxembourg, Trier & Bitburg | Blitzeblank",
+        title: "Window Cleaning for Businesses | Blitzeblank",
         description:
           "Window cleaning for offices, shops and commercial properties in Luxembourg, Trier and Bitburg. Free site visit, clear fixed quote, reliable appointments.",
       },
     },
     fr: {
       privat: {
-        title: "Nettoyage de vitres pour particuliers au Luxembourg, à Trèves et Bitburg | Blitzeblank",
+        title: "Nettoyage de vitres pour particuliers | Blitzeblank",
         description:
           "Nettoyage de vitres pour maisons et appartements : verre, cadres et feuillures, à l'intérieur et à l'extérieur sur demande. Visite gratuite, offre claire.",
       },
       gewerbe: {
-        title: "Nettoyage de vitres pour entreprises au Luxembourg, à Trèves et Bitburg | Blitzeblank",
+        title: "Nettoyage de vitres pour entreprises | Blitzeblank",
         description:
           "Nettoyage de vitres pour bureaux, commerces et locaux professionnels au Luxembourg, à Trèves et Bitburg. Visite gratuite, offre ferme claire.",
       },

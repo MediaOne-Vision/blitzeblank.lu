@@ -1,18 +1,9 @@
 import { Metadata } from "next"
 import { Building2 } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Fassadenreinigung Trier, Bitburg & Luxemburg | Blitzeblank",
-  description: "Professionelle Fassadenreinigung in Trier, Bitburg und Luxemburg. Außenreinigung für Fassaden aller Art und Dachrinnenreinigung für Privat- und Gewerbekunden.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/leistungen/fassadenreinigung",
-    languages: {
-      de: "/leistungen/fassadenreinigung",
-      en: "/en/leistungen/fassadenreinigung",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/leistungen/fassadenreinigung", "de")
 
 const features = [
   {

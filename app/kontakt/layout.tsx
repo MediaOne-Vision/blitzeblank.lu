@@ -1,17 +1,7 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Kontakt | Blitzeblank Reinigung Luxemburg",
-  description:
-    "Nehmen Sie Kontakt mit Blitzeblank auf: Fragen zu Industrie-, Fenster-, Stein- oder Fassadenreinigung? Wir melden uns schnell und vereinbaren einen kostenlosen Besichtigungstermin.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/kontakt",
-    languages: {
-      de: "/kontakt",
-      en: "/en/kontakt",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/kontakt", "de")
 
 export default function KontaktLayout({ children }: { children: React.ReactNode }) {
   return children

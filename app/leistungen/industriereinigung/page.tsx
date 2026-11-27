@@ -1,18 +1,9 @@
 import { Metadata } from "next"
 import { Factory } from "lucide-react"
 import { ServicePageTemplate } from "@/components/service-page-template"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Industriereinigung Trier, Bitburg & Luxemburg | Blitzeblank",
-  description: "Professionelle Industriereinigung in Trier, Bitburg und Luxemburg. Wir reinigen Produktionshallen, Lager, Werkstätten und Industrieanlagen nach höchsten Standards.",
-  alternates: {
-    canonical: "https://blitzeblank.lu/leistungen/industriereinigung",
-    languages: {
-      de: "/leistungen/industriereinigung",
-      en: "/en/leistungen/industriereinigung",
-    },
-  },
-}
+export const metadata: Metadata = pageMetadata("/leistungen/industriereinigung", "de")
 
 const features = [
   {
